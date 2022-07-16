@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["chrome","Extensions for working with Chromium-based browsers."],["firefox","Extensions for working with Firefox."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"type":[["Cookie","Type alias for a [cookie::Cookie]"]]});

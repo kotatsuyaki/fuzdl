@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["StringMatchLength",""]],"struct":[["StringMatch",""]],"trait":[["Needle",""],["NeedleDebug",""],["NeedleIter",""]]});

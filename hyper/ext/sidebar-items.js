@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ReasonPhrase","A reason phrase in an HTTP/1 response."]]});

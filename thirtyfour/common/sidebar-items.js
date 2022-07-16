@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["capabilities",""],["command",""],["config",""],["types",""]]});
