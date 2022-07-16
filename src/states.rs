@@ -21,24 +21,27 @@ pub struct Signin {
     login_button_elem: WebElement,
 }
 
+/// State corresponding to the `/account/signin` page after a successful login.
+/// Create using [`Signin::signin`].
+pub struct SigninDone {}
+
 impl Signin {
     /// Navigate to the [`Signin`] state.
     pub async fn new(driver: &SessionHandle) -> Result<Self> {
         driver.get(SIGNIN_URL).await?;
-        let signin_input_elements =
+        let [email_elem, password_elem] =
             ElemExpect::new_class_prefix("Signin Inputs", "signin_form__input")
                 .with_count(2)
-                .verify(&driver)
+                .find_at(&driver, [0, 1])
                 .await?;
         let login_button_elem = ElemExpect::new_class_prefix("Login Button", "signin_form__button")
             .with_count(1)
-            .verify(&driver)
-            .await?[0]
-            .clone();
+            .find_one(&driver)
+            .await?;
 
         Ok(Self {
-            email_elem: signin_input_elements[0].clone(),
-            password_elem: signin_input_elements[1].clone(),
+            email_elem,
+            password_elem,
             login_button_elem,
         })
     }
@@ -57,16 +60,12 @@ impl Signin {
     }
 }
 
-/// State corresponding to the `/account/signin` page after a successful login.
-/// Create using [`Signin::signin`].
-pub struct SigninDone {}
-
 impl SigninDone {
     async fn new(driver: &SessionHandle) -> Result<Self> {
         ElemExpect::new_class_prefix("Signin Done Description", "signin_signin__description")
             .with_count(1)
             .with_text(SIGNIN_DONE_TEXT)
-            .verify(&driver)
+            .find(&driver)
             .await?;
         Ok(Self {})
     }

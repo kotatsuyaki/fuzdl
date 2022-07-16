@@ -44,7 +44,24 @@ impl ElemExpect {
         self
     }
 
-    pub async fn verify(&self, driver: &SessionHandle) -> Result<Vec<WebElement>> {
+    /// Find and verify elements, and return the ones at specified indices.
+    pub async fn find_at<const N: usize>(
+        &self,
+        driver: &SessionHandle,
+        indices: [usize; N],
+    ) -> Result<[WebElement; N]> {
+        let elements = self.find(driver).await?;
+        Ok(indices.map(|i| elements[i].clone()))
+    }
+
+    /// Find and verify elements, and return the first one.
+    pub async fn find_one(&self, driver: &SessionHandle) -> Result<WebElement> {
+        let mut elements = self.find(driver).await?;
+        Ok(elements.remove(0))
+    }
+
+    // Find and verify elements.
+    pub async fn find(&self, driver: &SessionHandle) -> Result<Vec<WebElement>> {
         let elements = driver
             .find_elements(self.by.clone())
             .await
