@@ -1,5 +1,7 @@
 //! Page element verification supporting types.
 
+use std::ops::Range;
+
 use anyhow::{bail, Context, Result};
 use thirtyfour::{session::handle::SessionHandle, By, WebElement};
 
@@ -17,10 +19,7 @@ pub struct ElemExpect {
 }
 
 impl ElemExpect {
-    pub fn new_class_prefix<NAME: AsRef<str>, PREFIX: AsRef<str>>(
-        name: NAME,
-        prefix: PREFIX,
-    ) -> Self {
+    pub fn new_class_prefix(name: impl AsRef<str>, prefix: impl AsRef<str>) -> Self {
         let name = name.as_ref().to_string();
         let prefix = prefix.as_ref().to_string();
         let selector_string = Some(format!("[class^={prefix}]"));
@@ -33,14 +32,31 @@ impl ElemExpect {
         }
     }
 
+    pub fn new_css(name: impl AsRef<str>, selector: impl AsRef<str>) -> Self {
+        let name = name.as_ref().to_string();
+        let selector_string = Some(selector.as_ref().to_string());
+        let by = By::Css(selector_string.as_ref().unwrap());
+        Self {
+            name,
+            by,
+            _selector_string: selector_string,
+            conditions: vec![],
+        }
+    }
+
     pub fn with_count(mut self, count: usize) -> Self {
-        self.conditions.push(ExpectCondition::Count(count));
+        self.conditions.push(ExpectCondition::ExactCount(count));
         self
     }
 
     pub fn with_text(mut self, text: impl AsRef<str>) -> Self {
         self.conditions
             .push(ExpectCondition::Text(text.as_ref().to_string()));
+        self
+    }
+
+    pub fn with_count_range(mut self, range: Range<usize>) -> Self {
+        self.conditions.push(ExpectCondition::RangeCount(range));
         self
     }
 
@@ -83,14 +99,16 @@ impl ElemExpect {
 /// A condition to be checked against one or many [`WebElement`]s.
 #[derive(Debug, Clone)]
 enum ExpectCondition {
-    Count(usize),
+    ExactCount(usize),
+    RangeCount(Range<usize>),
     Text(String),
 }
 
 impl ExpectCondition {
     async fn is_fulfilled(&self, elements: &[WebElement]) -> Result<bool> {
         let is_fulfilled = match self {
-            ExpectCondition::Count(count) => &elements.len() == count,
+            ExpectCondition::ExactCount(count) => &elements.len() == count,
+            ExpectCondition::RangeCount(range) => range.contains(&elements.len()),
             ExpectCondition::Text(text) => {
                 let mut all_text_matches = elements.len() != 0;
                 for elem in elements {

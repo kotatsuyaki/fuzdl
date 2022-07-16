@@ -21,14 +21,13 @@
 //! state. Thus, the constructor [`SigninDone::new()`] is private, and a constructing method is
 //! provided as [`Signin::signin()`].
 
+use std::ops::Range;
+
 use anyhow::Result;
 use thirtyfour::{session::handle::SessionHandle, WebElement};
 
 mod expect;
 use expect::ElemExpect;
-
-const SIGNIN_URL: &str = "https://comic-fuz.com/account/signin";
-const SIGNIN_DONE_TEXT: &str = "ログインが完了しました。";
 
 /// State corresponding to the `/account/signin` page before any attempt to login.
 pub struct Signin {
@@ -41,16 +40,25 @@ pub struct Signin {
 /// Create using [`Signin::signin`].
 pub struct SigninDone {}
 
+/// State corresponding to the `/rensai` page.
+pub struct SerialCatalog {
+    title_elems: Vec<WebElement>,
+}
+
 impl Signin {
     /// Navigate to the [`Signin`] state.
     pub async fn new(driver: &SessionHandle) -> Result<Self> {
-        driver.get(SIGNIN_URL).await?;
+        const URL: &str = "https://comic-fuz.com/account/signin";
+        const INPUT_PREFIX: &str = "signin_form__input";
+        const BUTTON_PREFIX: &str = "signin_form__button";
+
+        driver.get(URL).await?;
         let [email_elem, password_elem] =
-            ElemExpect::new_class_prefix("Signin Inputs", "signin_form__input")
+            ElemExpect::new_class_prefix("Signin Inputs", INPUT_PREFIX)
                 .with_count(2)
                 .find_at(&driver, [0, 1])
                 .await?;
-        let login_button_elem = ElemExpect::new_class_prefix("Login Button", "signin_form__button")
+        let login_button_elem = ElemExpect::new_class_prefix("Login Button", BUTTON_PREFIX)
             .with_count(1)
             .find_one(&driver)
             .await?;
@@ -78,11 +86,31 @@ impl Signin {
 
 impl SigninDone {
     async fn new(driver: &SessionHandle) -> Result<Self> {
+        const SIGNIN_DONE_TEXT: &str = "ログインが完了しました。";
+
         ElemExpect::new_class_prefix("Signin Done Description", "signin_signin__description")
             .with_count(1)
             .with_text(SIGNIN_DONE_TEXT)
             .find(&driver)
             .await?;
         Ok(Self {})
+    }
+}
+
+impl SerialCatalog {
+    async fn new(driver: &SessionHandle) -> Result<Self> {
+        const URL: &str = "https://comic-fuz.com/rensai";
+        const TITLE_SEL: &str = "[class^=title_list_manga]>[class^=Title_title__]";
+        // As of 2022/7/16 this is 258
+        const NUM_TITLE_RANGE: Range<usize> = 250..400;
+
+        driver.get(URL).await?;
+
+        let title_elems = ElemExpect::new_css("Serial Titles", TITLE_SEL)
+            .with_count_range(NUM_TITLE_RANGE)
+            .find(&driver)
+            .await?;
+
+        Ok(Self { title_elems })
     }
 }
