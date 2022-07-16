@@ -28,7 +28,7 @@
             rust-analyzer
             rnix-lsp
             taplo-cli
-            geckodriver
+            chromedriver
           ];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };

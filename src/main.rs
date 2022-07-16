@@ -14,7 +14,7 @@ mod states;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let _gecko_process = create_geckodriver_process()?;
+    let _driver_process = create_driver_process()?;
     let driver = create_driver().await?;
 
     // The `run` function is just for the error-catching boundary
@@ -41,20 +41,19 @@ async fn run(driver: &WebDriver) -> Result<()> {
     Ok(())
 }
 
-fn create_geckodriver_process() -> Result<Child> {
-    Command::new("geckodriver")
-        .arg("--host=127.0.0.1")
+fn create_driver_process() -> Result<Child> {
+    Command::new("chromedriver")
         .arg("--port=4444")
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .kill_on_drop(true)
         .spawn()
-        .context("Failed to spawn geckodriver")
+        .context("Failed to spawn chromedriver")
 }
 
 async fn create_driver() -> Result<WebDriver> {
-    let driver = WebDriver::new("http://localhost:4444", DesiredCapabilities::firefox())
+    let driver = WebDriver::new("http://localhost:4444", DesiredCapabilities::chrome())
         .await
         .context("Failed to create WebDriver")?;
     driver
