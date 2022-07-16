@@ -1,0 +1,26 @@
+on:
+  push:
+
+name: Run Cargo Tests
+jobs:
+  test:
+    name: Cargo Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Setup Chrome and ChromeDriver
+        uses: ./.github/actions/setup-chrome
+
+      - name: Sequentally Run Cargo Tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: -- --test-threads 1
