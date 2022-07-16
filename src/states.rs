@@ -4,6 +4,22 @@
 //! A state type like [`Signin`] waits for elements to be loaded and verifies the page before
 //! constructing itself. Therefore, the existence of an object of a state type ensures that the
 //! preconditions of the state has been met.
+//!
+//! # State Type Design Notes
+//!
+//! While a trait is not designed yet (not necessary now), a state type should follow this design:
+//! - An async `new()` constructor that performs
+//!   1. (Optional) navigation to a specific page
+//!   2. verifications ensuring that the page meets some expectations
+//! - Some information getters that does not interact with the page
+//! - Some action methods (consumes `self`) that interact with the page, potentially returning a new state object
+//!
+//! The `new()` constructor should be marked as public only if the page can be unconditionally
+//! navigated to at any stage of execution. Otherwise, it should be left private, and a
+//! constructing method should exist in other states that can navigate to the new state.
+//! For example, it is only possible to navigate to the [`SigninDone`] state from the [`Signin`]
+//! state. Thus, the constructor [`SigninDone::new()`] is private, and a constructing method is
+//! provided as [`Signin::signin()`].
 
 use anyhow::Result;
 use thirtyfour::{session::handle::SessionHandle, WebElement};
