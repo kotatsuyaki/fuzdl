@@ -1,13 +1,35 @@
-name: "Build Nix flake on Ubuntu"
-
 on:
   push:
 
+name: Build For x86_64-unknown-linux-musl
 jobs:
-  build:
+  test:
+    name: Build Artifact
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v17
-      - name: Build package
-        run: nix build .#
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          default: true
+          target: x86_64-unknown-linux-musl
+
+      - name: Install Musl GCC
+        run: |
+          sudo apt-get update
+          sudo apt-get install musl-tools
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target x86_64-unknown-linux-musl
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fuzdl
+          path: target/x86_64-unknown-linux-musl/release/fuzdl
