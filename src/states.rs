@@ -1,3 +1,10 @@
+//! State types used to 1) verify and extract data from expected elements and 2) interact with the
+//! pages.
+//!
+//! A state type like [`Signin`] waits for elements to be loaded and verifies the page before
+//! constructing itself. Therefore, the existence of an object of a state type ensures that the
+//! preconditions of the state has been met.
+
 use anyhow::Result;
 use thirtyfour::{session::handle::SessionHandle, WebElement};
 
@@ -7,6 +14,7 @@ use expect::ElemExpect;
 const SIGNIN_URL: &str = "https://comic-fuz.com/account/signin";
 const SIGNIN_DONE_TEXT: &str = "ログインが完了しました。";
 
+/// State corresponding to the `/account/signin` page before any attempt to login.
 pub struct Signin {
     email_elem: WebElement,
     password_elem: WebElement,
@@ -14,6 +22,7 @@ pub struct Signin {
 }
 
 impl Signin {
+    /// Navigate to the [`Signin`] state.
     pub async fn new(driver: &SessionHandle) -> Result<Self> {
         driver.get(SIGNIN_URL).await?;
         let signin_input_elements =
@@ -34,6 +43,7 @@ impl Signin {
         })
     }
 
+    /// Interact with the sign elements and navigate to the [`SigninDone`] state.
     pub async fn signin(
         self,
         driver: &SessionHandle,
@@ -47,7 +57,8 @@ impl Signin {
     }
 }
 
-/// Create using [`Signin::SigninDone`]
+/// State corresponding to the `/account/signin` page after a successful login.
+/// Create using [`Signin::signin`].
 pub struct SigninDone {}
 
 impl SigninDone {

@@ -44,6 +44,7 @@ async fn run(driver: &WebDriver) -> Result<()> {
 fn create_driver_process() -> Result<Child> {
     Command::new("chromedriver")
         .arg("--port=4444")
+        // Prevent IO from the child process messing up our IO
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
@@ -59,6 +60,8 @@ async fn create_driver() -> Result<WebDriver> {
     let driver = WebDriver::new("http://localhost:4444", caps)
         .await
         .context("Failed to create WebDriver")?;
+
+    // Enable waiting period before find timeouts
     driver
         .set_implicit_wait_timeout(Duration::from_secs(10))
         .await

@@ -1,6 +1,9 @@
+//! Page element verification supporting types.
+
 use anyhow::{bail, Context, Result};
 use thirtyfour::{session::handle::SessionHandle, By, WebElement};
 
+/// Wrapper type around [`By`] selector and verification conditions.
 #[derive(Debug, Clone)]
 pub struct ElemExpect {
     /// Display name for this element for debugging purpose
@@ -60,6 +63,7 @@ impl ElemExpect {
     }
 }
 
+/// A condition to be checked against one or many [`WebElement`]s.
 #[derive(Debug, Clone)]
 enum ExpectCondition {
     Count(usize),

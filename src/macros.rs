@@ -1,3 +1,5 @@
+//! Internal logging macros.
+
 macro_rules! write_colored {
     ($color: expr, $($args: tt),*) => {
         ::console::Term::stderr().write_line(&$color.apply_to(format!($($args),*)).to_string())?;
