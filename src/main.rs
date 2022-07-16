@@ -53,7 +53,10 @@ fn create_driver_process() -> Result<Child> {
 }
 
 async fn create_driver() -> Result<WebDriver> {
-    let driver = WebDriver::new("http://localhost:4444", DesiredCapabilities::chrome())
+    let mut caps = DesiredCapabilities::chrome();
+    caps.set_headless()?;
+
+    let driver = WebDriver::new("http://localhost:4444", caps)
         .await
         .context("Failed to create WebDriver")?;
     driver
