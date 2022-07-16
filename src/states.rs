@@ -114,3 +114,34 @@ impl SerialCatalog {
         Ok(Self { title_elems })
     }
 }
+
+#[cfg(test)]
+mod test {
+    use std::future::Future;
+
+    use super::*;
+
+    async fn with_driver<Fut: Future<Output = Result<()>>>(
+        f: impl FnOnce(SessionHandle) -> Fut,
+    ) -> Result<()> {
+        let mut driver_process = crate::create_driver_process().unwrap();
+        let driver = crate::create_driver().await.unwrap();
+
+        let res = f(driver.clone()).await;
+
+        driver.quit().await.unwrap();
+        driver_process.kill().await.unwrap();
+
+        res
+    }
+
+    #[tokio::test]
+    async fn test_signin_new() -> Result<()> {
+        with_driver(|driver| async move { Signin::new(&driver).await.map(|_| ()) }).await
+    }
+
+    #[tokio::test]
+    async fn test_serial_catalog_new() -> Result<()> {
+        with_driver(|driver| async move { SerialCatalog::new(&driver).await.map(|_| ()) }).await
+    }
+}
