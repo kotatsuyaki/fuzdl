@@ -63,6 +63,14 @@ async fn create_driver() -> Result<WebDriver> {
         .set_implicit_wait_timeout(Duration::from_secs(10))
         .await
         .context("Failed to set timeout for WebDriver")?;
+
+    // The width 960 (which is small enough)
+    // prevents Fuz from showing two manga pages at once
+    driver
+        .set_window_rect(0, 0, 960, 1080)
+        .await
+        .context("Failed to set window rect")?;
+
     Ok(driver)
 }
 
