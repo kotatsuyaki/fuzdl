@@ -144,12 +144,6 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
 </pre><pre class="rust"><code><span class="doccomment">//! State types used to 1) verify and extract data from expected elements and 2) interact with the</span>
 <span class="doccomment">//! pages.</span>
 <span class="doccomment">//!</span>
@@ -250,7 +244,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">SerialCatalog</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">SessionHandle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">SessionHandle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">const</span> <span class="ident">URL</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;https://comic-fuz.com/rensai&quot;</span>;
         <span class="kw">const</span> <span class="ident">TITLE_SEL</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;[class^=title_list_manga]&gt;[class^=Title_title__]&quot;</span>;
         <span class="comment">// As of 2022/7/16 this is 258</span>
@@ -269,32 +263,26 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident">std::future::Future</span>;
+    <span class="kw">use</span> <span class="ident">anyhow::Context</span>;
+
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::driver::with_driver</span>;
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">with_driver</span><span class="op">&lt;</span><span class="ident">Fut</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-        <span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">SessionHandle</span>) -&gt; <span class="ident">Fut</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">driver_process</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::create_driver_process</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">driver</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::create_driver</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>();
-
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">f</span>(<span class="ident">driver</span>.<span class="ident">clone</span>()).<span class="kw">await</span>;
-
-        <span class="ident">driver</span>.<span class="ident">quit</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>();
-        <span class="ident">driver_process</span>.<span class="ident">kill</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>();
-
-        <span class="ident">res</span>
-    }
-
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_signin_new</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">Signin::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ()) }).<span class="kw">await</span>
+        <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">Signin::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ()) })
+            .<span class="kw">await</span><span class="question-mark">?</span>
+            .<span class="ident">context</span>(<span class="string">&quot;Driver early cancel&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_serial_catalog_new</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">SerialCatalog::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ()) }).<span class="kw">await</span>
+        <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">SerialCatalog::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ()) })
+            .<span class="kw">await</span><span class="question-mark">?</span>
+            .<span class="ident">context</span>(<span class="string">&quot;Driver early cancel&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

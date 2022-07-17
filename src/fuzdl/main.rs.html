@@ -53,80 +53,33 @@
 <span id="48">48</span>
 <span id="49">49</span>
 <span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
-<span id="55">55</span>
-<span id="56">56</span>
-<span id="57">57</span>
-<span id="58">58</span>
-<span id="59">59</span>
-<span id="60">60</span>
-<span id="61">61</span>
-<span id="62">62</span>
-<span id="63">63</span>
-<span id="64">64</span>
-<span id="65">65</span>
-<span id="66">66</span>
-<span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
-<span id="71">71</span>
-<span id="72">72</span>
-<span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
-<span id="76">76</span>
-<span id="77">77</span>
-<span id="78">78</span>
-<span id="79">79</span>
-<span id="80">80</span>
-<span id="81">81</span>
-<span id="82">82</span>
-<span id="83">83</span>
-<span id="84">84</span>
-<span id="85">85</span>
-<span id="86">86</span>
-<span id="87">87</span>
-<span id="88">88</span>
-<span id="89">89</span>
-<span id="90">90</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">process::Stdio</span>, <span class="ident">time::Duration</span>};
-
-<span class="kw">use</span> <span class="ident">anyhow</span>::{<span class="ident">Context</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="ident">dialoguer</span>::{<span class="ident">Confirm</span>, <span class="ident">Input</span>, <span class="ident">Password</span>};
-<span class="kw">use</span> <span class="ident">thirtyfour</span>::{<span class="ident">DesiredCapabilities</span>, <span class="ident">WebDriver</span>};
-<span class="kw">use</span> <span class="ident">tokio</span>::{
-    <span class="ident">process</span>::{<span class="ident">Child</span>, <span class="ident">Command</span>},
-    <span class="ident">task::spawn_blocking</span>,
-};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">anyhow</span>::{<span class="ident">Context</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="ident">dialoguer</span>::{<span class="ident">Input</span>, <span class="ident">Password</span>};
+<span class="kw">use</span> <span class="ident">thirtyfour::session::handle::SessionHandle</span>;
+<span class="kw">use</span> <span class="ident">tokio::task::spawn_blocking</span>;
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">macros</span>;
+<span class="kw">mod</span> <span class="ident">driver</span>;
 <span class="kw">mod</span> <span class="ident">states</span>;
 
 <span class="attribute">#[<span class="ident">tokio::main</span>]</span>
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">driver_process</span> <span class="op">=</span> <span class="ident">create_driver_process</span>()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">driver</span> <span class="op">=</span> <span class="ident">create_driver</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-
-    <span class="comment">// The `run` function is just for the error-catching boundary</span>
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span> {
-        <span class="macro">warn!</span>(<span class="string">&quot;Encountered error: {}&quot;</span>, <span class="ident">e</span>);
+    <span class="kw">let</span> <span class="ident">ret</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">driver::with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">run</span>(<span class="ident">driver</span>).<span class="kw">await</span> {
+            <span class="macro">warn!</span>(<span class="string">&quot;Encountered error: {}&quot;</span>, <span class="ident">e</span>);
+        }
+    })
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">if</span> <span class="ident">ret</span>.<span class="ident">is_none</span>() {
+        <span class="macro">info!</span>(<span class="string">&quot;Task aborted&quot;</span>);
     }
-
-    <span class="ident">spawn_blocking</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Confirm::new</span>().<span class="ident">with_prompt</span>(<span class="string">&quot;Pause&quot;</span>).<span class="ident">interact</span>()).<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>;
-
-    <span class="macro">info!</span>(<span class="string">&quot;Quitting driver&quot;</span>);
-    <span class="ident">driver</span>.<span class="ident">quit</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="ident">driver_process</span>.<span class="ident">kill</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">WebDriver</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="doccomment">/// The actual main logic.</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">driver</span>: <span class="ident">SessionHandle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> (<span class="ident">email</span>, <span class="ident">password</span>) <span class="op">=</span> <span class="ident">prompt_credentials</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">signin_state</span> <span class="op">=</span> <span class="ident">states::Signin::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -135,45 +88,12 @@
     <span class="ident">signin_state</span>.<span class="ident">signin</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>, <span class="ident">email</span>, <span class="ident">password</span>).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="macro">info!</span>(<span class="string">&quot;Successfully signed in&quot;</span>);
 
+    <span class="kw">let</span> <span class="ident">_serial_catalog_state</span> <span class="op">=</span> <span class="ident">states::SerialCatalog::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">fn</span> <span class="ident">create_driver_process</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Child</span><span class="op">&gt;</span> {
-    <span class="ident">Command::new</span>(<span class="string">&quot;chromedriver&quot;</span>)
-        .<span class="ident">arg</span>(<span class="string">&quot;--port=4444&quot;</span>)
-        <span class="comment">// Prevent IO from the child process messing up our IO</span>
-        .<span class="ident">stdin</span>(<span class="ident">Stdio::null</span>())
-        .<span class="ident">stdout</span>(<span class="ident">Stdio::null</span>())
-        .<span class="ident">stderr</span>(<span class="ident">Stdio::null</span>())
-        .<span class="ident">spawn</span>()
-        .<span class="ident">context</span>(<span class="string">&quot;Failed to spawn chromedriver&quot;</span>)
-}
-
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_driver</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WebDriver</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">caps</span> <span class="op">=</span> <span class="ident">DesiredCapabilities::chrome</span>();
-    <span class="ident">caps</span>.<span class="ident">set_headless</span>()<span class="question-mark">?</span>;
-    <span class="ident">caps</span>.<span class="ident">add_chrome_arg</span>(<span class="string">&quot;--no-sandbox&quot;</span>)<span class="question-mark">?</span>;
-
-    <span class="kw">let</span> <span class="ident">driver</span> <span class="op">=</span> <span class="ident">WebDriver::new</span>(<span class="string">&quot;http://localhost:4444&quot;</span>, <span class="ident">caps</span>)
-        .<span class="kw">await</span>
-        .<span class="ident">context</span>(<span class="string">&quot;Failed to create WebDriver&quot;</span>)<span class="question-mark">?</span>;
-
-    <span class="comment">// Enable waiting period before find timeouts</span>
-    <span class="ident">driver</span>
-        .<span class="ident">set_implicit_wait_timeout</span>(<span class="ident">Duration::from_secs</span>(<span class="number">10</span>))
-        .<span class="kw">await</span>
-        .<span class="ident">context</span>(<span class="string">&quot;Failed to set timeout for WebDriver&quot;</span>)<span class="question-mark">?</span>;
-
-    <span class="comment">// The width 960 (which is small enough)</span>
-    <span class="comment">// prevents Fuz from showing two manga pages at once</span>
-    <span class="ident">driver</span>
-        .<span class="ident">set_window_rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">960</span>, <span class="number">1080</span>)
-        .<span class="kw">await</span>
-        .<span class="ident">context</span>(<span class="string">&quot;Failed to set window rect&quot;</span>)<span class="question-mark">?</span>;
-
-    <span class="prelude-val">Ok</span>(<span class="ident">driver</span>)
-}
-
+<span class="doccomment">/// Prompt the user to input login credentials.</span>
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">prompt_credentials</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">String</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">email</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">spawn_blocking</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Input::new</span>().<span class="ident">with_prompt</span>(<span class="string">&quot;Email&quot;</span>).<span class="ident">interact</span>())
         .<span class="kw">await</span><span class="question-mark">?</span>
