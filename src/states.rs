@@ -26,7 +26,6 @@ use std::ops::Range;
 use anyhow::Result;
 use futures::prelude::*;
 use thirtyfour::{session::handle::SessionHandle, WebElement};
-use tokio::spawn;
 
 mod expect;
 use expect::ElemExpect;
@@ -44,12 +43,19 @@ pub struct SigninDone {}
 
 /// State corresponding to the `/rensai` page.
 pub struct SerialCatalog {
-    title_elems: Vec<TitleElem>,
+    title_elems: Vec<SerialElem>,
 }
 
+/// State corresponding to the `/manga/{id}` pages.
+pub struct Manga {
+    title_elem: WebElement,
+    chapter_elems: Vec<ChapterElem>,
+}
+
+/// Serial title element in [`SerialCatalog`].
 #[derive(Clone)]
 #[allow(dead_code)]
-struct TitleElem {
+struct SerialElem {
     elem: WebElement,
     name_elem: WebElement,
     description_elem: Option<WebElement>,
@@ -62,6 +68,14 @@ pub struct Serial {
     pub name: String,
     pub description: String,
     pub href: String,
+}
+
+// Manga chapter element in [`Manga`].
+#[derive(Clone)]
+#[allow(dead_code)]
+pub struct ChapterElem {
+    elem: WebElement,
+    free_elem: Option<WebElement>,
 }
 
 impl Signin {
@@ -146,7 +160,7 @@ impl SerialCatalog {
                         .find_maybe_one(elem.clone())
                         .await?;
 
-                Result::<TitleElem>::Ok(TitleElem {
+                Result::<SerialElem>::Ok(SerialElem {
                     elem,
                     name_elem,
                     description_elem,
@@ -162,7 +176,7 @@ impl SerialCatalog {
     /// Get the serials listed on the page.
     pub async fn serials(&self) -> Result<Vec<Serial>> {
         let mut serials = vec![];
-        for TitleElem {
+        for SerialElem {
             elem: _,
             name_elem,
             description_elem,
@@ -183,6 +197,45 @@ impl SerialCatalog {
             });
         }
         Ok(serials)
+    }
+}
+
+impl Manga {
+    pub async fn new(driver: &SessionHandle, url: impl AsRef<str>) -> Result<Self> {
+        driver.goto(url.as_ref()).await?;
+
+        let title_elem =
+            ElemExpect::new_class_prefix("Manga Title Element", "title_detail_introduction__name")
+                .with_count(1)
+                .find_one(driver)
+                .await?;
+        let chapter_elem_raw =
+            ElemExpect::new_css("Manga Chapter Element", "ul>[class^=Chapter_chapter]")
+                .with_count_range(1..)
+                .find_all(driver)
+                .await?;
+        let chapter_elems = chapter_elem_raw
+            .into_iter()
+            .map(|elem| async {
+                let free_elem =
+                    ElemExpect::new_class_prefix("Free Element", "Chapter_chapter__price_free")
+                        .with_count_range(0..=1)
+                        .find_maybe_one(driver)
+                        .await?;
+
+                Result::<ChapterElem>::Ok(ChapterElem { elem, free_elem })
+            })
+            .collect::<Vec<_>>();
+        let chapter_elems = future::try_join_all(chapter_elems).await?;
+
+        Ok(Self {
+            title_elem,
+            chapter_elems,
+        })
+    }
+
+    pub async fn title(&self) -> Result<String> {
+        Ok(self.title_elem.text().await?)
     }
 }
 
@@ -211,6 +264,23 @@ mod test {
         })
         .await?
         .context("Driver early cancel")??;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_manga_title() -> Result<()> {
+        const MANGA_URL: &str = "https://comic-fuz.com/manga/1541";
+        const MANGA_TITLE: &str = "スローループ";
+
+        let title = with_driver(|driver| async move {
+            let manga_state = Manga::new(&driver, MANGA_URL).await?;
+            manga_state.title().await
+        })
+        .await?
+        .context("Driver early cancel")??;
+
+        assert_eq!(title, MANGA_TITLE);
+
         Ok(())
     }
 }

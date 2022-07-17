@@ -2,7 +2,7 @@
 
 use std::{
     fmt::Debug,
-    ops::{Range, RangeInclusive},
+    ops::{Range, RangeFrom, RangeInclusive},
     time::Duration,
 };
 
@@ -187,7 +187,7 @@ pub trait WebDriverExt: Clone + Send + Sync {
 impl WebDriverExt for &SessionHandle {
     async fn find_elements_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>> {
         self.query(by)
-            .wait(Duration::from_secs(5), Duration::from_millis(500))
+            .wait(Duration::from_secs(2), Duration::from_millis(200))
             .all()
             .await
     }
@@ -205,7 +205,7 @@ impl WebDriverExt for &SessionHandle {
 impl WebDriverExt for WebElement {
     async fn find_elements_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>> {
         self.query(by)
-            .wait(Duration::from_secs(5), Duration::from_millis(500))
+            .wait(Duration::from_secs(2), Duration::from_millis(200))
             .all()
             .await
     }
@@ -220,6 +220,7 @@ impl WebDriverExt for WebElement {
 pub enum IndexRange {
     Range(Range<usize>),
     RangeInclusive(RangeInclusive<usize>),
+    RangeFrom(RangeFrom<usize>),
 }
 
 impl IndexRange {
@@ -227,6 +228,7 @@ impl IndexRange {
         match self {
             IndexRange::Range(r) => r.contains(index),
             IndexRange::RangeInclusive(r) => r.contains(index),
+            IndexRange::RangeFrom(r) => r.contains(index),
         }
     }
 }
@@ -240,5 +242,11 @@ impl From<Range<usize>> for IndexRange {
 impl From<RangeInclusive<usize>> for IndexRange {
     fn from(r: RangeInclusive<usize>) -> Self {
         Self::RangeInclusive(r)
+    }
+}
+
+impl From<RangeFrom<usize>> for IndexRange {
+    fn from(r: RangeFrom<usize>) -> Self {
+        Self::RangeFrom(r)
     }
 }
