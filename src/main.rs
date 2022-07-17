@@ -18,6 +18,7 @@ async fn main() -> Result<()> {
     .await?;
     if ret.is_none() {
         info!("Task aborted");
+        std::process::exit(1);
     }
 
     Ok(())
