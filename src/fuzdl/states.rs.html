@@ -225,6 +225,69 @@
 <span id="220">220</span>
 <span id="221">221</span>
 <span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
 </pre><pre class="rust"><code><span class="doccomment">//! State types used to 1) verify and extract data from expected elements and 2) interact with the</span>
 <span class="doccomment">//! pages.</span>
 <span class="doccomment">//!</span>
@@ -253,10 +316,9 @@
 <span class="kw">use</span> <span class="ident">anyhow::Result</span>;
 <span class="kw">use</span> <span class="ident">futures::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">thirtyfour</span>::{<span class="ident">session::handle::SessionHandle</span>, <span class="ident">WebElement</span>};
-<span class="kw">use</span> <span class="ident">tokio::spawn</span>;
 
 <span class="kw">mod</span> <span class="ident">expect</span>;
-<span class="kw">use</span> <span class="ident">expect::ElemExpect</span>;
+<span class="kw">use</span> <span class="ident">expect::Expect</span>;
 
 <span class="doccomment">/// State corresponding to the `/account/signin` page before any attempt to login.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Signin</span> {
@@ -271,11 +333,19 @@
 
 <span class="doccomment">/// State corresponding to the `/rensai` page.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SerialCatalog</span> {
-    <span class="ident">title_elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TitleElem</span><span class="op">&gt;</span>,
+    <span class="ident">title_elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SerialElem</span><span class="op">&gt;</span>,
 }
 
+<span class="doccomment">/// State corresponding to the `/manga/{id}` pages.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Manga</span> {
+    <span class="ident">title_elem</span>: <span class="ident">WebElement</span>,
+    <span class="ident">chapter_elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ChapterElem</span><span class="op">&gt;</span>,
+}
+
+<span class="doccomment">/// Serial title element in [`SerialCatalog`].</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">TitleElem</span> {
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">struct</span> <span class="ident">SerialElem</span> {
     <span class="ident">elem</span>: <span class="ident">WebElement</span>,
     <span class="ident">name_elem</span>: <span class="ident">WebElement</span>,
     <span class="ident">description_elem</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
@@ -290,6 +360,14 @@
     <span class="kw">pub</span> <span class="ident">href</span>: <span class="ident">String</span>,
 }
 
+<span class="comment">// Manga chapter element in [`Manga`].</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChapterElem</span> {
+    <span class="ident">elem</span>: <span class="ident">WebElement</span>,
+    <span class="ident">free_elem</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+}
+
 <span class="kw">impl</span> <span class="ident">Signin</span> {
     <span class="doccomment">/// Navigate to the [`Signin`] state.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">SessionHandle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
@@ -298,12 +376,11 @@
         <span class="kw">const</span> <span class="ident">BUTTON_PREFIX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;signin_form__button&quot;</span>;
 
         <span class="ident">driver</span>.<span class="ident">goto</span>(<span class="ident">URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> [<span class="ident">email_elem</span>, <span class="ident">password_elem</span>] <span class="op">=</span>
-            <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Signin Inputs&quot;</span>, <span class="ident">INPUT_PREFIX</span>)
-                .<span class="ident">with_count</span>(<span class="number">2</span>)
-                .<span class="ident">find_at</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>, [<span class="number">0</span>, <span class="number">1</span>])
-                .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">login_button_elem</span> <span class="op">=</span> <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Login Button&quot;</span>, <span class="ident">BUTTON_PREFIX</span>)
+        <span class="kw">let</span> [<span class="ident">email_elem</span>, <span class="ident">password_elem</span>] <span class="op">=</span> <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Signin Inputs&quot;</span>, <span class="ident">INPUT_PREFIX</span>)
+            .<span class="ident">with_count</span>(<span class="number">2</span>)
+            .<span class="ident">find_at</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>, [<span class="number">0</span>, <span class="number">1</span>])
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">login_button_elem</span> <span class="op">=</span> <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Login Button&quot;</span>, <span class="ident">BUTTON_PREFIX</span>)
             .<span class="ident">with_count</span>(<span class="number">1</span>)
             .<span class="ident">find_one</span>(<span class="ident">driver</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -333,7 +410,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">SessionHandle</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">const</span> <span class="ident">SIGNIN_DONE_TEXT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;ログインが完了しました。&quot;</span>;
 
-        <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Signin Done Description&quot;</span>, <span class="string">&quot;signin_signin__description&quot;</span>)
+        <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Signin Done Description&quot;</span>, <span class="string">&quot;signin_signin__description&quot;</span>)
             .<span class="ident">with_count</span>(<span class="number">1</span>)
             .<span class="ident">with_text</span>(<span class="ident">SIGNIN_DONE_TEXT</span>)
             .<span class="ident">find_all</span>(<span class="ident">driver</span>)
@@ -351,7 +428,7 @@
 
         <span class="ident">driver</span>.<span class="ident">goto</span>(<span class="ident">URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">title_elems_raw</span> <span class="op">=</span> <span class="ident">ElemExpect::new_css</span>(<span class="string">&quot;Serial Titles&quot;</span>, <span class="ident">TITLE_SEL</span>)
+        <span class="kw">let</span> <span class="ident">title_elems_raw</span> <span class="op">=</span> <span class="ident">Expect::new_css</span>(<span class="string">&quot;Serial Titles&quot;</span>, <span class="ident">TITLE_SEL</span>)
             .<span class="ident">with_count_range</span>(<span class="ident">NUM_TITLE_RANGE</span>)
             .<span class="ident">with_attribute</span>(<span class="string">&quot;href&quot;</span>)
             .<span class="ident">find_all</span>(<span class="ident">driver</span>)
@@ -361,30 +438,23 @@
         <span class="kw">let</span> <span class="ident">title_elems</span> <span class="op">=</span> <span class="ident">title_elems_raw</span>
             .<span class="ident">into_iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">elem</span><span class="op">|</span> <span class="kw">async</span> {
-                <span class="ident">spawn</span>(<span class="kw">async</span> {
-                    <span class="kw">let</span> <span class="ident">name_elem</span> <span class="op">=</span>
-                        <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Name Element&quot;</span>, <span class="string">&quot;Title_title__name&quot;</span>)
-                            .<span class="ident">with_count</span>(<span class="number">1</span>)
-                            .<span class="ident">find_one</span>(<span class="ident">elem</span>.<span class="ident">clone</span>())
-                            .<span class="kw">await</span><span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">href</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">attr</span>(<span class="string">&quot;href&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">unwrap</span>();
-                    <span class="kw">let</span> <span class="ident">description_elem</span> <span class="op">=</span> <span class="ident">ElemExpect::new_class_prefix</span>(
-                        <span class="string">&quot;Description Element&quot;</span>,
-                        <span class="string">&quot;Title_title__description&quot;</span>,
-                    )
-                    .<span class="ident">with_count_range</span>(<span class="number">0</span>..<span class="op">=</span><span class="number">1</span>)
-                    .<span class="ident">find_maybe_one</span>(<span class="ident">elem</span>.<span class="ident">clone</span>())
+                <span class="kw">let</span> <span class="ident">name_elem</span> <span class="op">=</span> <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Name Element&quot;</span>, <span class="string">&quot;Title_title__name&quot;</span>)
+                    .<span class="ident">with_count</span>(<span class="number">1</span>)
+                    .<span class="ident">find_one</span>(<span class="ident">elem</span>.<span class="ident">clone</span>())
                     .<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">href</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">attr</span>(<span class="string">&quot;href&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">unwrap</span>();
+                <span class="kw">let</span> <span class="ident">description_elem</span> <span class="op">=</span>
+                    <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Description Element&quot;</span>, <span class="string">&quot;Title_title__description&quot;</span>)
+                        .<span class="ident">with_count_range</span>(<span class="number">0</span>..<span class="op">=</span><span class="number">1</span>)
+                        .<span class="ident">find_maybe_one</span>(<span class="ident">elem</span>.<span class="ident">clone</span>())
+                        .<span class="kw">await</span><span class="question-mark">?</span>;
 
-                    <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="ident">TitleElem</span><span class="op">&gt;</span><span class="ident">::Ok</span>(<span class="ident">TitleElem</span> {
-                        <span class="ident">elem</span>,
-                        <span class="ident">name_elem</span>,
-                        <span class="ident">description_elem</span>,
-                        <span class="ident">href</span>,
-                    })
+                <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="ident">SerialElem</span><span class="op">&gt;</span><span class="ident">::Ok</span>(<span class="ident">SerialElem</span> {
+                    <span class="ident">elem</span>,
+                    <span class="ident">name_elem</span>,
+                    <span class="ident">description_elem</span>,
+                    <span class="ident">href</span>,
                 })
-                .<span class="kw">await</span>
-                .<span class="ident">unwrap</span>()
             })
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">title_elems</span> <span class="op">=</span> <span class="ident">future::try_join_all</span>(<span class="ident">title_elems</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -395,7 +465,7 @@
     <span class="doccomment">/// Get the serials listed on the page.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">serials</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Serial</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serials</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-        <span class="kw">for</span> <span class="ident">TitleElem</span> {
+        <span class="kw">for</span> <span class="ident">SerialElem</span> {
             <span class="ident">elem</span>: <span class="kw">_</span>,
             <span class="ident">name_elem</span>,
             <span class="ident">description_elem</span>,
@@ -416,6 +486,45 @@
             });
         }
         <span class="prelude-val">Ok</span>(<span class="ident">serials</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Manga</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">SessionHandle</span>, <span class="ident">url</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="ident">driver</span>.<span class="ident">goto</span>(<span class="ident">url</span>.<span class="ident">as_ref</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">title_elem</span> <span class="op">=</span>
+            <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Manga Title Element&quot;</span>, <span class="string">&quot;title_detail_introduction__name&quot;</span>)
+                .<span class="ident">with_count</span>(<span class="number">1</span>)
+                .<span class="ident">find_one</span>(<span class="ident">driver</span>)
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">chapter_elem_raw</span> <span class="op">=</span>
+            <span class="ident">Expect::new_css</span>(<span class="string">&quot;Manga Chapter Element&quot;</span>, <span class="string">&quot;ul&gt;[class^=Chapter_chapter]&quot;</span>)
+                .<span class="ident">with_count_range</span>(<span class="number">1</span>..)
+                .<span class="ident">find_all</span>(<span class="ident">driver</span>)
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">chapter_elems</span> <span class="op">=</span> <span class="ident">chapter_elem_raw</span>
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">elem</span><span class="op">|</span> <span class="kw">async</span> {
+                <span class="kw">let</span> <span class="ident">free_elem</span> <span class="op">=</span>
+                    <span class="ident">Expect::new_class_prefix</span>(<span class="string">&quot;Free Element&quot;</span>, <span class="string">&quot;Chapter_chapter__price_free&quot;</span>)
+                        .<span class="ident">with_count_range</span>(<span class="number">0</span>..<span class="op">=</span><span class="number">1</span>)
+                        .<span class="ident">find_maybe_one</span>(<span class="ident">driver</span>)
+                        .<span class="kw">await</span><span class="question-mark">?</span>;
+
+                <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="ident">ChapterElem</span><span class="op">&gt;</span><span class="ident">::Ok</span>(<span class="ident">ChapterElem</span> { <span class="ident">elem</span>, <span class="ident">free_elem</span> })
+            })
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="ident">chapter_elems</span> <span class="op">=</span> <span class="ident">future::try_join_all</span>(<span class="ident">chapter_elems</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+            <span class="ident">title_elem</span>,
+            <span class="ident">chapter_elems</span>,
+        })
+    }
+
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">title</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">title_elem</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 }
 
@@ -444,6 +553,23 @@
         })
         .<span class="kw">await</span><span class="question-mark">?</span>
         .<span class="ident">context</span>(<span class="string">&quot;Driver early cancel&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_manga_title</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">const</span> <span class="ident">MANGA_URL</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;https://comic-fuz.com/manga/1541&quot;</span>;
+        <span class="kw">const</span> <span class="ident">MANGA_TITLE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;スローループ&quot;</span>;
+
+        <span class="kw">let</span> <span class="ident">title</span> <span class="op">=</span> <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+            <span class="kw">let</span> <span class="ident">manga_state</span> <span class="op">=</span> <span class="ident">Manga::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>, <span class="ident">MANGA_URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">manga_state</span>.<span class="ident">title</span>().<span class="kw">await</span>
+        })
+        .<span class="kw">await</span><span class="question-mark">?</span>
+        .<span class="ident">context</span>(<span class="string">&quot;Driver early cancel&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
+
+        <span class="macro">assert_eq!</span>(<span class="ident">title</span>, <span class="ident">MANGA_TITLE</span>);
+
         <span class="prelude-val">Ok</span>(())
     }
 }
