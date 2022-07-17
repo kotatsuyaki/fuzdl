@@ -38,15 +38,7 @@ async fn run(driver: SessionHandle) -> Result<()> {
     info!("Reached serials page");
 
     let serials = serial_catalog_state.serials().await?;
-    for (
-        i,
-        states::Serial {
-            name,
-            description,
-            href,
-        },
-    ) in serials.iter().enumerate()
-    {
+    for (i, states::Serial { name, href, .. }) in serials.iter().enumerate() {
         let href = console::pad_str(href, 14, console::Alignment::Left, Some(".."));
         info!("{i:3} | {href} | {name}");
     }

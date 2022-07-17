@@ -48,6 +48,7 @@ pub struct SerialCatalog {
 }
 
 #[derive(Clone)]
+#[allow(dead_code)]
 struct TitleElem {
     elem: WebElement,
     name_elem: WebElement,
