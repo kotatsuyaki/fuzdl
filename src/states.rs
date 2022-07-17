@@ -135,30 +135,23 @@ impl SerialCatalog {
         let title_elems = title_elems_raw
             .into_iter()
             .map(|elem| async {
-                spawn(async {
-                    let name_elem =
-                        ElemExpect::new_class_prefix("Name Element", "Title_title__name")
-                            .with_count(1)
-                            .find_one(elem.clone())
-                            .await?;
-                    let href = elem.attr("href").await?.unwrap();
-                    let description_elem = ElemExpect::new_class_prefix(
-                        "Description Element",
-                        "Title_title__description",
-                    )
-                    .with_count_range(0..=1)
-                    .find_maybe_one(elem.clone())
+                let name_elem = ElemExpect::new_class_prefix("Name Element", "Title_title__name")
+                    .with_count(1)
+                    .find_one(elem.clone())
                     .await?;
+                let href = elem.attr("href").await?.unwrap();
+                let description_elem =
+                    ElemExpect::new_class_prefix("Description Element", "Title_title__description")
+                        .with_count_range(0..=1)
+                        .find_maybe_one(elem.clone())
+                        .await?;
 
-                    Result::<TitleElem>::Ok(TitleElem {
-                        elem,
-                        name_elem,
-                        description_elem,
-                        href,
-                    })
+                Result::<TitleElem>::Ok(TitleElem {
+                    elem,
+                    name_elem,
+                    description_elem,
+                    href,
                 })
-                .await
-                .unwrap()
             })
             .collect::<Vec<_>>();
         let title_elems = future::try_join_all(title_elems).await?;
