@@ -104,12 +104,6 @@ async fn create_driver() -> Result<WebDriver> {
         .await
         .context("Failed to create WebDriver")?;
 
-    // Enable waiting period before find timeouts
-    driver
-        .set_implicit_wait_timeout(Duration::from_secs(10))
-        .await
-        .context("Failed to set timeout for WebDriver")?;
-
     // The width 960 (which is small enough)
     // prevents Fuz from showing two manga pages at once
     driver

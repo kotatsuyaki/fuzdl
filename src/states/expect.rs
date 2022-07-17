@@ -1,9 +1,14 @@
 //! Page element verification supporting types.
 
-use std::ops::Range;
+use std::{
+    fmt::Debug,
+    ops::{Range, RangeInclusive},
+    time::Duration,
+};
 
 use anyhow::{bail, Context, Result};
-use thirtyfour::{session::handle::SessionHandle, By, WebElement};
+use async_trait::async_trait;
+use thirtyfour::{prelude::*, session::handle::SessionHandle, By, WebElement};
 
 /// Wrapper type around [`By`] selector and verification conditions.
 #[derive(Debug, Clone)]
@@ -55,8 +60,15 @@ impl ElemExpect {
         self
     }
 
-    pub fn with_count_range(mut self, range: Range<usize>) -> Self {
-        self.conditions.push(ExpectCondition::RangeCount(range));
+    pub fn with_count_range(mut self, range: impl Into<IndexRange>) -> Self {
+        self.conditions
+            .push(ExpectCondition::RangeCount(range.into()));
+        self
+    }
+
+    pub fn with_attribute(mut self, name: impl AsRef<str>) -> Self {
+        self.conditions
+            .push(ExpectCondition::Attribute(name.as_ref().to_string()));
         self
     }
 
@@ -66,22 +78,35 @@ impl ElemExpect {
         driver: &SessionHandle,
         indices: [usize; N],
     ) -> Result<[WebElement; N]> {
-        let elements = self.find(driver).await?;
+        let elements = self.find_all(driver).await?;
         Ok(indices.map(|i| elements[i].clone()))
     }
 
     /// Find and verify elements, and return the first one.
-    pub async fn find_one(&self, driver: &SessionHandle) -> Result<WebElement> {
-        let mut elements = self.find(driver).await?;
+    pub async fn find_one(&self, driver: impl WebDriverExt) -> Result<WebElement> {
+        let mut elements = self.find_all(driver).await?;
         Ok(elements.remove(0))
     }
 
-    // Find and verify elements.
-    pub async fn find(&self, driver: &SessionHandle) -> Result<Vec<WebElement>> {
-        let elements = driver
-            .find_elements(self.by.clone())
-            .await
-            .context("Failed to find elements")?;
+    /// Find and verify elements, and return the first one if it exists.
+    /// **This method does not wait for the element to appear.**
+    pub async fn find_maybe_one(&self, driver: impl WebDriverExt) -> Result<Option<WebElement>> {
+        let elements = self._find_all_nowait(driver).await?;
+        Ok(elements.into_iter().next())
+    }
+
+    /// Find and verify elements.
+    pub async fn find_all(&self, driver: impl WebDriverExt) -> Result<Vec<WebElement>> {
+        let elements = self._find_all(driver.clone()).await?;
+        Ok(self._verify(driver, elements).await?)
+    }
+
+    /// Verify that the given elements fulfills all the conditions.
+    async fn _verify(
+        &self,
+        driver: impl WebDriverExt,
+        elements: Vec<WebElement>,
+    ) -> Result<Vec<WebElement>> {
         for condition in self.conditions.iter() {
             let is_fulfilled = condition.is_fulfilled(&elements).await?;
             if is_fulfilled {
@@ -94,14 +119,31 @@ impl ElemExpect {
         }
         Ok(elements)
     }
+
+    /// Find elements with wait.
+    async fn _find_all(&self, driver: impl WebDriverExt) -> Result<Vec<WebElement>> {
+        driver
+            .find_elements_ext(self.by.clone())
+            .await
+            .context(format!("Failed to find elements by {by:?}", by = self.by))
+    }
+
+    /// Find elements **without** wait.
+    async fn _find_all_nowait(&self, driver: impl WebDriverExt) -> Result<Vec<WebElement>> {
+        driver
+            .find_elements_nowait_ext(self.by.clone())
+            .await
+            .context(format!("Failed to find elements by {by:?}", by = self.by))
+    }
 }
 
 /// A condition to be checked against one or many [`WebElement`]s.
 #[derive(Debug, Clone)]
 enum ExpectCondition {
     ExactCount(usize),
-    RangeCount(Range<usize>),
+    RangeCount(IndexRange),
     Text(String),
+    Attribute(String),
 }
 
 impl ExpectCondition {
@@ -116,7 +158,87 @@ impl ExpectCondition {
                 }
                 all_text_matches
             }
+            ExpectCondition::Attribute(name) => {
+                let mut all_elem_has_attribute = elements.len() != 0;
+                for elem in elements {
+                    all_elem_has_attribute &= elem.attr(&name).await?.is_some();
+                }
+                all_elem_has_attribute
+            }
         };
         Ok(is_fulfilled)
+    }
+}
+
+/// Trait providing a streamlined API for finding elements in [`SessionHandle`] and [`WebElement`].
+#[async_trait]
+pub trait WebDriverExt: Clone + Send + Sync {
+    /// Equivalent to [`SessionHandle::find_elements`] or [`WebElement::find_elements`].
+    async fn find_elements_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>>;
+
+    async fn find_elements_nowait_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>>;
+
+    async fn current_url(&self) -> WebDriverResult<String> {
+        Ok("".to_string())
+    }
+}
+
+#[async_trait]
+impl WebDriverExt for &SessionHandle {
+    async fn find_elements_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>> {
+        self.query(by)
+            .wait(Duration::from_secs(5), Duration::from_millis(500))
+            .all()
+            .await
+    }
+
+    async fn find_elements_nowait_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>> {
+        self.query(by).nowait().all().await
+    }
+
+    async fn current_url(&self) -> WebDriverResult<String> {
+        self.current_url().await.map(|url| url.to_string())
+    }
+}
+
+#[async_trait]
+impl WebDriverExt for WebElement {
+    async fn find_elements_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>> {
+        self.query(by)
+            .wait(Duration::from_secs(5), Duration::from_millis(500))
+            .all()
+            .await
+    }
+
+    async fn find_elements_nowait_ext(&self, by: By) -> WebDriverResult<Vec<WebElement>> {
+        self.query(by).nowait().all().await
+    }
+}
+
+/// Workaround since `Box<dyn std::ops::RangeBounds>` is not possible (the trait is not object-safe).
+#[derive(Debug, Clone)]
+pub enum IndexRange {
+    Range(Range<usize>),
+    RangeInclusive(RangeInclusive<usize>),
+}
+
+impl IndexRange {
+    fn contains(&self, index: &usize) -> bool {
+        match self {
+            IndexRange::Range(r) => r.contains(index),
+            IndexRange::RangeInclusive(r) => r.contains(index),
+        }
+    }
+}
+
+impl From<Range<usize>> for IndexRange {
+    fn from(r: Range<usize>) -> Self {
+        Self::Range(r)
+    }
+}
+
+impl From<RangeInclusive<usize>> for IndexRange {
+    fn from(r: RangeInclusive<usize>) -> Self {
+        Self::RangeInclusive(r)
     }
 }

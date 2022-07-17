@@ -24,7 +24,9 @@
 use std::ops::Range;
 
 use anyhow::Result;
+use futures::prelude::*;
 use thirtyfour::{session::handle::SessionHandle, WebElement};
+use tokio::spawn;
 
 mod expect;
 use expect::ElemExpect;
@@ -42,7 +44,23 @@ pub struct SigninDone {}
 
 /// State corresponding to the `/rensai` page.
 pub struct SerialCatalog {
-    title_elems: Vec<WebElement>,
+    title_elems: Vec<TitleElem>,
+}
+
+#[derive(Clone)]
+struct TitleElem {
+    elem: WebElement,
+    name_elem: WebElement,
+    description_elem: Option<WebElement>,
+    href: String,
+}
+
+/// Metadata of a serial, tied to the [`SerialCatalog`] struct.
+#[derive(Debug, Clone)]
+pub struct Serial {
+    pub name: String,
+    pub description: String,
+    pub href: String,
 }
 
 impl Signin {
@@ -52,7 +70,7 @@ impl Signin {
         const INPUT_PREFIX: &str = "signin_form__input";
         const BUTTON_PREFIX: &str = "signin_form__button";
 
-        driver.get(URL).await?;
+        driver.goto(URL).await?;
         let [email_elem, password_elem] =
             ElemExpect::new_class_prefix("Signin Inputs", INPUT_PREFIX)
                 .with_count(2)
@@ -60,7 +78,7 @@ impl Signin {
                 .await?;
         let login_button_elem = ElemExpect::new_class_prefix("Login Button", BUTTON_PREFIX)
             .with_count(1)
-            .find_one(&driver)
+            .find_one(driver)
             .await?;
 
         Ok(Self {
@@ -91,7 +109,7 @@ impl SigninDone {
         ElemExpect::new_class_prefix("Signin Done Description", "signin_signin__description")
             .with_count(1)
             .with_text(SIGNIN_DONE_TEXT)
-            .find(&driver)
+            .find_all(driver)
             .await?;
         Ok(Self {})
     }
@@ -104,14 +122,73 @@ impl SerialCatalog {
         // As of 2022/7/16 this is 258
         const NUM_TITLE_RANGE: Range<usize> = 250..400;
 
-        driver.get(URL).await?;
+        driver.goto(URL).await?;
 
-        let title_elems = ElemExpect::new_css("Serial Titles", TITLE_SEL)
+        let title_elems_raw = ElemExpect::new_css("Serial Titles", TITLE_SEL)
             .with_count_range(NUM_TITLE_RANGE)
-            .find(&driver)
+            .with_attribute("href")
+            .find_all(driver)
             .await?;
 
+        // Find name and description in each title
+        let title_elems = title_elems_raw
+            .into_iter()
+            .map(|elem| async {
+                spawn(async {
+                    let name_elem =
+                        ElemExpect::new_class_prefix("Name Element", "Title_title__name")
+                            .with_count(1)
+                            .find_one(elem.clone())
+                            .await?;
+                    let href = elem.attr("href").await?.unwrap();
+                    let description_elem = ElemExpect::new_class_prefix(
+                        "Description Element",
+                        "Title_title__description",
+                    )
+                    .with_count_range(0..=1)
+                    .find_maybe_one(elem.clone())
+                    .await?;
+
+                    Result::<TitleElem>::Ok(TitleElem {
+                        elem,
+                        name_elem,
+                        description_elem,
+                        href,
+                    })
+                })
+                .await
+                .unwrap()
+            })
+            .collect::<Vec<_>>();
+        let title_elems = future::try_join_all(title_elems).await?;
+
         Ok(Self { title_elems })
+    }
+
+    /// Get the serials listed on the page.
+    pub async fn serials(&self) -> Result<Vec<Serial>> {
+        let mut serials = vec![];
+        for TitleElem {
+            elem: _,
+            name_elem,
+            description_elem,
+            href,
+        } in self.title_elems.iter()
+        {
+            let name = name_elem.text().await?.to_string();
+            let description = if let Some(elem) = description_elem {
+                elem.text().await?.to_string()
+            } else {
+                "".to_string()
+            };
+            let href = href.clone();
+            serials.push(Serial {
+                name,
+                description,
+                href,
+            });
+        }
+        Ok(serials)
     }
 }
 
@@ -132,10 +209,14 @@ mod test {
     }
 
     #[tokio::test]
-    async fn test_serial_catalog_new() -> Result<()> {
-        with_driver(|driver| async move { SerialCatalog::new(&driver).await.map(|_| ()) })
-            .await?
-            .context("Driver early cancel")??;
+    async fn test_serial_catalog() -> Result<()> {
+        with_driver(|driver| async move {
+            let serial_catalog_state = SerialCatalog::new(&driver).await?;
+            serial_catalog_state.serials().await?;
+            Result::<()>::Ok(())
+        })
+        .await?
+        .context("Driver early cancel")??;
         Ok(())
     }
 }

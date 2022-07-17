@@ -34,7 +34,22 @@ async fn run(driver: SessionHandle) -> Result<()> {
     signin_state.signin(&driver, email, password).await?;
     info!("Successfully signed in");
 
-    let _serial_catalog_state = states::SerialCatalog::new(&driver).await?;
+    let serial_catalog_state = states::SerialCatalog::new(&driver).await?;
+    info!("Reached serials page");
+
+    let serials = serial_catalog_state.serials().await?;
+    for (
+        i,
+        states::Serial {
+            name,
+            description,
+            href,
+        },
+    ) in serials.iter().enumerate()
+    {
+        let href = console::pad_str(href, 14, console::Alignment::Left, Some(".."));
+        info!("{i:3} | {href} | {name}");
+    }
 
     Ok(())
 }
