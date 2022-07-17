@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/thirtyfour-5f52ba504ecd8cb3/b85670a/src/session/handle.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>handle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/thirtyfour-5f52ba504ecd8cb3/d128872/src/session/handle.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>handle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><script defer src="../../../main.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script>
     <noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
         </a><h2 class="location"></h2>
     </nav>
@@ -1189,6 +1189,39 @@
 <span id="1184">1184</span>
 <span id="1185">1185</span>
 <span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
+<span id="1190">1190</span>
+<span id="1191">1191</span>
+<span id="1192">1192</span>
+<span id="1193">1193</span>
+<span id="1194">1194</span>
+<span id="1195">1195</span>
+<span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
+<span id="1202">1202</span>
+<span id="1203">1203</span>
+<span id="1204">1204</span>
+<span id="1205">1205</span>
+<span id="1206">1206</span>
+<span id="1207">1207</span>
+<span id="1208">1208</span>
+<span id="1209">1209</span>
+<span id="1210">1210</span>
+<span id="1211">1211</span>
+<span id="1212">1212</span>
+<span id="1213">1213</span>
+<span id="1214">1214</span>
+<span id="1215">1215</span>
+<span id="1216">1216</span>
+<span id="1217">1217</span>
+<span id="1218">1218</span>
+<span id="1219">1219</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde_json::Value</span>;
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Formatter</span>};
@@ -1213,7 +1246,7 @@
 <span class="doccomment">/// as the [`fantoccini::Client`] to allow sending commands to the underlying WebDriver.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SessionHandle</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">client</span>: <span class="ident">fantoccini::Client</span>,
+    <span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">fantoccini::Client</span>,
     <span class="kw">pub</span> <span class="ident">config</span>: <span class="ident">WebDriverConfig</span>,
 }
 
@@ -1225,6 +1258,7 @@
 
 <span class="kw">impl</span> <span class="ident">SessionHandle</span> {
     <span class="doccomment">/// Create new SessionHandle from a fantoccini Client.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">client</span>: <span class="ident">fantoccini::Client</span>,
         <span class="ident">capabilities</span>: <span class="ident">Capabilities</span>,
@@ -1236,6 +1270,7 @@
         })
     }
 
+    <span class="doccomment">/// Convert a fantoccini `Element` into a thirtyfour `WebElement`.</span>
     <span class="kw">fn</span> <span class="ident">wrap_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">element</span>: <span class="ident">Element</span>) -&gt; <span class="ident">WebElement</span> {
         <span class="ident">WebElement::new</span>(<span class="ident">element</span>, <span class="self">self</span>.<span class="ident">clone</span>())
     }
@@ -1251,8 +1286,9 @@
         <span class="prelude-val">Ok</span>(<span class="ident">SessionId::from</span>(<span class="ident">id</span>.<span class="ident">unwrap_or_default</span>()))
     }
 
-    <span class="doccomment">/// Get a clone of the `WebDriverConfig`. You can update the config by modifying</span>
-    <span class="doccomment">/// it directly.</span>
+    <span class="doccomment">/// Get a clone of the `WebDriverConfig`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You can update the config by modifying it directly.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverConfig</span> {
         <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">clone</span>()
     }
@@ -1260,7 +1296,7 @@
     <span class="doccomment">/// Get the WebDriver status.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1281,7 +1317,7 @@
     <span class="comment">// /// Set the request timeout for the HTTP client.</span>
     <span class="comment">// ///</span>
     <span class="comment">// /// # Example</span>
-    <span class="comment">// /// ```rust</span>
+    <span class="comment">// /// ```no_run</span>
     <span class="comment">// /// # use thirtyfour::prelude::*;</span>
     <span class="comment">// /// # use std::time::Duration;</span>
     <span class="comment">// /// # use thirtyfour::support::block_on;</span>
@@ -1303,7 +1339,7 @@
     <span class="doccomment">/// Close the current window or tab. This will close the session if no other windows exist.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1311,21 +1347,27 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// // Open a new tab.</span>
-    <span class="doccomment">/// driver.execute_script(r#&quot;window.open(&quot;about:blank&quot;, target=&quot;_blank&quot;);&quot;#, Vec::new()).await?;</span>
+    <span class="doccomment">/// driver.new_tab().await?;</span>
     <span class="doccomment">/// // Get window handles and switch to the new tab.</span>
-    <span class="doccomment">/// let handles = driver.window_handles().await?;</span>
-    <span class="doccomment">/// driver.switch_to().window(handles[1].clone()).await?;</span>
+    <span class="doccomment">/// let handles = driver.windows().await?;</span>
+    <span class="doccomment">/// driver.switch_to_window(handles[1].clone()).await?;</span>
     <span class="doccomment">/// // We are now controlling the new tab.</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// // Close the tab. This will return to the original tab.</span>
-    <span class="doccomment">/// driver.close().await?;</span>
+    <span class="doccomment">/// driver.close_window().await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">close_window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">close_window</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to close_window()&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">close</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">close_window</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
@@ -1334,7 +1376,7 @@
     <span class="doccomment">/// Navigate to the specified URL.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1342,85 +1384,43 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">S</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">goto</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">S</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
     {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">goto</span>(<span class="ident">url</span>.<span class="ident">as_ref</span>()).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="doccomment">/// Get the current URL as a String.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
-    <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
-    <span class="doccomment">/// use url::Url;</span>
-    <span class="doccomment">/// #</span>
-    <span class="doccomment">/// # fn main() -&gt; WebDriverResult&lt;()&gt; {</span>
-    <span class="doccomment">/// #     block_on(async {</span>
-    <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
-    <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// let url = driver.current_url().await?;</span>
-    <span class="doccomment">/// #         assert_eq!(url, Url::parse(&quot;http://webappdemo/&quot;)?);</span>
-    <span class="doccomment">/// #         driver.quit().await?;</span>
-    <span class="doccomment">/// #         Ok(())</span>
-    <span class="doccomment">/// #     })</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to goto()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">S</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+    {
+        <span class="self">self</span>.<span class="ident">goto</span>(<span class="ident">url</span>).<span class="kw">await</span>
+    }
+
+    <span class="doccomment">/// Get the current URL.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">current_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">url::Url</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">current_url</span>().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
     <span class="doccomment">/// Get the page source as a String.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
-    <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
-    <span class="doccomment">/// #</span>
-    <span class="doccomment">/// # fn main() -&gt; WebDriverResult&lt;()&gt; {</span>
-    <span class="doccomment">/// #     block_on(async {</span>
-    <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
-    <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// let source = driver.page_source().await?;</span>
-    <span class="doccomment">/// #         assert!(source.starts_with(r#&quot;&lt;html lang=&quot;en&quot;&gt;&quot;#));</span>
-    <span class="doccomment">/// #         driver.quit().await?;</span>
-    <span class="doccomment">/// #         Ok(())</span>
-    <span class="doccomment">/// #     })</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">page_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">source</span>().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to source()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">page_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">source</span>().<span class="kw">await</span>
+    }
+
     <span class="doccomment">/// Get the page title as a String.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
-    <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
-    <span class="doccomment">/// #</span>
-    <span class="doccomment">/// # fn main() -&gt; WebDriverResult&lt;()&gt; {</span>
-    <span class="doccomment">/// #     block_on(async {</span>
-    <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
-    <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// let title = driver.title().await?;</span>
-    <span class="doccomment">/// #         assert_eq!(title, &quot;Demo Web App&quot;);</span>
-    <span class="doccomment">/// #         driver.quit().await?;</span>
-    <span class="doccomment">/// #         Ok(())</span>
-    <span class="doccomment">/// #     })</span>
-    <span class="doccomment">/// # }</span>
-    <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">title</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">title</span>().<span class="kw">await</span><span class="question-mark">?</span>)
     }
@@ -1431,7 +1431,7 @@
     <span class="doccomment">/// [WebDriver::query()](struct.WebDriver.html#method.query) method instead.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1439,17 +1439,16 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
-    <span class="doccomment">/// let elem_text = driver.find_element(By::Name(&quot;input1&quot;)).await?;</span>
-    <span class="doccomment">/// let elem_button = driver.find_element(By::Id(&quot;button-set&quot;)).await?;</span>
-    <span class="doccomment">/// let elem_result = driver.find_element(By::Id(&quot;input-result&quot;)).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// let elem_button = driver.find(By::Id(&quot;button-copy&quot;)).await?;</span>
+    <span class="doccomment">/// let elem_text = driver.find(By::Name(&quot;text-input2&quot;)).await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">find_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">by</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">By</span><span class="op">&gt;</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">find</span>(<span class="ident">by</span>.<span class="ident">locator</span>()).<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
             <span class="comment">// It&#39;s generally only useful to know the element query that failed.</span>
             <span class="ident">CmdError::NoSuchElement</span>(<span class="kw">_</span>) =&gt; <span class="ident">WebDriverError::NoSuchElement</span>(<span class="ident">by</span>.<span class="ident">to_string</span>()),
@@ -1458,13 +1457,18 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">wrap_element</span>(<span class="ident">elem</span>))
     }
 
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to find()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">find_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">find</span>(<span class="ident">by</span>).<span class="kw">await</span>
+    }
+
     <span class="doccomment">/// Search for all elements on the current page that match the specified selector.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// **NOTE**: For more powerful element queries including polling and filters, see the</span>
     <span class="doccomment">/// [WebDriver::query()](struct.WebDriver.html#method.query) method instead.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1472,8 +1476,8 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// let elems = driver.find_elements(By::ClassName(&quot;section&quot;)).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// let elems = driver.find_all(By::ClassName(&quot;section&quot;)).await?;</span>
     <span class="doccomment">/// for elem in elems {</span>
     <span class="doccomment">///     assert!(elem.get_attribute(&quot;class&quot;).await?.expect(&quot;Missing class on element&quot;).contains(&quot;section&quot;));</span>
     <span class="doccomment">/// }</span>
@@ -1482,7 +1486,8 @@
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">find_elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">find_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">by</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">By</span><span class="op">&gt;</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">elems</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">find_all</span>(<span class="ident">by</span>.<span class="ident">locator</span>()).<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">e</span> {
             <span class="comment">// It&#39;s generally only useful to know the element query that failed.</span>
             <span class="ident">CmdError::NoSuchElement</span>(<span class="kw">_</span>) =&gt; <span class="ident">WebDriverError::NoSuchElement</span>(<span class="ident">by</span>.<span class="ident">to_string</span>()),
@@ -1491,10 +1496,15 @@
         <span class="prelude-val">Ok</span>(<span class="ident">elems</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">wrap_element</span>(<span class="ident">x</span>)).<span class="ident">collect</span>())
     }
 
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to find_all()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">find_elements</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">find_all</span>(<span class="ident">by</span>).<span class="kw">await</span>
+    }
+
     <span class="doccomment">/// Execute the specified Javascript synchronously and return the result.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1502,19 +1512,15 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         // Use find_element() to wait for the page to load.</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;button1&quot;)).await?;</span>
-    <span class="doccomment">/// let ret = driver.execute_script(r#&quot;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.find(By::Id(&quot;button1&quot;)).await?;</span>
+    <span class="doccomment">/// let ret = driver.execute(r#&quot;</span>
     <span class="doccomment">///     let elem = document.getElementById(&quot;button1&quot;);</span>
     <span class="doccomment">///     elem.click();</span>
     <span class="doccomment">///     return elem;</span>
     <span class="doccomment">///     &quot;#, Vec::new()</span>
     <span class="doccomment">/// ).await?;</span>
-    <span class="doccomment">/// let elem_out = ret.get_element()?;</span>
-    <span class="doccomment">/// assert_eq!(elem_out.text().await?, &quot;BUTTON 1&quot;);</span>
-    <span class="doccomment">/// let elem = driver.find_element(By::Id(&quot;button-result&quot;)).await?;</span>
-    <span class="doccomment">/// assert_eq!(elem.text().await?, &quot;Button 1 clicked&quot;);</span>
+    <span class="doccomment">/// let elem_out: WebElement = ret.element()?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
@@ -1522,7 +1528,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1530,14 +1536,14 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// let elem = driver.find_element(By::Id(&quot;button1&quot;)).await?;</span>
-    <span class="doccomment">/// let ret = driver.execute_script(r#&quot;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;</span>
+    <span class="doccomment">/// let ret = driver.execute(r#&quot;</span>
     <span class="doccomment">///     arguments[0].innerHTML = arguments[1];</span>
     <span class="doccomment">///     return arguments[0];</span>
     <span class="doccomment">///     &quot;#, vec![elem.to_json()?, serde_json::to_value(&quot;TESTING&quot;)?]</span>
     <span class="doccomment">/// ).await?;</span>
-    <span class="doccomment">/// let elem_out = ret.get_element()?;</span>
+    <span class="doccomment">/// let elem_out = ret.element()?;</span>
     <span class="doccomment">/// assert_eq!(elem_out.element_id(), elem.element_id());</span>
     <span class="doccomment">/// assert_eq!(elem_out.text().await?, &quot;TESTING&quot;);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
@@ -1545,19 +1551,24 @@
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">script</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">ScriptRet</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">execute</span>(<span class="ident">script</span>, <span class="ident">args</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">ScriptRet::new</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">v</span>))
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to execute()&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_script</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">script</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">ScriptRet</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">execute</span>(<span class="ident">script</span>, <span class="ident">args</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">ScriptRet::new</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">v</span>))
+        <span class="self">self</span>.<span class="ident">execute</span>(<span class="ident">script</span>, <span class="ident">args</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Execute the specified Javascrypt asynchronously and return the result.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1565,10 +1576,9 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         // Use find_element() to wait for the page to load.</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;button1&quot;)).await?;</span>
-    <span class="doccomment">/// let ret = driver.execute_script_async(r#&quot;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.find(By::Id(&quot;button1&quot;)).await?;</span>
+    <span class="doccomment">/// let ret = driver.execute_async(r#&quot;</span>
     <span class="doccomment">///     // Selenium automatically provides an extra argument which is a</span>
     <span class="doccomment">///     // function that receives the return value(s).</span>
     <span class="doccomment">///     let done = arguments[0];</span>
@@ -1579,10 +1589,7 @@
     <span class="doccomment">///     }, 1000);</span>
     <span class="doccomment">///     &quot;#, Vec::new()</span>
     <span class="doccomment">/// ).await?;</span>
-    <span class="doccomment">/// let elem_out = ret.get_element()?;</span>
-    <span class="doccomment">/// assert_eq!(elem_out.text().await?, &quot;BUTTON 1&quot;);</span>
-    <span class="doccomment">/// let elem = driver.find_element(By::Id(&quot;button-result&quot;)).await?;</span>
-    <span class="doccomment">/// assert_eq!(elem.text().await?, &quot;Button 1 clicked&quot;);</span>
+    <span class="doccomment">/// let elem_out: WebElement = ret.element()?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
@@ -1590,7 +1597,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1598,10 +1605,10 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// let elem = driver.find_element(By::Id(&quot;button1&quot;)).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;</span>
     <span class="doccomment">/// let args = vec![elem.to_json()?, serde_json::to_value(&quot;TESTING&quot;)?];</span>
-    <span class="doccomment">/// let ret = driver.execute_script_async(r#&quot;</span>
+    <span class="doccomment">/// let ret = driver.execute_async(r#&quot;</span>
     <span class="doccomment">///     // Selenium automatically provides an extra argument which is a</span>
     <span class="doccomment">///     // function that receives the return value(s).</span>
     <span class="doccomment">///     let done = arguments[2];</span>
@@ -1611,7 +1618,7 @@
     <span class="doccomment">///     }, 1000);</span>
     <span class="doccomment">///     &quot;#, args</span>
     <span class="doccomment">/// ).await?;</span>
-    <span class="doccomment">/// let elem_out = ret.get_element()?;</span>
+    <span class="doccomment">/// let elem_out = ret.element()?;</span>
     <span class="doccomment">/// assert_eq!(elem_out.element_id(), elem.element_id());</span>
     <span class="doccomment">/// assert_eq!(elem_out.text().await?, &quot;TESTING&quot;);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
@@ -1619,7 +1626,7 @@
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_script_async</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_async</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">script</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>,
@@ -1628,10 +1635,19 @@
         <span class="prelude-val">Ok</span>(<span class="ident">ScriptRet::new</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">v</span>))
     }
 
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to execute_async()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_script_async</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">script</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">ScriptRet</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">execute_async</span>(<span class="ident">script</span>, <span class="ident">args</span>).<span class="kw">await</span>
+    }
+
     <span class="doccomment">/// Get the current window handle.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1639,35 +1655,38 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
-    <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// // Get the current window handle.</span>
-    <span class="doccomment">/// let handle = driver.current_window_handle().await?;</span>
+    <span class="doccomment">/// let handle = driver.window().await?;</span>
     <span class="doccomment">/// // Open a new tab.</span>
-    <span class="doccomment">/// driver.execute_script(r#&quot;window.open(&quot;about:blank&quot;, target=&quot;_blank&quot;);&quot;#, Vec::new()).await?;</span>
+    <span class="doccomment">/// driver.new_tab().await?;</span>
     <span class="doccomment">/// // Get window handles and switch to the new tab.</span>
-    <span class="doccomment">/// let handles = driver.window_handles().await?;</span>
-    <span class="doccomment">/// driver.switch_to().window(handles[1].clone()).await?;</span>
+    <span class="doccomment">/// let handles = driver.windows().await?;</span>
+    <span class="doccomment">/// driver.switch_to_window(handles[1].clone()).await?;</span>
     <span class="doccomment">/// // We are now controlling the new tab.</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// assert_ne!(driver.current_window_handle().await?, handle);</span>
+    <span class="doccomment">/// driver.goto(&quot;https://www.rust-lang.org/&quot;).await?;</span>
+    <span class="doccomment">/// assert_ne!(driver.window().await?, handle);</span>
     <span class="doccomment">/// // Switch back to original tab.</span>
-    <span class="doccomment">/// driver.switch_to().window(handle.clone()).await?;</span>
-    <span class="doccomment">/// assert_eq!(driver.current_window_handle().await?, handle);</span>
+    <span class="doccomment">/// driver.switch_to_window(handle.clone()).await?;</span>
+    <span class="doccomment">/// assert_eq!(driver.window().await?, handle);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">current_window_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WindowHandle</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">window</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WindowHandle</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">window</span>().<span class="kw">await</span><span class="question-mark">?</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to window()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">current_window_handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WindowHandle</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">window</span>().<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Get all window handles for the current session.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1675,29 +1694,32 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
-    <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
-    <span class="doccomment">/// assert_eq!(driver.window_handles().await?.len(), 1);</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// assert_eq!(driver.windows().await?.len(), 1);</span>
     <span class="doccomment">/// // Open a new tab.</span>
-    <span class="doccomment">/// driver.execute_script(r#&quot;window.open(&quot;about:blank&quot;, target=&quot;_blank&quot;);&quot;#, Vec::new()).await?;</span>
+    <span class="doccomment">/// driver.new_tab().await?;</span>
     <span class="doccomment">/// // Get window handles and switch to the new tab.</span>
-    <span class="doccomment">/// let handles = driver.window_handles().await?;</span>
+    <span class="doccomment">/// let handles = driver.windows().await?;</span>
     <span class="doccomment">/// assert_eq!(handles.len(), 2);</span>
-    <span class="doccomment">/// driver.switch_to().window(handles[1].clone()).await?;</span>
+    <span class="doccomment">/// driver.switch_to_window(handles[1].clone()).await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">window_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WindowHandle</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">windows</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WindowHandle</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">windows</span>().<span class="kw">await</span><span class="question-mark">?</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to windows()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">window_handles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WindowHandle</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">windows</span>().<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Maximize the current window.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1705,7 +1727,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// driver.maximize_window().await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
@@ -1730,7 +1752,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// driver.minimize_window().await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
@@ -1745,7 +1767,7 @@
     <span class="doccomment">/// Make the current window fullscreen.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1753,7 +1775,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// driver.fullscreen_window().await?;</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
@@ -1771,7 +1793,7 @@
     <span class="doccomment">/// all i32.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::Rect;</span>
@@ -1780,7 +1802,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// driver.set_window_rect(0, 0, 600, 400).await?;</span>
     <span class="doccomment">/// let rect = driver.get_window_rect().await?;</span>
     <span class="doccomment">/// assert_eq!(rect, Rect::new(0, 0, 600, 400));</span>
@@ -1796,7 +1818,7 @@
 
     <span class="doccomment">/// Set the current window rectangle, in pixels.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1823,7 +1845,7 @@
     <span class="doccomment">/// Go back. This is equivalent to clicking the browser&#39;s back button.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1831,7 +1853,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
     <span class="doccomment">/// driver.back().await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;&quot;);</span>
@@ -1847,7 +1869,7 @@
     <span class="doccomment">/// Go forward. This is equivalent to clicking the browser&#39;s forward button.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1855,7 +1877,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
     <span class="doccomment">/// #         driver.back().await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;&quot;);</span>
@@ -1874,7 +1896,7 @@
     <span class="doccomment">/// Refresh the current page.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -1882,7 +1904,7 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
     <span class="doccomment">/// driver.refresh().await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
@@ -1898,7 +1920,7 @@
     <span class="doccomment">/// Get all timeouts for the current session.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::TimeoutConfiguration;</span>
@@ -1913,7 +1935,7 @@
     <span class="doccomment">/// #             Some(Duration::new(2, 0)),</span>
     <span class="doccomment">/// #             Some(Duration::new(3, 0))</span>
     <span class="doccomment">/// #         );</span>
-    <span class="doccomment">/// #         driver.set_timeouts(set_timeouts.clone()).await?;</span>
+    <span class="doccomment">/// #         driver.update_timeouts(set_timeouts.clone()).await?;</span>
     <span class="doccomment">/// let timeouts = driver.get_timeouts().await?;</span>
     <span class="doccomment">/// println!(&quot;Page load timeout = {:?}&quot;, timeouts.page_load());</span>
     <span class="doccomment">/// #         assert_eq!(timeouts.script(), Some(Duration::new(1, 0)));</span>
@@ -1942,7 +1964,7 @@
     <span class="doccomment">///           See `WebDriver::set_request_timeout()` for more details.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::TimeoutConfiguration;</span>
@@ -1954,7 +1976,7 @@
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
     <span class="doccomment">/// // Setting timeouts to None means those timeout values will not be updated.</span>
     <span class="doccomment">/// let timeouts = TimeoutConfiguration::new(None, Some(Duration::new(11, 0)), None);</span>
-    <span class="doccomment">/// driver.set_timeouts(timeouts.clone()).await?;</span>
+    <span class="doccomment">/// driver.update_timeouts(timeouts.clone()).await?;</span>
     <span class="doccomment">/// #         let got_timeouts = driver.get_timeouts().await?;</span>
     <span class="doccomment">/// #         assert_eq!(got_timeouts.page_load(), Some(Duration::new(11, 0)));</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
@@ -1962,9 +1984,14 @@
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_timeouts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeouts</span>: <span class="ident">TimeoutConfiguration</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update_timeouts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeouts</span>: <span class="ident">TimeoutConfiguration</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">update_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to update_timeouts()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_timeouts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeouts</span>: <span class="ident">TimeoutConfiguration</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">update_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Set the implicit wait timeout. This is how long the WebDriver will</span>
@@ -1983,7 +2010,7 @@
     <span class="doccomment">///           See `WebDriver::set_request_timeout()` for more details.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::TimeoutConfiguration;</span>
@@ -2004,7 +2031,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_implicit_wait_timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">time_to_wait</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">timeouts</span> <span class="op">=</span> <span class="ident">TimeoutConfiguration::new</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">time_to_wait</span>));
-        <span class="self">self</span>.<span class="ident">set_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
+        <span class="self">self</span>.<span class="ident">update_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Set the script timeout. This is how long the WebDriver will wait for a</span>
@@ -2017,7 +2044,7 @@
     <span class="doccomment">///           See `WebDriver::set_request_timeout()` for more details.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::TimeoutConfiguration;</span>
@@ -2038,7 +2065,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_script_timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">time_to_wait</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">timeouts</span> <span class="op">=</span> <span class="ident">TimeoutConfiguration::new</span>(<span class="prelude-val">Some</span>(<span class="ident">time_to_wait</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
-        <span class="self">self</span>.<span class="ident">set_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
+        <span class="self">self</span>.<span class="ident">update_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Set the page load timeout. This is how long the WebDriver will wait</span>
@@ -2051,7 +2078,7 @@
     <span class="doccomment">///           See `WebDriver::set_request_timeout()` for more details.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::TimeoutConfiguration;</span>
@@ -2072,7 +2099,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_page_load_timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">time_to_wait</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">timeouts</span> <span class="op">=</span> <span class="ident">TimeoutConfiguration::new</span>(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">time_to_wait</span>), <span class="prelude-val">None</span>);
-        <span class="self">self</span>.<span class="ident">set_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
+        <span class="self">self</span>.<span class="ident">update_timeouts</span>(<span class="ident">timeouts</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Create a new action chain for this session. Action chains can be used</span>
@@ -2080,7 +2107,7 @@
     <span class="doccomment">/// mouse movements, mouse click, right-click, and more.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -2088,17 +2115,17 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
-    <span class="doccomment">/// let elem_text = driver.find_element(By::Name(&quot;input1&quot;)).await?;</span>
-    <span class="doccomment">/// let elem_button = driver.find_element(By::Id(&quot;button-set&quot;)).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.find(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
+    <span class="doccomment">/// let elem_text = driver.find(By::Name(&quot;input1&quot;)).await?;</span>
+    <span class="doccomment">/// let elem_button = driver.find(By::Id(&quot;button-set&quot;)).await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// driver.action_chain()</span>
     <span class="doccomment">///     .send_keys_to_element(&amp;elem_text, &quot;thirtyfour&quot;)</span>
     <span class="doccomment">///     .move_to_element_center(&amp;elem_button)</span>
     <span class="doccomment">///     .click()</span>
     <span class="doccomment">///     .perform().await?;</span>
-    <span class="doccomment">/// #         let elem_result = driver.find_element(By::Id(&quot;input-result&quot;)).await?;</span>
+    <span class="doccomment">/// #         let elem_result = driver.find(By::Id(&quot;input-result&quot;)).await?;</span>
     <span class="doccomment">/// #         assert_eq!(elem_result.text().await?, &quot;thirtyfour&quot;);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
@@ -2109,10 +2136,42 @@
         <span class="ident">ActionChain::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
     }
 
+    <span class="doccomment">/// Create a new Actions chain.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Also see [`WebDriver::action_chain()`] for a builder-based alternative.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```ignore</span>
+    <span class="doccomment">/// let mouse_actions = MouseActions::new(&quot;mouse&quot;)</span>
+    <span class="doccomment">///     .then(PointerAction::Down {</span>
+    <span class="doccomment">///         button: MOUSE_BUTTON_LEFT,</span>
+    <span class="doccomment">///     })</span>
+    <span class="doccomment">///     .then(PointerAction::MoveBy {</span>
+    <span class="doccomment">///         duration: Some(Duration::from_secs(2)),</span>
+    <span class="doccomment">///         x: 100,</span>
+    <span class="doccomment">///         y: 0,</span>
+    <span class="doccomment">///     })</span>
+    <span class="doccomment">///     .then(PointerAction::Up {</span>
+    <span class="doccomment">///         button: MOUSE_BUTTON_LEFT,</span>
+    <span class="doccomment">///     });</span>
+    <span class="doccomment">/// client.perform_actions(mouse_actions).await?;</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See the documentation for [`Actions`] for more information.</span>
+    <span class="doccomment">/// Perform the specified input actions.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Actions`]: fantoccini::actions::Actions</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">perform_actions</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">actions</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">fantoccini::actions::Actions</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">perform_actions</span>(<span class="ident">actions</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
     <span class="doccomment">/// Get all cookies.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::cookie::SameSite;</span>
@@ -2121,13 +2180,13 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;https://wikipedia.org&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;https://wikipedia.org&quot;).await?;</span>
     <span class="doccomment">/// #         let mut set_cookie = Cookie::new(&quot;key&quot;, &quot;value&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_domain(&quot;wikipedia.org&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_path(&quot;/&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_same_site(Some(SameSite::Lax));</span>
     <span class="doccomment">/// #         driver.add_cookie(set_cookie).await?;</span>
-    <span class="doccomment">/// let cookies = driver.get_cookies().await?;</span>
+    <span class="doccomment">/// let cookies = driver.get_all_cookies().await?;</span>
     <span class="doccomment">/// for cookie in &amp;cookies {</span>
     <span class="doccomment">///     println!(&quot;Got cookie: {}&quot;, cookie.value());</span>
     <span class="doccomment">/// }</span>
@@ -2138,14 +2197,19 @@
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_cookies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cookie</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_all_cookies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cookie</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_all_cookies</span>().<span class="kw">await</span><span class="question-mark">?</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to get_all_cookies()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_cookies</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cookie</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">get_all_cookies</span>().<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Get the specified cookie.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::cookie::SameSite;</span>
@@ -2154,13 +2218,13 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;https://wikipedia.org&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;https://wikipedia.org&quot;).await?;</span>
     <span class="doccomment">/// #         let mut set_cookie = Cookie::new(&quot;key&quot;, &quot;value&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_domain(&quot;wikipedia.org&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_path(&quot;/&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_same_site(Some(SameSite::Lax));</span>
     <span class="doccomment">/// #         driver.add_cookie(set_cookie).await?;</span>
-    <span class="doccomment">/// let cookie = driver.get_cookie(&quot;key&quot;).await?;</span>
+    <span class="doccomment">/// let cookie = driver.get_named_cookie(&quot;key&quot;).await?;</span>
     <span class="doccomment">/// println!(&quot;Got cookie: {}&quot;, cookie.value());</span>
     <span class="doccomment">/// #         assert_eq!(cookie.value(),&quot;value&quot;);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
@@ -2168,14 +2232,19 @@
     <span class="doccomment">/// #     })</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_cookie</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Cookie</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_named_cookie</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Cookie</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">get_named_cookie</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method has been renamed to get_named_cookie()&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_cookie</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Cookie</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">get_named_cookie</span>(<span class="ident">name</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Delete the specified cookie.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::cookie::SameSite;</span>
@@ -2184,15 +2253,15 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;https://wikipedia.org&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;https://wikipedia.org&quot;).await?;</span>
     <span class="doccomment">/// #         let mut set_cookie = Cookie::new(&quot;key&quot;,&quot;value&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_domain(&quot;wikipedia.org&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_path(&quot;/&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_same_site(Some(SameSite::Lax));</span>
     <span class="doccomment">/// #         driver.add_cookie(set_cookie).await?;</span>
-    <span class="doccomment">/// #         assert!(driver.get_cookie(&quot;key&quot;).await.is_ok());</span>
+    <span class="doccomment">/// #         assert!(driver.get_named_cookie(&quot;key&quot;).await.is_ok());</span>
     <span class="doccomment">/// driver.delete_cookie(&quot;key&quot;).await?;</span>
-    <span class="doccomment">/// #         assert!(driver.get_cookie(&quot;key&quot;).await.is_err());</span>
+    <span class="doccomment">/// #         assert!(driver.get_named_cookie(&quot;key&quot;).await.is_err());</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
@@ -2205,7 +2274,7 @@
     <span class="doccomment">/// Delete all cookies.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::cookie::SameSite;</span>
@@ -2214,16 +2283,16 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;https://wikipedia.org&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;https://wikipedia.org&quot;).await?;</span>
     <span class="doccomment">/// #         let mut set_cookie = Cookie::new(&quot;key&quot;, &quot;value&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_domain(&quot;wikipedia.org&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_path(&quot;/&quot;);</span>
     <span class="doccomment">/// #         set_cookie.set_same_site(Some(SameSite::Lax));</span>
     <span class="doccomment">/// #         driver.add_cookie(set_cookie).await?;</span>
-    <span class="doccomment">/// #         assert!(driver.get_cookie(&quot;key&quot;).await.is_ok());</span>
+    <span class="doccomment">/// #         assert!(driver.get_named_cookie(&quot;key&quot;).await.is_ok());</span>
     <span class="doccomment">/// driver.delete_all_cookies().await?;</span>
-    <span class="doccomment">/// #         assert!(driver.get_cookie(&quot;key&quot;).await.is_err());</span>
-    <span class="doccomment">/// #         assert!(driver.get_cookies().await?.is_empty());</span>
+    <span class="doccomment">/// #         assert!(driver.get_named_cookie(&quot;key&quot;).await.is_err());</span>
+    <span class="doccomment">/// #         assert!(driver.get_all_cookies().await?.is_empty());</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
@@ -2236,7 +2305,7 @@
     <span class="doccomment">/// Add the specified cookie.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// use thirtyfour::cookie::SameSite;</span>
@@ -2245,13 +2314,13 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;https://wikipedia.org&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;https://wikipedia.org&quot;).await?;</span>
     <span class="doccomment">/// let mut cookie = Cookie::new(&quot;key&quot;, &quot;value&quot;);</span>
     <span class="doccomment">/// cookie.set_domain(&quot;wikipedia.org&quot;);</span>
     <span class="doccomment">/// cookie.set_path(&quot;/&quot;);</span>
     <span class="doccomment">/// cookie.set_same_site(Some(SameSite::Lax));</span>
     <span class="doccomment">/// driver.add_cookie(cookie.clone()).await?;</span>
-    <span class="doccomment">/// #         let got_cookie = driver.get_cookie(&quot;key&quot;).await?;</span>
+    <span class="doccomment">/// #         let got_cookie = driver.get_named_cookie(&quot;key&quot;).await?;</span>
     <span class="doccomment">/// #         assert_eq!(got_cookie.value(), cookie.value());</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
@@ -2277,15 +2346,19 @@
     }
 
     <span class="doccomment">/// Return a SwitchTo struct for switching to another window or frame.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(
+        <span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>,
+        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;SwitchTo has been deprecated. Use WebDriver::switch_to_*() methods instead&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">switch_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SwitchTo</span> {
         <span class="ident">SwitchTo::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
     }
 
     <span class="doccomment">/// Set the current window name.</span>
-    <span class="doccomment">/// Useful for switching between windows/tabs using `driver.switch_to().window_name(name)`.</span>
+    <span class="doccomment">/// Useful for switching between windows/tabs using `driver.switch_to_named_window(name)`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example:</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -2293,23 +2366,23 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.find(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
     <span class="doccomment">/// // Get the current window handle.</span>
-    <span class="doccomment">/// let handle = driver.current_window_handle().await?;</span>
+    <span class="doccomment">/// let handle = driver.window().await?;</span>
     <span class="doccomment">/// driver.set_window_name(&quot;main&quot;).await?;</span>
     <span class="doccomment">/// // Open a new tab.</span>
-    <span class="doccomment">/// driver.execute_script(r#&quot;window.open(&quot;about:blank&quot;, target=&quot;_blank&quot;);&quot;#, Vec::new()).await?;</span>
+    <span class="doccomment">/// driver.new_tab().await?;</span>
     <span class="doccomment">/// // Get window handles and switch to the new tab.</span>
-    <span class="doccomment">/// let handles = driver.window_handles().await?;</span>
-    <span class="doccomment">/// driver.switch_to().window(handles[1].clone()).await?;</span>
+    <span class="doccomment">/// let handles = driver.windows().await?;</span>
+    <span class="doccomment">/// driver.switch_to_window(handles[1].clone()).await?;</span>
     <span class="doccomment">/// // We are now controlling the new tab.</span>
-    <span class="doccomment">/// driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// assert_ne!(driver.current_window_handle().await?, handle);</span>
+    <span class="doccomment">/// driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// assert_ne!(driver.window().await?, handle);</span>
     <span class="doccomment">/// // Switch back to original tab using window name.</span>
-    <span class="doccomment">/// driver.switch_to().window_name(&quot;main&quot;).await?;</span>
-    <span class="doccomment">/// assert_eq!(driver.current_window_handle().await?, handle);</span>
+    <span class="doccomment">/// driver.switch_to_named_window(&quot;main&quot;).await?;</span>
+    <span class="doccomment">/// assert_eq!(driver.window().await?, handle);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
@@ -2317,7 +2390,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_window_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">window_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">script</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">r#&quot;window.name = &quot;{}&quot;&quot;#</span>, <span class="ident">window_name</span>);
-        <span class="self">self</span>.<span class="ident">execute_script</span>(<span class="kw-2">&amp;</span><span class="ident">script</span>, <span class="ident">Vec::new</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="ident">script</span>, <span class="ident">Vec::new</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -2325,7 +2398,7 @@
     <span class="doccomment">/// The return value will be that of the supplied function, unless an error occurs while</span>
     <span class="doccomment">/// opening or closing the tab.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # use thirtyfour::prelude::*;</span>
     <span class="doccomment">/// # use thirtyfour::support::block_on;</span>
     <span class="doccomment">/// #</span>
@@ -2333,17 +2406,17 @@
     <span class="doccomment">/// #     block_on(async {</span>
     <span class="doccomment">/// #         let caps = DesiredCapabilities::chrome();</span>
     <span class="doccomment">/// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;</span>
-    <span class="doccomment">/// #         driver.get(&quot;http://webappdemo&quot;).await?;</span>
-    <span class="doccomment">/// #         driver.find_element(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
+    <span class="doccomment">/// #         driver.goto(&quot;http://localhost:8000&quot;).await?;</span>
+    <span class="doccomment">/// #         driver.find(By::Id(&quot;pagetextinput&quot;)).await?.click().await?;</span>
     <span class="doccomment">/// #         assert_eq!(driver.title().await?, &quot;Demo Web App&quot;);</span>
     <span class="doccomment">/// #         // Get the current window handle.</span>
-    <span class="doccomment">/// #         let handle = driver.current_window_handle().await?;</span>
+    <span class="doccomment">/// #         let handle = driver.window().await?;</span>
     <span class="doccomment">/// let window_title = driver.in_new_tab(|| async {</span>
-    <span class="doccomment">///     driver.get(&quot;https://www.google.com&quot;).await?;</span>
+    <span class="doccomment">///     driver.goto(&quot;https://www.google.com&quot;).await?;</span>
     <span class="doccomment">///     driver.title().await</span>
     <span class="doccomment">/// }).await?;</span>
     <span class="doccomment">/// #         assert_eq!(window_title, &quot;Google&quot;);</span>
-    <span class="doccomment">/// #         assert_eq!(driver.current_window_handle().await?, handle);</span>
+    <span class="doccomment">/// #         assert_eq!(driver.window().await?, handle);</span>
     <span class="doccomment">/// #         driver.quit().await?;</span>
     <span class="doccomment">/// #         Ok(())</span>
     <span class="doccomment">/// #     })</span>
@@ -2355,22 +2428,15 @@
         <span class="ident">Fut</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>,
         <span class="ident">T</span>: <span class="ident">Send</span>,
     {
-        <span class="kw">let</span> <span class="ident">existing_handles</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">window_handles</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">current_window_handle</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">window</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="comment">// Open new tab.</span>
-        <span class="self">self</span>.<span class="ident">execute_script</span>(<span class="string">r#&quot;window.open(&quot;about:blank&quot;, target=&quot;_blank&quot;);&quot;#</span>, <span class="ident">Vec::new</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_handles</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">window_handles</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="ident">new_handles</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="op">!</span><span class="ident">existing_handles</span>.<span class="ident">contains</span>(<span class="ident">h</span>));
-        <span class="kw">if</span> <span class="ident">new_handles</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">WebDriverError::CustomError</span>(<span class="string">&quot;couldn&#39;t find new tab&quot;</span>.<span class="ident">to_string</span>()));
-        }
-        <span class="self">self</span>.<span class="ident">switch_to</span>().<span class="ident">window</span>(<span class="ident">new_handles</span>[<span class="number">0</span>].<span class="ident">clone</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">new_tab</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">f</span>().<span class="kw">await</span>;
 
         <span class="comment">// Close tab.</span>
-        <span class="self">self</span>.<span class="ident">execute_script</span>(<span class="string">r#&quot;window.close();&quot;#</span>, <span class="ident">Vec::new</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">switch_to</span>().<span class="ident">window</span>(<span class="ident">handle</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">close_window</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">switch_to_window</span>(<span class="ident">handle</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="ident">result</span>
     }

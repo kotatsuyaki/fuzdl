@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["chrome","Extensions for working with Chromium-based browsers."],["firefox","Extensions for working with Firefox."]]});
+initSidebarItems({"mod":[["chrome",""],["firefox","Extensions for working with Firefox."],["query","Extensions for working with Chromium-based browsers. Advanced query interface featuring powerful filtering and polling options."]]});

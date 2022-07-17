@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["BySelector",""]],"struct":[["By",""]]});
+initSidebarItems({"enum":[["BySelector",""]],"fn":[["locator_to_string",""]],"struct":[["By",""]]});

@@ -144,6 +144,87 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
 </pre><pre class="rust"><code><span class="doccomment">//! State types used to 1) verify and extract data from expected elements and 2) interact with the</span>
 <span class="doccomment">//! pages.</span>
 <span class="doccomment">//!</span>
@@ -170,7 +251,9 @@
 <span class="kw">use</span> <span class="ident">std::ops::Range</span>;
 
 <span class="kw">use</span> <span class="ident">anyhow::Result</span>;
+<span class="kw">use</span> <span class="ident">futures::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">thirtyfour</span>::{<span class="ident">session::handle::SessionHandle</span>, <span class="ident">WebElement</span>};
+<span class="kw">use</span> <span class="ident">tokio::spawn</span>;
 
 <span class="kw">mod</span> <span class="ident">expect</span>;
 <span class="kw">use</span> <span class="ident">expect::ElemExpect</span>;
@@ -188,7 +271,23 @@
 
 <span class="doccomment">/// State corresponding to the `/rensai` page.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SerialCatalog</span> {
-    <span class="ident">title_elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+    <span class="ident">title_elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TitleElem</span><span class="op">&gt;</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">struct</span> <span class="ident">TitleElem</span> {
+    <span class="ident">elem</span>: <span class="ident">WebElement</span>,
+    <span class="ident">name_elem</span>: <span class="ident">WebElement</span>,
+    <span class="ident">description_elem</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+    <span class="ident">href</span>: <span class="ident">String</span>,
+}
+
+<span class="doccomment">/// Metadata of a serial, tied to the [`SerialCatalog`] struct.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Serial</span> {
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">href</span>: <span class="ident">String</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Signin</span> {
@@ -198,7 +297,7 @@
         <span class="kw">const</span> <span class="ident">INPUT_PREFIX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;signin_form__input&quot;</span>;
         <span class="kw">const</span> <span class="ident">BUTTON_PREFIX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;signin_form__button&quot;</span>;
 
-        <span class="ident">driver</span>.<span class="ident">get</span>(<span class="ident">URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="ident">driver</span>.<span class="ident">goto</span>(<span class="ident">URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> [<span class="ident">email_elem</span>, <span class="ident">password_elem</span>] <span class="op">=</span>
             <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Signin Inputs&quot;</span>, <span class="ident">INPUT_PREFIX</span>)
                 .<span class="ident">with_count</span>(<span class="number">2</span>)
@@ -206,7 +305,7 @@
                 .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">login_button_elem</span> <span class="op">=</span> <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Login Button&quot;</span>, <span class="ident">BUTTON_PREFIX</span>)
             .<span class="ident">with_count</span>(<span class="number">1</span>)
-            .<span class="ident">find_one</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>)
+            .<span class="ident">find_one</span>(<span class="ident">driver</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
@@ -237,7 +336,7 @@
         <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Signin Done Description&quot;</span>, <span class="string">&quot;signin_signin__description&quot;</span>)
             .<span class="ident">with_count</span>(<span class="number">1</span>)
             .<span class="ident">with_text</span>(<span class="ident">SIGNIN_DONE_TEXT</span>)
-            .<span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>)
+            .<span class="ident">find_all</span>(<span class="ident">driver</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {})
     }
@@ -250,14 +349,73 @@
         <span class="comment">// As of 2022/7/16 this is 258</span>
         <span class="kw">const</span> <span class="ident">NUM_TITLE_RANGE</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> <span class="number">250</span>..<span class="number">400</span>;
 
-        <span class="ident">driver</span>.<span class="ident">get</span>(<span class="ident">URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="ident">driver</span>.<span class="ident">goto</span>(<span class="ident">URL</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">title_elems</span> <span class="op">=</span> <span class="ident">ElemExpect::new_css</span>(<span class="string">&quot;Serial Titles&quot;</span>, <span class="ident">TITLE_SEL</span>)
+        <span class="kw">let</span> <span class="ident">title_elems_raw</span> <span class="op">=</span> <span class="ident">ElemExpect::new_css</span>(<span class="string">&quot;Serial Titles&quot;</span>, <span class="ident">TITLE_SEL</span>)
             .<span class="ident">with_count_range</span>(<span class="ident">NUM_TITLE_RANGE</span>)
-            .<span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>)
+            .<span class="ident">with_attribute</span>(<span class="string">&quot;href&quot;</span>)
+            .<span class="ident">find_all</span>(<span class="ident">driver</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
+        <span class="comment">// Find name and description in each title</span>
+        <span class="kw">let</span> <span class="ident">title_elems</span> <span class="op">=</span> <span class="ident">title_elems_raw</span>
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">elem</span><span class="op">|</span> <span class="kw">async</span> {
+                <span class="ident">spawn</span>(<span class="kw">async</span> {
+                    <span class="kw">let</span> <span class="ident">name_elem</span> <span class="op">=</span>
+                        <span class="ident">ElemExpect::new_class_prefix</span>(<span class="string">&quot;Name Element&quot;</span>, <span class="string">&quot;Title_title__name&quot;</span>)
+                            .<span class="ident">with_count</span>(<span class="number">1</span>)
+                            .<span class="ident">find_one</span>(<span class="ident">elem</span>.<span class="ident">clone</span>())
+                            .<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">href</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">attr</span>(<span class="string">&quot;href&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">unwrap</span>();
+                    <span class="kw">let</span> <span class="ident">description_elem</span> <span class="op">=</span> <span class="ident">ElemExpect::new_class_prefix</span>(
+                        <span class="string">&quot;Description Element&quot;</span>,
+                        <span class="string">&quot;Title_title__description&quot;</span>,
+                    )
+                    .<span class="ident">with_count_range</span>(<span class="number">0</span>..<span class="op">=</span><span class="number">1</span>)
+                    .<span class="ident">find_maybe_one</span>(<span class="ident">elem</span>.<span class="ident">clone</span>())
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+                    <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="ident">TitleElem</span><span class="op">&gt;</span><span class="ident">::Ok</span>(<span class="ident">TitleElem</span> {
+                        <span class="ident">elem</span>,
+                        <span class="ident">name_elem</span>,
+                        <span class="ident">description_elem</span>,
+                        <span class="ident">href</span>,
+                    })
+                })
+                .<span class="kw">await</span>
+                .<span class="ident">unwrap</span>()
+            })
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="ident">title_elems</span> <span class="op">=</span> <span class="ident">future::try_join_all</span>(<span class="ident">title_elems</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">title_elems</span> })
+    }
+
+    <span class="doccomment">/// Get the serials listed on the page.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">serials</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Serial</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serials</span> <span class="op">=</span> <span class="macro">vec!</span>[];
+        <span class="kw">for</span> <span class="ident">TitleElem</span> {
+            <span class="ident">elem</span>: <span class="kw">_</span>,
+            <span class="ident">name_elem</span>,
+            <span class="ident">description_elem</span>,
+            <span class="ident">href</span>,
+        } <span class="kw">in</span> <span class="self">self</span>.<span class="ident">title_elems</span>.<span class="ident">iter</span>()
+        {
+            <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name_elem</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">to_string</span>();
+            <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">elem</span>) <span class="op">=</span> <span class="ident">description_elem</span> {
+                <span class="ident">elem</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">to_string</span>()
+            } <span class="kw">else</span> {
+                <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()
+            };
+            <span class="kw">let</span> <span class="ident">href</span> <span class="op">=</span> <span class="ident">href</span>.<span class="ident">clone</span>();
+            <span class="ident">serials</span>.<span class="ident">push</span>(<span class="ident">Serial</span> {
+                <span class="ident">name</span>,
+                <span class="ident">description</span>,
+                <span class="ident">href</span>,
+            });
+        }
+        <span class="prelude-val">Ok</span>(<span class="ident">serials</span>)
     }
 }
 
@@ -278,10 +436,14 @@
     }
 
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_serial_catalog_new</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> { <span class="ident">SerialCatalog::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ()) })
-            .<span class="kw">await</span><span class="question-mark">?</span>
-            .<span class="ident">context</span>(<span class="string">&quot;Driver early cancel&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_serial_catalog</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">with_driver</span>(<span class="op">|</span><span class="ident">driver</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+            <span class="kw">let</span> <span class="ident">serial_catalog_state</span> <span class="op">=</span> <span class="ident">SerialCatalog::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">serial_catalog_state</span>.<span class="ident">serials</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="prelude-ty">Result</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span><span class="ident">::Ok</span>(())
+        })
+        .<span class="kw">await</span><span class="question-mark">?</span>
+        .<span class="ident">context</span>(<span class="string">&quot;Driver early cancel&quot;</span>)<span class="question-mark">?</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
