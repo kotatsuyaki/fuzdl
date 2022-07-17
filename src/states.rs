@@ -28,7 +28,7 @@ use futures::prelude::*;
 use thirtyfour::{session::handle::SessionHandle, WebElement};
 
 mod expect;
-use expect::ElemExpect;
+use expect::Expect;
 
 /// State corresponding to the `/account/signin` page before any attempt to login.
 pub struct Signin {
@@ -86,12 +86,11 @@ impl Signin {
         const BUTTON_PREFIX: &str = "signin_form__button";
 
         driver.goto(URL).await?;
-        let [email_elem, password_elem] =
-            ElemExpect::new_class_prefix("Signin Inputs", INPUT_PREFIX)
-                .with_count(2)
-                .find_at(&driver, [0, 1])
-                .await?;
-        let login_button_elem = ElemExpect::new_class_prefix("Login Button", BUTTON_PREFIX)
+        let [email_elem, password_elem] = Expect::new_class_prefix("Signin Inputs", INPUT_PREFIX)
+            .with_count(2)
+            .find_at(&driver, [0, 1])
+            .await?;
+        let login_button_elem = Expect::new_class_prefix("Login Button", BUTTON_PREFIX)
             .with_count(1)
             .find_one(driver)
             .await?;
@@ -121,7 +120,7 @@ impl SigninDone {
     async fn new(driver: &SessionHandle) -> Result<Self> {
         const SIGNIN_DONE_TEXT: &str = "ログインが完了しました。";
 
-        ElemExpect::new_class_prefix("Signin Done Description", "signin_signin__description")
+        Expect::new_class_prefix("Signin Done Description", "signin_signin__description")
             .with_count(1)
             .with_text(SIGNIN_DONE_TEXT)
             .find_all(driver)
@@ -139,7 +138,7 @@ impl SerialCatalog {
 
         driver.goto(URL).await?;
 
-        let title_elems_raw = ElemExpect::new_css("Serial Titles", TITLE_SEL)
+        let title_elems_raw = Expect::new_css("Serial Titles", TITLE_SEL)
             .with_count_range(NUM_TITLE_RANGE)
             .with_attribute("href")
             .find_all(driver)
@@ -149,13 +148,13 @@ impl SerialCatalog {
         let title_elems = title_elems_raw
             .into_iter()
             .map(|elem| async {
-                let name_elem = ElemExpect::new_class_prefix("Name Element", "Title_title__name")
+                let name_elem = Expect::new_class_prefix("Name Element", "Title_title__name")
                     .with_count(1)
                     .find_one(elem.clone())
                     .await?;
                 let href = elem.attr("href").await?.unwrap();
                 let description_elem =
-                    ElemExpect::new_class_prefix("Description Element", "Title_title__description")
+                    Expect::new_class_prefix("Description Element", "Title_title__description")
                         .with_count_range(0..=1)
                         .find_maybe_one(elem.clone())
                         .await?;
@@ -205,12 +204,12 @@ impl Manga {
         driver.goto(url.as_ref()).await?;
 
         let title_elem =
-            ElemExpect::new_class_prefix("Manga Title Element", "title_detail_introduction__name")
+            Expect::new_class_prefix("Manga Title Element", "title_detail_introduction__name")
                 .with_count(1)
                 .find_one(driver)
                 .await?;
         let chapter_elem_raw =
-            ElemExpect::new_css("Manga Chapter Element", "ul>[class^=Chapter_chapter]")
+            Expect::new_css("Manga Chapter Element", "ul>[class^=Chapter_chapter]")
                 .with_count_range(1..)
                 .find_all(driver)
                 .await?;
@@ -218,7 +217,7 @@ impl Manga {
             .into_iter()
             .map(|elem| async {
                 let free_elem =
-                    ElemExpect::new_class_prefix("Free Element", "Chapter_chapter__price_free")
+                    Expect::new_class_prefix("Free Element", "Chapter_chapter__price_free")
                         .with_count_range(0..=1)
                         .find_maybe_one(driver)
                         .await?;

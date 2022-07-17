@@ -12,7 +12,7 @@ use thirtyfour::{prelude::*, session::handle::SessionHandle, By, WebElement};
 
 /// Wrapper type around [`By`] selector and verification conditions.
 #[derive(Debug, Clone)]
-pub struct ElemExpect {
+pub struct Expect {
     /// Display name for this element for debugging purpose
     name: String,
     /// Selector condition
@@ -23,7 +23,7 @@ pub struct ElemExpect {
     conditions: Vec<ExpectCondition>,
 }
 
-impl ElemExpect {
+impl Expect {
     pub fn new_class_prefix(name: impl AsRef<str>, prefix: impl AsRef<str>) -> Self {
         let name = name.as_ref().to_string();
         let prefix = prefix.as_ref().to_string();
