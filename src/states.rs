@@ -98,7 +98,7 @@ impl SigninDone {
 }
 
 impl SerialCatalog {
-    async fn new(driver: &SessionHandle) -> Result<Self> {
+    pub async fn new(driver: &SessionHandle) -> Result<Self> {
         const URL: &str = "https://comic-fuz.com/rensai";
         const TITLE_SEL: &str = "[class^=title_list_manga]>[class^=Title_title__]";
         // As of 2022/7/16 this is 258
@@ -117,31 +117,25 @@ impl SerialCatalog {
 
 #[cfg(test)]
 mod test {
-    use std::future::Future;
+    use anyhow::Context;
+
+    use crate::driver::with_driver;
 
     use super::*;
 
-    async fn with_driver<Fut: Future<Output = Result<()>>>(
-        f: impl FnOnce(SessionHandle) -> Fut,
-    ) -> Result<()> {
-        let mut driver_process = crate::create_driver_process().unwrap();
-        let driver = crate::create_driver().await.unwrap();
-
-        let res = f(driver.clone()).await;
-
-        driver.quit().await.unwrap();
-        driver_process.kill().await.unwrap();
-
-        res
-    }
-
     #[tokio::test]
     async fn test_signin_new() -> Result<()> {
-        with_driver(|driver| async move { Signin::new(&driver).await.map(|_| ()) }).await
+        with_driver(|driver| async move { Signin::new(&driver).await.map(|_| ()) })
+            .await?
+            .context("Driver early cancel")??;
+        Ok(())
     }
 
     #[tokio::test]
     async fn test_serial_catalog_new() -> Result<()> {
-        with_driver(|driver| async move { SerialCatalog::new(&driver).await.map(|_| ()) }).await
+        with_driver(|driver| async move { SerialCatalog::new(&driver).await.map(|_| ()) })
+            .await?
+            .context("Driver early cancel")??;
+        Ok(())
     }
 }

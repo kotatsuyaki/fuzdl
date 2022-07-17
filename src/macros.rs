@@ -2,7 +2,10 @@
 
 macro_rules! write_colored {
     ($color: expr, $($args: tt),*) => {
-        ::console::Term::stderr().write_line(&$color.apply_to(format!($($args),*)).to_string())?;
+        if let Err(e)
+            = ::console::Term::stderr().write_line(&$color.apply_to(format!($($args),*)).to_string()) {
+            println!("write_colored failed: {e:?}");
+        }
     }
 }
 
