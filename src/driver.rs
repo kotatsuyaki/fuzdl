@@ -4,7 +4,7 @@
 use std::{future::Future, process::Stdio, time::Duration};
 
 use anyhow::{Context, Result};
-use thirtyfour::{session::handle::SessionHandle, DesiredCapabilities, WebDriver};
+use thirtyfour::{DesiredCapabilities, WebDriver};
 use tokio::{
     process::{Child, Command},
     select, time,
@@ -41,7 +41,7 @@ use tokio::{
 ///
 /// *When can we have support for async drop in Rust?*
 pub async fn with_driver<Out, Fut: Future<Output = Out> + Send>(
-    f: impl FnOnce(SessionHandle) -> Fut + Send + 'static,
+    f: impl FnOnce(WebDriver) -> Fut + Send + 'static,
 ) -> Result<Option<Out>> {
     let mut driver_process = create_driver_process().await?;
 
@@ -57,7 +57,12 @@ pub async fn with_driver<Out, Fut: Future<Output = Out> + Send>(
             return Err(e);
         }
     };
-    let session_handle = driver.clone();
+    let driver = WebDriver {
+        handle: driver.clone(),
+    };
+    let driver_clone = WebDriver {
+        handle: driver.clone(),
+    };
 
     let cleanup = || async move {
         let driver_quit_res = driver.quit().await.context("Failed to quit driver");
@@ -71,7 +76,7 @@ pub async fn with_driver<Out, Fut: Future<Output = Out> + Send>(
     };
 
     select! {
-        res = f(session_handle) => {
+        res = f(driver_clone) => {
             cleanup().await?;
             Ok(Some(res))
         }

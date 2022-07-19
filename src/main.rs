@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use dialoguer::{Input, Password};
-use thirtyfour::session::handle::SessionHandle;
+use thirtyfour::WebDriver;
 use tokio::task::spawn_blocking;
 
 #[macro_use]
@@ -10,7 +10,7 @@ mod states;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let ret: Option<()> = driver::with_driver(|driver| async {
+    let ret: Option<()> = driver::with_driver(|driver| async move {
         if let Err(e) = run(driver).await {
             warn!("Encountered error: {}", e);
         }
@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
 }
 
 /// The actual main logic.
-async fn run(driver: SessionHandle) -> Result<()> {
+async fn run(driver: WebDriver) -> Result<()> {
     let (email, password) = prompt_credentials().await?;
 
     let signin_state = states::Signin::new(&driver).await?;
@@ -39,7 +39,7 @@ async fn run(driver: SessionHandle) -> Result<()> {
 
     let serials = serial_catalog_state.serials().await?;
     for (i, states::Serial { name, href, .. }) in serials.iter().enumerate() {
-        let href = console::pad_str(href, 14, console::Alignment::Left, Some(".."));
+        let href = console::pad_str(&href, 14, console::Alignment::Left, Some(".."));
         info!("{i:3} | {href} | {name}");
     }
 
