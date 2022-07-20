@@ -29,6 +29,7 @@
             rnix-lsp
             taplo-cli
             chromedriver
+            img2pdf
           ];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };

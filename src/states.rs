@@ -1,13 +1,13 @@
 //! State types used to 1) verify and extract data from expected elements and 2) interact with the
 //! pages.
 
-use anyhow::{bail, Result};
-use std::time::Duration;
-use thirtyfour::{
-    prelude::ElementQueryable, session::handle::SessionHandle, WebDriver, WebElement,
-};
+#![allow(dead_code)]
+
+use anyhow::{bail, Context, Result};
+use thirtyfour::{prelude::*, session::handle::SessionHandle};
 use thirtyfour_querier_derive::Querier;
 
+/// State corresponding to the `/account/signin` page
 #[derive(Querier)]
 pub struct Signin {
     #[querier(wait = 3, css = "[class^=signin_form__input][type=email]")]
@@ -157,6 +157,96 @@ impl Manga {
     }
 }
 
+#[derive(Querier)]
+pub struct MangaViewer {
+    #[querier(css = "body")]
+    body: WebElement,
+
+    #[querier(wait = 3, css = "img[alt=page_{page}]")]
+    img: WebElement,
+
+    #[querier(wait = 3, css = "[class^=ViewerFooter_footer__page]")]
+    footer_page: WebElement,
+}
+
+pub struct MangaViewerState {
+    page: usize,
+    viewer: MangaViewer,
+}
+
+impl MangaViewerState {
+    pub async fn new(driver: &WebDriver, url: impl AsRef<str>) -> Result<Self> {
+        driver.goto(url.as_ref()).await?;
+        let viewer = MangaViewer::query(driver, 0).await?;
+        Ok(Self { page: 0, viewer })
+    }
+
+    pub async fn number_of_pages(&self) -> Result<usize> {
+        let text = self.viewer.footer_page.text().await?;
+        let text = text
+            .split("/")
+            .nth(1)
+            .context("Failed split page indicator text")?
+            .trim();
+        Ok(text.parse::<usize>()? - 1)
+    }
+
+    pub async fn img_data(&self, driver: &WebDriver) -> Result<Vec<u8>> {
+        // Wait until <img src="..."> has something
+        self.viewer
+            .img
+            .wait_until()
+            .condition(Box::new(|img: &WebElement| {
+                Box::pin(async move { Ok(img.attr("src").await?.is_some()) })
+            }))
+            .await?;
+        let src = self
+            .viewer
+            .img
+            .attr("src")
+            .await?
+            .context("Missing blob src in img tag")?;
+        // Execute the unreadable script
+        let src = serde_json::to_value(src)?;
+        let ret = driver.execute_async(BLOB_SCRIPT, vec![src]).await?;
+
+        // Convert to string and decode from base64 to raw bytes
+        let b64: String = ret.convert()?;
+        Ok(base64::decode(b64)?)
+    }
+
+    pub async fn has_next_page(&self) -> Result<bool> {
+        Ok(self.page + 1 < self.number_of_pages().await?)
+    }
+
+    pub async fn next_page(&mut self, driver: &WebDriver) -> Result<()> {
+        self.viewer
+            .body
+            .send_keys(thirtyfour::Key::Left.to_string())
+            .await?;
+        self.viewer = MangaViewer::query(driver, self.page + 1).await?;
+        self.page += 1;
+
+        Ok(())
+    }
+
+    pub fn page(&self) -> usize {
+        self.page
+    }
+}
+
+const BLOB_SCRIPT: &str = r#"
+    var uri = arguments[0];
+    var callback = arguments[1];
+    var toBase64 = function(buffer){for(var r,n=new Uint8Array(buffer),t=n.length,a=new Uint8Array(4*Math.ceil(t/3)),i=new Uint8Array(64),o=0,c=0;64>c;++c)i[c]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charCodeAt(c);for(c=0;t-t%3>c;c+=3,o+=4)r=n[c]<<16|n[c+1]<<8|n[c+2],a[o]=i[r>>18],a[o+1]=i[r>>12&63],a[o+2]=i[r>>6&63],a[o+3]=i[63&r];return t%3===1?(r=n[t-1],a[o]=i[r>>2],a[o+1]=i[r<<4&63],a[o+2]=61,a[o+3]=61):t%3===2&&(r=(n[t-2]<<8)+n[t-1],a[o]=i[r>>10],a[o+1]=i[r>>4&63],a[o+2]=i[r<<2&63],a[o+3]=61),new TextDecoder("ascii").decode(a)};
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function(){ callback(toBase64(xhr.response)) };
+    xhr.onerror = function(){ callback(xhr.status) };
+    xhr.open('GET', uri);
+    xhr.send();
+"#;
+
 #[cfg(test)]
 mod test {
     use anyhow::Context;
@@ -211,6 +301,28 @@ mod test {
             "The fetch title does not match the assumption"
         );
         assert!(has_free_chapters, "No free chapters found");
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_manga_viewer() -> Result<()> {
+        const VIEWER_URL: &str = "https://comic-fuz.com/manga/viewer/14954";
+
+        with_driver(|driver| async move {
+            let mut viewer_state = MangaViewerState::new(&driver, VIEWER_URL).await?;
+            loop {
+                let _data = viewer_state.img_data(&driver).await?;
+                if viewer_state.has_next_page().await? {
+                    viewer_state.next_page(&driver).await?;
+                } else {
+                    break;
+                }
+            }
+            Result::<()>::Ok(())
+        })
+        .await?
+        .context("Driver early cancel")??;
 
         Ok(())
     }
