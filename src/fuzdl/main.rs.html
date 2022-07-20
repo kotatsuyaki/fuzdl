@@ -61,10 +61,61 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">anyhow</span>::{<span class="ident">Context</span>, <span class="prelude-ty">Result</span>};
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">anyhow</span>::{<span class="ident">bail</span>, <span class="ident">Context</span>, <span class="prelude-ty">Result</span>};
 <span class="kw">use</span> <span class="ident">dialoguer</span>::{<span class="ident">Input</span>, <span class="ident">Password</span>};
+<span class="kw">use</span> <span class="ident">tempfile::TempDir</span>;
 <span class="kw">use</span> <span class="ident">thirtyfour::WebDriver</span>;
-<span class="kw">use</span> <span class="ident">tokio::task::spawn_blocking</span>;
+<span class="kw">use</span> <span class="ident">tokio</span>::{<span class="ident">fs</span>, <span class="ident">process::Command</span>, <span class="ident">task::spawn_blocking</span>};
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">macros</span>;
@@ -97,13 +148,41 @@
     <span class="ident">signin_state</span>.<span class="ident">signin</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>, <span class="ident">email</span>, <span class="ident">password</span>).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="macro">info!</span>(<span class="string">&quot;Successfully signed in&quot;</span>);
 
-    <span class="kw">let</span> <span class="ident">serial_catalog_state</span> <span class="op">=</span> <span class="ident">states::SerialCatalog::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="macro">info!</span>(<span class="string">&quot;Reached serials page&quot;</span>);
+    <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">prompt_viewer_url</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">serials</span> <span class="op">=</span> <span class="ident">serial_catalog_state</span>.<span class="ident">serials</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">states::Serial</span> { <span class="ident">name</span>, <span class="ident">href</span>, .. }) <span class="kw">in</span> <span class="ident">serials</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="ident">href</span> <span class="op">=</span> <span class="ident">console::pad_str</span>(<span class="kw-2">&amp;</span><span class="ident">href</span>, <span class="number">14</span>, <span class="ident">console::Alignment::Left</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;..&quot;</span>));
-        <span class="macro">info!</span>(<span class="string">&quot;{i:3} | {href} | {name}&quot;</span>);
+    <span class="kw">let</span> <span class="ident">tmpdir</span> <span class="op">=</span> <span class="ident">create_tmpdir</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">pdf_filename</span> <span class="op">=</span> <span class="ident">prompt_pdf_name</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">viewer</span> <span class="op">=</span> <span class="ident">states::MangaViewerState::new</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>, <span class="ident">url</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">img_paths</span> <span class="op">=</span> <span class="macro">vec!</span>[];
+    <span class="kw">loop</span> {
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">viewer</span>.<span class="ident">img_data</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">page</span> <span class="op">=</span> <span class="ident">viewer</span>.<span class="ident">page</span>();
+
+        <span class="macro">info!</span>(<span class="string">&quot;Got page {}&quot;</span>, <span class="ident">page</span>);
+
+        <span class="kw">let</span> <span class="ident">img_filename</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{page:3}.jpg&quot;</span>);
+        <span class="kw">let</span> <span class="ident">img_path</span> <span class="op">=</span> <span class="ident">tmpdir</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="ident">img_filename</span>);
+        <span class="ident">img_paths</span>.<span class="ident">push</span>(<span class="ident">img_path</span>.<span class="ident">as_os_str</span>().<span class="ident">to_os_string</span>());
+
+        <span class="ident">fs::write</span>(<span class="ident">img_path</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">if</span> <span class="ident">viewer</span>.<span class="ident">has_next_page</span>().<span class="kw">await</span><span class="question-mark">?</span> {
+            <span class="ident">viewer</span>.<span class="ident">next_page</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        } <span class="kw">else</span> {
+            <span class="kw">break</span>;
+        }
+    }
+
+    <span class="macro">info!</span>(<span class="string">&quot;Running img2pdf&quot;</span>);
+    <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">Command::new</span>(<span class="string">&quot;img2pdf&quot;</span>)
+        .<span class="ident">args</span>(<span class="ident">img_paths</span>)
+        .<span class="ident">arg</span>(<span class="string">&quot;--output&quot;</span>)
+        .<span class="ident">arg</span>(<span class="ident">pdf_filename</span>)
+        .<span class="ident">status</span>()
+        .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">if</span> <span class="ident">status</span>.<span class="ident">code</span>() <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="number">0</span>) {
+        <span class="macro">bail!</span>(<span class="string">&quot;img2pdf process returned non-zero status code&quot;</span>);
     }
 
     <span class="prelude-val">Ok</span>(())
@@ -119,6 +198,27 @@
         .<span class="ident">context</span>(<span class="string">&quot;Failed to read password&quot;</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>((<span class="ident">email</span>, <span class="ident">password</span>))
 }
+
+<span class="doccomment">/// Prompt the user to input login credentials.</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">prompt_viewer_url</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">url</span>: <span class="ident">String</span> <span class="op">=</span>
+        <span class="ident">spawn_blocking</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Input::new</span>().<span class="ident">with_prompt</span>(<span class="string">&quot;Paste the viewer URL&quot;</span>).<span class="ident">interact</span>())
+            .<span class="kw">await</span><span class="question-mark">?</span>
+            .<span class="ident">context</span>(<span class="string">&quot;Failed to read email&quot;</span>)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(<span class="ident">url</span>)
+}
+
+<span class="doccomment">/// Prompt the user to input login credentials.</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">prompt_pdf_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">name</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">spawn_blocking</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Input::new</span>().<span class="ident">with_prompt</span>(<span class="string">&quot;Output PDF name&quot;</span>).<span class="ident">interact</span>())
+        .<span class="kw">await</span><span class="question-mark">?</span>
+        .<span class="ident">context</span>(<span class="string">&quot;Failed to read PDF name&quot;</span>)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(<span class="ident">name</span>)
+}
+
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_tmpdir</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TempDir</span><span class="op">&gt;</span> {
+    <span class="prelude-val">Ok</span>(<span class="ident">spawn_blocking</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">TempDir::new</span>()).<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>)
+}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="fuzdl" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0 (a8314ef7d 2022-06-27)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="fuzdl" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.1 (e092d0b6b 2022-07-16)" ></div>
 </body></html>
