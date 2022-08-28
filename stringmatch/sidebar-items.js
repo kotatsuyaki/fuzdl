@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["StringMatchLength",""]],"struct":[["StringMatch",""]],"trait":[["Needle",""],["NeedleDebug",""],["NeedleIter",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["StringMatchLength",""]],"struct":[["StringMatch",""]],"trait":[["Needle",""],["NeedleIter",""],["StringMatchable",""]]};

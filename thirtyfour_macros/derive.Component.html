@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Derive macro for a wrapped `Component`."><meta name="keywords" content="rust, rustlang, rust-lang, Component"><title>Component in thirtyfour_macros - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../dark.css" disabled><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../storage.js"></script><script defer src="sidebar-items.js"></script><script defer src="../main.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../favicon.svg"></head><body class="rustdoc derive"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../thirtyfour_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../thirtyfour_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><div class="sidebar-elems"><h2 class="location"><a href="index.html">In thirtyfour_macros</a></h2></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../thirtyfour_macros/index.html"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Derive Macro <a href="index.html">thirtyfour_macros</a>::<wbr><a class="derive" href="#">Component</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../src/thirtyfour_macros/lib.rs.html#121">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><div class="docblock item-decl"><pre class="rust derive"><code>#[derive(Component)]
+{
+    // Attributes available to this derive:
+    #[base]
+    #[by]
+}
+</code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Derive macro for a wrapped <code>Component</code>.</p>
+<p>A <code>Component</code> contains a base <a href="https://docs.rs/thirtyfour/latest/thirtyfour/struct.WebElement.html"><code>WebElement</code></a> from which all element queries will be performed.</p>
+<p>All elements in the component are descendents of the base element (or at least the
+starting point for an element query, since XPath queries can access parent nodes).</p>
+<p>Components perform element lookups via <a href="https://docs.rs/thirtyfour/0.31.0-alpha.1/thirtyfour/components/struct.ElementResolver.html"><code>ElementResolver</code></a>s, which lazily perform an
+element query to resolve a <a href="https://docs.rs/thirtyfour/latest/thirtyfour/struct.WebElement.html"><code>WebElement</code></a>, and then cache the result for later access.</p>
+<p>See the <a href="https://docs.rs/thirtyfour/0.31.0-alpha.1/thirtyfour/components/struct.ElementResolver.html"><code>ElementResolver</code></a> documentation for more details.</p>
+<h3 id="attributes"><a href="#attributes">Attributes</a></h3><h4 id="base"><a href="#base"><code>#[base]</code></a></h4>
+<p>By default the base element should be named <code>base</code> and be of type <code>WebElement</code>.
+You can optionally use the <code>#[base]</code> attribute if you wish to name the base element
+something other than <code>base</code>. If you use this attribute you cannot also have another
+element named <code>base</code>.</p>
+<h4 id="by"><a href="#by"><code>#[by(..)]</code></a></h4>
+<p>Components use the <code>#[by(..)]</code> attribute to specify all of the details of the query.</p>
+<p>The only required attribute is the selector attribute, which can be one of the following:</p>
+<ul>
+<li><code>id = &quot;...&quot;</code>: Select element by id.</li>
+<li><code>tag = &quot;...&quot;</code>: Select element by tag name.</li>
+<li><code>link = &quot;...&quot;</code>: Select element by link text.</li>
+<li><code>css = &quot;...&quot;</code>: Select element by CSS.</li>
+<li><code>xpath = &quot;...&quot;</code>: Select element by XPath.</li>
+<li><code>name = &quot;...&quot;</code>: Select element by name.</li>
+<li><code>class = &quot;...&quot;</code>: Select element by class name.</li>
+</ul>
+<p>Optional attributes available within <code>#[by(..)]</code> include:</p>
+<ul>
+<li><code>single</code>: (default, single element only) Return <code>NoSuchElement</code> if the number of elements
+found is != 1.</li>
+<li><code>first</code>: (single element only) Select the first element that matches the query.
+By default a query will return <code>NoSuchElement</code> if multiple elements match.
+This default is designed to catch instances where a query is not specific enough.</li>
+<li><code>not_empty</code>: (default, multi elements only) Return <code>NoSuchElement</code> if no elements were found.</li>
+<li><code>allow_empty</code>: (multi elements only) Return an empty Vec if no elements were found.
+By default a multi-element query will return <code>NoSuchElement</code> if no
+elements were found.</li>
+<li><code>description = &quot;...&quot;</code>: Set the element description to be displayed in <code>NoSuchElement</code> errors.</li>
+<li><code>allow_errors</code>: Ignore errors such as stale elements while polling.</li>
+<li><code>wait(timeout_ms = 10000, interval_ms=500)</code>: Override the default polling options.</li>
+<li><code>nowait</code>: Turn off polling for this element query.</li>
+<li><code>custom = &quot;my_resolve_fn&quot;</code>: Use the specified function to resolve the element or component.
+<strong>NOTE</strong>: The <code>custom</code> attribute cannot be specified with any other
+attribute.</li>
+</ul>
+<p>See <a href="https://docs.rs/thirtyfour/0.31.0-alpha.1/thirtyfour/extensions/query/struct.ElementQueryOptions.html"><code>ElementQueryOptions</code></a> for more details on how each option is used.</p>
+<h4 id="custom-resolver-functions"><a href="#custom-resolver-functions">Custom resolver functions</a></h4>
+<p>When using <code>custom = &quot;my_resolve_fn&quot;</code>, your function signature should look something like this:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">async</span> <span class="kw">fn</span> <span class="ident">my_resolve_fn</span>(<span class="ident">elem</span>: <span class="kw-2">&amp;</span><span class="ident">WebElement</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span></code></pre></div>
+<p>where the <code>T</code> is the same as type <code>T</code> in <code>ElementResolver&lt;T&gt;</code>.
+Also see the example below.</p>
+<h3 id="example"><a href="#example">Example:</a></h3>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="doccomment">/// This component shows how to nest components inside others.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Component</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CheckboxSectionComponent</span> {
+    <span class="ident">base</span>: <span class="ident">WebElement</span>,
+    <span class="attribute">#[<span class="ident">by</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;label&quot;</span>, <span class="ident">allow_empty</span>)]</span>
+    <span class="ident">boxes</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CheckboxComponent</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="comment">// Other fields will be initialised using `Default::default()`.</span>
+    <span class="ident">my_field</span>: <span class="ident">bool</span>,
+}
+
+<span class="doccomment">/// This component shows how to wrap a simple web component.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Component</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CheckboxComponent</span> {
+    <span class="ident">base</span>: <span class="ident">WebElement</span>,
+    <span class="attribute">#[<span class="ident">by</span>(<span class="ident">css</span> <span class="op">=</span> <span class="string">&quot;input[type=&#39;checkbox&#39;]&quot;</span>, <span class="ident">first</span>)]</span>
+    <span class="ident">input</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">by</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;text-label&quot;</span>, <span class="ident">description</span> <span class="op">=</span> <span class="string">&quot;text label&quot;</span>)]</span>
+    <span class="ident">label</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>
+    <span class="attribute">#[<span class="ident">by</span>(<span class="ident">custom</span> <span class="op">=</span> <span class="string">&quot;my_custom_resolve_fn&quot;</span>)]</span>
+    <span class="ident">button</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>
+}
+
+<span class="doccomment">/// Use this function signature for your custom resolvers.</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">my_custom_resolve_fn</span>(<span class="ident">elem</span>: <span class="kw-2">&amp;</span><span class="ident">WebElement</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> {
+    <span class="comment">// Do something with elem.</span>
+    <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">By::ClassName</span>(<span class="string">&quot;my-class&quot;</span>)).<span class="ident">and_displayed</span>().<span class="ident">first</span>().<span class="kw">await</span>
+}
+
+<span class="kw">impl</span> <span class="ident">CheckboxComponent</span> {
+    <span class="doccomment">/// Return true if the checkbox is ticked.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">is_ticked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+        <span class="comment">// Equivalent to: let elem = self.input.resolve_present().await?;</span>
+        <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="macro">resolve_present!</span>(<span class="self">self</span>.<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">prop</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">prop</span>(<span class="string">&quot;checked&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">prop</span>.<span class="ident">unwrap_or_default</span>() <span class="op">==</span> <span class="string">&quot;true&quot;</span>)
+    }
+}</code></pre></div>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="thirtyfour_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

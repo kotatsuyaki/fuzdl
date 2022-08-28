@@ -1,1 +1,1 @@
-initSidebarItems({"macro":[["info",""],["warn",""],["write_colored",""]]});
+window.SIDEBAR_ITEMS = {"macro":[["info",""],["warn",""],["write_colored",""]]};

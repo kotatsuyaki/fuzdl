@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ScriptRet","Helper struct for getting return values from scripts. See the examples for WebDriver::execute_script() and WebDriver::execute_async_script()."]]});
+window.SIDEBAR_ITEMS = {"struct":[["ScriptRet","Helper struct for getting return values from scripts."]]};

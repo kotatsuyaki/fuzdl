@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["SafariCapabilities",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["SafariCapabilities",""]]};

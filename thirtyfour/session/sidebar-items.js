@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["handle",""],["scriptret",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["handle",""],["scriptret",""]]};

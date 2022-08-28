@@ -1,1 +1,1 @@
-initSidebarItems({"type":[["Cookie","Type alias for a [cookie::Cookie]"]]});
+window.SIDEBAR_ITEMS = {"type":[["Cookie","Type alias for a [cookie::Cookie]"]]};

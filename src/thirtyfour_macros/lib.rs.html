@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/thirtyfour-macros-0.1.1/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../thirtyfour_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../thirtyfour_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../thirtyfour_macros/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Thirtyfour is a Selenium / WebDriver library for Rust, for automated website UI testing.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This crate provides proc macros for use with [thirtyfour](https://docs.rs/thirtyfour).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
+
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::component::expand_component_derive</span>;
+<span class="kw">use</span> <span class="ident">proc_macro::TokenStream</span>;
+<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">parse_macro_input</span>, <span class="ident">DeriveInput</span>};
+
+<span class="kw">mod</span> <span class="ident">component</span>;
+
+<span class="doccomment">/// Derive macro for a wrapped `Component`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A `Component` contains a base [`WebElement`] from which all element queries will be performed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// All elements in the component are descendents of the base element (or at least the</span>
+<span class="doccomment">/// starting point for an element query, since XPath queries can access parent nodes).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Components perform element lookups via [`ElementResolver`]s, which lazily perform an</span>
+<span class="doccomment">/// element query to resolve a [`WebElement`], and then cache the result for later access.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See the [`ElementResolver`] documentation for more details.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Attributes</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### `#[base]`</span>
+<span class="doccomment">/// By default the base element should be named `base` and be of type `WebElement`.</span>
+<span class="doccomment">/// You can optionally use the `#[base]` attribute if you wish to name the base element</span>
+<span class="doccomment">/// something other than `base`. If you use this attribute you cannot also have another</span>
+<span class="doccomment">/// element named `base`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### `#[by(..)]`</span>
+<span class="doccomment">/// Components use the `#[by(..)]` attribute to specify all of the details of the query.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The only required attribute is the selector attribute, which can be one of the following:</span>
+<span class="doccomment">/// - `id = &quot;...&quot;`: Select element by id.</span>
+<span class="doccomment">/// - `tag = &quot;...&quot;`: Select element by tag name.</span>
+<span class="doccomment">/// - `link = &quot;...&quot;`: Select element by link text.</span>
+<span class="doccomment">/// - `css = &quot;...&quot;`: Select element by CSS.</span>
+<span class="doccomment">/// - `xpath = &quot;...&quot;`: Select element by XPath.</span>
+<span class="doccomment">/// - `name = &quot;...&quot;`: Select element by name.</span>
+<span class="doccomment">/// - `class = &quot;...&quot;`: Select element by class name.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Optional attributes available within `#[by(..)]` include:</span>
+<span class="doccomment">/// - `single`: (default, single element only) Return `NoSuchElement` if the number of elements</span>
+<span class="doccomment">///             found is != 1.</span>
+<span class="doccomment">/// - `first`: (single element only) Select the first element that matches the query.</span>
+<span class="doccomment">///            By default a query will return `NoSuchElement` if multiple elements match.</span>
+<span class="doccomment">///            This default is designed to catch instances where a query is not specific enough.</span>
+<span class="doccomment">/// - `not_empty`: (default, multi elements only) Return `NoSuchElement` if no elements were found.</span>
+<span class="doccomment">/// - `allow_empty`: (multi elements only) Return an empty Vec if no elements were found.</span>
+<span class="doccomment">///                  By default a multi-element query will return `NoSuchElement` if no</span>
+<span class="doccomment">///                  elements were found.</span>
+<span class="doccomment">/// - `description = &quot;...&quot;`: Set the element description to be displayed in `NoSuchElement` errors.</span>
+<span class="doccomment">/// - `allow_errors`: Ignore errors such as stale elements while polling.</span>
+<span class="doccomment">/// - `wait(timeout_ms = 10000, interval_ms=500)`: Override the default polling options.</span>
+<span class="doccomment">/// - `nowait`: Turn off polling for this element query.</span>
+<span class="doccomment">/// - `custom = &quot;my_resolve_fn&quot;`: Use the specified function to resolve the element or component.</span>
+<span class="doccomment">///                      **NOTE**: The `custom` attribute cannot be specified with any other</span>
+<span class="doccomment">///                      attribute.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [`ElementQueryOptions`] for more details on how each option is used.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ### Custom resolver functions</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When using `custom = &quot;my_resolve_fn&quot;`, your function signature should look something like this:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// async fn my_resolve_fn(elem: &amp;WebElement) -&gt; WebDriverResult&lt;T&gt;</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// where the `T` is the same as type `T` in `ElementResolver&lt;T&gt;`.</span>
+<span class="doccomment">/// Also see the example below.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Example:</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// /// This component shows how to nest components inside others.</span>
+<span class="doccomment">/// #[derive(Debug, Clone, Component)]</span>
+<span class="doccomment">/// pub struct CheckboxSectionComponent {</span>
+<span class="doccomment">///     base: WebElement,</span>
+<span class="doccomment">///     #[by(tag = &quot;label&quot;, allow_empty)]</span>
+<span class="doccomment">///     boxes: ElementResolver&lt;Vec&lt;CheckboxComponent&gt;&gt;,</span>
+<span class="doccomment">///     // Other fields will be initialised using `Default::default()`.</span>
+<span class="doccomment">///     my_field: bool,</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// /// This component shows how to wrap a simple web component.</span>
+<span class="doccomment">/// #[derive(Debug, Clone, Component)]</span>
+<span class="doccomment">/// pub struct CheckboxComponent {</span>
+<span class="doccomment">///     base: WebElement,</span>
+<span class="doccomment">///     #[by(css = &quot;input[type=&#39;checkbox&#39;]&quot;, first)]</span>
+<span class="doccomment">///     input: ElementResolver&lt;WebElement&gt;,</span>
+<span class="doccomment">///     #[by(name = &quot;text-label&quot;, description = &quot;text label&quot;)]</span>
+<span class="doccomment">///     label: ElementResolver&lt;WebElement&gt;</span>
+<span class="doccomment">///     #[by(custom = &quot;my_custom_resolve_fn&quot;)]</span>
+<span class="doccomment">///     button: ElementResolver&lt;WebElement&gt;</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// /// Use this function signature for your custom resolvers.</span>
+<span class="doccomment">/// async fn my_custom_resolve_fn(elem: &amp;WebElement) -&gt; WebDriverResult&lt;WebElement&gt; {</span>
+<span class="doccomment">///     // Do something with elem.</span>
+<span class="doccomment">///     elem.query(By::ClassName(&quot;my-class&quot;)).and_displayed().first().await</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// impl CheckboxComponent {</span>
+<span class="doccomment">///     /// Return true if the checkbox is ticked.</span>
+<span class="doccomment">///     pub async fn is_ticked(&amp;self) -&gt; WebDriverResult&lt;bool&gt; {</span>
+<span class="doccomment">///         // Equivalent to: let elem = self.input.resolve_present().await?;</span>
+<span class="doccomment">///         let elem = resolve_present!(self.input);</span>
+<span class="doccomment">///         let prop = elem.prop(&quot;checked&quot;).await?;</span>
+<span class="doccomment">///         Ok(prop.unwrap_or_default() == &quot;true&quot;)</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// [`WebElement`]: https://docs.rs/thirtyfour/latest/thirtyfour/struct.WebElement.html</span>
+<span class="doccomment">/// [`ElementResolver`]: https://docs.rs/thirtyfour/0.31.0-alpha.1/thirtyfour/components/struct.ElementResolver.html</span>
+<span class="doccomment">/// [`ElementQueryOptions`]: https://docs.rs/thirtyfour/0.31.0-alpha.1/thirtyfour/extensions/query/struct.ElementQueryOptions.html</span>
+<span class="doccomment">/// [`ElementQueryFn&lt;T&gt;`]: https://docs.rs/thirtyfour/0.31.0-alpha.1/thirtyfour/common/types/type.ElementQueryFn.html</span>
+<span class="attribute">#[<span class="ident">proc_macro_derive</span>(<span class="ident">Component</span>, <span class="ident">attributes</span>(<span class="ident">base</span>, <span class="ident">by</span>))]</span>
+<span class="attribute">#[<span class="ident">proc_macro_error::proc_macro_error</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">derive_component_fn</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
+    <span class="kw">let</span> <span class="ident">ast</span>: <span class="ident">DeriveInput</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span>);
+    <span class="ident">expand_component_derive</span>(<span class="ident">ast</span>).<span class="ident">into</span>()
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="thirtyfour_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

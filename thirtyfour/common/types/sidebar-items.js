@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ElementRefHelper","Helper to Deserialize ElementRef from JSON Value."],["WindowType",""]],"struct":[["ElementRect",""],["Rect",""],["SessionId",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["ElementRefHelper","Helper to Deserialize ElementRef from JSON Value."],["WindowType",""]],"struct":[["ElementRect",""],["Rect",""],["SessionId",""]],"type":[["ElementPredicate","Function signature for element predicates."],["ElementQueryFn","Generic element query function that returns some type T."]]};

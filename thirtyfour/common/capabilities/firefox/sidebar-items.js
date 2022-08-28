@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["FirefoxProfileLogDriver",""],["LogLevel",""],["LoggingPrefsLogLevel",""]],"struct":[["FirefoxCapabilities",""],["FirefoxPreferences",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["FirefoxProfileLogDriver",""],["LogLevel",""],["LoggingPrefsLogLevel",""]],"struct":[["FirefoxCapabilities",""],["FirefoxPreferences",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ChromeCapabilities",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["ChromeCapabilities",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["SessionHandle","The SessionHandle contains a shared reference to the [`WebDriverConfig`] as well as the [`fantoccini::Client`] to allow sending commands to the underlying WebDriver."]]});
+window.SIDEBAR_ITEMS = {"struct":[["SessionHandle","The SessionHandle contains a shared reference to the [`fantoccini::Client`] to allow sending commands to the underlying WebDriver."]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["chrome",""],["firefox","Extensions for working with Firefox."],["query","Extensions for working with Chromium-based browsers. Advanced query interface featuring powerful filtering and polling options."]]});
+window.SIDEBAR_ITEMS = {"mod":[["addons","Extensions for working with Firefox Addons."],["cdp","Extensions for Chrome Devtools Protocol"],["query","Advanced query interface featuring powerful filtering and polling options."]]};

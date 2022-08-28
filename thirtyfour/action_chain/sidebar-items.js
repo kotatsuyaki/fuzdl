@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ActionChain","The ActionChain struct allows you to perform multiple input actions in a sequence, including drag-and-drop, send keystrokes to an element, and hover the mouse over an element."]]});
+window.SIDEBAR_ITEMS = {"struct":[["ActionChain","The ActionChain struct allows you to perform multiple input actions in a sequence, including drag-and-drop, send keystrokes to an element, and hover the mouse over an element."]]};

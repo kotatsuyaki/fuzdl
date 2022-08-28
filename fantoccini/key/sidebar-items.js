@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Key","Key codes for use with Actions."]]});
+window.SIDEBAR_ITEMS = {"enum":[["Key","Key codes for use with Actions."]]};

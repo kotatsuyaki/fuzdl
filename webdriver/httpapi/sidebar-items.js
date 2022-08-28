@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Route",""]],"fn":[["standard_routes",""]],"struct":[["VoidWebDriverExtensionRoute",""]],"trait":[["WebDriverExtensionRoute",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["Route",""]],"fn":[["standard_routes",""]],"struct":[["VoidWebDriverExtensionRoute",""]],"trait":[["WebDriverExtensionRoute",""]]};

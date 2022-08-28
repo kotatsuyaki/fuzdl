@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["capabilities",""],["command",""],["config",""],["types",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["capabilities",""],["command",""],["types",""]]};

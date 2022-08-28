@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["form",""]]});
+window.SIDEBAR_ITEMS = {"fn":[["form",""]]};

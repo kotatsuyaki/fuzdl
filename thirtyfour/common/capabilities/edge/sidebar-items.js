@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["EdgeCapabilities",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["EdgeCapabilities",""]]};

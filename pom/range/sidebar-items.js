@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Bound",""]],"trait":[["RangeArgument",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["Bound",""]],"trait":[["RangeArgument",""]]};

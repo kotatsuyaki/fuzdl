@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["png",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["png",""]]};

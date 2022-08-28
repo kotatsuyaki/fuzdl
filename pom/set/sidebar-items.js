@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["Set","Set relationship."]]});
+window.SIDEBAR_ITEMS = {"trait":[["Set","Set relationship."]]};
