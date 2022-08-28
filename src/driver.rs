@@ -5,10 +5,8 @@ use std::{future::Future, process::Stdio, time::Duration};
 
 use anyhow::{Context, Result};
 use thirtyfour::{DesiredCapabilities, WebDriver};
-use tokio::{
-    process::{Child, Command},
-    select, time,
-};
+use tokio::process::{Child, Command};
+use tokio::{select, time};
 
 /// Create a [`WebDriver`] and run the callback function with the driver as the argument.
 ///
@@ -57,12 +55,7 @@ pub async fn with_driver<Out, Fut: Future<Output = Out> + Send>(
             return Err(e);
         }
     };
-    let driver = WebDriver {
-        handle: driver.clone(),
-    };
-    let driver_clone = WebDriver {
-        handle: driver.clone(),
-    };
+    let driver_clone = driver.clone();
 
     let cleanup = || async move {
         let driver_quit_res = driver.quit().await.context("Failed to quit driver");
@@ -109,10 +102,10 @@ async fn create_driver() -> Result<WebDriver> {
         .await
         .context("Failed to create WebDriver")?;
 
-    // The width 960 (which is small enough)
+    // The width 1920/2 (which is small enough)
     // prevents Fuz from showing two manga pages at once
     driver
-        .set_window_rect(0, 0, 960, 1080)
+        .set_window_rect(0, 0, 1920 / 2, 1080)
         .await
         .context("Failed to set window rect")?;
 

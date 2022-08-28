@@ -3,187 +3,333 @@
 
 #![allow(dead_code)]
 
-use anyhow::{bail, Context, Result};
-use thirtyfour::{prelude::*, session::handle::SessionHandle};
-use thirtyfour_querier_derive::Querier;
+use std::fmt::Display;
+use std::time::Duration;
 
-/// State corresponding to the `/account/signin` page
-#[derive(Querier)]
-pub struct Signin {
-    #[querier(wait = 3, css = "[class^=signin_form__input][type=email]")]
-    email: WebElement,
+use anyhow::{anyhow, bail};
+use anyhow::{Context, Result};
+use futures::{future, try_join, Future};
+use serde::Deserialize;
+use serde_json as json;
+use tempfile::TempDir;
+use thirtyfour::components::{Component, ElementResolver};
+use thirtyfour::prelude::*;
+use tokio::fs;
+use tokio::task::spawn_blocking;
 
-    #[querier(wait = 3, css = "[class^=signin_form__input][type=password]")]
-    password: WebElement,
-
-    #[querier(wait = 3, css = "[class^=signin_form__button]")]
-    button: WebElement,
+/// # Example
+///
+/// ```
+/// async fn resolve(title: ElementResolver<WebElement>, main: ElementResolver<WebElement>) {
+///     let (title, main) = resolve_all!(title, main).expect("One of them failed");
+/// }
+/// ```
+macro_rules! resolve_all {
+    ( $($rest: expr),+ ) => {
+        ::futures::try_join!( $( $rest.resolve() ),+ )
+    };
 }
 
-/// State corresponding to the `/account/signin` page after a successful login.
+// State for `/account/signin`
+#[derive(Component)]
+pub struct Signin {
+    base: WebElement,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=signin_form__input][type=email]"
+    )]
+    email: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=signin_form__input][type=password]"
+    )]
+    password: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=signin_form__button]"
+    )]
+    button: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=signin_signin__description]"
+    )]
+    done_description: ElementResolver<WebElement>,
+}
+
+// State for the 購入済み tab of `/bookshelf`
+#[derive(Component)]
+pub struct Purchased {
+    base: WebElement,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=Selector_selector__option__]"
+    )]
+    selector_options: ElementResolver<Vec<WebElement>>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "a[class^=Magazine_magazine__]"
+    )]
+    magazines: ElementResolver<Vec<PurchasedMagazine>>,
+}
+
+#[derive(Component, Clone)]
+struct PurchasedMagazine {
+    #[base]
+    anchor: WebElement,
+
+    #[by(nowait, css = "[class^=Magazine_magazine__name__]")]
+    name: ElementResolver<WebElement>,
+}
+
+#[derive(Debug, Clone)]
+pub struct MagazineMetadata {
+    pub href: String,
+    pub name: String,
+}
+
+#[derive(Component)]
+pub struct Magazine {
+    base: WebElement,
+
+    #[by(wait(timeout_ms = 3000, interval_ms = 300), css = "#__NEXT_DATA__")]
+    json_data: ElementResolver<WebElement>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MagazineIssue {
+    pub magazine_name: String,
+    pub magazine_issue_id: usize,
+    pub magazine_issue_name: String,
+
+    // (Currently) unused fields are optional
+    pub thumbnail_url: Option<String>,
+    pub paid_point: Option<usize>,
+    pub number_of_sample_pages: Option<usize>,
+    pub updated_date: Option<String>,
+    pub end_date: Option<String>,
+    pub first_page_image_url: Option<String>,
+}
+
+#[derive(Component)]
+pub struct Viewer {
+    #[base]
+    body: WebElement,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=ViewerFooter_footer__page]"
+    )]
+    page_counter: ElementResolver<WebElement>,
+}
+
+pub enum ViewerKind {
+    Magazine,
+    Manga,
+}
+
 impl Signin {
-    pub async fn new(driver: &WebDriver) -> Result<Self> {
+    pub async fn new_from_driver(driver: &WebDriver) -> Result<Self> {
         const SIGNIN_URL: &str = "https://comic-fuz.com/account/signin";
         driver.goto(SIGNIN_URL).await?;
-        Ok(Self::query(driver).await?)
+        let body = driver.body().await?;
+        Ok(Self::new(body))
     }
 
-    /// Interact with the sign elements and navigate to the [`SigninDone`] state.
     pub async fn signin(
         self,
-        driver: &SessionHandle,
-        email: impl AsRef<str>,
-        password: impl AsRef<str>,
-    ) -> Result<SigninDone> {
-        self.email.send_keys(email).await?;
-        self.password.send_keys(password).await?;
-        self.button.click().await?;
-        SigninDone::new(driver).await
+        user_email: impl AsRef<str>,
+        user_password: impl AsRef<str>,
+    ) -> Result<()> {
+        let (email, password, button) = resolve_all!(self.email, self.password, self.button)?;
+
+        email.send_keys(user_email).await?;
+        password.send_keys(user_password).await?;
+        button.click().await?;
+
+        self.check_description().await
     }
-}
 
-/// State corresponding to the `/account/signin` page after a successful login.
-#[derive(Querier)]
-pub struct SigninDone {
-    #[querier(wait = 3, css = "[class^=signin_signin__description]")]
-    done_description: WebElement,
-}
-
-impl SigninDone {
-    async fn new<T: ElementQueryable>(driver: &T) -> Result<Self> {
+    async fn check_description(&self) -> Result<()> {
         const SIGNIN_DONE_TEXT: &str = "ログインが完了しました。";
+        let done_description = self.done_description.resolve().await?;
+        let text = done_description.text().await?;
 
-        let state = Self::query(driver).await?;
-        let text = state.done_description.text().await?;
         if text != SIGNIN_DONE_TEXT {
             bail!(
                 "Description text on signin '{}' does not match the expected '{}'",
                 text,
                 SIGNIN_DONE_TEXT
             );
+        } else {
+            Ok(())
         }
-        Ok(state)
     }
 }
 
-/// State corresponding to the `/rensai` page.
-#[derive(Querier)]
-pub struct SerialCatalog {
-    #[querier(
-        all,
-        nested,
-        wait = 3,
-        css = "[class^=title_list_manga]>[class^=Title_title__]"
-    )]
-    entries: Vec<(WebElement, SerialCatalogEntry)>,
-}
+impl Purchased {
+    pub async fn new_from_driver(driver: &WebDriver) -> Result<Self> {
+        const BOOKSHELF_URL: &str = "https://comic-fuz.com/bookshelf";
 
-/// Serial title element in [`SerialCatalog`].
-#[derive(Querier, Clone)]
-struct SerialCatalogEntry {
-    #[querier(css = "[class^=Title_title__name]")]
-    name: WebElement,
-    #[querier(maybe, css = "[class^=Title_title__description]")]
-    description: Option<WebElement>,
-}
-
-/// Metadata of a serial, tied to the [`SerialCatalog`] struct.
-#[derive(Debug, Clone)]
-pub struct Serial {
-    pub name: String,
-    pub description: String,
-    pub href: String,
-}
-
-impl SerialCatalog {
-    pub async fn new(driver: &WebDriver) -> Result<Self> {
-        const SERIALS_URL: &str = "https://comic-fuz.com/rensai";
-        driver.goto(SERIALS_URL).await?;
-        Ok(Self::query(driver).await?)
+        driver.goto(BOOKSHELF_URL).await?;
+        let body = driver.body().await?;
+        Self::new(body).navigate_to_purchased_tab().await
     }
 
-    /// Get the serials listed on the page.
-    pub async fn serials(&self) -> Result<Vec<Serial>> {
-        let serials = self
-            .entries
-            .iter()
-            .map(
-                |(elem, SerialCatalogEntry { name, description })| async move {
-                    let name = name.text().await?;
-                    let description = if let Some(description) = description {
-                        description.text().await?.to_string()
-                    } else {
-                        String::new()
-                    };
-                    let href = elem.attr("href").await?.unwrap_or(String::new());
+    async fn navigate_to_purchased_tab(self) -> Result<Self> {
+        const PURCHASED_TEXT: &str = "購入済み";
 
-                    Result::<Serial>::Ok(Serial {
-                        name,
-                        description,
-                        href,
-                    })
-                },
-            )
-            .collect::<Vec<_>>();
-        futures::future::try_join_all(serials).await
+        let selector_options = self.selector_options.resolve().await?;
+        let purchased_option = selector_options
+            .get(2)
+            .ok_or(anyhow!("No enough tabs present on the bookshelf page"))?;
+        if purchased_option.text().await? != PURCHASED_TEXT {
+            bail!(
+                "The 3rd tab on the bookshelf page is not '{}'",
+                PURCHASED_TEXT
+            );
+        }
+        purchased_option.click().await?;
+        Ok(self)
+    }
+
+    pub async fn list_megazines(&self) -> Result<Vec<MagazineMetadata>> {
+        let magazines = self.magazines.resolve().await?;
+        future::try_join_all(magazines.into_iter().map(PurchasedMagazine::into_metadata)).await
     }
 }
 
-/// State corresponding to the `/manga/{id}` pages.
-#[derive(Querier)]
-pub struct Manga {
-    #[querier(wait = 3, css = "[class^=title_detail_introduction__name]")]
-    title: WebElement,
+impl PurchasedMagazine {
+    async fn into_metadata(self) -> Result<MagazineMetadata> {
+        let Self { anchor, name } = self;
 
-    #[querier(all, nested, wait = 3, css = "ul>[class^=Chapter_chapter]")]
-    chapters: Vec<(WebElement, ChapterEntry)>,
-}
+        let name = name.resolve().await?;
+        let (href, name) = try_join!(anchor.attr("href"), name.text())?;
+        let href = href.context("Magazine href missing")?;
 
-// Manga chapter element in [`Manga`].
-#[derive(Querier)]
-pub struct ChapterEntry {
-    #[querier(maybe, css = "[class^=Chapter_chapter__price_free]")]
-    free_elem: Option<WebElement>,
-}
-
-impl Manga {
-    pub async fn new(driver: &WebDriver, url: impl AsRef<str>) -> Result<Self> {
-        driver.goto(url.as_ref()).await?;
-        Ok(Self::query(driver).await?)
-    }
-
-    pub async fn title(&self) -> Result<String> {
-        Ok(self.title.text().await?)
+        Ok(MagazineMetadata { href, name })
     }
 }
 
-#[derive(Querier)]
-pub struct MangaViewer {
-    #[querier(css = "body")]
-    body: WebElement,
-
-    #[querier(wait = 3, css = "img[alt=page_{page}]")]
-    img: WebElement,
-
-    #[querier(wait = 3, css = "[class^=ViewerFooter_footer__page]")]
-    footer_page: WebElement,
+impl Display for MagazineMetadata {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
-pub struct MangaViewerState {
-    page: usize,
-    viewer: MangaViewer,
+impl Magazine {
+    pub async fn new_from_driver(driver: &WebDriver, href: impl AsRef<str>) -> Result<Self> {
+        driver.goto(href.as_ref()).await?;
+        let body = driver.body().await?;
+        Ok(Self::new(body))
+    }
+
+    pub async fn list_issues(&self) -> Result<Vec<MagazineIssue>> {
+        let json_data = self.json_data.resolve().await?;
+        let json_text = json_data.inner_html().await?;
+        let json_obj: json::Value = json::from_str(&json_text)?;
+        let megazine_issues = json_obj["props"]["pageProps"]["magazineIssues"].clone();
+
+        if megazine_issues.is_array() == false {
+            bail!("JSON data does not contain array at .props.pageProps.megazineIssues");
+        }
+
+        let megazine_issues: Vec<MagazineIssue> = json::from_value(megazine_issues)?;
+        Ok(megazine_issues)
+    }
 }
 
-impl MangaViewerState {
-    pub async fn new(driver: &WebDriver, url: impl AsRef<str>) -> Result<Self> {
-        driver.goto(url.as_ref()).await?;
-        let viewer = MangaViewer::query(driver, 0).await?;
-        Ok(Self { page: 0, viewer })
+impl Display for MagazineIssue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} - {} ({})",
+            self.magazine_name, self.magazine_issue_name, self.magazine_issue_id
+        )
+    }
+}
+
+pub struct DownloadProgress {
+    pub done: usize,
+    pub total: usize,
+}
+
+impl Viewer {
+    pub async fn new_from_driver(driver: &WebDriver, kind: ViewerKind, id: usize) -> Result<Self> {
+        driver
+            .goto(format!("https://comic-fuz.com/{kind}/viewer/{id}"))
+            .await?;
+        let body = driver.body().await?;
+        Ok(Self::new(body))
+    }
+
+    pub async fn download_imgs(
+        self,
+        driver: &WebDriver,
+        update_progress: impl Fn(DownloadProgress),
+    ) -> Result<TempDir> {
+        let mut downloaded_pages = vec![];
+        let tempdir = spawn_blocking(|| TempDir::new()).await??;
+
+        let number_of_pages = self.number_of_pages().await?;
+        update_progress(DownloadProgress {
+            done: 0,
+            total: number_of_pages,
+        });
+
+        while downloaded_pages.len() < number_of_pages {
+            let page_number = downloaded_pages.len();
+            let img_css_selector = format!("img[alt^=page_{page_number}]");
+            let img = self
+                .body
+                .query(By::Css(&img_css_selector))
+                .wait(Duration::from_secs(1), Duration::from_millis(100))
+                .single()
+                .await?;
+
+            let img_bytes = Self::fetch_img_data(img, driver).await?;
+            let filename = format!("{:03}.jpg", page_number);
+            let filepath = tempdir.path().join(filename);
+
+            fs::write(&filepath, &img_bytes).await?;
+            downloaded_pages.push(filepath);
+
+            update_progress(DownloadProgress {
+                done: downloaded_pages.len(),
+                total: number_of_pages,
+            });
+
+            self.body
+                .send_keys(Key::Left.to_string())
+                .await
+                .context("Failed to send left key")?;
+        }
+
+        Ok(tempdir)
+    }
+
+    // zero-based
+    pub async fn current_page(&self) -> Result<i64> {
+        let page_counter = self.page_counter.resolve().await?;
+        let counter_text = page_counter.text().await?;
+        let text = counter_text
+            .split("/")
+            .nth(0)
+            .context("Failed split page indicator text")?
+            .trim();
+        Ok(text.parse::<i64>()? - 1)
     }
 
     pub async fn number_of_pages(&self) -> Result<usize> {
-        let text = self.viewer.footer_page.text().await?;
-        let text = text
+        let page_counter = self.page_counter.resolve().await?;
+        let counter_text = page_counter.text().await?;
+        let text = counter_text
             .split("/")
             .nth(1)
             .context("Failed split page indicator text")?
@@ -191,47 +337,40 @@ impl MangaViewerState {
         Ok(text.parse::<usize>()? - 1)
     }
 
-    pub async fn img_data(&self, driver: &WebDriver) -> Result<Vec<u8>> {
+    async fn fetch_img_data(img: WebElement, driver: &WebDriver) -> Result<Vec<u8>> {
         // Wait until <img src="..."> has something
-        self.viewer
-            .img
-            .wait_until()
+        img.wait_until()
+            .wait(Duration::from_secs(20), Duration::from_millis(50))
             .condition(Box::new(|img: &WebElement| {
                 Box::pin(async move { Ok(img.attr("src").await?.is_some()) })
             }))
             .await?;
-        let src = self
-            .viewer
-            .img
+
+        let src = img
             .attr("src")
             .await?
             .context("Missing blob src in img tag")?;
-        // Execute the unreadable script
+
         let src = serde_json::to_value(src)?;
         let ret = driver.execute_async(BLOB_SCRIPT, vec![src]).await?;
 
-        // Convert to string and decode from base64 to raw bytes
+        // base64 bytes -> base64 String -> bytes
         let b64: String = ret.convert()?;
         Ok(base64::decode(b64)?)
     }
 
     pub async fn has_next_page(&self) -> Result<bool> {
-        Ok(self.page + 1 < self.number_of_pages().await?)
+        // Ok(self.page + 1 < self.number_of_pages().await?)
+        todo!()
     }
+}
 
-    pub async fn next_page(&mut self, driver: &WebDriver) -> Result<()> {
-        self.viewer
-            .body
-            .send_keys(thirtyfour::Key::Left.to_string())
-            .await?;
-        self.viewer = MangaViewer::query(driver, self.page + 1).await?;
-        self.page += 1;
-
-        Ok(())
-    }
-
-    pub fn page(&self) -> usize {
-        self.page
+impl Display for ViewerKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ViewerKind::Magazine => write!(f, "magazine"),
+            ViewerKind::Manga => write!(f, "manga"),
+        }
     }
 }
 
@@ -245,84 +384,56 @@ const BLOB_SCRIPT: &str = r#"
     xhr.onerror = function(){ callback(xhr.status) };
     xhr.open('GET', uri);
     xhr.send();
-"#;
+ "#;
+
+trait BodyQueryable {
+    type Output: Future<Output = Result<WebElement>>;
+    fn body(&self) -> Self::Output;
+}
+
+impl BodyQueryable for WebDriver {
+    type Output = futures::future::BoxFuture<'static, Result<WebElement>>;
+
+    fn body(&self) -> Self::Output {
+        let driver = self.clone();
+        let fut = async move {
+            driver
+                .query(By::Tag("body"))
+                .single()
+                .await
+                .context("Failed to query the body element")
+        };
+        Box::pin(fut)
+    }
+}
 
 #[cfg(test)]
-mod test {
-    use anyhow::Context;
-
+mod tests {
+    use super::*;
     use crate::driver::with_driver;
 
-    use super::*;
-
     #[tokio::test]
-    async fn test_signin_new() -> Result<()> {
-        with_driver(|driver| async move { Signin::new(&driver).await.map(|_| ()) })
+    async fn test_signin() -> Result<()> {
+        with_driver(|driver| async move { Signin::new_from_driver(&driver).await })
             .await?
-            .context("Driver early cancel")??;
+            .context("Driver early cacnel")??;
         Ok(())
     }
 
     #[tokio::test]
-    async fn test_serial_catalog() -> Result<()> {
-        let serials = with_driver(|driver| async move {
-            let serial_catalog_state = SerialCatalog::new(&driver).await?;
-            let serials = serial_catalog_state.serials().await?;
-            Result::<Vec<Serial>>::Ok(serials)
+    async fn test_viewer() -> Result<()> {
+        let img_tempdir = with_driver(|driver| async move {
+            let viewer = Viewer::new_from_driver(&driver, ViewerKind::Manga, 30445).await?;
+            let img_tempdir = viewer.download_imgs(&driver, |_| {}).await?;
+            Result::<TempDir>::Ok(img_tempdir)
         })
         .await?
-        .context("Driver early cancel")??;
+        .context("Driver early cacnel")??;
 
-        assert!(!serials.is_empty(), "Fetched list of serials is empty");
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_manga_metadata() -> Result<()> {
-        const MANGA_URL: &str = "https://comic-fuz.com/manga/1541";
-        const MANGA_TITLE: &str = "スローループ";
-
-        let (has_free_chapters, title) = with_driver(|driver| async move {
-            let manga_state = Manga::new(&driver, MANGA_URL).await?;
-            let has_free_chapters = manga_state
-                .chapters
-                .iter()
-                .find(|(_, chapter)| chapter.free_elem.is_some())
-                .is_some();
-            let title = manga_state.title().await?;
-            Result::<(bool, String)>::Ok((has_free_chapters, title))
-        })
-        .await?
-        .context("Driver early cancel")??;
-
-        assert_eq!(
-            title, MANGA_TITLE,
-            "The fetch title does not match the assumption"
-        );
-        assert!(has_free_chapters, "No free chapters found");
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_manga_viewer() -> Result<()> {
-        const VIEWER_URL: &str = "https://comic-fuz.com/manga/viewer/14954";
-
-        with_driver(|driver| async move {
-            let mut viewer_state = MangaViewerState::new(&driver, VIEWER_URL).await?;
-            loop {
-                let _data = viewer_state.img_data(&driver).await?;
-                if viewer_state.has_next_page().await? {
-                    viewer_state.next_page(&driver).await?;
-                } else {
-                    break;
-                }
-            }
-            Result::<()>::Ok(())
-        })
-        .await?
-        .context("Driver early cancel")??;
+        let mut entries = fs::read_dir(img_tempdir.path()).await?;
+        while let Some(entry) = entries.next_entry().await? {
+            eprintln!("{:?}", entry.path());
+        }
 
         Ok(())
     }
