@@ -201,6 +201,34 @@ pub struct Viewer {
         css = "[class^=ViewerFooter_footer__page]"
     )]
     page_counter: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=ViewerFooter_footer__tableOfContents__]"
+    )]
+    toc_button: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=ViewerIndexModal_dialog__cell__]"
+    )]
+    toc_elements: ElementResolver<Vec<TocElement>>,
+}
+
+#[derive(Component, Clone)]
+struct TocElement {
+    base: WebElement,
+
+    #[by(nowait, css = "[class^=ViewerIndexModal_dialog__name__]")]
+    name: ElementResolver<WebElement>,
+
+    #[by(nowait, css = "p[class^=ViewerIndexModal_dialog__index__]")]
+    index: ElementResolver<WebElement>,
+}
+
+pub struct TocEntry {
+    pub name: String,
+    pub index: usize,
 }
 
 pub enum ViewerLocation {
@@ -440,7 +468,7 @@ impl Viewer {
     }
 
     pub async fn download_imgs(
-        self,
+        &self,
         driver: &WebDriver,
         update_progress: impl Fn(DownloadProgress),
     ) -> Result<DownloadOutput> {
@@ -487,19 +515,23 @@ impl Viewer {
         })
     }
 
-    // zero-based
-    pub async fn current_page(&self) -> Result<i64> {
-        let page_counter = self.page_counter.resolve().await?;
-        let counter_text = page_counter.text().await?;
-        let text = counter_text
-            .split("/")
-            .nth(0)
-            .context("Failed split page indicator text")?
-            .trim();
-        Ok(text.parse::<i64>()? - 1)
+    pub async fn fetch_toc_entries(&self) -> Result<Vec<TocEntry>> {
+        let toc_button = self.toc_button.resolve().await?;
+        toc_button.click().await?;
+
+        let toc_elements = self.toc_elements.resolve().await?;
+        let toc_entries = future::try_join_all(toc_elements.into_iter().map(|elem| async move {
+            let (name, index) = resolve_all!(elem.name, elem.index)?;
+            let name: String = name.text().await?;
+            let index: usize = index.text().await?.parse()?;
+            Result::<TocEntry>::Ok(TocEntry { name, index })
+        }))
+        .await?;
+
+        Ok(toc_entries)
     }
 
-    pub async fn number_of_pages(&self) -> Result<usize> {
+    async fn number_of_pages(&self) -> Result<usize> {
         let page_counter = self.page_counter.resolve().await?;
         let counter_text = page_counter.text().await?;
         let text = counter_text
@@ -530,11 +562,6 @@ impl Viewer {
         // base64 bytes -> base64 String -> bytes
         let b64: String = ret.convert()?;
         Ok(base64::decode(b64)?)
-    }
-
-    pub async fn has_next_page(&self) -> Result<bool> {
-        // Ok(self.page + 1 < self.number_of_pages().await?)
-        todo!()
     }
 }
 

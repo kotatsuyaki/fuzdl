@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::env;
 use std::fmt::Display;
 use std::path::Path;
@@ -10,6 +11,7 @@ use dialoguer::{Input, MultiSelect, Password, Select};
 use indicatif::{ProgressBar, ProgressStyle};
 use serde::{Deserialize, Serialize};
 use serde_json as json;
+use states::TocEntry;
 use thirtyfour::WebDriver;
 use tokio::fs;
 use tokio::task::spawn_blocking;
@@ -118,6 +120,12 @@ async fn run(driver: WebDriver) -> Result<()> {
     for task in download_tasks {
         let viewer_state = states::Viewer::new_from_driver(&driver, task.viewer_location()).await?;
 
+        let toc = viewer_state
+            .fetch_toc_entries()
+            .await
+            .map(toc_entries_to_hashmap)
+            .unwrap_or_default();
+
         let pb = new_download_progressbar(&task);
         let download_output = viewer_state
             .download_imgs(&driver, |progress| {
@@ -129,7 +137,7 @@ async fn run(driver: WebDriver) -> Result<()> {
                 pb.set_position(done);
             })
             .await?;
-        pb.finish_with_message(format!("Finished downloading {}", task));
+        pb.finish_with_message(format_finished_task(&task));
         drop(pb);
 
         let pdf_title = task.pdf_title();
@@ -139,15 +147,8 @@ async fn run(driver: WebDriver) -> Result<()> {
             .join("output")
             .join(pdf_filename);
 
-        images_to_pdf::images_to_pdf(&pdf_title, download_output.image_paths(), &pdf_path)?;
+        images_to_pdf::images_to_pdf(&pdf_title, toc, download_output.image_paths(), &pdf_path)?;
         info!("Saved to PDF file at {}", pdf_path.to_string_lossy());
-
-        spawn_blocking(|| {
-            dialoguer::Confirm::new()
-                .with_prompt("Press enter to continue")
-                .interact()
-        })
-        .await??;
     }
 
     Ok(())
@@ -312,4 +313,19 @@ fn new_download_progressbar(item_name: &impl Display) -> ProgressBar {
     pb.set_style(style);
     pb.enable_steady_tick(Duration::from_secs(1));
     pb
+}
+
+fn format_finished_task(task: &DownloadTask) -> String {
+    format!(
+        "{} {}",
+        style("Finished downloading".to_string()).cyan(),
+        style(task).green()
+    )
+}
+
+fn toc_entries_to_hashmap(toc_entries: Vec<TocEntry>) -> HashMap<usize, String> {
+    toc_entries
+        .into_iter()
+        .map(|entry| (entry.index, entry.name))
+        .collect()
 }
