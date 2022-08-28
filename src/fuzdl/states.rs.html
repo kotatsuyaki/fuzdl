@@ -642,6 +642,33 @@
 <span id="636">636</span>
 <span id="637">637</span>
 <span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
 </pre><pre class="rust"><code><span class="doccomment">//! State types used to 1) verify and extract data from expected elements and 2) interact with the</span>
 <span class="doccomment">//! pages.</span>
 
@@ -845,6 +872,34 @@
         <span class="ident">css</span> <span class="op">=</span> <span class="string">&quot;[class^=ViewerFooter_footer__page]&quot;</span>
     )]</span>
     <span class="ident">page_counter</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+
+    <span class="attribute">#[<span class="ident">by</span>(
+        <span class="ident">wait</span>(<span class="ident">timeout_ms</span> <span class="op">=</span> <span class="number">3000</span>, <span class="ident">interval_ms</span> <span class="op">=</span> <span class="number">300</span>),
+        <span class="ident">css</span> <span class="op">=</span> <span class="string">&quot;[class^=ViewerFooter_footer__tableOfContents__]&quot;</span>
+    )]</span>
+    <span class="ident">toc_button</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+
+    <span class="attribute">#[<span class="ident">by</span>(
+        <span class="ident">wait</span>(<span class="ident">timeout_ms</span> <span class="op">=</span> <span class="number">3000</span>, <span class="ident">interval_ms</span> <span class="op">=</span> <span class="number">300</span>),
+        <span class="ident">css</span> <span class="op">=</span> <span class="string">&quot;[class^=ViewerIndexModal_dialog__cell__]&quot;</span>
+    )]</span>
+    <span class="ident">toc_elements</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TocElement</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Component</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">struct</span> <span class="ident">TocElement</span> {
+    <span class="ident">base</span>: <span class="ident">WebElement</span>,
+
+    <span class="attribute">#[<span class="ident">by</span>(<span class="ident">nowait</span>, <span class="ident">css</span> <span class="op">=</span> <span class="string">&quot;[class^=ViewerIndexModal_dialog__name__]&quot;</span>)]</span>
+    <span class="ident">name</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+
+    <span class="attribute">#[<span class="ident">by</span>(<span class="ident">nowait</span>, <span class="ident">css</span> <span class="op">=</span> <span class="string">&quot;p[class^=ViewerIndexModal_dialog__index__]&quot;</span>)]</span>
+    <span class="ident">index</span>: <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TocEntry</span> {
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">index</span>: <span class="ident">usize</span>,
 }
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ViewerLocation</span> {
@@ -1084,7 +1139,7 @@
     }
 
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">download_imgs</span>(
-        <span class="self">self</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">WebDriver</span>,
         <span class="ident">update_progress</span>: <span class="kw">impl</span> <span class="ident">Fn</span>(<span class="ident">DownloadProgress</span>),
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DownloadOutput</span><span class="op">&gt;</span> {
@@ -1131,19 +1186,23 @@
         })
     }
 
-    <span class="comment">// zero-based</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">current_page</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">page_counter</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">page_counter</span>.<span class="ident">resolve</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">counter_text</span> <span class="op">=</span> <span class="ident">page_counter</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">counter_text</span>
-            .<span class="ident">split</span>(<span class="string">&quot;/&quot;</span>)
-            .<span class="ident">nth</span>(<span class="number">0</span>)
-            .<span class="ident">context</span>(<span class="string">&quot;Failed split page indicator text&quot;</span>)<span class="question-mark">?</span>
-            .<span class="ident">trim</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">text</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>()<span class="question-mark">?</span> <span class="op">-</span> <span class="number">1</span>)
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch_toc_entries</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TocEntry</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">toc_button</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">toc_button</span>.<span class="ident">resolve</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="ident">toc_button</span>.<span class="ident">click</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">toc_elements</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">toc_elements</span>.<span class="ident">resolve</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">toc_entries</span> <span class="op">=</span> <span class="ident">future::try_join_all</span>(<span class="ident">toc_elements</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">elem</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+            <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">index</span>) <span class="op">=</span> <span class="macro">resolve_all!</span>(<span class="ident">elem</span>.<span class="ident">name</span>, <span class="ident">elem</span>.<span class="ident">index</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">name</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">index</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>;
+            <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="ident">TocEntry</span><span class="op">&gt;</span><span class="ident">::Ok</span>(<span class="ident">TocEntry</span> { <span class="ident">name</span>, <span class="ident">index</span> })
+        }))
+        .<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="ident">toc_entries</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">number_of_pages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">number_of_pages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">page_counter</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">page_counter</span>.<span class="ident">resolve</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">counter_text</span> <span class="op">=</span> <span class="ident">page_counter</span>.<span class="ident">text</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">counter_text</span>
@@ -1174,11 +1233,6 @@
         <span class="comment">// base64 bytes -&gt; base64 String -&gt; bytes</span>
         <span class="kw">let</span> <span class="ident">b64</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">ret</span>.<span class="ident">convert</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">base64::decode</span>(<span class="ident">b64</span>)<span class="question-mark">?</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">has_next_page</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="comment">// Ok(self.page + 1 &lt; self.number_of_pages().await?)</span>
-        <span class="macro">todo!</span>()
     }
 }
 
