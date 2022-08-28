@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["PdfResources","Struct for storing the PDF Resources, to be used on a PDF page"]]};

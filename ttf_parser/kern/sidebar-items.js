@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Subtable","A kerning subtable."],["Subtables","An iterator over kerning subtables."]]};

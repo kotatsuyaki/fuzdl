@@ -1,0 +1,1052 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/printpdf-0.5.3/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../printpdf/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../printpdf/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../printpdf/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+</pre><pre class="rust"><code><span class="doccomment">//! `printpdf` is a library designed for creating printable PDF documents.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [Crates.io](https://crates.io/crates/printpdf) | [Documentation](https://docs.rs/printpdf)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```toml,ignore</span>
+<span class="doccomment">//! [dependencies]</span>
+<span class="doccomment">//! printpdf = &quot;0.5.0&quot;</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Features</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Currently, printpdf can only write documents, not read them.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - Page generation</span>
+<span class="doccomment">//! - Layers (Illustrator like layers)</span>
+<span class="doccomment">//! - Graphics (lines, shapes, bezier curves)</span>
+<span class="doccomment">//! - Images (currently BMP/PNG/JPG only or generate your own images)</span>
+<span class="doccomment">//! - Embedded fonts (TTF and OTF) with Unicode support</span>
+<span class="doccomment">//! - Advanced graphics - overprint control, blending modes, etc.</span>
+<span class="doccomment">//! - Advanced typography - character scaling, character spacing, superscript, subscript, outlining, etc.</span>
+<span class="doccomment">//! - PDF layers (you should be able to open the PDF in Illustrator and have the layers appear)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Getting started</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Writing PDF</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Simple page</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! use printpdf::*;</span>
+<span class="doccomment">//! use std::fs::File;</span>
+<span class="doccomment">//! use std::io::BufWriter;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let (doc, page1, layer1) = PdfDocument::new(&quot;PDF_Document_title&quot;, Mm(247.0), Mm(210.0), &quot;Layer 1&quot;);</span>
+<span class="doccomment">//! let (page2, layer1) = doc.add_page(Mm(10.0), Mm(250.0),&quot;Page 2, Layer 1&quot;);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! doc.save(&amp;mut BufWriter::new(File::create(&quot;test_working.pdf&quot;).unwrap())).unwrap();</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Adding graphical shapes</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! use printpdf::*;</span>
+<span class="doccomment">//! use std::fs::File;</span>
+<span class="doccomment">//! use std::io::BufWriter;</span>
+<span class="doccomment">//! use std::iter::FromIterator;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let (doc, page1, layer1) = PdfDocument::new(&quot;printpdf graphics test&quot;, Mm(297.0), Mm(210.0), &quot;Layer 1&quot;);</span>
+<span class="doccomment">//! let current_layer = doc.get_page(page1).get_layer(layer1);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Quadratic shape. The &quot;false&quot; determines if the next (following)</span>
+<span class="doccomment">//! // point is a bezier handle (for curves)</span>
+<span class="doccomment">//! // If you want holes, simply reorder the winding of the points to be</span>
+<span class="doccomment">//! // counterclockwise instead of clockwise.</span>
+<span class="doccomment">//! let points1 = vec![(Point::new(Mm(100.0), Mm(100.0)), false),</span>
+<span class="doccomment">//!                    (Point::new(Mm(100.0), Mm(200.0)), false),</span>
+<span class="doccomment">//!                    (Point::new(Mm(300.0), Mm(200.0)), false),</span>
+<span class="doccomment">//!                    (Point::new(Mm(300.0), Mm(100.0)), false)];</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Is the shape stroked? Is the shape closed? Is the shape filled?</span>
+<span class="doccomment">//! let line1 = Line {</span>
+<span class="doccomment">//!     points: points1,</span>
+<span class="doccomment">//!     is_closed: true,</span>
+<span class="doccomment">//!     has_fill: true,</span>
+<span class="doccomment">//!     has_stroke: true,</span>
+<span class="doccomment">//!     is_clipping_path: false,</span>
+<span class="doccomment">//! };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Triangle shape</span>
+<span class="doccomment">//! // Note: Line is invisible by default, the previous method of</span>
+<span class="doccomment">//! // constructing a line is recommended!</span>
+<span class="doccomment">//! let mut line2 = Line::from_iter(vec![</span>
+<span class="doccomment">//!     (Point::new(Mm(150.0), Mm(150.0)), false),</span>
+<span class="doccomment">//!     (Point::new(Mm(150.0), Mm(250.0)), false),</span>
+<span class="doccomment">//!     (Point::new(Mm(350.0), Mm(250.0)), false)]);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! line2.set_stroke(true);</span>
+<span class="doccomment">//! line2.set_closed(false);</span>
+<span class="doccomment">//! line2.set_fill(false);</span>
+<span class="doccomment">//! line2.set_as_clipping_path(false);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let fill_color = Color::Cmyk(Cmyk::new(0.0, 0.23, 0.0, 0.0, None));</span>
+<span class="doccomment">//! let outline_color = Color::Rgb(Rgb::new(0.75, 1.0, 0.64, None));</span>
+<span class="doccomment">//! let mut dash_pattern = LineDashPattern::default();</span>
+<span class="doccomment">//! dash_pattern.dash_1 = Some(20);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! current_layer.set_fill_color(fill_color);</span>
+<span class="doccomment">//! current_layer.set_outline_color(outline_color);</span>
+<span class="doccomment">//! current_layer.set_outline_thickness(10.0);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Draw first line</span>
+<span class="doccomment">//! current_layer.add_shape(line1);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let fill_color_2 = Color::Cmyk(Cmyk::new(0.0, 0.0, 0.0, 0.0, None));</span>
+<span class="doccomment">//! let outline_color_2 = Color::Greyscale(Greyscale::new(0.45, None));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // More advanced graphical options</span>
+<span class="doccomment">//! current_layer.set_overprint_stroke(true);</span>
+<span class="doccomment">//! current_layer.set_blend_mode(BlendMode::Seperable(SeperableBlendMode::Multiply));</span>
+<span class="doccomment">//! current_layer.set_line_dash_pattern(dash_pattern);</span>
+<span class="doccomment">//! current_layer.set_line_cap_style(LineCapStyle::Round);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! current_layer.set_fill_color(fill_color_2);</span>
+<span class="doccomment">//! current_layer.set_outline_color(outline_color_2);</span>
+<span class="doccomment">//! current_layer.set_outline_thickness(15.0);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // draw second line</span>
+<span class="doccomment">//! current_layer.add_shape(line2);</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Adding images</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Note: Images only get compressed in release mode. You might get huge PDFs (6 or more MB) in</span>
+<span class="doccomment">//! debug mode. In release mode, the compression makes these files much smaller (~ 100 - 200 KB).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To make this process faster, use `BufReader` instead of directly reading from the file.</span>
+<span class="doccomment">//! Images are currently not a top priority.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Scaling of images is implicitly done to fit one pixel = one dot at 300 dpi.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! // Compile with --feature=&quot;embedded_images&quot;</span>
+<span class="doccomment">//! extern crate printpdf;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // imports the `image` library with the exact version that we are using</span>
+<span class="doccomment">//! use printpdf::*;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! use std::convert::From;</span>
+<span class="doccomment">//! use std::convert::TryFrom;</span>
+<span class="doccomment">//! use std::fs::File;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!     let (doc, page1, layer1) = PdfDocument::new(&quot;PDF_Document_title&quot;, Mm(247.0), Mm(210.0), &quot;Layer 1&quot;);</span>
+<span class="doccomment">//!     let current_layer = doc.get_page(page1).get_layer(layer1);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // currently, the only reliable file formats are bmp/jpeg/png</span>
+<span class="doccomment">//!     // this is an issue of the image library, not a fault of printpdf</span>
+<span class="doccomment">//!     let mut image_file = File::open(&quot;assets/img/BMP_test.bmp&quot;).unwrap();</span>
+<span class="doccomment">//!     let image = Image::try_from(image_crate::codecs::bmp::BmpDecoder::new(&amp;mut image_file).unwrap()).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // translate x, translate y, rotate, scale x, scale y</span>
+<span class="doccomment">//!     // by default, an image is optimized to 300 DPI (if scale is None)</span>
+<span class="doccomment">//!     // rotations and translations are always in relation to the lower left corner</span>
+<span class="doccomment">//!     image.add_to_layer(current_layer.clone(), ImageTransform::default());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // you can also construct images manually from your data:</span>
+<span class="doccomment">//!     let mut image_file_2 = ImageXObject {</span>
+<span class="doccomment">//!         width: Px(200),</span>
+<span class="doccomment">//!         height: Px(200),</span>
+<span class="doccomment">//!         color_space: ColorSpace::Greyscale,</span>
+<span class="doccomment">//!         bits_per_component: ColorBits::Bit8,</span>
+<span class="doccomment">//!         interpolate: true,</span>
+<span class="doccomment">//!         /* put your bytes here. Make sure the total number of bytes =</span>
+<span class="doccomment">//!            width * height * (bytes per component * number of components)</span>
+<span class="doccomment">//!            (e.g. 2 (bytes) x 3 (colors) for RGB 16bit) */</span>
+<span class="doccomment">//!         image_data: Vec::new(),</span>
+<span class="doccomment">//!         image_filter: None, /* does not work yet */</span>
+<span class="doccomment">//!         clipping_bbox: None, /* doesn&#39;t work either, untested */</span>
+<span class="doccomment">//!     };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     let image2 = Image::from(image_file_2);</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Adding fonts</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Note: Fonts are shared between pages. This means that they are added to the document first</span>
+<span class="doccomment">//! and then a reference to this one object can be passed to multiple pages. This is different to</span>
+<span class="doccomment">//! images, for example, which can only be used once on the page they are created on (since that&#39;s</span>
+<span class="doccomment">//! the most common use-case).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! use printpdf::*;</span>
+<span class="doccomment">//! use std::fs::File;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let (doc, page1, layer1) = PdfDocument::new(&quot;PDF_Document_title&quot;, Mm(247.0), Mm(210.0), &quot;Layer 1&quot;);</span>
+<span class="doccomment">//! let current_layer = doc.get_page(page1).get_layer(layer1);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let text = &quot;Lorem ipsum&quot;;</span>
+<span class="doccomment">//! let text2 = &quot;unicode: стуфхfцчшщъыьэюя&quot;;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let font = doc.add_external_font(File::open(&quot;assets/fonts/RobotoMedium.ttf&quot;).unwrap()).unwrap();</span>
+<span class="doccomment">//! let font2 = doc.add_external_font(File::open(&quot;assets/fonts/RobotoMedium.ttf&quot;).unwrap()).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // text, font size, x from left edge, y from bottom edge, font</span>
+<span class="doccomment">//! current_layer.use_text(text, 48.0, Mm(200.0), Mm(200.0), &amp;font);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // For more complex layout of text, you can use functions</span>
+<span class="doccomment">//! // defined on the PdfLayerReference</span>
+<span class="doccomment">//! // Make sure to wrap your commands</span>
+<span class="doccomment">//! // in a `begin_text_section()` and `end_text_section()` wrapper</span>
+<span class="doccomment">//! current_layer.begin_text_section();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // setup the general fonts.</span>
+<span class="doccomment">//!     // see the docs for these functions for details</span>
+<span class="doccomment">//!     current_layer.set_font(&amp;font2, 33.0);</span>
+<span class="doccomment">//!     current_layer.set_text_cursor(Mm(10.0), Mm(10.0));</span>
+<span class="doccomment">//!     current_layer.set_line_height(33.0);</span>
+<span class="doccomment">//!     current_layer.set_word_spacing(3000.0);</span>
+<span class="doccomment">//!     current_layer.set_character_spacing(10.0);</span>
+<span class="doccomment">//!     current_layer.set_text_rendering_mode(TextRenderingMode::Stroke);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // write two lines (one line break)</span>
+<span class="doccomment">//!     current_layer.write_text(text.clone(), &amp;font2);</span>
+<span class="doccomment">//!     current_layer.add_line_break();</span>
+<span class="doccomment">//!     current_layer.write_text(text2.clone(), &amp;font2);</span>
+<span class="doccomment">//!     current_layer.add_line_break();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // write one line, but write text2 in superscript</span>
+<span class="doccomment">//!     current_layer.write_text(text.clone(), &amp;font2);</span>
+<span class="doccomment">//!     current_layer.set_line_offset(10.0);</span>
+<span class="doccomment">//!     current_layer.write_text(text2.clone(), &amp;font2);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! current_layer.end_text_section();</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Changelog</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! See the CHANGELOG.md file.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Further reading</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `PdfDocument` is hidden behind a `PdfDocumentReference`, which locks</span>
+<span class="doccomment">//! the things you can do behind a facade. Pretty much all functions operate</span>
+<span class="doccomment">//! on a `PdfLayerReference`, so that would be where to look for existing</span>
+<span class="doccomment">//! functions or where to implement new functions. The `PdfDocumentReference`</span>
+<span class="doccomment">//! is a reference-counted document. It uses the pages and layers for inner</span>
+<span class="doccomment">//! mutablility, because</span>
+<span class="doccomment">//! I ran into borrowing issues with the document. __IMPORTANT:__ All functions</span>
+<span class="doccomment">//! that mutate the state of the document, &quot;borrow&quot; the document mutably for</span>
+<span class="doccomment">//! the duration of the function. It is important that you don&#39;t borrow the</span>
+<span class="doccomment">//! document twice (your program will crash if you do so). I have prevented</span>
+<span class="doccomment">//! this wherever possible, by making the document only public to the crate</span>
+<span class="doccomment">//! so you cannot lock it from outside of this library.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Images have to be added to the pages resources before using them. Meaning,</span>
+<span class="doccomment">//! you can only use an image on the page that you added it to. Otherwise,</span>
+<span class="doccomment">//! you may end up with a corrupt PDF.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Fonts are embedded using `freetype`. There is a `rusttype` branch in this</span>
+<span class="doccomment">//! repository, but `rusttype` does fails to get the height of an unscaled</span>
+<span class="doccomment">//! font correctly, so that&#39;s why you currently have to use `freetype`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Please report issues if you have any, especially if you see `BorrowMut`</span>
+<span class="doccomment">//! errors (they should not happen). Kerning is currently not done, because</span>
+<span class="doccomment">//! neither `freetype` nor `rusttype` can reliably read kerning data.</span>
+<span class="doccomment">//! However, &quot;correct&quot; kerning / placement requires a full font shaping</span>
+<span class="doccomment">//! engine, etc. This would be a completely different project.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For learning how a PDF is actually made, please read the</span>
+<span class="doccomment">//! [wiki](https://github.com/fschutt/printpdf/wiki) (currently not</span>
+<span class="doccomment">//! completely finished). When I began making this library, these resources</span>
+<span class="doccomment">//! were not available anywhere, so I hope to help other people</span>
+<span class="doccomment">//! with these topics. Reading the wiki is essential if you want to</span>
+<span class="doccomment">//! contribute to this library.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Goals and Roadmap</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The goal of printpdf is to be a general-use PDF library, such as</span>
+<span class="doccomment">//! libharu or similar. PDFs generated by printpdf should always adhere</span>
+<span class="doccomment">//! to a PDF standard, except if you turn it off. Currently, only the</span>
+<span class="doccomment">//! standard `PDF/X-3:2002` is covered (i.e. valid PDF according to Adobe</span>
+<span class="doccomment">//! Acrobat). Over time, there will be more standards supported. Checking a</span>
+<span class="doccomment">//! PDF for errors is currently only a stub.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Planned features / Not done yet</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The following features aren&#39;t implemented yet, most</span>
+<span class="doccomment">//! - Clipping</span>
+<span class="doccomment">//! - Aligning / layouting text</span>
+<span class="doccomment">//! - Open Prepress Interface</span>
+<span class="doccomment">//! - Halftoning images, Gradients, Patterns</span>
+<span class="doccomment">//! - SVG / instantiated content</span>
+<span class="doccomment">//! - Forms, annotations</span>
+<span class="doccomment">//! - Bookmarks / Table of contents</span>
+<span class="doccomment">//! - Conformance / error checking for various PDF standards</span>
+<span class="doccomment">//! - Embedded Javascript</span>
+<span class="doccomment">//! - Reading PDF</span>
+<span class="doccomment">//! - Completion of printpdf wiki</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Testing</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Currently the testing is pretty much non-existent, because PDF is very hard to test.</span>
+<span class="doccomment">//! This should change over time: Testing should be done in two stages. First, test</span>
+<span class="doccomment">//! the individual PDF objects, if the conversion into a PDF object is done correctly.</span>
+<span class="doccomment">//! The second stage is manual inspection of PDF objects via Adobe Preflight.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Put the tests of the first stage in /tests/mod.rs. The second stage tests are</span>
+<span class="doccomment">//! better to be handled inside the plugins&#39; mod.rs file. `printpdf` depends highly</span>
+<span class="doccomment">//! on [lopdf](https://github.com/J-F-Liu/lopdf), so you can either construct your</span>
+<span class="doccomment">//! test object against a real type or a debug string of your serialized type.</span>
+<span class="doccomment">//! Either way is fine - you just have to check that the test object is conform to</span>
+<span class="doccomment">//! what PDF expects.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Useful links</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Here are some resources I found while working on this library:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [`PDFXPlorer`, shows the DOM tree of a PDF, needs .NET 2.0](http://www.o2sol.com/pdfxplorer/download.htm)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [Official PDF 1.7 reference](http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [\[GERMAN\] How to embed unicode fonts in PDF](http://www.p2501.ch/pdf-howto/typographie/vollzugriff/direkt)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [PDF X/1-a Validator](https://www.pdf-online.com/osa/validate.aspx)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [PDF X/3 technical notes](http://www.pdfxreport.com/lib/exe/fetch.php?media=en:technote_pdfx_checks.pdf)</span>
+
+<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_copy_implementations</span>,
+        <span class="ident">trivial_numeric_casts</span>,
+        <span class="ident">trivial_casts</span>,
+        <span class="ident">unused_extern_crates</span>,
+        <span class="ident">unused_import_braces</span>,
+        <span class="ident">unused_qualifications</span>)]</span>
+
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">cast_possible_truncation</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">cast_possible_truncation</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">cast_precision_loss</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">cast_sign_loss</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">missing_docs_in_private_items</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">mut_mut</span>))]</span>
+
+<span class="comment">// Disallow `println!`. Use `debug!` for debug output</span>
+<span class="comment">// (which is provided by the `log` crate).</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">print_stdout</span>))]</span>
+
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">test</span>), <span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>), <span class="ident">warn</span>(<span class="ident">result_unwrap_used</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">unseparated_literal_suffix</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;clippy&quot;</span>, <span class="ident">warn</span>(<span class="ident">wrong_pub_self_convention</span>))]</span>
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;logging&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">pub</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;embedded_images&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">image</span> <span class="kw">as</span> <span class="ident">image_crate</span>;
+<span class="kw">pub</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">lopdf</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">owned_ttf_parser</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;svg&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pdf_writer</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;unknown&quot;</span>))]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">js_sys</span>;
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">color</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ctm</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">date</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">document_info</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">errors</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">extgstate</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">font</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">icc_profile</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">image</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">indices</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">line</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ocg</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pattern</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pdf_conformance</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pdf_document</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pdf_layer</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pdf_metadata</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pdf_page</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pdf_resources</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">point</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">scale</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;svg&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">svg</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">utils</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">xmp_metadata</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">xobject</span>;
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">glob_defines</span> {
+
+    <span class="comment">// Included files</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ICC_PROFILE_ECI_V2</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes!</span>(<span class="string">&quot;../assets/CoatedFOGRA39.icc&quot;</span>);
+
+    <span class="doccomment">/// ## General graphics state</span>
+
+    <span class="doccomment">/// Set line width</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_LINE_WIDTH</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                 <span class="op">=</span> <span class="string">&quot;w&quot;</span>;
+    <span class="doccomment">/// Set line join</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_LINE_JOIN</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                  <span class="op">=</span> <span class="string">&quot;J&quot;</span>;
+    <span class="doccomment">/// Set line cap</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_LINE_CAP</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                   <span class="op">=</span> <span class="string">&quot;j&quot;</span>;
+    <span class="doccomment">/// Set miter limit</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_MITER_LIMIT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                <span class="op">=</span> <span class="string">&quot;M&quot;</span>;
+    <span class="doccomment">/// Set line dash pattern</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_LINE_DASH</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                  <span class="op">=</span> <span class="string">&quot;d&quot;</span>;
+    <span class="doccomment">/// Set rendering intent</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_RENDERING_INTENT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>           <span class="op">=</span> <span class="string">&quot;ri&quot;</span>;
+    <span class="doccomment">/// Set flatness tolerance</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_FLATNESS_TOLERANCE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>         <span class="op">=</span> <span class="string">&quot;i&quot;</span>;
+    <span class="doccomment">/// (PDF 1.2) Set graphics state from parameter dictionary</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_STATE_SET_GS_FROM_PARAM_DICT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>         <span class="op">=</span> <span class="string">&quot;gs&quot;</span>;
+
+
+    <span class="doccomment">/// ## Color</span>
+
+    <span class="doccomment">/// stroking color space (PDF 1.1)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_STROKE_CS</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                       <span class="op">=</span> <span class="string">&quot;CS&quot;</span>;
+    <span class="doccomment">/// non-stroking color space (PDF 1.1)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_FILL_CS</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                         <span class="op">=</span> <span class="string">&quot;cs&quot;</span>;
+    <span class="doccomment">/// set stroking color (PDF 1.1)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_STROKE_COLOR</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                    <span class="op">=</span> <span class="string">&quot;SC&quot;</span>;
+    <span class="doccomment">/// set stroking color (PDF 1.2) with support for ICC, etc.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_STROKE_COLOR_ICC</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                <span class="op">=</span> <span class="string">&quot;SCN&quot;</span>;
+    <span class="doccomment">/// set fill color (PDF 1.1)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_FILL_COLOR</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                      <span class="op">=</span> <span class="string">&quot;sc&quot;</span>;
+    <span class="doccomment">/// set fill color (PDF 1.2) with support for Icc, etc.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_FILL_COLOR_ICC</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                  <span class="op">=</span> <span class="string">&quot;scn&quot;</span>;
+
+    <span class="doccomment">/// Set the stroking color space to DeviceGray</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_STROKE_CS_DEVICEGRAY</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>            <span class="op">=</span> <span class="string">&quot;G&quot;</span>;
+    <span class="doccomment">/// Set the fill color space to DeviceGray</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_FILL_CS_DEVICEGRAY</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>              <span class="op">=</span> <span class="string">&quot;g&quot;</span>;
+    <span class="doccomment">/// Set the stroking color space to DeviceRGB</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_STROKE_CS_DEVICERGB</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>             <span class="op">=</span> <span class="string">&quot;RG&quot;</span>;
+    <span class="doccomment">/// Set the fill color space to DeviceRGB</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_FILL_CS_DEVICERGB</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>               <span class="op">=</span> <span class="string">&quot;rg&quot;</span>;
+    <span class="doccomment">/// Set the stroking color space to DeviceCMYK</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_STROKE_CS_DEVICECMYK</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>            <span class="op">=</span> <span class="string">&quot;K&quot;</span>;
+    <span class="doccomment">/// Set the fill color to DeviceCMYK</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_COLOR_SET_FILL_CS_DEVICECMYK</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>              <span class="op">=</span> <span class="string">&quot;k&quot;</span>;
+
+
+    <span class="doccomment">/// Path construction</span>
+
+    <span class="doccomment">/// Move to point</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_MOVE_TO</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                        <span class="op">=</span> <span class="string">&quot;m&quot;</span>;
+    <span class="doccomment">/// Straight line to the two following points</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_LINE_TO</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                        <span class="op">=</span> <span class="string">&quot;l&quot;</span>;
+    <span class="doccomment">/// Cubic bezier over four following points</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_4BEZIER</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                        <span class="op">=</span> <span class="string">&quot;c&quot;</span>;
+    <span class="doccomment">/// Cubic bezier with two points in v1</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_3BEZIER_V1</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                     <span class="op">=</span> <span class="string">&quot;v&quot;</span>;
+    <span class="doccomment">/// Cubic bezier with two points in v2</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_3BEZIER_V2</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                     <span class="op">=</span> <span class="string">&quot;y&quot;</span>;
+    <span class="doccomment">/// Add rectangle to the path (width / height): x y width height re</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_RECT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                           <span class="op">=</span> <span class="string">&quot;re&quot;</span>;
+    <span class="doccomment">/// Close current sub-path (for appending custom patterns along line)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_CLOSE_SUBPATH</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                  <span class="op">=</span> <span class="string">&quot;h&quot;</span>;
+    <span class="doccomment">/// Current path is a clip path, non-zero winding order (usually in like `h W S`)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_CLIP_NZ</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;W&quot;</span>;
+    <span class="doccomment">/// Current path is a clip path, non-zero winding order</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_CONST_CLIP_EO</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;W*&quot;</span>;
+
+    <span class="doccomment">/// Path painting</span>
+
+    <span class="doccomment">/// Stroke path</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_STROKE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                         <span class="op">=</span> <span class="string">&quot;S&quot;</span>;
+    <span class="doccomment">/// Close and stroke path</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_STROKE_CLOSE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                   <span class="op">=</span> <span class="string">&quot;s&quot;</span>;
+    <span class="doccomment">/// Fill path using nonzero winding number rule</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_NZ</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                        <span class="op">=</span> <span class="string">&quot;f&quot;</span>;
+    <span class="doccomment">/// Fill path using nonzero winding number rule (obsolete)</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_NZ_OLD</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                    <span class="op">=</span> <span class="string">&quot;F&quot;</span>;
+    <span class="doccomment">/// Fill path using even-odd rule</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_EO</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                        <span class="op">=</span> <span class="string">&quot;f*&quot;</span>;
+    <span class="doccomment">/// Fill and stroke path using nonzero winding number rule</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_STROKE_NZ</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                 <span class="op">=</span> <span class="string">&quot;B&quot;</span>;
+    <span class="doccomment">/// Close, fill and stroke path using nonzero winding number rule</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_STROKE_CLOSE_NZ</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>           <span class="op">=</span> <span class="string">&quot;b&quot;</span>;
+    <span class="doccomment">/// Fill and stroke path using even-odd rule</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_STROKE_EO</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                 <span class="op">=</span> <span class="string">&quot;B*&quot;</span>;
+    <span class="doccomment">/// Close, fill and stroke path using even odd rule</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_FILL_STROKE_CLOSE_EO</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>           <span class="op">=</span> <span class="string">&quot;b*&quot;</span>;
+    <span class="doccomment">/// End path without filling or stroking</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">OP_PATH_PAINT_END</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>                            <span class="op">=</span> <span class="string">&quot;n&quot;</span>;
+}
+
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ctm</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::date</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::document_info</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::errors</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::extgstate</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::font</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::glob_defines</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::icc_profile</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::indices</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::line</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ocg</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pattern</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pdf_conformance</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pdf_document</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pdf_layer</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pdf_metadata</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pdf_page</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pdf_resources</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::point</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::scale</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;svg&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::svg</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::xmp_metadata</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::xobject</span>::<span class="kw-2">*</span>;</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="printpdf" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

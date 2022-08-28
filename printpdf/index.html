@@ -1,0 +1,483 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`printpdf` is a library designed for creating printable PDF documents."><meta name="keywords" content="rust, rustlang, rust-lang, printpdf"><title>printpdf - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../dark.css" disabled><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../storage.js"></script><script defer src="../crates.js"></script><script defer src="../main.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../favicon.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../printpdf/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../printpdf/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Crate printpdf</a></h2><div class="sidebar-elems"><div class="block"><ul><li class="version">Version 0.5.3</li><li><a id="all-types" href="all.html">All Items</a></li></ul></div><section><div class="block"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../printpdf/index.html"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Crate <a class="mod" href="#">printpdf</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../src/printpdf/lib.rs.html#1-522">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p><code>printpdf</code> is a library designed for creating printable PDF documents.</p>
+<p><a href="https://crates.io/crates/printpdf">Crates.io</a> | <a href="https://docs.rs/printpdf">Documentation</a></p>
+<div class="example-wrap"><pre class="language-toml,ignore"><code>[dependencies]
+printpdf = &quot;0.5.0&quot;</code></pre></div><h2 id="features"><a href="#features">Features</a></h2>
+<p>Currently, printpdf can only write documents, not read them.</p>
+<ul>
+<li>Page generation</li>
+<li>Layers (Illustrator like layers)</li>
+<li>Graphics (lines, shapes, bezier curves)</li>
+<li>Images (currently BMP/PNG/JPG only or generate your own images)</li>
+<li>Embedded fonts (TTF and OTF) with Unicode support</li>
+<li>Advanced graphics - overprint control, blending modes, etc.</li>
+<li>Advanced typography - character scaling, character spacing, superscript, subscript, outlining, etc.</li>
+<li>PDF layers (you should be able to open the PDF in Illustrator and have the layers appear)</li>
+</ul>
+<h2 id="getting-started"><a href="#getting-started">Getting started</a></h2><h3 id="writing-pdf"><a href="#writing-pdf">Writing PDF</a></h3><h4 id="simple-page"><a href="#simple-page">Simple page</a></h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">printpdf</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std::fs::File</span>;
+<span class="kw">use</span> <span class="ident">std::io::BufWriter</span>;
+
+<span class="kw">let</span> (<span class="ident">doc</span>, <span class="ident">page1</span>, <span class="ident">layer1</span>) <span class="op">=</span> <span class="ident">PdfDocument::new</span>(<span class="string">&quot;PDF_Document_title&quot;</span>, <span class="ident">Mm</span>(<span class="number">247.0</span>), <span class="ident">Mm</span>(<span class="number">210.0</span>), <span class="string">&quot;Layer 1&quot;</span>);
+<span class="kw">let</span> (<span class="ident">page2</span>, <span class="ident">layer1</span>) <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">add_page</span>(<span class="ident">Mm</span>(<span class="number">10.0</span>), <span class="ident">Mm</span>(<span class="number">250.0</span>),<span class="string">&quot;Page 2, Layer 1&quot;</span>);
+
+<span class="ident">doc</span>.<span class="ident">save</span>(<span class="kw-2">&amp;mut</span> <span class="ident">BufWriter::new</span>(<span class="ident">File::create</span>(<span class="string">&quot;test_working.pdf&quot;</span>).<span class="ident">unwrap</span>())).<span class="ident">unwrap</span>();</code></pre></div>
+<h4 id="adding-graphical-shapes"><a href="#adding-graphical-shapes">Adding graphical shapes</a></h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">printpdf</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std::fs::File</span>;
+<span class="kw">use</span> <span class="ident">std::io::BufWriter</span>;
+<span class="kw">use</span> <span class="ident">std::iter::FromIterator</span>;
+
+<span class="kw">let</span> (<span class="ident">doc</span>, <span class="ident">page1</span>, <span class="ident">layer1</span>) <span class="op">=</span> <span class="ident">PdfDocument::new</span>(<span class="string">&quot;printpdf graphics test&quot;</span>, <span class="ident">Mm</span>(<span class="number">297.0</span>), <span class="ident">Mm</span>(<span class="number">210.0</span>), <span class="string">&quot;Layer 1&quot;</span>);
+<span class="kw">let</span> <span class="ident">current_layer</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">get_page</span>(<span class="ident">page1</span>).<span class="ident">get_layer</span>(<span class="ident">layer1</span>);
+
+<span class="comment">// Quadratic shape. The &quot;false&quot; determines if the next (following)</span>
+<span class="comment">// point is a bezier handle (for curves)</span>
+<span class="comment">// If you want holes, simply reorder the winding of the points to be</span>
+<span class="comment">// counterclockwise instead of clockwise.</span>
+<span class="kw">let</span> <span class="ident">points1</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">100.0</span>), <span class="ident">Mm</span>(<span class="number">100.0</span>)), <span class="bool-val">false</span>),
+                   (<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">100.0</span>), <span class="ident">Mm</span>(<span class="number">200.0</span>)), <span class="bool-val">false</span>),
+                   (<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">300.0</span>), <span class="ident">Mm</span>(<span class="number">200.0</span>)), <span class="bool-val">false</span>),
+                   (<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">300.0</span>), <span class="ident">Mm</span>(<span class="number">100.0</span>)), <span class="bool-val">false</span>)];
+
+<span class="comment">// Is the shape stroked? Is the shape closed? Is the shape filled?</span>
+<span class="kw">let</span> <span class="ident">line1</span> <span class="op">=</span> <span class="ident">Line</span> {
+    <span class="ident">points</span>: <span class="ident">points1</span>,
+    <span class="ident">is_closed</span>: <span class="bool-val">true</span>,
+    <span class="ident">has_fill</span>: <span class="bool-val">true</span>,
+    <span class="ident">has_stroke</span>: <span class="bool-val">true</span>,
+    <span class="ident">is_clipping_path</span>: <span class="bool-val">false</span>,
+};
+
+<span class="comment">// Triangle shape</span>
+<span class="comment">// Note: Line is invisible by default, the previous method of</span>
+<span class="comment">// constructing a line is recommended!</span>
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">line2</span> <span class="op">=</span> <span class="ident">Line::from_iter</span>(<span class="macro">vec!</span>[
+    (<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">150.0</span>), <span class="ident">Mm</span>(<span class="number">150.0</span>)), <span class="bool-val">false</span>),
+    (<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">150.0</span>), <span class="ident">Mm</span>(<span class="number">250.0</span>)), <span class="bool-val">false</span>),
+    (<span class="ident">Point::new</span>(<span class="ident">Mm</span>(<span class="number">350.0</span>), <span class="ident">Mm</span>(<span class="number">250.0</span>)), <span class="bool-val">false</span>)]);
+
+<span class="ident">line2</span>.<span class="ident">set_stroke</span>(<span class="bool-val">true</span>);
+<span class="ident">line2</span>.<span class="ident">set_closed</span>(<span class="bool-val">false</span>);
+<span class="ident">line2</span>.<span class="ident">set_fill</span>(<span class="bool-val">false</span>);
+<span class="ident">line2</span>.<span class="ident">set_as_clipping_path</span>(<span class="bool-val">false</span>);
+
+<span class="kw">let</span> <span class="ident">fill_color</span> <span class="op">=</span> <span class="ident">Color::Cmyk</span>(<span class="ident">Cmyk::new</span>(<span class="number">0.0</span>, <span class="number">0.23</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="prelude-val">None</span>));
+<span class="kw">let</span> <span class="ident">outline_color</span> <span class="op">=</span> <span class="ident">Color::Rgb</span>(<span class="ident">Rgb::new</span>(<span class="number">0.75</span>, <span class="number">1.0</span>, <span class="number">0.64</span>, <span class="prelude-val">None</span>));
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dash_pattern</span> <span class="op">=</span> <span class="ident">LineDashPattern::default</span>();
+<span class="ident">dash_pattern</span>.<span class="ident">dash_1</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="number">20</span>);
+
+<span class="ident">current_layer</span>.<span class="ident">set_fill_color</span>(<span class="ident">fill_color</span>);
+<span class="ident">current_layer</span>.<span class="ident">set_outline_color</span>(<span class="ident">outline_color</span>);
+<span class="ident">current_layer</span>.<span class="ident">set_outline_thickness</span>(<span class="number">10.0</span>);
+
+<span class="comment">// Draw first line</span>
+<span class="ident">current_layer</span>.<span class="ident">add_shape</span>(<span class="ident">line1</span>);
+
+<span class="kw">let</span> <span class="ident">fill_color_2</span> <span class="op">=</span> <span class="ident">Color::Cmyk</span>(<span class="ident">Cmyk::new</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="prelude-val">None</span>));
+<span class="kw">let</span> <span class="ident">outline_color_2</span> <span class="op">=</span> <span class="ident">Color::Greyscale</span>(<span class="ident">Greyscale::new</span>(<span class="number">0.45</span>, <span class="prelude-val">None</span>));
+
+<span class="comment">// More advanced graphical options</span>
+<span class="ident">current_layer</span>.<span class="ident">set_overprint_stroke</span>(<span class="bool-val">true</span>);
+<span class="ident">current_layer</span>.<span class="ident">set_blend_mode</span>(<span class="ident">BlendMode::Seperable</span>(<span class="ident">SeperableBlendMode::Multiply</span>));
+<span class="ident">current_layer</span>.<span class="ident">set_line_dash_pattern</span>(<span class="ident">dash_pattern</span>);
+<span class="ident">current_layer</span>.<span class="ident">set_line_cap_style</span>(<span class="ident">LineCapStyle::Round</span>);
+
+<span class="ident">current_layer</span>.<span class="ident">set_fill_color</span>(<span class="ident">fill_color_2</span>);
+<span class="ident">current_layer</span>.<span class="ident">set_outline_color</span>(<span class="ident">outline_color_2</span>);
+<span class="ident">current_layer</span>.<span class="ident">set_outline_thickness</span>(<span class="number">15.0</span>);
+
+<span class="comment">// draw second line</span>
+<span class="ident">current_layer</span>.<span class="ident">add_shape</span>(<span class="ident">line2</span>);</code></pre></div>
+<h4 id="adding-images"><a href="#adding-images">Adding images</a></h4>
+<p>Note: Images only get compressed in release mode. You might get huge PDFs (6 or more MB) in
+debug mode. In release mode, the compression makes these files much smaller (~ 100 - 200 KB).</p>
+<p>To make this process faster, use <code>BufReader</code> instead of directly reading from the file.
+Images are currently not a top priority.</p>
+<p>Scaling of images is implicitly done to fit one pixel = one dot at 300 dpi.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Compile with --feature=&quot;embedded_images&quot;</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">printpdf</span>;
+
+<span class="comment">// imports the `image` library with the exact version that we are using</span>
+<span class="kw">use</span> <span class="ident">printpdf</span>::<span class="kw-2">*</span>;
+
+<span class="kw">use</span> <span class="ident">std::convert::From</span>;
+<span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
+<span class="kw">use</span> <span class="ident">std::fs::File</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> (<span class="ident">doc</span>, <span class="ident">page1</span>, <span class="ident">layer1</span>) <span class="op">=</span> <span class="ident">PdfDocument::new</span>(<span class="string">&quot;PDF_Document_title&quot;</span>, <span class="ident">Mm</span>(<span class="number">247.0</span>), <span class="ident">Mm</span>(<span class="number">210.0</span>), <span class="string">&quot;Layer 1&quot;</span>);
+    <span class="kw">let</span> <span class="ident">current_layer</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">get_page</span>(<span class="ident">page1</span>).<span class="ident">get_layer</span>(<span class="ident">layer1</span>);
+
+    <span class="comment">// currently, the only reliable file formats are bmp/jpeg/png</span>
+    <span class="comment">// this is an issue of the image library, not a fault of printpdf</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image_file</span> <span class="op">=</span> <span class="ident">File::open</span>(<span class="string">&quot;assets/img/BMP_test.bmp&quot;</span>).<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">Image::try_from</span>(<span class="ident">image_crate::codecs::bmp::BmpDecoder::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">image_file</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+
+    <span class="comment">// translate x, translate y, rotate, scale x, scale y</span>
+    <span class="comment">// by default, an image is optimized to 300 DPI (if scale is None)</span>
+    <span class="comment">// rotations and translations are always in relation to the lower left corner</span>
+    <span class="ident">image</span>.<span class="ident">add_to_layer</span>(<span class="ident">current_layer</span>.<span class="ident">clone</span>(), <span class="ident">ImageTransform::default</span>());
+
+    <span class="comment">// you can also construct images manually from your data:</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image_file_2</span> <span class="op">=</span> <span class="ident">ImageXObject</span> {
+        <span class="ident">width</span>: <span class="ident">Px</span>(<span class="number">200</span>),
+        <span class="ident">height</span>: <span class="ident">Px</span>(<span class="number">200</span>),
+        <span class="ident">color_space</span>: <span class="ident">ColorSpace::Greyscale</span>,
+        <span class="ident">bits_per_component</span>: <span class="ident">ColorBits::Bit8</span>,
+        <span class="ident">interpolate</span>: <span class="bool-val">true</span>,
+        <span class="comment">/* put your bytes here. Make sure the total number of bytes =
+           width * height * (bytes per component * number of components)
+           (e.g. 2 (bytes) x 3 (colors) for RGB 16bit) */</span>
+        <span class="ident">image_data</span>: <span class="ident">Vec::new</span>(),
+        <span class="ident">image_filter</span>: <span class="prelude-val">None</span>, <span class="comment">/* does not work yet */</span>
+        <span class="ident">clipping_bbox</span>: <span class="prelude-val">None</span>, <span class="comment">/* doesn&#39;t work either, untested */</span>
+    };
+
+    <span class="kw">let</span> <span class="ident">image2</span> <span class="op">=</span> <span class="ident">Image::from</span>(<span class="ident">image_file_2</span>);
+}</code></pre></div>
+<h4 id="adding-fonts"><a href="#adding-fonts">Adding fonts</a></h4>
+<p>Note: Fonts are shared between pages. This means that they are added to the document first
+and then a reference to this one object can be passed to multiple pages. This is different to
+images, for example, which can only be used once on the page they are created on (since that’s
+the most common use-case).</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">printpdf</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std::fs::File</span>;
+
+<span class="kw">let</span> (<span class="ident">doc</span>, <span class="ident">page1</span>, <span class="ident">layer1</span>) <span class="op">=</span> <span class="ident">PdfDocument::new</span>(<span class="string">&quot;PDF_Document_title&quot;</span>, <span class="ident">Mm</span>(<span class="number">247.0</span>), <span class="ident">Mm</span>(<span class="number">210.0</span>), <span class="string">&quot;Layer 1&quot;</span>);
+<span class="kw">let</span> <span class="ident">current_layer</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">get_page</span>(<span class="ident">page1</span>).<span class="ident">get_layer</span>(<span class="ident">layer1</span>);
+
+<span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="string">&quot;Lorem ipsum&quot;</span>;
+<span class="kw">let</span> <span class="ident">text2</span> <span class="op">=</span> <span class="string">&quot;unicode: стуфхfцчшщъыьэюя&quot;</span>;
+
+<span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">add_external_font</span>(<span class="ident">File::open</span>(<span class="string">&quot;assets/fonts/RobotoMedium.ttf&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+<span class="kw">let</span> <span class="ident">font2</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">add_external_font</span>(<span class="ident">File::open</span>(<span class="string">&quot;assets/fonts/RobotoMedium.ttf&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+
+<span class="comment">// text, font size, x from left edge, y from bottom edge, font</span>
+<span class="ident">current_layer</span>.<span class="ident">use_text</span>(<span class="ident">text</span>, <span class="number">48.0</span>, <span class="ident">Mm</span>(<span class="number">200.0</span>), <span class="ident">Mm</span>(<span class="number">200.0</span>), <span class="kw-2">&amp;</span><span class="ident">font</span>);
+
+<span class="comment">// For more complex layout of text, you can use functions</span>
+<span class="comment">// defined on the PdfLayerReference</span>
+<span class="comment">// Make sure to wrap your commands</span>
+<span class="comment">// in a `begin_text_section()` and `end_text_section()` wrapper</span>
+<span class="ident">current_layer</span>.<span class="ident">begin_text_section</span>();
+
+    <span class="comment">// setup the general fonts.</span>
+    <span class="comment">// see the docs for these functions for details</span>
+    <span class="ident">current_layer</span>.<span class="ident">set_font</span>(<span class="kw-2">&amp;</span><span class="ident">font2</span>, <span class="number">33.0</span>);
+    <span class="ident">current_layer</span>.<span class="ident">set_text_cursor</span>(<span class="ident">Mm</span>(<span class="number">10.0</span>), <span class="ident">Mm</span>(<span class="number">10.0</span>));
+    <span class="ident">current_layer</span>.<span class="ident">set_line_height</span>(<span class="number">33.0</span>);
+    <span class="ident">current_layer</span>.<span class="ident">set_word_spacing</span>(<span class="number">3000.0</span>);
+    <span class="ident">current_layer</span>.<span class="ident">set_character_spacing</span>(<span class="number">10.0</span>);
+    <span class="ident">current_layer</span>.<span class="ident">set_text_rendering_mode</span>(<span class="ident">TextRenderingMode::Stroke</span>);
+
+    <span class="comment">// write two lines (one line break)</span>
+    <span class="ident">current_layer</span>.<span class="ident">write_text</span>(<span class="ident">text</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">font2</span>);
+    <span class="ident">current_layer</span>.<span class="ident">add_line_break</span>();
+    <span class="ident">current_layer</span>.<span class="ident">write_text</span>(<span class="ident">text2</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">font2</span>);
+    <span class="ident">current_layer</span>.<span class="ident">add_line_break</span>();
+
+    <span class="comment">// write one line, but write text2 in superscript</span>
+    <span class="ident">current_layer</span>.<span class="ident">write_text</span>(<span class="ident">text</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">font2</span>);
+    <span class="ident">current_layer</span>.<span class="ident">set_line_offset</span>(<span class="number">10.0</span>);
+    <span class="ident">current_layer</span>.<span class="ident">write_text</span>(<span class="ident">text2</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">font2</span>);
+
+<span class="ident">current_layer</span>.<span class="ident">end_text_section</span>();</code></pre></div>
+<h3 id="changelog"><a href="#changelog">Changelog</a></h3>
+<p>See the CHANGELOG.md file.</p>
+<h2 id="further-reading"><a href="#further-reading">Further reading</a></h2>
+<p>The <code>PdfDocument</code> is hidden behind a <code>PdfDocumentReference</code>, which locks
+the things you can do behind a facade. Pretty much all functions operate
+on a <code>PdfLayerReference</code>, so that would be where to look for existing
+functions or where to implement new functions. The <code>PdfDocumentReference</code>
+is a reference-counted document. It uses the pages and layers for inner
+mutablility, because
+I ran into borrowing issues with the document. <strong>IMPORTANT:</strong> All functions
+that mutate the state of the document, “borrow” the document mutably for
+the duration of the function. It is important that you don’t borrow the
+document twice (your program will crash if you do so). I have prevented
+this wherever possible, by making the document only public to the crate
+so you cannot lock it from outside of this library.</p>
+<p>Images have to be added to the pages resources before using them. Meaning,
+you can only use an image on the page that you added it to. Otherwise,
+you may end up with a corrupt PDF.</p>
+<p>Fonts are embedded using <code>freetype</code>. There is a <code>rusttype</code> branch in this
+repository, but <code>rusttype</code> does fails to get the height of an unscaled
+font correctly, so that’s why you currently have to use <code>freetype</code></p>
+<p>Please report issues if you have any, especially if you see <code>BorrowMut</code>
+errors (they should not happen). Kerning is currently not done, because
+neither <code>freetype</code> nor <code>rusttype</code> can reliably read kerning data.
+However, “correct” kerning / placement requires a full font shaping
+engine, etc. This would be a completely different project.</p>
+<p>For learning how a PDF is actually made, please read the
+<a href="https://github.com/fschutt/printpdf/wiki">wiki</a> (currently not
+completely finished). When I began making this library, these resources
+were not available anywhere, so I hope to help other people
+with these topics. Reading the wiki is essential if you want to
+contribute to this library.</p>
+<h2 id="goals-and-roadmap"><a href="#goals-and-roadmap">Goals and Roadmap</a></h2>
+<p>The goal of printpdf is to be a general-use PDF library, such as
+libharu or similar. PDFs generated by printpdf should always adhere
+to a PDF standard, except if you turn it off. Currently, only the
+standard <code>PDF/X-3:2002</code> is covered (i.e. valid PDF according to Adobe
+Acrobat). Over time, there will be more standards supported. Checking a
+PDF for errors is currently only a stub.</p>
+<h3 id="planned-features--not-done-yet"><a href="#planned-features--not-done-yet">Planned features / Not done yet</a></h3>
+<p>The following features aren’t implemented yet, most</p>
+<ul>
+<li>Clipping</li>
+<li>Aligning / layouting text</li>
+<li>Open Prepress Interface</li>
+<li>Halftoning images, Gradients, Patterns</li>
+<li>SVG / instantiated content</li>
+<li>Forms, annotations</li>
+<li>Bookmarks / Table of contents</li>
+<li>Conformance / error checking for various PDF standards</li>
+<li>Embedded Javascript</li>
+<li>Reading PDF</li>
+<li>Completion of printpdf wiki</li>
+</ul>
+<h2 id="testing"><a href="#testing">Testing</a></h2>
+<p>Currently the testing is pretty much non-existent, because PDF is very hard to test.
+This should change over time: Testing should be done in two stages. First, test
+the individual PDF objects, if the conversion into a PDF object is done correctly.
+The second stage is manual inspection of PDF objects via Adobe Preflight.</p>
+<p>Put the tests of the first stage in /tests/mod.rs. The second stage tests are
+better to be handled inside the plugins’ mod.rs file. <code>printpdf</code> depends highly
+on <a href="https://github.com/J-F-Liu/lopdf">lopdf</a>, so you can either construct your
+test object against a real type or a debug string of your serialized type.
+Either way is fine - you just have to check that the test object is conform to
+what PDF expects.</p>
+<h2 id="useful-links"><a href="#useful-links">Useful links</a></h2>
+<p>Here are some resources I found while working on this library:</p>
+<p><a href="http://www.o2sol.com/pdfxplorer/download.htm"><code>PDFXPlorer</code>, shows the DOM tree of a PDF, needs .NET 2.0</a></p>
+<p><a href="http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf">Official PDF 1.7 reference</a></p>
+<p><a href="http://www.p2501.ch/pdf-howto/typographie/vollzugriff/direkt">[GERMAN] How to embed unicode fonts in PDF</a></p>
+<p><a href="https://www.pdf-online.com/osa/validate.aspx">PDF X/1-a Validator</a></p>
+<p><a href="http://www.pdfxreport.com/lib/exe/fetch.php?media=en:technote_pdfx_checks.pdf">PDF X/3 technical notes</a></p>
+</div></details><h2 id="reexports" class="small-section-header"><a href="#reexports">Re-exports</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left"><code>pub extern crate <a class="mod" href="../image/index.html" title="mod image">image</a> as image_crate;</code></div></div><div class="item-row"><div class="item-left"><code>pub extern crate <a class="mod" href="../lopdf/index.html" title="mod lopdf">lopdf</a>;</code></div></div></div><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="color/index.html" title="printpdf::color mod">color</a></div><div class="item-right docblock-short"><p>Color module (CMYK or RGB). Shared between 2D and 3D module.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="ctm/index.html" title="printpdf::ctm mod">ctm</a></div><div class="item-right docblock-short"><p>Current transformation matrix, for transforming shapes (rotate, translate, scale)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="date/index.html" title="printpdf::date mod">date</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="document_info/index.html" title="printpdf::document_info mod">document_info</a></div><div class="item-right docblock-short"><p>Info dictionary of a PDF document</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="errors/index.html" title="printpdf::errors mod">errors</a></div><div class="item-right docblock-short"><p>Errors for printpdf</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="extgstate/index.html" title="printpdf::extgstate mod">extgstate</a></div><div class="item-right docblock-short"><p>Extended graphics state, for advanced graphical operation (overprint, black point control, etc.)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="font/index.html" title="printpdf::font mod">font</a></div><div class="item-right docblock-short"><p>Embedding fonts in 2D for Pdf</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="icc_profile/index.html" title="printpdf::icc_profile mod">icc_profile</a></div><div class="item-right docblock-short"><p>ICC profile that can be embedded into a PDF</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="image/index.html" title="printpdf::image mod">image</a></div><div class="item-right docblock-short"><p>Abstraction class for images. Please use this class
+instead of adding <code>ImageXObjects</code> yourself</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="indices/index.html" title="printpdf::indices mod">indices</a></div><div class="item-right docblock-short"><p>These indices are for library internal use only.
+Use the <code>add_*</code> functions to get an index instead.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="line/index.html" title="printpdf::line mod">line</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="ocg/index.html" title="printpdf::ocg mod">ocg</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pattern/index.html" title="printpdf::pattern mod">pattern</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pdf_conformance/index.html" title="printpdf::pdf_conformance mod">pdf_conformance</a></div><div class="item-right docblock-short"><p>Module regulating the comparison and feature sets / allowed plugins of a PDF document</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pdf_document/index.html" title="printpdf::pdf_document mod">pdf_document</a></div><div class="item-right docblock-short"><p>A <code>PDFDocument</code> represents the whole content of the file</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pdf_layer/index.html" title="printpdf::pdf_layer mod">pdf_layer</a></div><div class="item-right docblock-short"><p>PDF layer management. Layers can contain referenced or real content.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pdf_metadata/index.html" title="printpdf::pdf_metadata mod">pdf_metadata</a></div><div class="item-right docblock-short"><p>Wapper type for shared metadata between XMP Metadata and the <code>DocumentInfo</code> dictionary</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pdf_page/index.html" title="printpdf::pdf_page mod">pdf_page</a></div><div class="item-right docblock-short"><p>PDF page management</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="pdf_resources/index.html" title="printpdf::pdf_resources mod">pdf_resources</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="point/index.html" title="printpdf::point mod">point</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="scale/index.html" title="printpdf::scale mod">scale</a></div><div class="item-right docblock-short"><p>Scaling types for reducing errors between conversions between point (pt) and millimeter (mm)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="utils/index.html" title="printpdf::utils mod">utils</a></div><div class="item-right docblock-short"><p>Utility / conveniece functions for commonly use graphical shapes</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="xmp_metadata/index.html" title="printpdf::xmp_metadata mod">xmp_metadata</a></div><div class="item-right docblock-short"><p>Stub plugin for XMP Metadata streams, to be expanded later</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="xobject/index.html" title="printpdf::xobject mod">xobject</a></div><div class="item-right docblock-short"></div></div></div><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Cmyk.html" title="printpdf::Cmyk struct">Cmyk</a></div><div class="item-right docblock-short"><p>CMYK color</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.CustomPdfConformance.html" title="printpdf::CustomPdfConformance struct">CustomPdfConformance</a></div><div class="item-right docblock-short"><p>Allows building custom conformance profiles. This is useful if you want very small documents for example and 
+you don’t <strong>need</strong> conformance with any PDF standard, you just want a PDF file.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.DirectFontRef.html" title="printpdf::DirectFontRef struct">DirectFontRef</a></div><div class="item-right docblock-short"><p>Direct reference (wrapper for <code>lopdf::Object::Reference</code>)
+for increased type safety</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.DocumentInfo.html" title="printpdf::DocumentInfo struct">DocumentInfo</a></div><div class="item-right docblock-short"><p>“Info” dictionary of a PDF document.
+Actual data is contained in <code>DocumentMetadata</code>, to keep it in sync with the <code>XmpMetadata</code>
+(if the timestamps / settings are not in sync, Preflight will complain)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExtendedGraphicsState.html" title="printpdf::ExtendedGraphicsState struct">ExtendedGraphicsState</a></div><div class="item-right docblock-short"><p><code>ExtGState</code> dictionary</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExtendedGraphicsStateBuilder.html" title="printpdf::ExtendedGraphicsStateBuilder struct">ExtendedGraphicsStateBuilder</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExtendedGraphicsStateList.html" title="printpdf::ExtendedGraphicsStateList struct">ExtendedGraphicsStateList</a></div><div class="item-right docblock-short"><p>List of many <code>ExtendedGraphicsState</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExtendedGraphicsStateRef.html" title="printpdf::ExtendedGraphicsStateRef struct">ExtendedGraphicsStateRef</a></div><div class="item-right docblock-short"><p>A reference to the graphics state, for reusing the
+graphics state during a stream without adding new graphics states all the time</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ExternalFont.html" title="printpdf::ExternalFont struct">ExternalFont</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.FontIndex.html" title="printpdf::FontIndex struct">FontIndex</a></div><div class="item-right docblock-short"><p>Index of a font</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.FontList.html" title="printpdf::FontList struct">FontList</a></div><div class="item-right docblock-short"><p>Font list for tracking fonts within a single PDF document</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.FontMetrics.html" title="printpdf::FontMetrics struct">FontMetrics</a></div><div class="item-right docblock-short"><p>The unscaled base metrics for a font provided by a <a href="trait.FontData.html"><code>FontData</code></a>
+implementation.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.FormXObject.html" title="printpdf::FormXObject struct">FormXObject</a></div><div class="item-right docblock-short"><p><strong>THIS IS NOT A PDF FORM!</strong> A form <code>XObject</code> can be nearly everything.
+PDF allows you to reuse content for the graphics stream in a <code>FormXObject</code>.
+A <code>FormXObject</code> is basically a layer-like content stream and can contain anything
+as long as it’s a valid strem. A <code>FormXObject</code> is intended to be used for reapeated
+content on one page.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.FormXObjectRef.html" title="printpdf::FormXObjectRef struct">FormXObjectRef</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.GlyphMetrics.html" title="printpdf::GlyphMetrics struct">GlyphMetrics</a></div><div class="item-right docblock-short"><p>The metrics for a glyph provided by a <a href="trait.FontData.html"><code>FontData</code></a> implementation.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Greyscale.html" title="printpdf::Greyscale struct">Greyscale</a></div><div class="item-right docblock-short"><p>Greyscale color</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.GroupXObject.html" title="printpdf::GroupXObject struct">GroupXObject</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.IccProfile.html" title="printpdf::IccProfile struct">IccProfile</a></div><div class="item-right docblock-short"><p>Icc profile</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.IccProfileList.html" title="printpdf::IccProfileList struct">IccProfileList</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.IccProfileRef.html" title="printpdf::IccProfileRef struct">IccProfileRef</a></div><div class="item-right docblock-short"><p>Named reference for an ICC profile</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Image.html" title="printpdf::Image struct">Image</a></div><div class="item-right docblock-short"><p>Image - wrapper around an <code>ImageXObject</code> to allow for more control
+within the library</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ImageRotation.html" title="printpdf::ImageRotation struct">ImageRotation</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ImageTransform.html" title="printpdf::ImageTransform struct">ImageTransform</a></div><div class="item-right docblock-short"><p>Transform that is applied immediately before the
+image gets painted. Does not affect anything other
+than the image.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ImageXObject.html" title="printpdf::ImageXObject struct">ImageXObject</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ImageXObjectRef.html" title="printpdf::ImageXObjectRef struct">ImageXObjectRef</a></div><div class="item-right docblock-short"><p>Named reference to an image</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.IndirectFontRef.html" title="printpdf::IndirectFontRef struct">IndirectFontRef</a></div><div class="item-right docblock-short"><p>Indexed reference to a font that was added to the document
+This is a “reference by postscript name”</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Line.html" title="printpdf::Line struct">Line</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.LineDashPattern.html" title="printpdf::LineDashPattern struct">LineDashPattern</a></div><div class="item-right docblock-short"><p>Line dash pattern is made up of a total width</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Mm.html" title="printpdf::Mm struct">Mm</a></div><div class="item-right docblock-short"><p>Scale in millimeter</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.OCGList.html" title="printpdf::OCGList struct">OCGList</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.OCGRef.html" title="printpdf::OCGRef struct">OCGRef</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.OffsetDateTime.html" title="printpdf::OffsetDateTime struct">OffsetDateTime</a></div><div class="item-right docblock-short"><p>A <a href="../time/primitive_date_time/struct.PrimitiveDateTime.html" title="PrimitiveDateTime"><code>PrimitiveDateTime</code></a> with a <a href="../time/utc_offset/struct.UtcOffset.html" title="UtcOffset"><code>UtcOffset</code></a>.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.OptionalContentGroup.html" title="printpdf::OptionalContentGroup struct">OptionalContentGroup</a></div><div class="item-right docblock-short"><p>Optional content group, for PDF layers. Only available in PDF 1.4
+but (I think) lower versions of PDF allow this, too. Used to create
+Adobe Illustrator-like layers in PDF</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Pattern.html" title="printpdf::Pattern struct">Pattern</a></div><div class="item-right docblock-short"><p><strong>STUB</strong></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PatternList.html" title="printpdf::PatternList struct">PatternList</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PatternRef.html" title="printpdf::PatternRef struct">PatternRef</a></div><div class="item-right docblock-short"><p>Named reference to a pattern</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfContentIndex.html" title="printpdf::PdfContentIndex struct">PdfContentIndex</a></div><div class="item-right docblock-short"><p>Index of the arbitrary content data</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfDocument.html" title="printpdf::PdfDocument struct">PdfDocument</a></div><div class="item-right docblock-short"><p>PDF document</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfDocumentReference.html" title="printpdf::PdfDocumentReference struct">PdfDocumentReference</a></div><div class="item-right docblock-short"><p>Marker struct for a document. Used to make the API a bit nicer.
+It simply calls <code>PdfDocument</code> functions.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfLayer.html" title="printpdf::PdfLayer struct">PdfLayer</a></div><div class="item-right docblock-short"><p>One layer of PDF data</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfLayerIndex.html" title="printpdf::PdfLayerIndex struct">PdfLayerIndex</a></div><div class="item-right docblock-short"><p>Index of the layer on the nth page</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfLayerReference.html" title="printpdf::PdfLayerReference struct">PdfLayerReference</a></div><div class="item-right docblock-short"><p>A “reference” to the current layer, allows for inner mutability
+but only inside this library</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfMetadata.html" title="printpdf::PdfMetadata struct">PdfMetadata</a></div><div class="item-right docblock-short"><p>This is a wrapper in order to keep shared data between the documents XMP metadata and
+the “Info” dictionary in sync</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfPage.html" title="printpdf::PdfPage struct">PdfPage</a></div><div class="item-right docblock-short"><p>PDF page</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfPageIndex.html" title="printpdf::PdfPageIndex struct">PdfPageIndex</a></div><div class="item-right docblock-short"><p>Index of the page (0-based)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfPageReference.html" title="printpdf::PdfPageReference struct">PdfPageReference</a></div><div class="item-right docblock-short"><p>A “reference” to the current page, allows for inner mutability
+but only inside this library</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PdfResources.html" title="printpdf::PdfResources struct">PdfResources</a></div><div class="item-right docblock-short"><p>Struct for storing the PDF Resources, to be used on a PDF page</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Point.html" title="printpdf::Point struct">Point</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PostScriptXObject.html" title="printpdf::PostScriptXObject struct">PostScriptXObject</a></div><div class="item-right docblock-short"><p>TODO, very low priority</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Pt.html" title="printpdf::Pt struct">Pt</a></div><div class="item-right docblock-short"><p>Scale in point</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Px.html" title="printpdf::Px struct">Px</a></div><div class="item-right docblock-short"><p>Scale in pixels</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ReferenceXObject.html" title="printpdf::ReferenceXObject struct">ReferenceXObject</a></div><div class="item-right docblock-short"><p>PDF 1.4 and higher
+Contains a PDF file to be embedded in the current PDF</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Rgb.html" title="printpdf::Rgb struct">Rgb</a></div><div class="item-right docblock-short"><p>RGB color</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SMask.html" title="printpdf::SMask struct">SMask</a></div><div class="item-right docblock-short"><p><code>SMask</code> dictionary. A soft mask (or <code>SMask</code>) is a greyscale image
+that is used to mask another image</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SoftMask.html" title="printpdf::SoftMask struct">SoftMask</a></div><div class="item-right docblock-short"><p>A soft mask is used for transparent images such as PNG with an alpha component
+The bytes range from 0xFF (opaque) to 0x00 (transparent). The alpha channel of a
+PNG image have to be sorted out.
+Can also be used for Vignettes, etc.
+Beware of color spaces!
+<strong>See PDF Reference Page 545</strong> - Soft masks</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SpotColor.html" title="printpdf::SpotColor struct">SpotColor</a></div><div class="item-right docblock-short"><p>Spot color
+Spot colors are like Cmyk, but without color space
+They are essentially “named” colors from specific vendors
+currently they are the same as a CMYK color.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.SvgIndex.html" title="printpdf::SvgIndex struct">SvgIndex</a></div><div class="item-right docblock-short"><p>Index of a svg file</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.XObjectList.html" title="printpdf::XObjectList struct">XObjectList</a></div><div class="item-right docblock-short"><p>List of <code>XObjects</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.XObjectRef.html" title="printpdf::XObjectRef struct">XObjectRef</a></div><div class="item-right docblock-short"><p>Named reference to an <code>XObject</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.XmpMetadata.html" title="printpdf::XmpMetadata struct">XmpMetadata</a></div><div class="item-right docblock-short"><p>Initial struct for Xmp metatdata. This should be expanded later for XML handling, etc.
+Right now it just fills out the necessary fields</p>
+</div></div></div><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.BlackGenerationExtraFunction.html" title="printpdf::BlackGenerationExtraFunction enum">BlackGenerationExtraFunction</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.BlackGenerationFunction.html" title="printpdf::BlackGenerationFunction enum">BlackGenerationFunction</a></div><div class="item-right docblock-short"><p>Black generation calculates the amount of black to be used when trying to
+reproduce a particular color.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.BlendMode.html" title="printpdf::BlendMode enum">BlendMode</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.BuiltinFont.html" title="printpdf::BuiltinFont enum">BuiltinFont</a></div><div class="item-right docblock-short"><p>Standard built-in PDF fonts</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Color.html" title="printpdf::Color enum">Color</a></div><div class="item-right docblock-short"><p>Wrapper for Rgb, Cmyk and other color types</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ColorBits.html" title="printpdf::ColorBits enum">ColorBits</a></div><div class="item-right docblock-short"><p>How many bits does a color have?</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ColorSpace.html" title="printpdf::ColorSpace enum">ColorSpace</a></div><div class="item-right docblock-short"><p>Color space (enum for marking the number of bits a color has)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.CurTransMat.html" title="printpdf::CurTransMat enum">CurTransMat</a></div><div class="item-right docblock-short"><p>PDF “current transformation matrix”. Once set, will operate on all following shapes,
+until the <code>layer.restore_graphics_state()</code> is called. It is important to
+call <code>layer.save_graphics_state()</code> earlier.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Error.html" title="printpdf::Error enum">Error</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Font.html" title="printpdf::Font enum">Font</a></div><div class="item-right docblock-short"><p>The font</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.FormType.html" title="printpdf::FormType enum">FormType</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.GroupXObjectType.html" title="printpdf::GroupXObjectType enum">GroupXObjectType</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.HalftoneType.html" title="printpdf::HalftoneType enum">HalftoneType</a></div><div class="item-right docblock-short"><p>In PDF 1.2, the graphics state includes a current halftone parameter,
+which determines the halftoning process to be used by the painting operators.
+It may be defined by either a dictionary or a stream, depending on the
+type of halftone; the term halftone dictionary is used generically
+throughout this section to refer to either a dictionary object or the
+dictionary portion of a stream object. (The halftones that are defined
+by streams are specifically identified as such in the descriptions
+of particular halftone types; unless otherwise stated, they are
+understood to be defined by simple dictionaries instead.)
+Deserialized into Integer: 1, 5, 6, 10 or 16</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.IccProfileType.html" title="printpdf::IccProfileType enum">IccProfileType</a></div><div class="item-right docblock-short"><p>Type of the icc profile</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ImageFilter.html" title="printpdf::ImageFilter enum">ImageFilter</a></div><div class="item-right docblock-short"><p>Describes the format the image bytes are compressed with.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.IndexError.html" title="printpdf::IndexError enum">IndexError</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.LineCapStyle.html" title="printpdf::LineCapStyle enum">LineCapStyle</a></div><div class="item-right docblock-short"><p><strong>See PDF Reference (Page 216)</strong> - Line cap (ending) style</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.LineJoinStyle.html" title="printpdf::LineJoinStyle enum">LineJoinStyle</a></div><div class="item-right docblock-short"><p><strong>See PDF Reference Page 216</strong> - Line join style</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.NonSeperableBlendMode.html" title="printpdf::NonSeperableBlendMode enum">NonSeperableBlendMode</a></div><div class="item-right docblock-short"><p>Since the nonseparable blend modes consider all color components in combination, their
+computation depends on the blending color space in which the components are interpreted.
+They may be applied to all multiple-component color spaces that are allowed as blending
+color spaces (see Section 7.2.3, “Blending Color Space”).</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.OCGIntent.html" title="printpdf::OCGIntent enum">OCGIntent</a></div><div class="item-right docblock-short"><p>Intent to use for the optional content groups</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.OverprintMode.html" title="printpdf::OverprintMode enum">OverprintMode</a></div><div class="item-right docblock-short"><p><strong>(PDF 1.3)</strong> A code specifying whether a color component value of 0
+in a <code>DeviceCMYK</code> color space should erase that component (<code>EraseUnderlying</code>) or
+leave it unchanged (<code>KeepUnderlying</code>) when overprinting (see Section 4.5.6, “Over-
+print Control”). Initial value: <code>EraseUnderlying</code></p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.PdfColor.html" title="printpdf::PdfColor enum">PdfColor</a></div><div class="item-right docblock-short"><p>Tuple for differentiating outline and fill colors</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.PdfConformance.html" title="printpdf::PdfConformance enum">PdfConformance</a></div><div class="item-right docblock-short"><p>List of (relevant) PDF versions
+Please note the difference between <strong>PDF/A</strong> (archiving), <strong>PDF/UA</strong> (universal acessibility),
+<strong>PDF/X</strong> (printing), <strong>PDF/E</strong> (engineering / CAD), <strong>PDF/VT</strong> (large volume transactions with
+repeated content)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.PdfError.html" title="printpdf::PdfError enum">PdfError</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.RenderingIntent.html" title="printpdf::RenderingIntent enum">RenderingIntent</a></div><div class="item-right docblock-short"><p>Although CIE-based color specifications are theoretically device-independent,
+they are subject to practical limitations in the color reproduction capabilities of
+the output device. Such limitations may sometimes require compromises to be
+made among various properties of a color specification when rendering colors for
+a given device. Specifying a rendering intent (PDF 1.1) allows a PDF file to set priorities
+regarding which of these properties to preserve and which to sacrifice.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.SeperableBlendMode.html" title="printpdf::SeperableBlendMode enum">SeperableBlendMode</a></div><div class="item-right docblock-short"><p>PDF Reference 1.7, Page 520, Table 7.2
+Blending modes for objects
+In the following reference, each function gets one new color (the thing to paint on top)
+and an old color (the color that was already present before the object gets painted)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.SoftMaskFunction.html" title="printpdf::SoftMaskFunction enum">SoftMaskFunction</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.SpotFunction.html" title="printpdf::SpotFunction enum">SpotFunction</a></div><div class="item-right docblock-short"><p>Spot functions, Table 6.1, Page 489 in Pdf Reference v1.7
+The code is pseudo code, returning the grey component at (x, y).</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.TextMatrix.html" title="printpdf::TextMatrix enum">TextMatrix</a></div><div class="item-right docblock-short"><p>Text matrix. Text placement is a bit different, but uses the same
+concepts as a CTM that’s why it’s merged here</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.TextRenderingMode.html" title="printpdf::TextRenderingMode enum">TextRenderingMode</a></div><div class="item-right docblock-short"><p>The text rendering mode determines how a text is drawn
+The default rendering mode is <code>Fill</code>. The color of the
+fill / stroke is determine by the current pages outline /
+fill color.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.TransferExtraFunction.html" title="printpdf::TransferExtraFunction enum">TransferExtraFunction</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.TransferFunction.html" title="printpdf::TransferFunction enum">TransferFunction</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.UnderColorRemovalExtraFunction.html" title="printpdf::UnderColorRemovalExtraFunction enum">UnderColorRemovalExtraFunction</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.UnderColorRemovalFunction.html" title="printpdf::UnderColorRemovalFunction enum">UnderColorRemovalFunction</a></div><div class="item-right docblock-short"><p>See <code>BlackGenerationFunction</code>, too. Undercolor removal reduces the amounts
+of the cyan, magenta, and yellow components to compensate for the amount of
+black that was added by black generation.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.XObject.html" title="printpdf::XObject enum">XObject</a></div><div class="item-right docblock-short"><p>External object that gets reference outside the PDF content stream
+Gets constructed similar to the <code>ExtGState</code>, then inserted into the <code>/XObject</code> dictionary
+on the page. You can instantiate <code>XObjects</code> with the <code>/Do</code> operator. The <code>layer.add_xobject()</code>
+(or better yet, the <code>layer.add_image()</code>, <code>layer.add_form()</code>) methods will do this for you.</p>
+</div></div></div><h2 id="constants" class="small-section-header"><a href="#constants">Constants</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.ICC_PROFILE_ECI_V2.html" title="printpdf::ICC_PROFILE_ECI_V2 constant">ICC_PROFILE_ECI_V2</a></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_FILL_COLOR.html" title="printpdf::OP_COLOR_SET_FILL_COLOR constant">OP_COLOR_SET_FILL_COLOR</a></div><div class="item-right docblock-short"><p>set fill color (PDF 1.1)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_FILL_COLOR_ICC.html" title="printpdf::OP_COLOR_SET_FILL_COLOR_ICC constant">OP_COLOR_SET_FILL_COLOR_ICC</a></div><div class="item-right docblock-short"><p>set fill color (PDF 1.2) with support for Icc, etc.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_FILL_CS.html" title="printpdf::OP_COLOR_SET_FILL_CS constant">OP_COLOR_SET_FILL_CS</a></div><div class="item-right docblock-short"><p>non-stroking color space (PDF 1.1)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_FILL_CS_DEVICECMYK.html" title="printpdf::OP_COLOR_SET_FILL_CS_DEVICECMYK constant">OP_COLOR_SET_FILL_CS_DEVICECMYK</a></div><div class="item-right docblock-short"><p>Set the fill color to DeviceCMYK</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_FILL_CS_DEVICEGRAY.html" title="printpdf::OP_COLOR_SET_FILL_CS_DEVICEGRAY constant">OP_COLOR_SET_FILL_CS_DEVICEGRAY</a></div><div class="item-right docblock-short"><p>Set the fill color space to DeviceGray</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_FILL_CS_DEVICERGB.html" title="printpdf::OP_COLOR_SET_FILL_CS_DEVICERGB constant">OP_COLOR_SET_FILL_CS_DEVICERGB</a></div><div class="item-right docblock-short"><p>Set the fill color space to DeviceRGB</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_STROKE_COLOR.html" title="printpdf::OP_COLOR_SET_STROKE_COLOR constant">OP_COLOR_SET_STROKE_COLOR</a></div><div class="item-right docblock-short"><p>set stroking color (PDF 1.1)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_STROKE_COLOR_ICC.html" title="printpdf::OP_COLOR_SET_STROKE_COLOR_ICC constant">OP_COLOR_SET_STROKE_COLOR_ICC</a></div><div class="item-right docblock-short"><p>set stroking color (PDF 1.2) with support for ICC, etc.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_STROKE_CS.html" title="printpdf::OP_COLOR_SET_STROKE_CS constant">OP_COLOR_SET_STROKE_CS</a></div><div class="item-right docblock-short"><p>Color</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_STROKE_CS_DEVICECMYK.html" title="printpdf::OP_COLOR_SET_STROKE_CS_DEVICECMYK constant">OP_COLOR_SET_STROKE_CS_DEVICECMYK</a></div><div class="item-right docblock-short"><p>Set the stroking color space to DeviceCMYK</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_STROKE_CS_DEVICEGRAY.html" title="printpdf::OP_COLOR_SET_STROKE_CS_DEVICEGRAY constant">OP_COLOR_SET_STROKE_CS_DEVICEGRAY</a></div><div class="item-right docblock-short"><p>Set the stroking color space to DeviceGray</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_COLOR_SET_STROKE_CS_DEVICERGB.html" title="printpdf::OP_COLOR_SET_STROKE_CS_DEVICERGB constant">OP_COLOR_SET_STROKE_CS_DEVICERGB</a></div><div class="item-right docblock-short"><p>Set the stroking color space to DeviceRGB</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_3BEZIER_V1.html" title="printpdf::OP_PATH_CONST_3BEZIER_V1 constant">OP_PATH_CONST_3BEZIER_V1</a></div><div class="item-right docblock-short"><p>Cubic bezier with two points in v1</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_3BEZIER_V2.html" title="printpdf::OP_PATH_CONST_3BEZIER_V2 constant">OP_PATH_CONST_3BEZIER_V2</a></div><div class="item-right docblock-short"><p>Cubic bezier with two points in v2</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_4BEZIER.html" title="printpdf::OP_PATH_CONST_4BEZIER constant">OP_PATH_CONST_4BEZIER</a></div><div class="item-right docblock-short"><p>Cubic bezier over four following points</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_CLIP_EO.html" title="printpdf::OP_PATH_CONST_CLIP_EO constant">OP_PATH_CONST_CLIP_EO</a></div><div class="item-right docblock-short"><p>Current path is a clip path, non-zero winding order</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_CLIP_NZ.html" title="printpdf::OP_PATH_CONST_CLIP_NZ constant">OP_PATH_CONST_CLIP_NZ</a></div><div class="item-right docblock-short"><p>Current path is a clip path, non-zero winding order (usually in like <code>h W S</code>)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_CLOSE_SUBPATH.html" title="printpdf::OP_PATH_CONST_CLOSE_SUBPATH constant">OP_PATH_CONST_CLOSE_SUBPATH</a></div><div class="item-right docblock-short"><p>Close current sub-path (for appending custom patterns along line)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_LINE_TO.html" title="printpdf::OP_PATH_CONST_LINE_TO constant">OP_PATH_CONST_LINE_TO</a></div><div class="item-right docblock-short"><p>Straight line to the two following points</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_MOVE_TO.html" title="printpdf::OP_PATH_CONST_MOVE_TO constant">OP_PATH_CONST_MOVE_TO</a></div><div class="item-right docblock-short"><p>Path construction
+Move to point</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_CONST_RECT.html" title="printpdf::OP_PATH_CONST_RECT constant">OP_PATH_CONST_RECT</a></div><div class="item-right docblock-short"><p>Add rectangle to the path (width / height): x y width height re</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_END.html" title="printpdf::OP_PATH_PAINT_END constant">OP_PATH_PAINT_END</a></div><div class="item-right docblock-short"><p>End path without filling or stroking</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_EO.html" title="printpdf::OP_PATH_PAINT_FILL_EO constant">OP_PATH_PAINT_FILL_EO</a></div><div class="item-right docblock-short"><p>Fill path using even-odd rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_NZ.html" title="printpdf::OP_PATH_PAINT_FILL_NZ constant">OP_PATH_PAINT_FILL_NZ</a></div><div class="item-right docblock-short"><p>Fill path using nonzero winding number rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_NZ_OLD.html" title="printpdf::OP_PATH_PAINT_FILL_NZ_OLD constant">OP_PATH_PAINT_FILL_NZ_OLD</a></div><div class="item-right docblock-short"><p>Fill path using nonzero winding number rule (obsolete)</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_STROKE_CLOSE_EO.html" title="printpdf::OP_PATH_PAINT_FILL_STROKE_CLOSE_EO constant">OP_PATH_PAINT_FILL_STROKE_CLOSE_EO</a></div><div class="item-right docblock-short"><p>Close, fill and stroke path using even odd rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_STROKE_CLOSE_NZ.html" title="printpdf::OP_PATH_PAINT_FILL_STROKE_CLOSE_NZ constant">OP_PATH_PAINT_FILL_STROKE_CLOSE_NZ</a></div><div class="item-right docblock-short"><p>Close, fill and stroke path using nonzero winding number rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_STROKE_EO.html" title="printpdf::OP_PATH_PAINT_FILL_STROKE_EO constant">OP_PATH_PAINT_FILL_STROKE_EO</a></div><div class="item-right docblock-short"><p>Fill and stroke path using even-odd rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_FILL_STROKE_NZ.html" title="printpdf::OP_PATH_PAINT_FILL_STROKE_NZ constant">OP_PATH_PAINT_FILL_STROKE_NZ</a></div><div class="item-right docblock-short"><p>Fill and stroke path using nonzero winding number rule</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_STROKE.html" title="printpdf::OP_PATH_PAINT_STROKE constant">OP_PATH_PAINT_STROKE</a></div><div class="item-right docblock-short"><p>Path painting
+Stroke path</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_PAINT_STROKE_CLOSE.html" title="printpdf::OP_PATH_PAINT_STROKE_CLOSE constant">OP_PATH_PAINT_STROKE_CLOSE</a></div><div class="item-right docblock-short"><p>Close and stroke path</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_FLATNESS_TOLERANCE.html" title="printpdf::OP_PATH_STATE_SET_FLATNESS_TOLERANCE constant">OP_PATH_STATE_SET_FLATNESS_TOLERANCE</a></div><div class="item-right docblock-short"><p>Set flatness tolerance</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_GS_FROM_PARAM_DICT.html" title="printpdf::OP_PATH_STATE_SET_GS_FROM_PARAM_DICT constant">OP_PATH_STATE_SET_GS_FROM_PARAM_DICT</a></div><div class="item-right docblock-short"><p>(PDF 1.2) Set graphics state from parameter dictionary</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_LINE_CAP.html" title="printpdf::OP_PATH_STATE_SET_LINE_CAP constant">OP_PATH_STATE_SET_LINE_CAP</a></div><div class="item-right docblock-short"><p>Set line cap</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_LINE_DASH.html" title="printpdf::OP_PATH_STATE_SET_LINE_DASH constant">OP_PATH_STATE_SET_LINE_DASH</a></div><div class="item-right docblock-short"><p>Set line dash pattern</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_LINE_JOIN.html" title="printpdf::OP_PATH_STATE_SET_LINE_JOIN constant">OP_PATH_STATE_SET_LINE_JOIN</a></div><div class="item-right docblock-short"><p>Set line join</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_LINE_WIDTH.html" title="printpdf::OP_PATH_STATE_SET_LINE_WIDTH constant">OP_PATH_STATE_SET_LINE_WIDTH</a></div><div class="item-right docblock-short"><p>General graphics state</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_MITER_LIMIT.html" title="printpdf::OP_PATH_STATE_SET_MITER_LIMIT constant">OP_PATH_STATE_SET_MITER_LIMIT</a></div><div class="item-right docblock-short"><p>Set miter limit</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="constant" href="constant.OP_PATH_STATE_SET_RENDERING_INTENT.html" title="printpdf::OP_PATH_STATE_SET_RENDERING_INTENT constant">OP_PATH_STATE_SET_RENDERING_INTENT</a></div><div class="item-right docblock-short"><p>Set rendering intent</p>
+</div></div></div><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.FontData.html" title="printpdf::FontData trait">FontData</a></div><div class="item-right docblock-short"><p>Provides access to font metrics.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.FontDataClone.html" title="printpdf::FontDataClone trait">FontDataClone</a></div><div class="item-right docblock-short"><p>Helper trait for cloning boxed <a href="trait.FontData.html"><code>FontData</code></a> implementors.</p>
+</div></div></div><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.calculate_points_for_circle.html" title="printpdf::calculate_points_for_circle fn">calculate_points_for_circle</a></div><div class="item-right docblock-short"><p>Calculates and returns the points for an approximated circle, given a radius and an
+offset into the centre of circle (starting from bottom left corner of page).</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.calculate_points_for_rect.html" title="printpdf::calculate_points_for_rect fn">calculate_points_for_rect</a></div><div class="item-right docblock-short"><p>Calculates and returns the points for a rectangle, given a horizontal and vertical scale.
+and an offset into the centre of rectangle (starting from bottom left corner of page).</p>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="printpdf" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>

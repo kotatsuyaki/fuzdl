@@ -1,0 +1,1091 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/printpdf-0.5.3/src/pdf_layer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pdf_layer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../printpdf/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../printpdf/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../printpdf/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+</pre><pre class="rust"><code><span class="doccomment">//! PDF layer management. Layers can contain referenced or real content.</span>
+
+<span class="kw">use</span> <span class="ident">indices</span>::{<span class="ident">PdfPageIndex</span>, <span class="ident">PdfLayerIndex</span>};
+<span class="kw">use</span> <span class="ident">std::rc::Weak</span>;
+<span class="kw">use</span> <span class="ident">std::cell::RefCell</span>;
+<span class="kw">use</span> <span class="ident">lopdf::content::Operation</span>;
+<span class="kw">use</span> <span class="ident">glob_defines::OP_PATH_STATE_SET_LINE_WIDTH</span>;
+<span class="kw">use</span> {
+    <span class="ident">Font</span>, <span class="ident">XObject</span>, <span class="ident">PdfColor</span>,  <span class="ident">PdfDocument</span>, <span class="ident">ExtendedGraphicsStateBuilder</span>, <span class="ident">Line</span>, <span class="ident">ImageXObject</span>, <span class="ident">XObjectRef</span>, <span class="ident">Color</span>, <span class="ident">IndirectFontRef</span>, <span class="ident">BlendMode</span>,
+    <span class="ident">LineJoinStyle</span>, <span class="ident">LineCapStyle</span>, <span class="ident">LineDashPattern</span>, <span class="ident">CurTransMat</span>, <span class="ident">TextMatrix</span>, <span class="ident">TextRenderingMode</span>, <span class="ident">Mm</span>, <span class="ident">Pt</span>
+};
+
+<span class="doccomment">/// One layer of PDF data</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PdfLayer</span> {
+    <span class="doccomment">/// Name of the layer. Must be present for the optional content group</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Stream objects in this layer. Usually, one layer == one stream</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">operations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&gt;</span>,
+}
+
+<span class="doccomment">/// A &quot;reference&quot; to the current layer, allows for inner mutability</span>
+<span class="doccomment">/// but only inside this library</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PdfLayerReference</span> {
+    <span class="doccomment">/// A weak reference to the document, for inner mutability</span>
+    <span class="kw">pub</span> <span class="ident">document</span>: <span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">PdfDocument</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// The index of the page this layer is on</span>
+    <span class="kw">pub</span> <span class="ident">page</span>: <span class="ident">PdfPageIndex</span>,
+    <span class="doccomment">/// The index of the layer this layer has (inside the page)</span>
+    <span class="kw">pub</span> <span class="ident">layer</span>: <span class="ident">PdfLayerIndex</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">PdfLayer</span> {
+
+    <span class="doccomment">/// Create a new layer, with a name and what index the layer has in the page</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">S</span>)
+    -&gt; <span class="self">Self</span> <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+    {
+        <span class="self">Self</span> {
+            <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">into</span>(),
+            <span class="ident">operations</span>: <span class="ident">Vec::new</span>(),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">lopdf::Stream</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PdfLayer</span> {
+    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>)
+    -&gt; <span class="ident">lopdf::Stream</span>
+    {
+        <span class="kw">use</span> <span class="ident">lopdf</span>::{<span class="ident">Stream</span>, <span class="ident">Dictionary</span>};
+        <span class="kw">let</span> <span class="ident">stream_content</span> <span class="op">=</span> <span class="ident">lopdf::content::Content</span> { <span class="ident">operations</span>: <span class="self">self</span>.<span class="ident">operations</span> };
+
+        <span class="comment">// page contents may not be compressed (todo: is this valid for XObjects?)</span>
+        <span class="ident">Stream::new</span>(<span class="ident">Dictionary::new</span>(), <span class="ident">stream_content</span>.<span class="ident">encode</span>().<span class="ident">unwrap</span>()).<span class="ident">with_compression</span>(<span class="bool-val">false</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">PdfLayerReference</span> {
+
+    <span class="doccomment">/// Add a shape to the layer. Use `closed` to indicate whether the line is a closed line</span>
+    <span class="doccomment">/// Use has_fill to determine if the line should be filled.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_shape</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line</span>: <span class="ident">Line</span>)
+    {
+        <span class="kw">let</span> <span class="ident">line_ops</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">into_stream_op</span>();
+        <span class="kw">for</span> <span class="ident">op</span> <span class="kw">in</span> <span class="ident">line_ops</span> {
+            <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">op</span>);
+        }
+    }
+
+    <span class="doccomment">/// Add an image to the layer. To be called from the</span>
+    <span class="doccomment">/// `image.add_to_layer()` class (see `use_xobject` documentation)</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_image</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">image</span>: <span class="ident">T</span>)
+    -&gt; <span class="ident">XObjectRef</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">ImageXObject</span><span class="op">&gt;</span>
+    {
+        <span class="self">self</span>.<span class="ident">add_xobject</span>(<span class="ident">image</span>.<span class="ident">into</span>())
+    }
+
+    <span class="doccomment">/// Adds a general XObject to the layer, similar to `add_image`,</span>
+    <span class="doccomment">/// but allows for other types of XObjects to be added to the</span>
+    <span class="doccomment">/// page, not just images</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_xobject</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">xobject</span>: <span class="ident">T</span>)
+    -&gt; <span class="ident">XObjectRef</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">XObject</span><span class="op">&gt;</span>
+    {
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">page_mut</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>];
+
+        <span class="ident">page_mut</span>.<span class="ident">add_xobject</span>(<span class="ident">xobject</span>.<span class="ident">into</span>())
+    }
+
+    <span class="doccomment">/// Begins a new text section</span>
+    <span class="doccomment">/// You have to make sure to call `end_text_section` afterwards</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">begin_text_section</span>(<span class="kw-2">&amp;</span><span class="self">self</span>)
+    -&gt; ()
+    {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;BT&quot;</span>, <span class="macro">vec!</span>[] ));
+    }
+
+    <span class="doccomment">/// Ends a new text section</span>
+    <span class="doccomment">/// Only valid if `begin_text_section` has been called</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">end_text_section</span>(<span class="kw-2">&amp;</span><span class="self">self</span>)
+    -&gt; ()
+    {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;ET&quot;</span>, <span class="macro">vec!</span>[] ));
+    }
+
+    <span class="doccomment">/// Set the current fill color for the layer</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_fill_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fill_color</span>: <span class="ident">Color</span>)
+    -&gt; ()
+    {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">PdfColor::FillColor</span>(<span class="ident">fill_color</span>));
+    }
+
+    <span class="doccomment">/// Set the current font, only valid in a `begin_text_section` to</span>
+    <span class="doccomment">/// `end_text_section` block</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_font</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">IndirectFontRef</span>, <span class="ident">font_size</span>: <span class="ident">f64</span>)
+    -&gt; ()
+    {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tf&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">font</span>.<span class="ident">name</span>.<span class="ident">clone</span>().<span class="ident">into</span>(), (<span class="ident">font_size</span>).<span class="ident">into</span>()]
+        ));
+    }
+
+    <span class="doccomment">/// Set the current line / outline color for the layer</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_outline_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">color</span>: <span class="ident">Color</span>)
+    {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">PdfColor::OutlineColor</span>(<span class="ident">color</span>));
+    }
+    <span class="doccomment">/// Instantiate layers, forms and postscript items on the page</span>
+    <span class="doccomment">/// __WARNING__: Object must be added to the same page, since the XObjectRef is just a</span>
+    <span class="doccomment">/// String, essentially, it can&#39;t be checked that this is the case. The caller is</span>
+    <span class="doccomment">/// responsible for ensuring this. However, you can use the `Image` struct</span>
+    <span class="doccomment">/// and use `image.add_to(layer)`, which will essentially do the same thing, but ensures</span>
+    <span class="doccomment">/// that the image is referenced correctly</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Function is limited to this library to ensure that outside code cannot call it</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">use_xobject</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">xobj</span>: <span class="ident">XObjectRef</span>, <span class="ident">transformations</span>: <span class="kw-2">&amp;</span>[<span class="ident">CurTransMat</span>]) {
+        <span class="comment">// save graphics state</span>
+        <span class="self">self</span>.<span class="ident">save_graphics_state</span>();
+
+        <span class="comment">// do transformations to XObject</span>
+        <span class="kw">if</span> <span class="ident">transformations</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">CurTransMat::Identity</span>;
+            <span class="kw">for</span> <span class="ident">q</span> <span class="kw">in</span> <span class="ident">transformations</span> {
+                <span class="ident">t</span> <span class="op">=</span> <span class="ident">CurTransMat::Raw</span>(<span class="ident">CurTransMat::combine_matrix</span>(<span class="ident">t</span>.<span class="ident">into</span>(), <span class="ident">q</span>.<span class="ident">clone</span>().<span class="ident">into</span>()));
+            }
+            <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">t</span>);
+        }
+
+        <span class="comment">// invoke object (/Do)</span>
+        <span class="self">self</span>.<span class="ident">internal_invoke_xobject</span>(<span class="ident">xobj</span>.<span class="ident">name</span>);
+
+        <span class="comment">// restore graphics state</span>
+        <span class="self">self</span>.<span class="ident">restore_graphics_state</span>();
+    }
+
+    <span class="doccomment">/// Set the overprint mode of the stroke color to true (overprint) or false (no overprint)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_overprint_fill</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">overprint</span>: <span class="ident">bool</span>)
+    {
+        <span class="kw">let</span> <span class="ident">new_overprint_state</span> <span class="op">=</span> <span class="ident">ExtendedGraphicsStateBuilder::new</span>()
+                                      .<span class="ident">with_overprint_fill</span>(<span class="ident">overprint</span>)
+                                      .<span class="ident">build</span>();
+
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">page_mut</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>];
+
+        <span class="kw">let</span> <span class="ident">new_ref</span> <span class="op">=</span> <span class="ident">page_mut</span>.<span class="ident">add_graphics_state</span>(<span class="ident">new_overprint_state</span>);
+
+        <span class="comment">// add gs operator to stream</span>
+        <span class="ident">page_mut</span>.<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+            .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">lopdf::content::Operation::new</span>(
+                <span class="string">&quot;gs&quot;</span>, <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Name</span>(<span class="ident">new_ref</span>.<span class="ident">gs_name</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>())]
+        ));
+    }
+
+    <span class="doccomment">/// Set the overprint mode of the fill color to true (overprint) or false (no overprint)</span>
+    <span class="doccomment">/// This changes the graphics state of the current page, don&#39;t do it too often or you&#39;ll bloat the file size</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_overprint_stroke</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">overprint</span>: <span class="ident">bool</span>)
+    {
+        <span class="comment">// this is technically an operation on the page level</span>
+        <span class="kw">let</span> <span class="ident">new_overprint_state</span> <span class="op">=</span> <span class="ident">ExtendedGraphicsStateBuilder::new</span>()
+                                      .<span class="ident">with_overprint_stroke</span>(<span class="ident">overprint</span>)
+                                      .<span class="ident">build</span>();
+
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">page_mut</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>];
+
+        <span class="kw">let</span> <span class="ident">new_ref</span> <span class="op">=</span> <span class="ident">page_mut</span>.<span class="ident">add_graphics_state</span>(<span class="ident">new_overprint_state</span>);
+        <span class="ident">page_mut</span>.<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+            .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">lopdf::content::Operation::new</span>(
+                <span class="string">&quot;gs&quot;</span>, <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Name</span>(<span class="ident">new_ref</span>.<span class="ident">gs_name</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>())]
+        ));
+    }
+
+    <span class="doccomment">/// Set the overprint mode of the fill color to true (overprint) or false (no overprint)</span>
+    <span class="doccomment">/// This changes the graphics state of the current page, don&#39;t do it too often or you&#39;ll bloat the file size</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_blend_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">blend_mode</span>: <span class="ident">BlendMode</span>)
+    {
+        <span class="comment">// this is technically an operation on the page level</span>
+        <span class="kw">let</span> <span class="ident">new_blend_mode_state</span> <span class="op">=</span> <span class="ident">ExtendedGraphicsStateBuilder::new</span>()
+                                      .<span class="ident">with_blend_mode</span>(<span class="ident">blend_mode</span>)
+                                      .<span class="ident">build</span>();
+
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">page_mut</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>];
+
+        <span class="kw">let</span> <span class="ident">new_ref</span> <span class="op">=</span> <span class="ident">page_mut</span>.<span class="ident">add_graphics_state</span>(<span class="ident">new_blend_mode_state</span>);
+
+        <span class="ident">page_mut</span>.<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+            .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">lopdf::content::Operation::new</span>(
+                <span class="string">&quot;gs&quot;</span>, <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Name</span>(<span class="ident">new_ref</span>.<span class="ident">gs_name</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>())]
+        ));
+    }
+
+    <span class="doccomment">/// Set the current line thickness, in points</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// __NOTE__: 0.0 is a special value, it does not make the line disappear, but rather</span>
+    <span class="doccomment">/// makes it appear 1px wide across all devices</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_outline_thickness</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">outline_thickness</span>: <span class="ident">f64</span>)
+    {
+        <span class="kw">use</span> <span class="ident">lopdf::Object</span>::<span class="kw-2">*</span>;
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="ident">OP_PATH_STATE_SET_LINE_WIDTH</span>, <span class="macro">vec!</span>[<span class="ident">Real</span>(<span class="ident">outline_thickness</span>)]));
+    }
+
+    <span class="doccomment">/// Set the current line join style for outlines</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_join_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line_join</span>: <span class="ident">LineJoinStyle</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">line_join</span>);
+    }
+
+    <span class="doccomment">/// Set the current line join style for outlines</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_cap_style</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">line_cap</span>: <span class="ident">LineCapStyle</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">line_cap</span>);
+    }
+
+    <span class="doccomment">/// Set the current line join style for outlines</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_dash_pattern</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dash_pattern</span>: <span class="ident">LineDashPattern</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">dash_pattern</span>);
+    }
+
+    <span class="doccomment">/// Sets (adds to) the current transformation matrix</span>
+    <span class="doccomment">/// Use `save_graphics_state()` and `restore_graphics_state()`</span>
+    <span class="doccomment">/// to &quot;scope&quot; the transformation matrix to a specific function</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_ctm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ctm</span>: <span class="ident">CurTransMat</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">ctm</span>);
+    }
+
+    <span class="doccomment">/// Sets (replaces) the current text matrix</span>
+    <span class="doccomment">/// This does not have to be scoped, since the matrix is replaced</span>
+    <span class="doccomment">/// instead of concatenated to the current matrix. However,</span>
+    <span class="doccomment">/// you should only call this function with in a block scoped by</span>
+    <span class="doccomment">/// `begin_text_section()` and `end_text_section()`</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_text_matrix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tm</span>: <span class="ident">TextMatrix</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">tm</span>);
+    }
+
+    <span class="doccomment">/// Sets the position where the text should appear</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_text_cursor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>:<span class="ident">Mm</span>, <span class="ident">y</span>:<span class="ident">Mm</span>) {
+        <span class="kw">let</span> <span class="ident">x_in_pt</span>: <span class="ident">Pt</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">y_in_pt</span>: <span class="ident">Pt</span> <span class="op">=</span> <span class="ident">y</span>.<span class="ident">into</span>();
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Td&quot;</span>,
+                <span class="macro">vec!</span>[<span class="ident">x_in_pt</span>.<span class="ident">into</span>(), <span class="ident">y_in_pt</span>.<span class="ident">into</span>()]
+        ));
+    }
+
+    <span class="doccomment">/// If called inside a text block scoped by `begin_text_section` and</span>
+    <span class="doccomment">/// `end_text_section`, moves the cursor to a new line. PDF does not have</span>
+    <span class="doccomment">/// any concept of &quot;alignment&quot; except left-aligned text</span>
+    <span class="doccomment">/// __Note:__ Use `set_line_height` earlier to set the line height first</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_line_break</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;T*&quot;</span>, <span class="ident">Vec::new</span>()));
+    }
+
+    <span class="doccomment">/// Sets the text line height inside a text block</span>
+    <span class="doccomment">/// (must be called within `begin_text_block` and `end_text_block`)</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_height</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">height</span>: <span class="ident">f64</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;TL&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Real</span>(<span class="ident">height</span>)]
+        ));
+    }
+
+    <span class="doccomment">/// Sets the character spacing inside a text block</span>
+    <span class="doccomment">/// Values are given in points. A value of 3 (pt) will increase</span>
+    <span class="doccomment">/// the spacing inside a word by 3pt.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_character_spacing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">spacing</span>: <span class="ident">f64</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tc&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Real</span>(<span class="ident">spacing</span>)]
+        ));
+    }
+
+    <span class="doccomment">/// Sets the word spacing inside a text block.</span>
+    <span class="doccomment">/// Same as `set_character_spacing`, just for words.</span>
+    <span class="doccomment">/// __Note:__ This currently does not work for external</span>
+    <span class="doccomment">/// fonts. External fonts are encoded with Unicode, and</span>
+    <span class="doccomment">/// PDF does not recognize unicode fonts. It only</span>
+    <span class="doccomment">/// recognizes builtin fonts done with PDFDoc encoding.</span>
+    <span class="doccomment">/// However, the function itself is valid and _will work_</span>
+    <span class="doccomment">/// with builtin fonts.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_word_spacing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">spacing</span>: <span class="ident">f64</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tw&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Real</span>(<span class="ident">spacing</span>)]
+        ));
+    }
+
+    <span class="doccomment">/// Sets the horizontal scaling (like a &quot;condensed&quot; font)</span>
+    <span class="doccomment">/// Default value is 100 (regular scaling). Setting it to</span>
+    <span class="doccomment">/// 50 will reduce the width of the written text by half,</span>
+    <span class="doccomment">/// but stretch the text</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_text_scaling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">scaling</span>: <span class="ident">f64</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tz&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Real</span>(<span class="ident">scaling</span>)]
+        ));
+    }
+
+    <span class="doccomment">/// Offsets the current text positon (used for superscript</span>
+    <span class="doccomment">/// and subscript). To reset the superscript / subscript, call this</span>
+    <span class="doccomment">/// function with 0 as the offset. For superscript, use a positive</span>
+    <span class="doccomment">/// number, for subscript, use a negative number. This does not</span>
+    <span class="doccomment">/// change the size of the font</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_line_offset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">offset</span>: <span class="ident">f64</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Ts&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Real</span>(<span class="ident">offset</span>)]
+        ));
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_text_rendering_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">TextRenderingMode</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tr&quot;</span>,
+            <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Integer</span>(<span class="ident">mode</span>.<span class="ident">into</span>())]
+        ));
+    }
+
+    <span class="doccomment">/// Add text to the file at the current position by specifying font codepoints for an</span>
+    <span class="doccomment">/// ExternalFont</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_codepoints</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">codepoints</span>: <span class="ident">I</span>)
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u16</span><span class="op">&gt;</span>
+    {
+        <span class="kw">use</span> <span class="ident">lopdf::Object</span>::<span class="kw-2">*</span>;
+        <span class="kw">use</span> <span class="ident">lopdf::StringFormat::Hexadecimal</span>;
+
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">codepoints</span>
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> {
+                <span class="kw">let</span> [<span class="ident">b0</span>, <span class="ident">b1</span>] <span class="op">=</span> <span class="ident">x</span>.<span class="ident">to_be_bytes</span>();
+                <span class="ident">std::iter::once</span>(<span class="ident">b0</span>).<span class="ident">chain</span>(<span class="ident">std::iter::once</span>(<span class="ident">b1</span>))
+            })
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>]
+            .<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+                .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tj&quot;</span>,
+                    <span class="macro">vec!</span>[<span class="ident">String</span>(<span class="ident">bytes</span>, <span class="ident">Hexadecimal</span>)]
+            ));
+    }
+
+    <span class="doccomment">/// Add text to the file at the current position by specifying</span>
+    <span class="doccomment">/// font codepoints with additional kerning offset</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_positioned_codepoints</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">codepoints</span>: <span class="ident">I</span>)
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">i64</span>, <span class="ident">u16</span>)<span class="op">&gt;</span>
+    {
+        <span class="kw">use</span> <span class="ident">lopdf::Object</span>::<span class="kw-2">*</span>;
+        <span class="kw">use</span> <span class="ident">lopdf::StringFormat::Hexadecimal</span>;
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+
+        <span class="kw">for</span> (<span class="ident">pos</span>, <span class="ident">codepoint</span>) <span class="kw">in</span> <span class="ident">codepoints</span> {
+            <span class="kw">if</span> <span class="ident">pos</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+                <span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">Integer</span>(<span class="ident">pos</span>));
+            }
+            <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">codepoint</span>.<span class="ident">to_be_bytes</span>().<span class="ident">to_vec</span>();
+            <span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">String</span>(<span class="ident">bytes</span>, <span class="ident">Hexadecimal</span>));
+        }
+
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>]
+            .<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+                .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;TJ&quot;</span>, <span class="macro">vec!</span>[<span class="ident">Array</span>(<span class="ident">list</span>)]));
+    }
+
+    <span class="doccomment">/// Add text to the file at the current position</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the given font is a built-in font and the given text contains characters that are not</span>
+    <span class="doccomment">/// supported by the [Windows-1252][] encoding, these characters will be ignored.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [Windows-1252]: https://en.wikipedia.org/wiki/Windows-1252</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_text</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">text</span>: <span class="ident">S</span>, <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">IndirectFontRef</span>)
+    -&gt; () <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+    {
+        <span class="comment">// NOTE: The unwrap() calls in this function are safe, since</span>
+        <span class="comment">// we&#39;ve already checked the font for validity when it was added to the document</span>
+
+        <span class="kw">use</span> <span class="ident">lopdf::Object</span>::<span class="kw-2">*</span>;
+        <span class="kw">use</span> <span class="ident">lopdf::StringFormat::Hexadecimal</span>;
+
+        <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">into</span>();
+
+        <span class="comment">// we need to transform the characters into glyph ids and then add them to the layer</span>
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+
+        <span class="comment">// glyph IDs that make up this string</span>
+
+        <span class="comment">// kerning for each glyph id. If no kerning is present, will be 0</span>
+        <span class="comment">// must be the same length as list_gid</span>
+        <span class="comment">// let mut kerning_data = Vec::&lt;freetype::Vector&gt;::new();</span>
+
+        <span class="kw">let</span> <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Font::ExternalFont</span>(<span class="ident">face_direct_ref</span>) <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">fonts</span>.<span class="ident">get_font</span>(<span class="ident">font</span>).<span class="ident">unwrap</span>().<span class="ident">data</span> {
+
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list_gid</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span><span class="ident">::new</span>();
+                <span class="kw">let</span> <span class="ident">font</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">face_direct_ref</span>.<span class="ident">font_data</span>;
+
+                <span class="kw">for</span> <span class="ident">ch</span> <span class="kw">in</span> <span class="ident">text</span>.<span class="ident">chars</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">glyph_id</span>) <span class="op">=</span> <span class="ident">font</span>.<span class="ident">glyph_id</span>(<span class="ident">ch</span>) {
+                        <span class="ident">list_gid</span>.<span class="ident">push</span>(<span class="ident">glyph_id</span>);
+                    }
+                }
+
+                <span class="ident">list_gid</span>.<span class="ident">iter</span>()
+                    .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="macro">vec!</span>((<span class="ident">x</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span>, (<span class="ident">x</span> <span class="op">&amp;</span> <span class="number">255</span>) <span class="kw">as</span> <span class="ident">u8</span>))
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            } <span class="kw">else</span> {
+                <span class="comment">// For built-in fonts, we selected the WinAnsiEncoding, see the Into&lt;LoDictionary&gt;</span>
+                <span class="comment">// implementation for BuiltinFont.</span>
+                <span class="ident">lopdf::Document::encode_text</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;WinAnsiEncoding&quot;</span>), <span class="kw-2">&amp;</span><span class="ident">text</span>)
+            }
+        };
+
+        <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>]
+            .<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+                .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Tj&quot;</span>,
+                    <span class="macro">vec!</span>[<span class="ident">String</span>(<span class="ident">bytes</span>, <span class="ident">Hexadecimal</span>)]
+        ));
+    }
+
+    <span class="doccomment">/// Saves the current graphic state</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">save_graphics_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;q&quot;</span>, <span class="ident">Vec::new</span>()));
+    }
+
+    <span class="doccomment">/// Restores the previous graphic state</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">restore_graphics_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">add_operation</span>(<span class="ident">Operation::new</span>(<span class="string">&quot;Q&quot;</span>, <span class="ident">Vec::new</span>()));
+    }
+
+    <span class="doccomment">/// Add text to the file, x and y are measure in millimeter from the bottom left corner</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the given font is a built-in font and the given text contains characters that are not</span>
+    <span class="doccomment">/// supported by the [Windows-1252][] encoding, these characters will be ignored.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [Windows-1252]: https://en.wikipedia.org/wiki/Windows-1252</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_text</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">text</span>: <span class="ident">S</span>, <span class="ident">font_size</span>: <span class="ident">f64</span>,
+                       <span class="ident">x</span>: <span class="ident">Mm</span>, <span class="ident">y</span>: <span class="ident">Mm</span>, <span class="ident">font</span>: <span class="kw-2">&amp;</span><span class="ident">IndirectFontRef</span>)
+    -&gt; () <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+    {
+            <span class="self">self</span>.<span class="ident">begin_text_section</span>();
+            <span class="self">self</span>.<span class="ident">set_font</span>(<span class="ident">font</span>, <span class="ident">font_size</span>);
+            <span class="self">self</span>.<span class="ident">set_text_cursor</span>(<span class="ident">x</span>, <span class="ident">y</span>);
+            <span class="self">self</span>.<span class="ident">write_text</span>(<span class="ident">text</span>, <span class="ident">font</span>);
+            <span class="self">self</span>.<span class="ident">end_text_section</span>();
+    }
+
+    <span class="doccomment">/// Add an operation</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is the low level function used by other function in this struct.</span>
+    <span class="doccomment">/// Notice that [Operation](crate::lopdf::content::Operation) is part of the</span>
+    <span class="doccomment">/// `lopdf` crate, which is re-exported by this crate.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_operation</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">op</span>: <span class="ident">T</span>)
+    -&gt; () <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&gt;</span>
+    {
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">layer</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>].<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>];
+        <span class="ident">layer</span>.<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">op</span>.<span class="ident">into</span>());
+    }
+
+<span class="comment">/*
+    /// Instantiate SVG data
+    #[inline]
+    pub fn use_svg(&amp;self, width_mm: f64, height_mm: f64,
+                   x_mm: f64, y_mm: f64, svg_data_index: SvgIndex)
+    {
+        let svg_element_ref = {
+            let doc = self.document.upgrade().unwrap();
+            let doc = doc.borrow_mut();
+            let element = doc.contents.get((svg_data_index.0).0).expect(&quot;invalid svg reference&quot;);
+            (*element).clone()
+        };
+
+        let doc = self.document.upgrade().unwrap();
+        let mut doc = doc.borrow_mut();
+
+        // todo: what about width / height?
+        doc.pages.get_mut(self.page.0).unwrap()
+            .layers.get_mut(self.layer.0).unwrap()
+                .layer.push(PdfResource::ReferencedResource(svg_data_index.0.clone()));
+    }
+*/</span>
+
+    <span class="comment">// internal function to invoke an xobject</span>
+    <span class="kw">fn</span> <span class="ident">internal_invoke_xobject</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>)
+    {
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">document</span>.<span class="ident">upgrade</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">borrow_mut</span>();
+        <span class="kw">let</span> <span class="ident">page_mut</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">doc</span>.<span class="ident">pages</span>[<span class="self">self</span>.<span class="ident">page</span>.<span class="number">0</span>];
+
+        <span class="ident">page_mut</span>.<span class="ident">layers</span>[<span class="self">self</span>.<span class="ident">layer</span>.<span class="number">0</span>]
+          .<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">lopdf::content::Operation::new</span>(
+              <span class="string">&quot;Do&quot;</span>, <span class="macro">vec!</span>[<span class="ident">lopdf::Object::Name</span>(<span class="ident">name</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>())]
+        ));
+    }
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="printpdf" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
+</body></html>
