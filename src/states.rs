@@ -3,7 +3,9 @@
 
 #![allow(dead_code)]
 
+use std::collections::HashSet;
 use std::fmt::Display;
+use std::path::PathBuf;
 use std::time::Duration;
 
 use anyhow::{anyhow, bail};
@@ -99,6 +101,29 @@ pub struct Magazine {
 
     #[by(wait(timeout_ms = 3000, interval_ms = 300), css = "#__NEXT_DATA__")]
     json_data: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "[class^=MagazineIssueDetail_magazineIssueDetail__topSection__]"
+    )]
+    issue_elements: ElementResolver<Vec<MagazineIssueElement>>,
+}
+
+#[derive(Component, Clone)]
+struct MagazineIssueElement {
+    base: WebElement,
+
+    #[by(
+        nowait,
+        css = "[class^=MagazineIssueDetail_magazineIssueDetail__name__]"
+    )]
+    name: ElementResolver<WebElement>,
+
+    #[by(
+        nowait,
+        css = "[class^=MagazineIssueDetail_magazineIssueDetail__readButton__]"
+    )]
+    read_button: ElementResolver<WebElement>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -118,6 +143,55 @@ pub struct MagazineIssue {
 }
 
 #[derive(Component)]
+pub struct Manga {
+    base: WebElement,
+
+    #[by(wait(timeout_ms = 3000, interval_ms = 300), css = "#__NEXT_DATA__")]
+    json_data: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 3000, interval_ms = 300),
+        css = "a[class^=Chapter_chapter__]"
+    )]
+    chapter_elements: ElementResolver<Vec<MangaChapterElement>>,
+}
+
+#[derive(Component, Clone)]
+struct MangaChapterElement {
+    base: WebElement,
+
+    #[by(nowait, css = "[class^=Chapter_chapter__name__]")]
+    name: ElementResolver<WebElement>,
+
+    #[by(nowait, css = "p[class^=Chapter_chapter__price_free__]")]
+    free_tag: ElementResolver<WebElement>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MangaBook {
+    pub chapters: Vec<MangaChapter>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MangaChapter {
+    pub chapter_id: usize,
+    pub chapter_main_name: String,
+
+    pub thumbnail_url: Option<String>,
+    pub number_of_likes: Option<usize>,
+    pub updated_date: Option<String>,
+    pub first_page_image_url: Option<String>,
+    pub point_cunsumption: Option<MangaPointConsumption>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct MangaPointConsumption {
+    pub amount: usize,
+}
+
+#[derive(Component)]
 pub struct Viewer {
     #[base]
     body: WebElement,
@@ -129,9 +203,9 @@ pub struct Viewer {
     page_counter: ElementResolver<WebElement>,
 }
 
-pub enum ViewerKind {
-    Magazine,
-    Manga,
+pub enum ViewerLocation {
+    Magazine(usize),
+    Manga(usize),
 }
 
 impl Signin {
@@ -199,7 +273,7 @@ impl Purchased {
         Ok(self)
     }
 
-    pub async fn list_megazines(&self) -> Result<Vec<MagazineMetadata>> {
+    pub async fn list_magazines(&self) -> Result<Vec<MagazineMetadata>> {
         let magazines = self.magazines.resolve().await?;
         future::try_join_all(magazines.into_iter().map(PurchasedMagazine::into_metadata)).await
     }
@@ -230,18 +304,46 @@ impl Magazine {
         Ok(Self::new(body))
     }
 
-    pub async fn list_issues(&self) -> Result<Vec<MagazineIssue>> {
+    pub async fn list_viewable_issues(&self) -> Result<Vec<MagazineIssue>> {
+        let mut magazine_issues = self.list_issues().await?;
+        if let Err(e) = self.retain_viewable_issues(&mut magazine_issues).await {
+            warn!("Failed to filter out non-free content: {e}");
+        }
+        Ok(magazine_issues)
+    }
+
+    async fn retain_viewable_issues(&self, magazine_issues: &mut Vec<MagazineIssue>) -> Result<()> {
+        let issue_elements = self.issue_elements.resolve().await?;
+
+        // (name, bool) pairs indicating whether "name" is free to view
+        let viewable_pairs =
+            future::try_join_all(issue_elements.into_iter().map(|elem| async move {
+                let name = elem.name.resolve().await?;
+                let text = name.text().await?;
+                let is_viewable = elem.read_button.resolve().await.is_ok();
+                Result::<(String, bool)>::Ok((text, is_viewable))
+            }))
+            .await?;
+        let viewable_names: HashSet<_> = viewable_pairs
+            .into_iter()
+            .filter_map(|(name, is_viewable)| if is_viewable { Some(name) } else { None })
+            .collect();
+        magazine_issues.retain(|issue| viewable_names.contains(&issue.magazine_issue_name));
+        Ok(())
+    }
+
+    async fn list_issues(&self) -> Result<Vec<MagazineIssue>> {
         let json_data = self.json_data.resolve().await?;
         let json_text = json_data.inner_html().await?;
         let json_obj: json::Value = json::from_str(&json_text)?;
-        let megazine_issues = json_obj["props"]["pageProps"]["magazineIssues"].clone();
+        let magazine_issues = json_obj["props"]["pageProps"]["magazineIssues"].clone();
 
-        if megazine_issues.is_array() == false {
-            bail!("JSON data does not contain array at .props.pageProps.megazineIssues");
+        if magazine_issues.is_array() == false {
+            bail!("JSON data does not contain array at .props.pageProps.magazineIssues");
         }
 
-        let megazine_issues: Vec<MagazineIssue> = json::from_value(megazine_issues)?;
-        Ok(megazine_issues)
+        let magazine_issues: Vec<MagazineIssue> = json::from_value(magazine_issues)?;
+        Ok(magazine_issues)
     }
 }
 
@@ -255,16 +357,84 @@ impl Display for MagazineIssue {
     }
 }
 
-pub struct DownloadProgress {
-    pub done: usize,
-    pub total: usize,
+impl Manga {
+    pub async fn new_from_driver(driver: &WebDriver, href: impl AsRef<str>) -> Result<Self> {
+        driver.goto(href.as_ref()).await?;
+        let body = driver.body().await?;
+        Ok(Self::new(body))
+    }
+
+    pub async fn name(&self) -> Result<String> {
+        let json_data = self.json_data.resolve().await?;
+        let json_text = json_data.inner_html().await?;
+        let json_obj: json::Value = json::from_str(&json_text)?;
+
+        let manga_name = json_obj["props"]["pageProps"]["manga"]["mangaName"].clone();
+        if manga_name.is_string() == false {
+            bail!("JSON data does not contain string at .props.pageProps.manga.mangaName");
+        }
+
+        let manga_name: String = json::from_value(manga_name)?;
+        Ok(manga_name)
+    }
+
+    pub async fn list_viewable_chapters(&self) -> Result<Vec<MangaChapter>> {
+        let mut manga_chapters = self.list_chapters().await?;
+        if let Err(e) = self.retain_viewable_chapters(&mut manga_chapters).await {
+            warn!("Failed to filter out non-free content: {e}");
+        }
+        Ok(manga_chapters)
+    }
+
+    async fn retain_viewable_chapters(&self, manga_chapters: &mut Vec<MangaChapter>) -> Result<()> {
+        let chapter_elements = self.chapter_elements.resolve().await?;
+
+        // (name, bool) pairs indicating whether "name" is free to view
+        let viewable_pairs =
+            future::try_join_all(chapter_elements.into_iter().map(|elem| async move {
+                let name = elem.name.resolve().await?;
+                let text = name.text().await?;
+                let is_viewable = elem.free_tag.resolve().await.is_ok();
+                Result::<(String, bool)>::Ok((text, is_viewable))
+            }))
+            .await?;
+        let viewable_names: HashSet<_> = viewable_pairs
+            .into_iter()
+            .filter_map(|(name, is_viewable)| if is_viewable { Some(name) } else { None })
+            .collect();
+        manga_chapters.retain(|chapter| viewable_names.contains(&chapter.chapter_main_name));
+        Ok(())
+    }
+
+    async fn list_chapters(&self) -> Result<Vec<MangaChapter>> {
+        let json_data = self.json_data.resolve().await?;
+        let json_text = json_data.inner_html().await?;
+        let json_obj: json::Value = json::from_str(&json_text)?;
+        let manga_books = json_obj["props"]["pageProps"]["chapters"].clone();
+
+        if manga_books.is_array() == false {
+            bail!("JSON data does not contain array at .props.pageProps.chapters");
+        }
+        let manga_books: Vec<MangaBook> = json::from_value(manga_books)?;
+        let manga_chapters = manga_books
+            .into_iter()
+            .map(|book| book.chapters.into_iter())
+            .flatten()
+            .collect();
+
+        Ok(manga_chapters)
+    }
+}
+
+impl Display for MangaChapter {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} ({})", self.chapter_main_name, self.chapter_id)
+    }
 }
 
 impl Viewer {
-    pub async fn new_from_driver(driver: &WebDriver, kind: ViewerKind, id: usize) -> Result<Self> {
-        driver
-            .goto(format!("https://comic-fuz.com/{kind}/viewer/{id}"))
-            .await?;
+    pub async fn new_from_driver(driver: &WebDriver, location: ViewerLocation) -> Result<Self> {
+        driver.goto(location.url()).await?;
         let body = driver.body().await?;
         Ok(Self::new(body))
     }
@@ -273,8 +443,8 @@ impl Viewer {
         self,
         driver: &WebDriver,
         update_progress: impl Fn(DownloadProgress),
-    ) -> Result<TempDir> {
-        let mut downloaded_pages = vec![];
+    ) -> Result<DownloadOutput> {
+        let mut downloaded_image_paths = vec![];
         let tempdir = spawn_blocking(|| TempDir::new()).await??;
 
         let number_of_pages = self.number_of_pages().await?;
@@ -283,8 +453,8 @@ impl Viewer {
             total: number_of_pages,
         });
 
-        while downloaded_pages.len() < number_of_pages {
-            let page_number = downloaded_pages.len();
+        while downloaded_image_paths.len() < number_of_pages {
+            let page_number = downloaded_image_paths.len();
             let img_css_selector = format!("img[alt^=page_{page_number}]");
             let img = self
                 .body
@@ -298,10 +468,10 @@ impl Viewer {
             let filepath = tempdir.path().join(filename);
 
             fs::write(&filepath, &img_bytes).await?;
-            downloaded_pages.push(filepath);
+            downloaded_image_paths.push(filepath);
 
             update_progress(DownloadProgress {
-                done: downloaded_pages.len(),
+                done: downloaded_image_paths.len(),
                 total: number_of_pages,
             });
 
@@ -311,7 +481,10 @@ impl Viewer {
                 .context("Failed to send left key")?;
         }
 
-        Ok(tempdir)
+        Ok(DownloadOutput {
+            tempdir,
+            image_paths: downloaded_image_paths,
+        })
     }
 
     // zero-based
@@ -365,12 +538,37 @@ impl Viewer {
     }
 }
 
-impl Display for ViewerKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ViewerKind::Magazine => write!(f, "magazine"),
-            ViewerKind::Manga => write!(f, "manga"),
-        }
+impl ViewerLocation {
+    pub fn new_manga(id: usize) -> Self {
+        Self::Manga(id)
+    }
+
+    pub fn new_magazine(id: usize) -> Self {
+        Self::Magazine(id)
+    }
+
+    pub fn url(&self) -> String {
+        let (kind, id) = match self {
+            ViewerLocation::Magazine(id) => ("magazine", id),
+            ViewerLocation::Manga(id) => ("manga", id),
+        };
+        format!("https://comic-fuz.com/{kind}/viewer/{id}")
+    }
+}
+
+pub struct DownloadProgress {
+    pub done: usize,
+    pub total: usize,
+}
+
+pub struct DownloadOutput {
+    tempdir: TempDir,
+    image_paths: Vec<PathBuf>,
+}
+
+impl DownloadOutput {
+    pub fn image_paths(&self) -> Vec<PathBuf> {
+        self.image_paths.clone()
     }
 }
 
@@ -422,15 +620,15 @@ mod tests {
 
     #[tokio::test]
     async fn test_viewer() -> Result<()> {
-        let img_tempdir = with_driver(|driver| async move {
-            let viewer = Viewer::new_from_driver(&driver, ViewerKind::Manga, 30445).await?;
-            let img_tempdir = viewer.download_imgs(&driver, |_| {}).await?;
-            Result::<TempDir>::Ok(img_tempdir)
+        let download_output = with_driver(|driver| async move {
+            let viewer = Viewer::new_from_driver(&driver, ViewerLocation::new_manga(30445)).await?;
+            let download_output = viewer.download_imgs(&driver, |_| {}).await?;
+            Result::<DownloadOutput>::Ok(download_output)
         })
         .await?
         .context("Driver early cacnel")??;
 
-        let mut entries = fs::read_dir(img_tempdir.path()).await?;
+        let mut entries = fs::read_dir(download_output.tempdir).await?;
         while let Some(entry) = entries.next_entry().await? {
             eprintln!("{:?}", entry.path());
         }
