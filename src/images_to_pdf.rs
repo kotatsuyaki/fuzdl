@@ -8,6 +8,8 @@ use image::io::Reader as ImageReader;
 use image::DynamicImage;
 use printpdf::{ImageTransform, Mm, PdfDocument, PdfDocumentReference, PdfPageIndex, Px};
 
+use crate::progress::Progress;
+
 const DPI: f64 = 96.0;
 
 pub struct PdfConfig<Title, ImgPathIter, ImgPath, PdfPath>
@@ -23,14 +25,9 @@ where
     pub pdf_path: PdfPath,
 }
 
-pub struct PdfProgress {
-    pub done: usize,
-    pub total: usize,
-}
-
 pub fn build_pdf<Title, ImgPathIter, ImgPath, PdfPath>(
     config: PdfConfig<Title, ImgPathIter, ImgPath, PdfPath>,
-    update_progress: impl Fn(PdfProgress),
+    update_progress: impl Fn(Progress),
 ) -> Result<()>
 where
     Title: AsRef<str>,
@@ -53,7 +50,7 @@ where
         let img = ImageReader::open(img_path.as_ref())?.decode()?;
         pdf_builder.add_image(&img);
 
-        update_progress(PdfProgress {
+        update_progress(Progress {
             done: i + 1,
             total: num_pages,
         });

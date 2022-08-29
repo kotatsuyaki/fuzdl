@@ -19,6 +19,8 @@ use thirtyfour::prelude::*;
 use tokio::fs;
 use tokio::task::spawn_blocking;
 
+use crate::progress::Progress;
+
 /// Concurrently run `.resolve()` on all input [`ElementResolver`]s, returning a
 /// `Result<(WebElement, WebElement, ...)>`.
 ///
@@ -471,13 +473,13 @@ impl Viewer {
     pub async fn download_imgs(
         &self,
         driver: &WebDriver,
-        update_progress: impl Fn(DownloadProgress),
+        update_progress: impl Fn(Progress),
     ) -> Result<DownloadOutput> {
         let mut downloaded_image_paths = vec![];
         let tempdir = spawn_blocking(|| TempDir::new()).await??;
 
         let number_of_pages = self.number_of_pages().await?;
-        update_progress(DownloadProgress {
+        update_progress(Progress {
             done: 0,
             total: number_of_pages,
         });
@@ -499,7 +501,7 @@ impl Viewer {
             fs::write(&filepath, &img_bytes).await?;
             downloaded_image_paths.push(filepath);
 
-            update_progress(DownloadProgress {
+            update_progress(Progress {
                 done: downloaded_image_paths.len(),
                 total: number_of_pages,
             });
@@ -582,11 +584,6 @@ impl ViewerLocation {
         };
         format!("https://comic-fuz.com/{kind}/viewer/{id}")
     }
-}
-
-pub struct DownloadProgress {
-    pub done: usize,
-    pub total: usize,
 }
 
 pub struct DownloadOutput {

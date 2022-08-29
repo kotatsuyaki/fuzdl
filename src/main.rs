@@ -2,13 +2,11 @@ use std::collections::HashMap;
 use std::env;
 use std::fmt::Display;
 use std::path::Path;
-use std::time::Duration;
 
 use anyhow::{Context, Result};
 use console::{style, Term};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::{Input, MultiSelect, Password, Select};
-use indicatif::{ProgressBar, ProgressStyle};
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 use states::TocEntry;
@@ -16,10 +14,13 @@ use thirtyfour::WebDriver;
 use tokio::fs;
 use tokio::task::spawn_blocking;
 
+use crate::progress::ProgressBar;
+
 #[macro_use]
 mod macros;
 mod driver;
 mod images_to_pdf;
+mod progress;
 mod states;
 
 #[tokio::main]
@@ -36,65 +37,6 @@ async fn main() -> Result<()> {
     }
 
     Ok(())
-}
-
-#[derive(Clone, Copy)]
-enum DownloadKind {
-    Manga,
-    Magazine,
-}
-
-impl Display for DownloadKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            DownloadKind::Manga => write!(f, "Manga"),
-            DownloadKind::Magazine => write!(f, "Magazine"),
-        }
-    }
-}
-
-enum DownloadTask {
-    Magazine {
-        issue: states::MagazineIssue,
-    },
-    Manga {
-        name: String,
-        chapter: states::MangaChapter,
-    },
-}
-
-impl DownloadTask {
-    fn pdf_title(&self) -> String {
-        match self {
-            DownloadTask::Magazine { issue } => {
-                format!("{} {}", issue.magazine_issue_name, issue.magazine_name)
-            }
-            DownloadTask::Manga { name, chapter } => {
-                format!("{} {}", name, chapter.chapter_main_name)
-            }
-        }
-    }
-
-    fn viewer_location(&self) -> states::ViewerLocation {
-        match self {
-            DownloadTask::Magazine { issue } => {
-                states::ViewerLocation::new_magazine(issue.magazine_issue_id)
-            }
-            DownloadTask::Manga { chapter, .. } => {
-                states::ViewerLocation::new_manga(chapter.chapter_id)
-            }
-        }
-    }
-}
-
-impl Display for DownloadTask {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let display: &dyn Display = match self {
-            DownloadTask::Magazine { ref issue } => issue,
-            DownloadTask::Manga { ref chapter, .. } => chapter,
-        };
-        write!(f, "{}", display)
-    }
 }
 
 async fn run(driver: WebDriver) -> Result<()> {
@@ -118,50 +60,7 @@ async fn run(driver: WebDriver) -> Result<()> {
     };
 
     for task in download_tasks {
-        let viewer_state = states::Viewer::new_from_driver(&driver, task.viewer_location()).await?;
-
-        let toc = viewer_state
-            .fetch_toc_entries()
-            .await
-            .map(toc_entries_to_hashmap)
-            .unwrap_or_default();
-
-        let pb = new_progressbar("Downloading", &task);
-        let download_output = viewer_state
-            .download_imgs(&driver, |progress| {
-                let (done, total) = (progress.done as u64, progress.total as u64);
-                if pb.length().unwrap() != total {
-                    pb.set_length(total);
-                }
-
-                pb.set_position(done);
-            })
-            .await?;
-        pb.finish_with_message(format_finished_task(&task));
-        drop(pb);
-
-        let pdf_title = task.pdf_title();
-        let pdf_filename = format!("{pdf_title}.pdf");
-        let pdf_path = env::current_dir()
-            .context("Failed to get working directory")?
-            .join("output")
-            .join(pdf_filename);
-
-        let pb = new_progressbar("Exporting PDF", &task);
-        let pdf_config = images_to_pdf::PdfConfig {
-            title: &pdf_title,
-            toc,
-            image_paths: download_output.image_paths(),
-            pdf_path: &pdf_path,
-        };
-        images_to_pdf::build_pdf(pdf_config, |progress| {
-            let (done, total) = (progress.done as u64, progress.total as u64);
-            if pb.length().unwrap() != total {
-                pb.set_length(total);
-            }
-            pb.set_position(done);
-        })?;
-        info!("Saved to PDF file at {}", pdf_path.to_string_lossy());
+        task.perform(&driver).await?;
     }
 
     Ok(())
@@ -203,6 +102,127 @@ impl Credentials {
     async fn read_from_file(path: impl AsRef<Path>) -> Result<Self> {
         let serialized = fs::read(path).await?;
         Ok(json::from_slice(&serialized)?)
+    }
+}
+
+#[derive(Clone, Copy)]
+enum DownloadKind {
+    Manga,
+    Magazine,
+}
+
+impl Display for DownloadKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DownloadKind::Manga => write!(f, "Manga"),
+            DownloadKind::Magazine => write!(f, "Magazine"),
+        }
+    }
+}
+
+enum DownloadTask {
+    Magazine {
+        issue: states::MagazineIssue,
+    },
+    Manga {
+        name: String,
+        chapter: states::MangaChapter,
+    },
+}
+
+impl DownloadTask {
+    async fn perform(self, driver: &WebDriver) -> Result<()> {
+        let viewer = states::Viewer::new_from_driver(&driver, self.viewer_location()).await?;
+
+        let toc = Self::obtain_toc(&viewer).await;
+        let download_output = self.download_images(driver, &viewer).await?;
+        self.export_pdf(toc, download_output)?;
+
+        Ok(())
+    }
+
+    async fn download_images(
+        &self,
+        driver: &WebDriver,
+        viewer: &states::Viewer,
+    ) -> Result<states::DownloadOutput> {
+        let pb = ProgressBar::create_and_show("Downloading", &self);
+        let download_output = viewer
+            .download_imgs(&driver, |progress| pb.update(progress))
+            .await?;
+        pb.finish();
+        info!("{}", format_finished_task(&self));
+        Ok(download_output)
+    }
+
+    fn export_pdf(
+        &self,
+        toc: HashMap<usize, String>,
+        download_output: states::DownloadOutput,
+    ) -> Result<()> {
+        let pdf_title = self.pdf_title();
+        let pdf_filename = format!("{pdf_title}.pdf");
+        let pdf_path = env::current_dir()
+            .context("Failed to get working directory")?
+            .join("output")
+            .join(pdf_filename);
+
+        let pb = ProgressBar::create_and_show("Exporting PDF", &self);
+        let pdf_config = images_to_pdf::PdfConfig {
+            title: &pdf_title,
+            toc,
+            image_paths: download_output.image_paths(),
+            pdf_path: &pdf_path,
+        };
+        images_to_pdf::build_pdf(pdf_config, |progress| pb.update(progress))?;
+        pb.finish();
+        info!(
+            "Saved to PDF file at {}",
+            style(pdf_path.to_string_lossy()).green()
+        );
+
+        Ok(())
+    }
+
+    async fn obtain_toc(viewer: &states::Viewer) -> HashMap<usize, String> {
+        let toc = viewer
+            .fetch_toc_entries()
+            .await
+            .map(toc_entries_to_hashmap)
+            .unwrap_or_default();
+        toc
+    }
+
+    fn pdf_title(&self) -> String {
+        match self {
+            DownloadTask::Magazine { issue } => {
+                format!("{} {}", issue.magazine_issue_name, issue.magazine_name)
+            }
+            DownloadTask::Manga { name, chapter } => {
+                format!("{} {}", name, chapter.chapter_main_name)
+            }
+        }
+    }
+
+    fn viewer_location(&self) -> states::ViewerLocation {
+        match self {
+            DownloadTask::Magazine { issue } => {
+                states::ViewerLocation::new_magazine(issue.magazine_issue_id)
+            }
+            DownloadTask::Manga { chapter, .. } => {
+                states::ViewerLocation::new_manga(chapter.chapter_id)
+            }
+        }
+    }
+}
+
+impl Display for DownloadTask {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let display: &dyn Display = match self {
+            DownloadTask::Magazine { ref issue } => issue,
+            DownloadTask::Manga { ref chapter, .. } => chapter,
+        };
+        write!(f, "{}", display)
     }
 }
 
@@ -314,20 +334,6 @@ async fn prompt_multi_select<'a, Item: Clone + Display + 'static>(
     });
 
     Ok(options)
-}
-
-fn new_progressbar(prefix: impl AsRef<str>, item_name: &impl Display) -> ProgressBar {
-    info!("{} {}", prefix.as_ref(), console::style(item_name).green());
-
-    let pb = ProgressBar::new(0);
-    let style = ProgressStyle::with_template(
-        "{msg}{spinner} {elapsed_precise} [{bar:.cyan/blue}] {pos:>3}/{len:3}P ({per_sec} / ETA {eta_precise})",
-    )
-    .unwrap()
-    .progress_chars("#>-");
-    pb.set_style(style);
-    pb.enable_steady_tick(Duration::from_secs(1));
-    pb
 }
 
 fn format_finished_task(task: &DownloadTask) -> String {
