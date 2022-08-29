@@ -12,7 +12,10 @@
         naersk-lib = pkgs.callPackage naersk { };
       in
       {
-        defaultPackage = naersk-lib.buildPackage ./.;
+        defaultPackage = naersk-lib.buildPackage {
+          src = ./.;
+          buildInputs = [ pkgs.chromedriver ];
+        };
 
         defaultApp = utils.lib.mkApp {
           drv = self.defaultPackage."${system}";
@@ -29,7 +32,6 @@
             rnix-lsp
             taplo-cli
             chromedriver
-            img2pdf
           ];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };
