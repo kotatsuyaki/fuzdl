@@ -41,6 +41,8 @@ use tokio::{select, time};
 pub async fn with_driver<Out, Fut: Future<Output = Out> + Send>(
     f: impl FnOnce(WebDriver) -> Fut + Send + 'static,
 ) -> Result<Option<Out>> {
+    which::which("chromedriver").context("This tool requires 'chromedriver' in PATH.\nCommon distribution package names include 'chromedriver' and 'chromium-driver'.\nAlternatively, visit the download page of ChromeDriver: https://chromedriver.chromium.org/downloads")?;
+
     let mut driver_process = create_driver_process().await?;
 
     // This match is required,
