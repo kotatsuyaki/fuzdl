@@ -136,7 +136,7 @@ impl DownloadTask {
 
         let toc = Self::obtain_toc(&viewer).await;
         let download_output = self.download_images(driver, &viewer).await?;
-        self.export_pdf(toc, download_output)?;
+        spawn_blocking(move || self.export_pdf(toc, download_output)).await??;
 
         Ok(())
     }

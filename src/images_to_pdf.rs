@@ -1,12 +1,15 @@
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufReader, BufWriter};
 use std::path::Path;
 use std::{collections::HashMap, fs};
 
 use anyhow::{Context, Result};
-use image::io::Reader as ImageReader;
-use image::DynamicImage;
-use printpdf::{ImageTransform, Mm, PdfDocument, PdfDocumentReference, PdfPageIndex, Px};
+use image::codecs::jpeg::JpegDecoder;
+use image::ImageDecoder;
+use printpdf::{
+    ColorBits, ColorSpace, CustomPdfConformance, ImageFilter, ImageTransform, ImageXObject, Mm,
+    PdfConformance, PdfDocument, PdfDocumentReference, PdfPageIndex, Px,
+};
 
 use crate::progress::Progress;
 
@@ -47,8 +50,7 @@ where
 
     let mut pdf_builder = PdfBuilder::new(title);
     for (i, img_path) in img_paths.into_iter().enumerate() {
-        let img = ImageReader::open(img_path.as_ref())?.decode()?;
-        pdf_builder.add_image(&img);
+        pdf_builder.add_image(&img_path)?;
 
         update_progress(Progress {
             done: i + 1,
@@ -69,23 +71,56 @@ struct PdfBuilder {
 
 impl PdfBuilder {
     fn new(title: impl AsRef<str>) -> Self {
-        Self {
-            doc: PdfDocument::empty(title.as_ref()),
-            pages: vec![],
-        }
+        let doc = PdfDocument::empty(title.as_ref());
+        let doc = doc.with_conformance(PdfConformance::Custom(CustomPdfConformance {
+            requires_icc_profile: false,
+            requires_xmp_metadata: false,
+            ..Default::default()
+        }));
+        Self { doc, pages: vec![] }
     }
 
-    fn add_image(&mut self, img: &DynamicImage) {
-        let img = printpdf::image::Image::from_dynamic_image(img);
-        let width = px_to_mm(img.image.width);
-        let height = px_to_mm(img.image.height);
-        let (page, layer) = self.doc.add_page(width, height, "Layer1");
+    fn add_image(&mut self, path: impl AsRef<Path>) -> Result<()> {
+        let path = path.as_ref();
+
+        let image_file = BufReader::new(File::open(&path)?);
+        let image_decoder = JpegDecoder::new(image_file)?;
+
+        let (width, height) = {
+            let dim = image_decoder.dimensions();
+            (Px(dim.0 as usize), Px(dim.1 as usize))
+        };
+        let (color_bits, color_space) = {
+            let color_type = image_decoder.color_type();
+            (ColorBits::from(color_type), ColorSpace::from(color_type))
+        };
+        drop(image_decoder);
+
+        let image_data = std::fs::read(&path)?;
+        let img_xobject = ImageXObject {
+            width,
+            height,
+            color_space,
+            bits_per_component: color_bits,
+            image_data,
+            interpolate: true,
+            image_filter: Some(ImageFilter::DCT),
+            clipping_bbox: None,
+        };
+        let image: printpdf::Image = img_xobject.into();
+
+        let width_mm = px_to_mm(width);
+        let height_mm = px_to_mm(height);
+
+        let (page, layer) = self.doc.add_page(width_mm, height_mm, "Layer1");
         self.pages.push(page);
         let layer = self.doc.get_page(page).get_layer(layer);
 
         let mut image_transform = ImageTransform::default();
         image_transform.dpi = Some(DPI);
-        img.add_to_layer(layer, image_transform);
+        image.add_to_layer(layer, image_transform);
+
+        Ok(())
     }
 
     fn add_bookmark(&mut self, page: usize, name: String) {
