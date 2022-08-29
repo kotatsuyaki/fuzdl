@@ -42,8 +42,8 @@ async fn main() -> Result<()> {
 async fn run(driver: WebDriver) -> Result<()> {
     let credentials = Credentials::read_or_prompt("credentials.json").await?;
 
-    let signin_state = states::Signin::new_from_driver(&driver).await?;
-    signin_state
+    let signin = states::Signin::new_from_driver(&driver).await?;
+    signin
         .signin(credentials.email, credentials.password)
         .await?;
     info!("Successfully signed in");
@@ -227,13 +227,12 @@ impl Display for DownloadTask {
 }
 
 async fn prompt_magazine(driver: &WebDriver) -> Result<Vec<DownloadTask>> {
-    let purchased_state = states::Purchased::new_from_driver(&driver).await?;
-    let magazines = purchased_state.list_magazines().await?;
+    let purchased = states::Purchased::new_from_driver(&driver).await?;
+    let magazines = purchased.list_magazines().await?;
     let selected_megazine = prompt_select("Select a magazine", &magazines).await?;
 
-    let megazine_state =
-        states::Magazine::new_from_driver(&driver, &selected_megazine.href).await?;
-    let megazine_issues = megazine_state.list_viewable_issues().await?;
+    let megazine = states::Magazine::new_from_driver(&driver, &selected_megazine.href).await?;
+    let megazine_issues = megazine.list_viewable_issues().await?;
     let selected_issues = prompt_multi_select(
         "Press <SPACE> to select megazine issue(s)",
         &megazine_issues,
@@ -251,9 +250,9 @@ async fn prompt_manga(driver: &WebDriver) -> Result<Vec<DownloadTask>> {
     let manga_url =
         prompt_string("Paste manga URL (for example 'https://comic-fuz.com/manga/418')").await?;
 
-    let manga_state = states::Manga::new_from_driver(driver, &manga_url).await?;
-    let manga_name = manga_state.name().await?;
-    let manga_chapters = manga_state.list_viewable_chapters().await?;
+    let manga = states::Manga::new_from_driver(driver, &manga_url).await?;
+    let manga_name = manga.name().await?;
+    let manga_chapters = manga.list_viewable_chapters().await?;
 
     let select_prompt = format!("Press <SPACE> to select chapters from {}", manga_name);
     let selected_chapters = prompt_multi_select(&select_prompt, &manga_chapters).await?;
