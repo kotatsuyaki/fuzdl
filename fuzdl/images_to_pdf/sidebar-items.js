@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["DPI",""]],"fn":[["images_to_pdf",""],["px_to_mm",""]],"struct":[["PdfBuilder",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["DPI",""]],"fn":[["build_pdf",""],["px_to_mm",""]],"struct":[["PdfBuilder",""],["PdfConfig",""],["PdfProgress",""]]};

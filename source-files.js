@@ -157,5 +157,6 @@ sourcesIndex["want"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["webdriver"] = {"name":"","files":["actions.rs","capabilities.rs","command.rs","common.rs","error.rs","httpapi.rs","lib.rs","macros.rs","response.rs"]};
 sourcesIndex["webpki"] = {"name":"","dirs":[{"name":"name","files":["dns_name.rs","ip_address.rs","verify.rs"]}],"files":["calendar.rs","cert.rs","der.rs","end_entity.rs","error.rs","lib.rs","name.rs","signed_data.rs","time.rs","trust_anchor.rs","verify_cert.rs"]};
 sourcesIndex["weezl"] = {"name":"","files":["decode.rs","encode.rs","error.rs","lib.rs"]};
+sourcesIndex["which"] = {"name":"","files":["checker.rs","error.rs","finder.rs","lib.rs"]};
 sourcesIndex["zeroize"] = {"name":"","files":["lib.rs","x86.rs"]};
 createSourceSidebar();

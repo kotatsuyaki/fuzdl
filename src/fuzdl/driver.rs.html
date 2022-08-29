@@ -117,6 +117,8 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Utilities to ensure that driver resources (e.g. driver and browser child processes) are cleaned</span>
 <span class="doccomment">//! up.</span>
 
@@ -160,6 +162,8 @@
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">with_driver</span><span class="op">&lt;</span><span class="ident">Out</span>, <span class="ident">Fut</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">Out</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
     <span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">WebDriver</span>) -&gt; <span class="ident">Fut</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Out</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="ident">which::which</span>(<span class="string">&quot;chromedriver&quot;</span>).<span class="ident">context</span>(<span class="string">&quot;This tool requires &#39;chromedriver&#39; in PATH.\nCommon distribution package names include &#39;chromedriver&#39; and &#39;chromium-driver&#39;.\nAlternatively, visit the download page of ChromeDriver: https://chromedriver.chromium.org/downloads&quot;</span>)<span class="question-mark">?</span>;
+
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">driver_process</span> <span class="op">=</span> <span class="ident">create_driver_process</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="comment">// This match is required,</span>
