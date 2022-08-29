@@ -14,11 +14,11 @@ use super::BodyQueryable;
 pub struct Magazine {
     base: WebElement,
 
-    #[by(wait(timeout_ms = 3000, interval_ms = 300), css = "#__NEXT_DATA__")]
+    #[by(wait(timeout_ms = 8000, interval_ms = 300), css = "#__NEXT_DATA__")]
     json_data: ElementResolver<WebElement>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=MagazineIssueDetail_magazineIssueDetail__topSection__]"
     )]
     issue_elements: ElementResolver<Vec<MagazineIssueElement>>,

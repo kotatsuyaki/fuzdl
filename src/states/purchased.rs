@@ -13,13 +13,13 @@ pub struct Purchased {
     base: WebElement,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=Selector_selector__option__]"
     )]
     selector_options: ElementResolver<Vec<WebElement>>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "a[class^=Magazine_magazine__]"
     )]
     magazines: ElementResolver<Vec<PurchasedMagazine>>,

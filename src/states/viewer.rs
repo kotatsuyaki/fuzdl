@@ -18,19 +18,19 @@ pub struct Viewer {
     body: WebElement,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=ViewerFooter_footer__page]"
     )]
     page_counter: ElementResolver<WebElement>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=ViewerFooter_footer__tableOfContents__]"
     )]
     toc_button: ElementResolver<WebElement>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=ViewerIndexModal_dialog__cell__]"
     )]
     toc_elements: ElementResolver<Vec<TocElement>>,

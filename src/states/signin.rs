@@ -10,25 +10,25 @@ pub struct Signin {
     base: WebElement,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=signin_form__input][type=email]"
     )]
     email: ElementResolver<WebElement>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=signin_form__input][type=password]"
     )]
     password: ElementResolver<WebElement>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=signin_form__button]"
     )]
     button: ElementResolver<WebElement>,
 
     #[by(
-        wait(timeout_ms = 3000, interval_ms = 300),
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=signin_signin__description]"
     )]
     done_description: ElementResolver<WebElement>,
