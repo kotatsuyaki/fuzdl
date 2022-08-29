@@ -61,7 +61,7 @@ impl BodyQueryable for WebDriver {
 mod tests {
     use super::*;
     use crate::driver::with_driver;
-    use tokio::fs;
+    use std::fs;
 
     #[tokio::test]
     async fn test_signin() -> Result<()> {
@@ -72,7 +72,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_viewer() -> Result<()> {
+    async fn test_viewer_download() -> Result<()> {
         let download_output = with_driver(|driver| async move {
             let viewer = Viewer::new_from_driver(&driver, ViewerLocation::new_manga(30445)).await?;
             let download_output = viewer.download_imgs(&driver, |_| {}).await?;
@@ -81,10 +81,33 @@ mod tests {
         .await?
         .context("Driver early cacnel")??;
 
-        let mut entries = fs::read_dir(download_output.tempdir).await?;
-        while let Some(entry) = entries.next_entry().await? {
-            eprintln!("{:?}", entry.path());
-        }
+        assert_eq!(
+            download_output.image_paths().len(),
+            7,
+            "The number of downloaded pages is wrong"
+        );
+
+        let entries: std::io::Result<Vec<_>> =
+            fs::read_dir(download_output.tempdir.path())?.collect();
+        let entries = entries?;
+
+        assert_eq!(entries.len(), 7, "The number of downloaded files is wrong");
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_viewer_toc() -> Result<()> {
+        let toc = with_driver(|driver| async move {
+            let viewer =
+                Viewer::new_from_driver(&driver, ViewerLocation::new_magazine(26144)).await?;
+            let toc = viewer.fetch_toc_entries().await?;
+            Result::<Vec<TocEntry>>::Ok(toc)
+        })
+        .await?
+        .context("Driver early cacnel")??;
+
+        assert_eq!(toc.is_empty(), false, "Table of contents is empty");
 
         Ok(())
     }
