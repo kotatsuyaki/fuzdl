@@ -19,7 +19,8 @@ use thirtyfour::prelude::*;
 use tokio::fs;
 use tokio::task::spawn_blocking;
 
-/// # Example
+/// Concurrently run `.resolve()` on all input [`ElementResolver`]s, returning a
+/// `Result<(WebElement, WebElement, ...)>`.
 ///
 /// ```
 /// async fn resolve(title: ElementResolver<WebElement>, main: ElementResolver<WebElement>) {

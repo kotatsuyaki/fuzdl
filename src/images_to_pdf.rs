@@ -10,16 +10,53 @@ use printpdf::{ImageTransform, Mm, PdfDocument, PdfDocumentReference, PdfPageInd
 
 const DPI: f64 = 96.0;
 
-pub fn images_to_pdf<T: AsRef<Path>>(
-    title: impl AsRef<str>,
-    toc: HashMap<usize, String>,
-    img_paths: impl IntoIterator<Item = T>,
-    pdf_path: impl AsRef<Path>,
-) -> Result<()> {
+pub struct PdfConfig<Title, ImgPathIter, ImgPath, PdfPath>
+where
+    Title: AsRef<str>,
+    ImgPathIter: IntoIterator<Item = ImgPath>,
+    ImgPath: AsRef<Path>,
+    PdfPath: AsRef<Path>,
+{
+    pub title: Title,
+    pub toc: HashMap<usize, String>,
+    pub image_paths: ImgPathIter,
+    pub pdf_path: PdfPath,
+}
+
+pub struct PdfProgress {
+    pub done: usize,
+    pub total: usize,
+}
+
+pub fn build_pdf<Title, ImgPathIter, ImgPath, PdfPath>(
+    config: PdfConfig<Title, ImgPathIter, ImgPath, PdfPath>,
+    update_progress: impl Fn(PdfProgress),
+) -> Result<()>
+where
+    Title: AsRef<str>,
+    ImgPathIter: IntoIterator<Item = ImgPath>,
+    ImgPath: AsRef<Path>,
+    PdfPath: AsRef<Path>,
+{
+    let PdfConfig {
+        title,
+        toc,
+        image_paths,
+        pdf_path,
+    } = config;
+
+    let img_paths: Vec<_> = image_paths.into_iter().collect();
+    let num_pages = img_paths.len();
+
     let mut pdf_builder = PdfBuilder::new(title);
-    for img_path in img_paths.into_iter() {
+    for (i, img_path) in img_paths.into_iter().enumerate() {
         let img = ImageReader::open(img_path.as_ref())?.decode()?;
         pdf_builder.add_image(&img);
+
+        update_progress(PdfProgress {
+            done: i + 1,
+            total: num_pages,
+        });
     }
     for (page, name) in toc {
         pdf_builder.add_bookmark(page, name);

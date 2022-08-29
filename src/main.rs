@@ -126,7 +126,7 @@ async fn run(driver: WebDriver) -> Result<()> {
             .map(toc_entries_to_hashmap)
             .unwrap_or_default();
 
-        let pb = new_download_progressbar(&task);
+        let pb = new_progressbar("Downloading", &task);
         let download_output = viewer_state
             .download_imgs(&driver, |progress| {
                 let (done, total) = (progress.done as u64, progress.total as u64);
@@ -147,7 +147,20 @@ async fn run(driver: WebDriver) -> Result<()> {
             .join("output")
             .join(pdf_filename);
 
-        images_to_pdf::images_to_pdf(&pdf_title, toc, download_output.image_paths(), &pdf_path)?;
+        let pb = new_progressbar("Exporting PDF", &task);
+        let pdf_config = images_to_pdf::PdfConfig {
+            title: &pdf_title,
+            toc,
+            image_paths: download_output.image_paths(),
+            pdf_path: &pdf_path,
+        };
+        images_to_pdf::build_pdf(pdf_config, |progress| {
+            let (done, total) = (progress.done as u64, progress.total as u64);
+            if pb.length().unwrap() != total {
+                pb.set_length(total);
+            }
+            pb.set_position(done);
+        })?;
         info!("Saved to PDF file at {}", pdf_path.to_string_lossy());
     }
 
@@ -174,13 +187,8 @@ impl Credentials {
     }
 
     async fn prompt() -> Result<Self> {
-        let email: String = spawn_blocking(|| Input::new().with_prompt("Email").interact())
-            .await?
-            .context("Failed to read email")?;
-        let password: String =
-            spawn_blocking(|| Password::new().with_prompt("Password").interact())
-                .await?
-                .context("Failed to read password")?;
+        let email: String = prompt_string("Email").await?;
+        let password: String = prompt_password("Password").await?;
 
         Ok(Self { email, password })
     }
@@ -246,6 +254,13 @@ async fn prompt_string(prompt: impl AsRef<str>) -> Result<String> {
     Ok(output)
 }
 
+async fn prompt_password(prompt: impl AsRef<str>) -> Result<String> {
+    let prompt = format!("{}", style(prompt.as_ref().to_string()).bold());
+    let output: String =
+        spawn_blocking(|| Password::new().with_prompt(prompt).interact()).await??;
+    Ok(output)
+}
+
 async fn prompt_select<'a, Item: Clone + Display + 'static>(
     prompt: impl AsRef<str>,
     options: impl IntoIterator<Item = &'a Item>,
@@ -301,8 +316,8 @@ async fn prompt_multi_select<'a, Item: Clone + Display + 'static>(
     Ok(options)
 }
 
-fn new_download_progressbar(item_name: &impl Display) -> ProgressBar {
-    info!("Downloading {}", console::style(item_name).green());
+fn new_progressbar(prefix: impl AsRef<str>, item_name: &impl Display) -> ProgressBar {
+    info!("{} {}", prefix.as_ref(), console::style(item_name).green());
 
     let pb = ProgressBar::new(0);
     let style = ProgressStyle::with_template(
