@@ -355,6 +355,8 @@
 <span id="349">349</span>
 <span id="350">350</span>
 <span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 <span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::fmt::Display</span>;
@@ -364,6 +366,7 @@
 <span class="kw">use</span> <span class="ident">console</span>::{<span class="ident">style</span>, <span class="ident">Term</span>};
 <span class="kw">use</span> <span class="ident">dialoguer::theme::ColorfulTheme</span>;
 <span class="kw">use</span> <span class="ident">dialoguer</span>::{<span class="ident">Input</span>, <span class="ident">MultiSelect</span>, <span class="ident">Password</span>, <span class="ident">Select</span>};
+<span class="kw">use</span> <span class="ident">git_version::git_version</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">serde_json</span> <span class="kw">as</span> <span class="ident">json</span>;
 <span class="kw">use</span> <span class="ident">states::TocEntry</span>;
@@ -397,8 +400,9 @@
 }
 
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">driver</span>: <span class="ident">WebDriver</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">credentials</span> <span class="op">=</span> <span class="ident">Credentials::read_or_prompt</span>(<span class="string">&quot;credentials.json&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">info!</span>(<span class="string">&quot;fuzdl ({})&quot;</span>, <span class="macro">git_version!</span>(<span class="ident">fallback</span> <span class="op">=</span> <span class="string">&quot;unknown version&quot;</span>));
 
+    <span class="kw">let</span> <span class="ident">credentials</span> <span class="op">=</span> <span class="ident">Credentials::read_or_prompt</span>(<span class="string">&quot;credentials.json&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">signin</span> <span class="op">=</span> <span class="ident">states::Signin::new_from_driver</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="ident">signin</span>
         .<span class="ident">signin</span>(<span class="ident">credentials</span>.<span class="ident">email</span>, <span class="ident">credentials</span>.<span class="ident">password</span>)
@@ -493,7 +497,7 @@
 
         <span class="kw">let</span> <span class="ident">toc</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::obtain_toc</span>(<span class="kw-2">&amp;</span><span class="ident">viewer</span>).<span class="kw">await</span>;
         <span class="kw">let</span> <span class="ident">download_output</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">download_images</span>(<span class="ident">driver</span>, <span class="kw-2">&amp;</span><span class="ident">viewer</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">export_pdf</span>(<span class="ident">toc</span>, <span class="ident">download_output</span>)<span class="question-mark">?</span>;
+        <span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">export_pdf</span>(<span class="ident">toc</span>, <span class="ident">download_output</span>)).<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }

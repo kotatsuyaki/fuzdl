@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":[["git_describe","Run `git describe` at compile time with custom flags."],["git_version","Get the git version for the source code."]]};
