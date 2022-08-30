@@ -7,6 +7,7 @@ use anyhow::{Context, Result};
 use console::{style, Term};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::{Input, MultiSelect, Password, Select};
+use git_version::git_version;
 use serde::{Deserialize, Serialize};
 use serde_json as json;
 use states::TocEntry;
@@ -40,8 +41,9 @@ async fn main() -> Result<()> {
 }
 
 async fn run(driver: WebDriver) -> Result<()> {
-    let credentials = Credentials::read_or_prompt("credentials.json").await?;
+    info!("fuzdl ({})", git_version!(fallback = "unknown version"));
 
+    let credentials = Credentials::read_or_prompt("credentials.json").await?;
     let signin = states::Signin::new_from_driver(&driver).await?;
     signin
         .signin(credentials.email, credentials.password)
