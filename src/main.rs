@@ -167,6 +167,7 @@ impl DownloadTask {
         let pdf_path = env::current_dir()
             .context("Failed to get working directory")?
             .join("output")
+            .join(self.series_name())
             .join(pdf_filename);
 
         let pb = ProgressBar::create_and_show("Exporting PDF", &self);
@@ -193,6 +194,13 @@ impl DownloadTask {
             .map(toc_entries_to_hashmap)
             .unwrap_or_default();
         toc
+    }
+
+    fn series_name(&self) -> &str {
+        match self {
+            DownloadTask::Magazine { issue } => &issue.magazine_name,
+            DownloadTask::Manga { name, .. } => &name,
+        }
     }
 
     fn pdf_title(&self) -> String {
