@@ -357,6 +357,14 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 <span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::fmt::Display</span>;
@@ -526,6 +534,7 @@
         <span class="kw">let</span> <span class="ident">pdf_path</span> <span class="op">=</span> <span class="ident">env::current_dir</span>()
             .<span class="ident">context</span>(<span class="string">&quot;Failed to get working directory&quot;</span>)<span class="question-mark">?</span>
             .<span class="ident">join</span>(<span class="string">&quot;output&quot;</span>)
+            .<span class="ident">join</span>(<span class="self">self</span>.<span class="ident">series_name</span>())
             .<span class="ident">join</span>(<span class="ident">pdf_filename</span>);
 
         <span class="kw">let</span> <span class="ident">pb</span> <span class="op">=</span> <span class="ident">ProgressBar::create_and_show</span>(<span class="string">&quot;Exporting PDF&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>);
@@ -552,6 +561,13 @@
             .<span class="ident">map</span>(<span class="ident">toc_entries_to_hashmap</span>)
             .<span class="ident">unwrap_or_default</span>();
         <span class="ident">toc</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">series_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">DownloadTask::Magazine</span> { <span class="ident">issue</span> } =&gt; <span class="kw-2">&amp;</span><span class="ident">issue</span>.<span class="ident">magazine_name</span>,
+            <span class="ident">DownloadTask::Manga</span> { <span class="ident">name</span>, .. } =&gt; <span class="kw-2">&amp;</span><span class="ident">name</span>,
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">pdf_title</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
