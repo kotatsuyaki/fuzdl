@@ -47,6 +47,7 @@ struct TocElement {
     index: ElementResolver<WebElement>,
 }
 
+#[derive(Debug)]
 pub struct TocEntry {
     pub name: String,
     pub index: usize,
