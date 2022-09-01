@@ -52,13 +52,18 @@ async fn run(driver: WebDriver) -> Result<()> {
 
     let download_kind = prompt_select(
         "Choose kind of content to download",
-        &[DownloadKind::Manga, DownloadKind::Magazine],
+        &[
+            DownloadKind::Manga,
+            DownloadKind::Magazine,
+            DownloadKind::Book,
+        ],
     )
     .await?;
 
     let download_tasks = match download_kind {
         DownloadKind::Manga => prompt_manga(&driver).await?,
         DownloadKind::Magazine => prompt_magazine(&driver).await?,
+        DownloadKind::Book => prompt_book(&driver).await?,
     };
 
     for task in download_tasks {
@@ -111,6 +116,7 @@ impl Credentials {
 enum DownloadKind {
     Manga,
     Magazine,
+    Book,
 }
 
 impl Display for DownloadKind {
@@ -118,6 +124,7 @@ impl Display for DownloadKind {
         match self {
             DownloadKind::Manga => write!(f, "Manga"),
             DownloadKind::Magazine => write!(f, "Magazine"),
+            DownloadKind::Book => write!(f, "Manga Book"),
         }
     }
 }
@@ -129,6 +136,10 @@ enum DownloadTask {
     Manga {
         name: String,
         chapter: states::MangaChapter,
+    },
+    Book {
+        name: String,
+        issue: states::BookIssue,
     },
 }
 
@@ -200,6 +211,7 @@ impl DownloadTask {
         match self {
             DownloadTask::Magazine { issue } => &issue.magazine_name,
             DownloadTask::Manga { name, .. } => &name,
+            DownloadTask::Book { name, .. } => &name,
         }
     }
 
@@ -211,6 +223,7 @@ impl DownloadTask {
             DownloadTask::Manga { name, chapter } => {
                 format!("{} {}", name, chapter.chapter_main_name)
             }
+            DownloadTask::Book { issue, .. } => issue.book_issue_name.clone(),
         }
     }
 
@@ -222,6 +235,9 @@ impl DownloadTask {
             DownloadTask::Manga { chapter, .. } => {
                 states::ViewerLocation::new_manga(chapter.chapter_id)
             }
+            DownloadTask::Book { issue, .. } => {
+                states::ViewerLocation::new_book(issue.book_issue_id)
+            }
         }
     }
 }
@@ -231,6 +247,7 @@ impl Display for DownloadTask {
         let display: &dyn Display = match self {
             DownloadTask::Magazine { ref issue } => issue,
             DownloadTask::Manga { ref chapter, .. } => chapter,
+            DownloadTask::Book { ref issue, .. } => issue,
         };
         write!(f, "{}", display)
     }
@@ -273,6 +290,28 @@ async fn prompt_manga(driver: &WebDriver) -> Result<Vec<DownloadTask>> {
         .map(|chapter| DownloadTask::Manga {
             name: manga_name.clone(),
             chapter,
+        })
+        .collect())
+}
+
+async fn prompt_book(driver: &WebDriver) -> Result<Vec<DownloadTask>> {
+    let book_url =
+        prompt_string("Paste manga book URL (for example 'https://comic-fuz.com/book/26477')")
+            .await?;
+
+    let book = states::Book::new_from_driver(driver, &book_url).await?;
+    let book_name = book.name().await?;
+    let book_issues = book.list_viewable_issues().await?;
+
+    let select_prompt = format!("Press <SPACE> to select book issues from {}", book_name);
+    let selected_issues = prompt_multi_select(&select_prompt, &book_issues).await?;
+
+    Ok(selected_issues
+        .into_iter()
+        .cloned()
+        .map(|issue| DownloadTask::Book {
+            name: book_name.clone(),
+            issue,
         })
         .collect())
 }

@@ -30,6 +30,9 @@ pub use purchased::{MagazineMetadata, Purchased};
 mod magazine;
 pub use magazine::{Magazine, MagazineIssue};
 
+mod book;
+pub use book::{Book, BookIssue};
+
 mod manga;
 pub use manga::{Manga, MangaBook, MangaChapter, MangaPointConsumption};
 
@@ -68,6 +71,20 @@ mod tests {
         with_driver(|driver| async move { Signin::new_from_driver(&driver).await })
             .await?
             .context("Driver early cacnel")??;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_list_book_issues() -> Result<()> {
+        let book_issues = with_driver(|driver| async move {
+            let book = Book::new_from_driver(&driver, "https://comic-fuz.com/book/26477").await?;
+            let book_issues = book.list_issues().await?;
+            Result::<Vec<BookIssue>>::Ok(book_issues)
+        })
+        .await?
+        .context("Driver early cacnel")??;
+        eprintln!("{book_issues:#?}");
+        assert_eq!(book_issues.is_empty(), false);
         Ok(())
     }
 

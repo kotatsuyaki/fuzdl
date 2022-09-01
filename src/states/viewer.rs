@@ -56,6 +56,7 @@ pub struct TocEntry {
 pub enum ViewerLocation {
     Magazine(usize),
     Manga(usize),
+    Book(usize),
 }
 
 impl Viewer {
@@ -172,10 +173,15 @@ impl ViewerLocation {
         Self::Magazine(id)
     }
 
+    pub fn new_book(id: usize) -> Self {
+        Self::Book(id)
+    }
+
     pub fn url(&self) -> String {
         let (kind, id) = match self {
             ViewerLocation::Magazine(id) => ("magazine", id),
             ViewerLocation::Manga(id) => ("manga", id),
+            ViewerLocation::Book(id) => ("book", id),
         };
         format!("https://comic-fuz.com/{kind}/viewer/{id}")
     }
