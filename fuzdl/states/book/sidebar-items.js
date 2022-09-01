@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Book","単行本s at /book/"],["BookIssue",""],["BookIssueElement",""]]};

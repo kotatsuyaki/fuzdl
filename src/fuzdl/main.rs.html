@@ -365,6 +365,45 @@
 <span id="359">359</span>
 <span id="360">360</span>
 <span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 <span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">std::fmt::Display</span>;
@@ -419,13 +458,18 @@
 
     <span class="kw">let</span> <span class="ident">download_kind</span> <span class="op">=</span> <span class="ident">prompt_select</span>(
         <span class="string">&quot;Choose kind of content to download&quot;</span>,
-        <span class="kw-2">&amp;</span>[<span class="ident">DownloadKind::Manga</span>, <span class="ident">DownloadKind::Magazine</span>],
+        <span class="kw-2">&amp;</span>[
+            <span class="ident">DownloadKind::Manga</span>,
+            <span class="ident">DownloadKind::Magazine</span>,
+            <span class="ident">DownloadKind::Book</span>,
+        ],
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">download_tasks</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">download_kind</span> {
         <span class="ident">DownloadKind::Manga</span> =&gt; <span class="ident">prompt_manga</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>,
         <span class="ident">DownloadKind::Magazine</span> =&gt; <span class="ident">prompt_magazine</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>,
+        <span class="ident">DownloadKind::Book</span> =&gt; <span class="ident">prompt_book</span>(<span class="kw-2">&amp;</span><span class="ident">driver</span>).<span class="kw">await</span><span class="question-mark">?</span>,
     };
 
     <span class="kw">for</span> <span class="ident">task</span> <span class="kw">in</span> <span class="ident">download_tasks</span> {
@@ -478,6 +522,7 @@
 <span class="kw">enum</span> <span class="ident">DownloadKind</span> {
     <span class="ident">Manga</span>,
     <span class="ident">Magazine</span>,
+    <span class="ident">Book</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">DownloadKind</span> {
@@ -485,6 +530,7 @@
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">DownloadKind::Manga</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Manga&quot;</span>),
             <span class="ident">DownloadKind::Magazine</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Magazine&quot;</span>),
+            <span class="ident">DownloadKind::Book</span> =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Manga Book&quot;</span>),
         }
     }
 }
@@ -496,6 +542,10 @@
     <span class="ident">Manga</span> {
         <span class="ident">name</span>: <span class="ident">String</span>,
         <span class="ident">chapter</span>: <span class="ident">states::MangaChapter</span>,
+    },
+    <span class="ident">Book</span> {
+        <span class="ident">name</span>: <span class="ident">String</span>,
+        <span class="ident">issue</span>: <span class="ident">states::BookIssue</span>,
     },
 }
 
@@ -567,6 +617,7 @@
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">DownloadTask::Magazine</span> { <span class="ident">issue</span> } =&gt; <span class="kw-2">&amp;</span><span class="ident">issue</span>.<span class="ident">magazine_name</span>,
             <span class="ident">DownloadTask::Manga</span> { <span class="ident">name</span>, .. } =&gt; <span class="kw-2">&amp;</span><span class="ident">name</span>,
+            <span class="ident">DownloadTask::Book</span> { <span class="ident">name</span>, .. } =&gt; <span class="kw-2">&amp;</span><span class="ident">name</span>,
         }
     }
 
@@ -578,6 +629,7 @@
             <span class="ident">DownloadTask::Manga</span> { <span class="ident">name</span>, <span class="ident">chapter</span> } =&gt; {
                 <span class="macro">format!</span>(<span class="string">&quot;{} {}&quot;</span>, <span class="ident">name</span>, <span class="ident">chapter</span>.<span class="ident">chapter_main_name</span>)
             }
+            <span class="ident">DownloadTask::Book</span> { <span class="ident">issue</span>, .. } =&gt; <span class="ident">issue</span>.<span class="ident">book_issue_name</span>.<span class="ident">clone</span>(),
         }
     }
 
@@ -589,6 +641,9 @@
             <span class="ident">DownloadTask::Manga</span> { <span class="ident">chapter</span>, .. } =&gt; {
                 <span class="ident">states::ViewerLocation::new_manga</span>(<span class="ident">chapter</span>.<span class="ident">chapter_id</span>)
             }
+            <span class="ident">DownloadTask::Book</span> { <span class="ident">issue</span>, .. } =&gt; {
+                <span class="ident">states::ViewerLocation::new_book</span>(<span class="ident">issue</span>.<span class="ident">book_issue_id</span>)
+            }
         }
     }
 }
@@ -598,6 +653,7 @@
         <span class="kw">let</span> <span class="ident">display</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Display</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">DownloadTask::Magazine</span> { <span class="kw-2">ref</span> <span class="ident">issue</span> } =&gt; <span class="ident">issue</span>,
             <span class="ident">DownloadTask::Manga</span> { <span class="kw-2">ref</span> <span class="ident">chapter</span>, .. } =&gt; <span class="ident">chapter</span>,
+            <span class="ident">DownloadTask::Book</span> { <span class="kw-2">ref</span> <span class="ident">issue</span>, .. } =&gt; <span class="ident">issue</span>,
         };
         <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">display</span>)
     }
@@ -640,6 +696,28 @@
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">chapter</span><span class="op">|</span> <span class="ident">DownloadTask::Manga</span> {
             <span class="ident">name</span>: <span class="ident">manga_name</span>.<span class="ident">clone</span>(),
             <span class="ident">chapter</span>,
+        })
+        .<span class="ident">collect</span>())
+}
+
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">prompt_book</span>(<span class="ident">driver</span>: <span class="kw-2">&amp;</span><span class="ident">WebDriver</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DownloadTask</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">book_url</span> <span class="op">=</span>
+        <span class="ident">prompt_string</span>(<span class="string">&quot;Paste manga book URL (for example &#39;https://comic-fuz.com/book/26477&#39;)&quot;</span>)
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">book</span> <span class="op">=</span> <span class="ident">states::Book::new_from_driver</span>(<span class="ident">driver</span>, <span class="kw-2">&amp;</span><span class="ident">book_url</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">book_name</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">name</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">book_issues</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">list_viewable_issues</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">select_prompt</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;Press &lt;SPACE&gt; to select book issues from {}&quot;</span>, <span class="ident">book_name</span>);
+    <span class="kw">let</span> <span class="ident">selected_issues</span> <span class="op">=</span> <span class="ident">prompt_multi_select</span>(<span class="kw-2">&amp;</span><span class="ident">select_prompt</span>, <span class="kw-2">&amp;</span><span class="ident">book_issues</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="prelude-val">Ok</span>(<span class="ident">selected_issues</span>
+        .<span class="ident">into_iter</span>()
+        .<span class="ident">cloned</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">issue</span><span class="op">|</span> <span class="ident">DownloadTask::Book</span> {
+            <span class="ident">name</span>: <span class="ident">book_name</span>.<span class="ident">clone</span>(),
+            <span class="ident">issue</span>,
         })
         .<span class="ident">collect</span>())
 }
