@@ -1,10 +1,10 @@
 on:
   push:
 
-name: Build For x86_64-unknown-linux-musl
+name: Build
 jobs:
-  build:
-    name: Build Artifact
+  build-ubuntu:
+    name: Build Ubuntu Artifact
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -43,3 +43,28 @@ jobs:
           title: "Development Build"
           files: |
             target/x86_64-unknown-linux-musl/release/fuzdl
+
+  build-windows:
+    name: Build Windows Artifact
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: x86_64-pc-windows-msvc
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target x86_64-pc-windows-msvc
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fuzdl.exe
+          path: target/x86_64-pc-windows-msvc/release/fuzdl.exe
