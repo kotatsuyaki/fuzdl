@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/length_encode.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>length_encode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/length_encode.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>length_encode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -665,498 +659,498 @@
 <span id="659">659</span>
 <span id="660">660</span>
 <span id="661">661</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::clone::Clone</span>;
-<span class="kw">use</span> <span class="ident">std::iter::Iterator</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::clone::Clone;
+<span class="kw">use </span>std::iter::Iterator;
 
-<span class="doccomment">/// An enum representing the different types in the run-length encoded data used to encode</span>
-<span class="doccomment">/// Huffman table lengths</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EncodedLength</span> {
-    <span class="comment">// An actual length value</span>
-    <span class="ident">Length</span>(<span class="ident">u8</span>),
-    <span class="comment">// Copy the previous value n times</span>
-    <span class="ident">CopyPrevious</span>(<span class="ident">u8</span>),
-    <span class="comment">// Repeat zero n times (with n represented by 3 bits)</span>
-    <span class="ident">RepeatZero3Bits</span>(<span class="ident">u8</span>),
-    <span class="comment">// Repeat zero n times (with n represented by 7 bits)</span>
-    <span class="ident">RepeatZero7Bits</span>(<span class="ident">u8</span>),
+<span class="doccomment">/// An enum representing the different types in the run-length encoded data used to encode
+/// Huffman table lengths
+</span><span class="attribute">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>EncodedLength {
+    <span class="comment">// An actual length value
+    </span>Length(u8),
+    <span class="comment">// Copy the previous value n times
+    </span>CopyPrevious(u8),
+    <span class="comment">// Repeat zero n times (with n represented by 3 bits)
+    </span>RepeatZero3Bits(u8),
+    <span class="comment">// Repeat zero n times (with n represented by 7 bits)
+    </span>RepeatZero7Bits(u8),
 }
 
-<span class="kw">impl</span> <span class="ident">EncodedLength</span> {
-    <span class="kw">fn</span> <span class="ident">from_prev_and_repeat</span>(<span class="ident">prev</span>: <span class="ident">u8</span>, <span class="ident">repeat</span>: <span class="ident">u8</span>) -&gt; <span class="ident">EncodedLength</span> {
-        <span class="kw">match</span> <span class="ident">prev</span> {
-            <span class="number">0</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">repeat</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">10</span> {
-                    <span class="ident">EncodedLength::RepeatZero3Bits</span>(<span class="ident">repeat</span>)
-                } <span class="kw">else</span> {
-                    <span class="ident">EncodedLength::RepeatZero7Bits</span>(<span class="ident">repeat</span>)
+<span class="kw">impl </span>EncodedLength {
+    <span class="kw">fn </span>from_prev_and_repeat(prev: u8, repeat: u8) -&gt; EncodedLength {
+        <span class="kw">match </span>prev {
+            <span class="number">0 </span>=&gt; {
+                <span class="kw">if </span>repeat &lt;= <span class="number">10 </span>{
+                    EncodedLength::RepeatZero3Bits(repeat)
+                } <span class="kw">else </span>{
+                    EncodedLength::RepeatZero7Bits(repeat)
                 }
             }
-            <span class="number">1</span>..<span class="op">=</span><span class="number">15</span> =&gt; <span class="ident">EncodedLength::CopyPrevious</span>(<span class="ident">repeat</span>),
-            <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(),
+            <span class="number">1</span>..=<span class="number">15 </span>=&gt; EncodedLength::CopyPrevious(repeat),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">COPY_PREVIOUS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">16</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">REPEAT_ZERO_3_BITS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">17</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">REPEAT_ZERO_7_BITS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">18</span>;
+<span class="kw">pub const </span>COPY_PREVIOUS: usize = <span class="number">16</span>;
+<span class="kw">pub const </span>REPEAT_ZERO_3_BITS: usize = <span class="number">17</span>;
+<span class="kw">pub const </span>REPEAT_ZERO_7_BITS: usize = <span class="number">18</span>;
 
-<span class="kw">const</span> <span class="ident">MIN_REPEAT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">3</span>;
+<span class="kw">const </span>MIN_REPEAT: u8 = <span class="number">3</span>;
 
-<span class="doccomment">/// Push an `EncodedLength` to the vector and update the frequency table.</span>
-<span class="kw">fn</span> <span class="ident">update_out_and_freq</span>(
-    <span class="ident">encoded</span>: <span class="ident">EncodedLength</span>,
-    <span class="ident">output</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodedLength</span><span class="op">&gt;</span>,
-    <span class="ident">frequencies</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>; <span class="number">19</span>],
+<span class="doccomment">/// Push an `EncodedLength` to the vector and update the frequency table.
+</span><span class="kw">fn </span>update_out_and_freq(
+    encoded: EncodedLength,
+    output: <span class="kw-2">&amp;mut </span>Vec&lt;EncodedLength&gt;,
+    frequencies: <span class="kw-2">&amp;mut </span>[u16; <span class="number">19</span>],
 ) {
-    <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">encoded</span> {
-        <span class="ident">EncodedLength::Length</span>(<span class="ident">l</span>) =&gt; <span class="ident">usize::from</span>(<span class="ident">l</span>),
-        <span class="ident">EncodedLength::CopyPrevious</span>(<span class="kw">_</span>) =&gt; <span class="ident">COPY_PREVIOUS</span>,
-        <span class="ident">EncodedLength::RepeatZero3Bits</span>(<span class="kw">_</span>) =&gt; <span class="ident">REPEAT_ZERO_3_BITS</span>,
-        <span class="ident">EncodedLength::RepeatZero7Bits</span>(<span class="kw">_</span>) =&gt; <span class="ident">REPEAT_ZERO_7_BITS</span>,
+    <span class="kw">let </span>index = <span class="kw">match </span>encoded {
+        EncodedLength::Length(l) =&gt; usize::from(l),
+        EncodedLength::CopyPrevious(<span class="kw">_</span>) =&gt; COPY_PREVIOUS,
+        EncodedLength::RepeatZero3Bits(<span class="kw">_</span>) =&gt; REPEAT_ZERO_3_BITS,
+        EncodedLength::RepeatZero7Bits(<span class="kw">_</span>) =&gt; REPEAT_ZERO_7_BITS,
     };
 
-    <span class="ident">frequencies</span>[<span class="ident">index</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    frequencies[index] += <span class="number">1</span>;
 
-    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">encoded</span>);
+    output.push(encoded);
 }
 
-<span class="doccomment">/// Convenience function to check if the repeat counter should be incremented further</span>
-<span class="kw">fn</span> <span class="ident">not_max_repetitions</span>(<span class="ident">length_value</span>: <span class="ident">u8</span>, <span class="ident">repeats</span>: <span class="ident">u8</span>) -&gt; <span class="ident">bool</span> {
-    (<span class="ident">length_value</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">repeats</span> <span class="op">&lt;</span> <span class="number">138</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">repeats</span> <span class="op">&lt;</span> <span class="number">6</span>
-}
+<span class="doccomment">/// Convenience function to check if the repeat counter should be incremented further
+</span><span class="kw">fn </span>not_max_repetitions(length_value: u8, repeats: u8) -&gt; bool {
+    (length_value == <span class="number">0 </span>&amp;&amp; repeats &lt; <span class="number">138</span>) || repeats &lt; <span class="number">6
+</span>}
 
-<span class="doccomment">///Convenience version for unit tests.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_lengths</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">lengths</span>: <span class="ident">I</span>) -&gt; (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodedLength</span><span class="op">&gt;</span>, [<span class="ident">u16</span>; <span class="number">19</span>])
-<span class="kw">where</span>
-    <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u8</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span>,
+<span class="doccomment">///Convenience version for unit tests.
+</span><span class="attribute">#[cfg(test)]
+</span><span class="kw">pub fn </span>encode_lengths&lt;<span class="lifetime">&#39;a</span>, I&gt;(lengths: I) -&gt; (Vec&lt;EncodedLength&gt;, [u16; <span class="number">19</span>])
+<span class="kw">where
+    </span>I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt; + Clone,
 {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">freqs</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="number">19</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodedLength</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="ident">encode_lengths_m</span>(<span class="ident">lengths</span>, <span class="kw-2">&amp;mut</span> <span class="ident">encoded</span>, <span class="kw-2">&amp;mut</span> <span class="ident">freqs</span>);
-    (<span class="ident">encoded</span>, <span class="ident">freqs</span>)
+    <span class="kw">let </span><span class="kw-2">mut </span>freqs = [<span class="number">0u16</span>; <span class="number">19</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>encoded: Vec&lt;EncodedLength&gt; = Vec::new();
+    encode_lengths_m(lengths, <span class="kw-2">&amp;mut </span>encoded, <span class="kw-2">&amp;mut </span>freqs);
+    (encoded, freqs)
 }
 
-<span class="doccomment">/// Run-length encodes the lengths of the values in `lengths` according to the deflate</span>
-<span class="doccomment">/// specification. This is used for writing the code lengths for the Huffman tables for</span>
-<span class="doccomment">/// the deflate stream.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Populates the supplied array with the frequency of the different encoded length values</span>
-<span class="doccomment">/// The frequency array is taken as a parameter rather than returned to avoid</span>
-<span class="doccomment">/// excessive `memcpy`-ing.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_lengths_m</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span><span class="op">&gt;</span>(
-    <span class="ident">lengths</span>: <span class="ident">I</span>,
-    <span class="kw-2">mut</span> <span class="ident">out</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodedLength</span><span class="op">&gt;</span>,
-    <span class="kw-2">mut</span> <span class="ident">frequencies</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>; <span class="number">19</span>],
-) <span class="kw">where</span>
-    <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u8</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span>,
+<span class="doccomment">/// Run-length encodes the lengths of the values in `lengths` according to the deflate
+/// specification. This is used for writing the code lengths for the Huffman tables for
+/// the deflate stream.
+///
+/// Populates the supplied array with the frequency of the different encoded length values
+/// The frequency array is taken as a parameter rather than returned to avoid
+/// excessive `memcpy`-ing.
+</span><span class="kw">pub fn </span>encode_lengths_m&lt;<span class="lifetime">&#39;a</span>, I&gt;(
+    lengths: I,
+    <span class="kw-2">mut </span>out: <span class="kw-2">&amp;mut </span>Vec&lt;EncodedLength&gt;,
+    <span class="kw-2">mut </span>frequencies: <span class="kw-2">&amp;mut </span>[u16; <span class="number">19</span>],
+) <span class="kw">where
+    </span>I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt; + Clone,
 {
-    <span class="ident">out</span>.<span class="ident">clear</span>();
-    <span class="comment">// Number of repetitions of the current value</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">repeat</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">clone</span>().<span class="ident">enumerate</span>().<span class="ident">peekable</span>();
-    <span class="comment">// Previous value</span>
-    <span class="comment">// We set it to the compliment of the first falue to simplify the code.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev</span> <span class="op">=</span> <span class="op">!</span><span class="ident">iter</span>.<span class="ident">peek</span>().<span class="ident">expect</span>(<span class="string">&quot;No length values!&quot;</span>).<span class="number">1</span>;
+    out.clear();
+    <span class="comment">// Number of repetitions of the current value
+    </span><span class="kw">let </span><span class="kw-2">mut </span>repeat = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>iter = lengths.clone().enumerate().peekable();
+    <span class="comment">// Previous value
+    // We set it to the compliment of the first falue to simplify the code.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>prev = !iter.peek().expect(<span class="string">&quot;No length values!&quot;</span>).<span class="number">1</span>;
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">n</span>, <span class="kw-2">&amp;</span><span class="ident">l</span>)) <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>() {
-        <span class="kw">if</span> <span class="ident">l</span> <span class="op">==</span> <span class="ident">prev</span> <span class="op">&amp;&amp;</span> <span class="ident">not_max_repetitions</span>(<span class="ident">l</span>, <span class="ident">repeat</span>) {
-            <span class="ident">repeat</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">while let </span><span class="prelude-val">Some</span>((n, <span class="kw-2">&amp;</span>l)) = iter.next() {
+        <span class="kw">if </span>l == prev &amp;&amp; not_max_repetitions(l, repeat) {
+            repeat += <span class="number">1</span>;
         }
-        <span class="kw">if</span> <span class="ident">l</span> <span class="op">!</span><span class="op">=</span> <span class="ident">prev</span> <span class="op">|</span><span class="op">|</span> <span class="ident">iter</span>.<span class="ident">peek</span>().<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">not_max_repetitions</span>(<span class="ident">l</span>, <span class="ident">repeat</span>) {
-            <span class="kw">if</span> <span class="ident">repeat</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">MIN_REPEAT</span> {
-                <span class="comment">// The previous value has been repeated enough times to write out a repeat code.</span>
+        <span class="kw">if </span>l != prev || iter.peek().is_none() || !not_max_repetitions(l, repeat) {
+            <span class="kw">if </span>repeat &gt;= MIN_REPEAT {
+                <span class="comment">// The previous value has been repeated enough times to write out a repeat code.
 
-                <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">EncodedLength::from_prev_and_repeat</span>(<span class="ident">prev</span>, <span class="ident">repeat</span>);
-                <span class="ident">update_out_and_freq</span>(<span class="ident">val</span>, <span class="kw-2">&amp;mut</span> <span class="ident">out</span>, <span class="kw-2">&amp;mut</span> <span class="ident">frequencies</span>);
-                <span class="ident">repeat</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="comment">// If we have a new length value, output l unless the last value is 0 or l is the</span>
-                <span class="comment">// last byte.</span>
-                <span class="kw">if</span> <span class="ident">l</span> <span class="op">!</span><span class="op">=</span> <span class="ident">prev</span> {
-                    <span class="kw">if</span> <span class="ident">l</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">iter</span>.<span class="ident">peek</span>().<span class="ident">is_none</span>() {
-                        <span class="ident">update_out_and_freq</span>(<span class="ident">EncodedLength::Length</span>(<span class="ident">l</span>), <span class="kw-2">&amp;mut</span> <span class="ident">out</span>, <span class="kw-2">&amp;mut</span> <span class="ident">frequencies</span>);
-                        <span class="ident">repeat</span> <span class="op">=</span> <span class="number">0</span>;
-                    } <span class="kw">else</span> {
-                        <span class="comment">// If we have a zero, we start repeat at one instead of outputting, as</span>
-                        <span class="comment">// there are separate codes for repeats of zero so we don&#39;t need a literal</span>
-                        <span class="comment">// to define what byte to repeat.</span>
-                        <span class="ident">repeat</span> <span class="op">=</span> <span class="number">1</span>;
+                </span><span class="kw">let </span>val = EncodedLength::from_prev_and_repeat(prev, repeat);
+                update_out_and_freq(val, <span class="kw-2">&amp;mut </span>out, <span class="kw-2">&amp;mut </span>frequencies);
+                repeat = <span class="number">0</span>;
+                <span class="comment">// If we have a new length value, output l unless the last value is 0 or l is the
+                // last byte.
+                </span><span class="kw">if </span>l != prev {
+                    <span class="kw">if </span>l != <span class="number">0 </span>|| iter.peek().is_none() {
+                        update_out_and_freq(EncodedLength::Length(l), <span class="kw-2">&amp;mut </span>out, <span class="kw-2">&amp;mut </span>frequencies);
+                        repeat = <span class="number">0</span>;
+                    } <span class="kw">else </span>{
+                        <span class="comment">// If we have a zero, we start repeat at one instead of outputting, as
+                        // there are separate codes for repeats of zero so we don&#39;t need a literal
+                        // to define what byte to repeat.
+                        </span>repeat = <span class="number">1</span>;
                     }
                 }
-            } <span class="kw">else</span> {
-                <span class="comment">// There haven&#39;t been enough repetitions of the previous value,</span>
-                <span class="comment">// so just we output the lengths directly.</span>
+            } <span class="kw">else </span>{
+                <span class="comment">// There haven&#39;t been enough repetitions of the previous value,
+                // so just we output the lengths directly.
 
-                <span class="comment">// If we are at the end, and we have a value that is repeated, we need to</span>
-                <span class="comment">// skip a byte and output the last one.</span>
-                <span class="kw">let</span> <span class="ident">extra_skip</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">iter</span>.<span class="ident">peek</span>().<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">l</span> <span class="op">==</span> <span class="ident">prev</span> {
-                    <span class="number">1</span>
-                } <span class="kw">else</span> {
-                    <span class="number">0</span>
-                };
+                // If we are at the end, and we have a value that is repeated, we need to
+                // skip a byte and output the last one.
+                </span><span class="kw">let </span>extra_skip = <span class="kw">if </span>iter.peek().is_none() &amp;&amp; l == prev {
+                    <span class="number">1
+                </span>} <span class="kw">else </span>{
+                    <span class="number">0
+                </span>};
 
-                <span class="comment">// Get to the position of the next byte to output by starting at zero and skipping.</span>
-                <span class="kw">let</span> <span class="ident">b_iter</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">clone</span>().<span class="ident">skip</span>(<span class="ident">n</span> <span class="op">+</span> <span class="ident">extra_skip</span> <span class="op">-</span> <span class="ident">repeat</span> <span class="kw">as</span> <span class="ident">usize</span>);
+                <span class="comment">// Get to the position of the next byte to output by starting at zero and skipping.
+                </span><span class="kw">let </span>b_iter = lengths.clone().skip(n + extra_skip - repeat <span class="kw">as </span>usize);
 
-                <span class="comment">// As repeats of zeroes have separate codes, we don&#39;t need to output a literal here</span>
-                <span class="comment">// if we have a zero (unless we are at the end).</span>
-                <span class="kw">let</span> <span class="ident">extra</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">l</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">iter</span>.<span class="ident">peek</span>().<span class="ident">is_none</span>() {
-                    <span class="number">1</span>
-                } <span class="kw">else</span> {
-                    <span class="number">0</span>
-                };
+                <span class="comment">// As repeats of zeroes have separate codes, we don&#39;t need to output a literal here
+                // if we have a zero (unless we are at the end).
+                </span><span class="kw">let </span>extra = <span class="kw">if </span>l != <span class="number">0 </span>|| iter.peek().is_none() {
+                    <span class="number">1
+                </span>} <span class="kw">else </span>{
+                    <span class="number">0
+                </span>};
 
-                <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">i</span> <span class="kw">in</span> <span class="ident">b_iter</span>.<span class="ident">take</span>(<span class="ident">repeat</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="ident">extra</span>) {
-                    <span class="ident">update_out_and_freq</span>(<span class="ident">EncodedLength::Length</span>(<span class="ident">i</span>), <span class="kw-2">&amp;mut</span> <span class="ident">out</span>, <span class="kw-2">&amp;mut</span> <span class="ident">frequencies</span>);
+                <span class="kw">for </span><span class="kw-2">&amp;</span>i <span class="kw">in </span>b_iter.take(repeat <span class="kw">as </span>usize + extra) {
+                    update_out_and_freq(EncodedLength::Length(i), <span class="kw-2">&amp;mut </span>out, <span class="kw-2">&amp;mut </span>frequencies);
                 }
 
-                <span class="comment">// If the current byte is zero we start repeat at 1 as we didn&#39;t output the literal</span>
-                <span class="comment">// directly.</span>
-                <span class="ident">repeat</span> <span class="op">=</span> <span class="number">1</span> <span class="op">-</span> <span class="ident">extra</span> <span class="kw">as</span> <span class="ident">u8</span>;
+                <span class="comment">// If the current byte is zero we start repeat at 1 as we didn&#39;t output the literal
+                // directly.
+                </span>repeat = <span class="number">1 </span>- extra <span class="kw">as </span>u8;
             }
         }
-        <span class="ident">prev</span> <span class="op">=</span> <span class="ident">l</span>;
+        prev = l;
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="ident">frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>], <span class="ident">max_len</span>: <span class="ident">usize</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-    <span class="ident">in_place::gen_lengths</span>(<span class="ident">frequencies</span>, <span class="ident">max_len</span>)
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">pub fn </span>huffman_lengths_from_frequency(frequencies: <span class="kw-2">&amp;</span>[u16], max_len: usize) -&gt; Vec&lt;u8&gt; {
+    in_place::gen_lengths(frequencies, max_len)
 }
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">LeafVec</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">in_place::Node</span><span class="op">&gt;</span>;
+<span class="kw">pub type </span>LeafVec = Vec&lt;in_place::Node&gt;;
 
-<span class="doccomment">/// Generate a set of canonical huffman lengths from the given frequencies, with a maximum length</span>
-<span class="doccomment">/// of `max_len`. The lengths are put in the lens slice parameter. Unused lengths are set to 0.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The leaf buffer is passed in to avoid allocating it every time this function is called.</span>
-<span class="doccomment">/// The existing data contained in it is not preserved.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">huffman_lengths_from_frequency_m</span>(
-    <span class="ident">frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
-    <span class="ident">max_len</span>: <span class="ident">usize</span>,
-    <span class="ident">leaf_buffer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">LeafVec</span>,
-    <span class="ident">lens</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>],
+<span class="doccomment">/// Generate a set of canonical huffman lengths from the given frequencies, with a maximum length
+/// of `max_len`. The lengths are put in the lens slice parameter. Unused lengths are set to 0.
+///
+/// The leaf buffer is passed in to avoid allocating it every time this function is called.
+/// The existing data contained in it is not preserved.
+</span><span class="kw">pub fn </span>huffman_lengths_from_frequency_m(
+    frequencies: <span class="kw-2">&amp;</span>[u16],
+    max_len: usize,
+    leaf_buffer: <span class="kw-2">&amp;mut </span>LeafVec,
+    lens: <span class="kw-2">&amp;mut </span>[u8],
 ) {
-    <span class="ident">in_place::in_place_lengths</span>(<span class="ident">frequencies</span>, <span class="ident">max_len</span>, <span class="ident">leaf_buffer</span>, <span class="ident">lens</span>);
+    in_place::in_place_lengths(frequencies, max_len, leaf_buffer, lens);
 }
 
-<span class="kw">mod</span> <span class="ident">in_place</span> {
-    <span class="kw">type</span> <span class="ident">WeightType</span> <span class="op">=</span> <span class="ident">u32</span>;
+<span class="kw">mod </span>in_place {
+    <span class="kw">type </span>WeightType = u32;
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate_lengths</span>(<span class="ident">lengths</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">bool</span> {
-        <span class="comment">// Avoid issue with floating point on mips: https://github.com/image-rs/deflate-rs/issues/23</span>
-        <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">any</span>(
-            <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;mips&quot;</span>,
-            <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;mipsel&quot;</span>,
-            <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;mips64&quot;</span>,
-            <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;mipsel64&quot;</span>
-        )) {
-            <span class="bool-val">true</span>
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">lengths</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0f64</span>, <span class="op">|</span><span class="ident">acc</span>, <span class="kw-2">&amp;</span><span class="ident">n</span><span class="op">|</span> {
-                <span class="ident">acc</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">n</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                    <span class="number">2f64</span>.<span class="ident">powi</span>(<span class="op">-</span>(<span class="ident">i32::from</span>(<span class="ident">n</span>)))
-                } <span class="kw">else</span> {
-                    <span class="number">0f64</span>
-                }
+    <span class="attribute">#[cfg(debug)]
+    </span><span class="kw">pub fn </span>validate_lengths(lengths: <span class="kw-2">&amp;</span>[u8]) -&gt; bool {
+        <span class="comment">// Avoid issue with floating point on mips: https://github.com/image-rs/deflate-rs/issues/23
+        </span><span class="kw">if </span><span class="macro">cfg!</span>(any(
+            target_arch = <span class="string">&quot;mips&quot;</span>,
+            target_arch = <span class="string">&quot;mipsel&quot;</span>,
+            target_arch = <span class="string">&quot;mips64&quot;</span>,
+            target_arch = <span class="string">&quot;mipsel64&quot;
+        </span>)) {
+            <span class="bool-val">true
+        </span>} <span class="kw">else </span>{
+            <span class="kw">let </span>v = lengths.iter().fold(<span class="number">0f64</span>, |acc, <span class="kw-2">&amp;</span>n| {
+                acc + <span class="kw">if </span>n != <span class="number">0 </span>{
+                    <span class="number">2f64</span>.powi(-(i32::from(n)))
+                } <span class="kw">else </span>{
+                    <span class="number">0f64
+                </span>}
             });
 
-            <span class="kw">match</span> <span class="ident">v</span>.<span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="number">1.0</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">std::cmp::Ordering::Greater</span>) =&gt; <span class="bool-val">false</span>,
-                <span class="kw">_</span> =&gt; <span class="bool-val">true</span>,
+            <span class="kw">match </span>v.partial_cmp(<span class="kw-2">&amp;</span><span class="number">1.0</span>) {
+                <span class="prelude-val">Some</span>(std::cmp::Ordering::Greater) =&gt; <span class="bool-val">false</span>,
+                <span class="kw">_ </span>=&gt; <span class="bool-val">true</span>,
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug</span>))]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate_lengths</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">bool</span> {
-        <span class="bool-val">true</span>
+    <span class="attribute">#[cfg(not(debug))]
+    </span><span class="kw">pub fn </span>validate_lengths(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[u8]) -&gt; bool {
+        <span class="bool-val">true
+    </span>}
+
+    <span class="attribute">#[derive(Eq, PartialEq, Debug)]
+    </span><span class="kw">pub struct </span>Node {
+        value: WeightType,
+        symbol: u16,
     }
 
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Node</span> {
-        <span class="ident">value</span>: <span class="ident">WeightType</span>,
-        <span class="ident">symbol</span>: <span class="ident">u16</span>,
-    }
+    <span class="kw">fn </span>step_1(leaves: <span class="kw-2">&amp;mut </span>[Node]) {
+        <span class="comment">// If there are less than 2 non-zero frequencies, this function should not have been
+        // called and we should not have gotten to this point.
+        </span><span class="macro">debug_assert!</span>(leaves.len() &gt;= <span class="number">2</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>root = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>leaf = <span class="number">2</span>;
 
-    <span class="kw">fn</span> <span class="ident">step_1</span>(<span class="ident">leaves</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">Node</span>]) {
-        <span class="comment">// If there are less than 2 non-zero frequencies, this function should not have been</span>
-        <span class="comment">// called and we should not have gotten to this point.</span>
-        <span class="macro">debug_assert!</span>(<span class="ident">leaves</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leaf</span> <span class="op">=</span> <span class="number">2</span>;
+        leaves[<span class="number">0</span>].value += leaves[<span class="number">1</span>].value;
 
-        <span class="ident">leaves</span>[<span class="number">0</span>].<span class="ident">value</span> <span class="op">+</span><span class="op">=</span> <span class="ident">leaves</span>[<span class="number">1</span>].<span class="ident">value</span>;
-
-        <span class="kw">for</span> <span class="ident">next</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">leaves</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> {
-            <span class="kw">if</span> (<span class="ident">leaf</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">len</span>()) <span class="op">|</span><span class="op">|</span> (<span class="ident">leaves</span>[<span class="ident">root</span>].<span class="ident">value</span> <span class="op">&lt;</span> <span class="ident">leaves</span>[<span class="ident">leaf</span>].<span class="ident">value</span>) {
-                <span class="ident">leaves</span>[<span class="ident">next</span>].<span class="ident">value</span> <span class="op">=</span> <span class="ident">leaves</span>[<span class="ident">root</span>].<span class="ident">value</span>;
-                <span class="ident">leaves</span>[<span class="ident">root</span>].<span class="ident">value</span> <span class="op">=</span> <span class="ident">next</span> <span class="kw">as</span> <span class="ident">WeightType</span>;
-                <span class="ident">root</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">leaves</span>[<span class="ident">next</span>].<span class="ident">value</span> <span class="op">=</span> <span class="ident">leaves</span>[<span class="ident">leaf</span>].<span class="ident">value</span>;
-                <span class="ident">leaf</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">for </span>next <span class="kw">in </span><span class="number">1</span>..leaves.len() - <span class="number">1 </span>{
+            <span class="kw">if </span>(leaf &gt;= leaves.len()) || (leaves[root].value &lt; leaves[leaf].value) {
+                leaves[next].value = leaves[root].value;
+                leaves[root].value = next <span class="kw">as </span>WeightType;
+                root += <span class="number">1</span>;
+            } <span class="kw">else </span>{
+                leaves[next].value = leaves[leaf].value;
+                leaf += <span class="number">1</span>;
             }
 
-            <span class="kw">if</span> (<span class="ident">leaf</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">len</span>()) <span class="op">|</span><span class="op">|</span> (<span class="ident">root</span> <span class="op">&lt;</span> <span class="ident">next</span> <span class="op">&amp;&amp;</span> (<span class="ident">leaves</span>[<span class="ident">root</span>].<span class="ident">value</span> <span class="op">&lt;</span> <span class="ident">leaves</span>[<span class="ident">leaf</span>].<span class="ident">value</span>))
+            <span class="kw">if </span>(leaf &gt;= leaves.len()) || (root &lt; next &amp;&amp; (leaves[root].value &lt; leaves[leaf].value))
             {
-                <span class="ident">leaves</span>[<span class="ident">next</span>].<span class="ident">value</span> <span class="op">+</span><span class="op">=</span> <span class="ident">leaves</span>[<span class="ident">root</span>].<span class="ident">value</span>;
-                <span class="ident">leaves</span>[<span class="ident">root</span>].<span class="ident">value</span> <span class="op">=</span> <span class="ident">next</span> <span class="kw">as</span> <span class="ident">WeightType</span>;
-                <span class="ident">root</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">leaves</span>[<span class="ident">next</span>].<span class="ident">value</span> <span class="op">+</span><span class="op">=</span> <span class="ident">leaves</span>[<span class="ident">leaf</span>].<span class="ident">value</span>;
-                <span class="ident">leaf</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                leaves[next].value += leaves[root].value;
+                leaves[root].value = next <span class="kw">as </span>WeightType;
+                root += <span class="number">1</span>;
+            } <span class="kw">else </span>{
+                leaves[next].value += leaves[leaf].value;
+                leaf += <span class="number">1</span>;
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">step_2</span>(<span class="ident">leaves</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">Node</span>]) {
-        <span class="macro">debug_assert!</span>(<span class="ident">leaves</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span>);
-        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">len</span>();
+    <span class="kw">fn </span>step_2(leaves: <span class="kw-2">&amp;mut </span>[Node]) {
+        <span class="macro">debug_assert!</span>(leaves.len() &gt;= <span class="number">2</span>);
+        <span class="kw">let </span>n = leaves.len();
 
-        <span class="ident">leaves</span>[<span class="ident">n</span> <span class="op">-</span> <span class="number">2</span>].<span class="ident">value</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">for</span> <span class="ident">t</span> <span class="kw">in</span> (<span class="number">0</span>..(<span class="ident">n</span> <span class="op">+</span> <span class="number">1</span> <span class="op">-</span> <span class="number">3</span>)).<span class="ident">rev</span>() {
-            <span class="ident">leaves</span>[<span class="ident">t</span>].<span class="ident">value</span> <span class="op">=</span> <span class="ident">leaves</span>[<span class="ident">leaves</span>[<span class="ident">t</span>].<span class="ident">value</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">value</span> <span class="op">+</span> <span class="number">1</span>;
+        leaves[n - <span class="number">2</span>].value = <span class="number">0</span>;
+        <span class="kw">for </span>t <span class="kw">in </span>(<span class="number">0</span>..(n + <span class="number">1 </span>- <span class="number">3</span>)).rev() {
+            leaves[t].value = leaves[leaves[t].value <span class="kw">as </span>usize].value + <span class="number">1</span>;
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available</span> <span class="op">=</span> <span class="number">1_usize</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">used</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">depth</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">isize</span> <span class="op">-</span> <span class="number">2</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next</span> <span class="op">=</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">isize</span> <span class="op">-</span> <span class="number">1</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>available = <span class="number">1_usize</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>used = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>depth = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>root = n <span class="kw">as </span>isize - <span class="number">2</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>next = n <span class="kw">as </span>isize - <span class="number">1</span>;
 
-        <span class="kw">while</span> <span class="ident">available</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="kw">while</span> <span class="ident">root</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">leaves</span>[<span class="ident">root</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">value</span> <span class="op">==</span> <span class="ident">depth</span> {
-                <span class="ident">used</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                <span class="ident">root</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">while </span>available &gt; <span class="number">0 </span>{
+            <span class="kw">while </span>root &gt;= <span class="number">0 </span>&amp;&amp; leaves[root <span class="kw">as </span>usize].value == depth {
+                used += <span class="number">1</span>;
+                root -= <span class="number">1</span>;
             }
-            <span class="kw">while</span> <span class="ident">available</span> <span class="op">&gt;</span> <span class="ident">used</span> {
-                <span class="ident">leaves</span>[<span class="ident">next</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">value</span> <span class="op">=</span> <span class="ident">depth</span>;
-                <span class="ident">next</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-                <span class="ident">available</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+            <span class="kw">while </span>available &gt; used {
+                leaves[next <span class="kw">as </span>usize].value = depth;
+                next -= <span class="number">1</span>;
+                available -= <span class="number">1</span>;
             }
-            <span class="ident">available</span> <span class="op">=</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">used</span>;
-            <span class="ident">depth</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">used</span> <span class="op">=</span> <span class="number">0</span>;
+            available = <span class="number">2 </span>* used;
+            depth += <span class="number">1</span>;
+            used = <span class="number">0</span>;
         }
     }
 
-    <span class="kw">const</span> <span class="ident">MAX_NUMBER_OF_CODES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">32</span>;
-    <span class="kw">const</span> <span class="ident">NUM_CODES_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">MAX_NUMBER_OF_CODES</span> <span class="op">+</span> <span class="number">1</span>;
+    <span class="kw">const </span>MAX_NUMBER_OF_CODES: usize = <span class="number">32</span>;
+    <span class="kw">const </span>NUM_CODES_LENGTH: usize = MAX_NUMBER_OF_CODES + <span class="number">1</span>;
 
-    <span class="doccomment">/// Checks if any of the lengths exceed `max_len`, and if that is the case, alters the length</span>
-    <span class="doccomment">/// table so that no codes exceed `max_len`.</span>
-    <span class="doccomment">/// This is ported from miniz (which is released as public domain by Rich Geldreich</span>
-    <span class="doccomment">/// https://github.com/richgel999/miniz/blob/master/miniz.c)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will not generate optimal (minimim-redundancy) codes, however in most cases</span>
-    <span class="doccomment">/// this won&#39;t make a large difference.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">enforce_max_code_lengths</span>(
-        <span class="ident">num_codes</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>; <span class="ident">NUM_CODES_LENGTH</span>],
-        <span class="ident">num_used</span>: <span class="ident">usize</span>,
-        <span class="ident">max_len</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// Checks if any of the lengths exceed `max_len`, and if that is the case, alters the length
+    /// table so that no codes exceed `max_len`.
+    /// This is ported from miniz (which is released as public domain by Rich Geldreich
+    /// https://github.com/richgel999/miniz/blob/master/miniz.c)
+    ///
+    /// This will not generate optimal (minimim-redundancy) codes, however in most cases
+    /// this won&#39;t make a large difference.
+    </span><span class="kw">pub fn </span>enforce_max_code_lengths(
+        num_codes: <span class="kw-2">&amp;mut </span>[u16; NUM_CODES_LENGTH],
+        num_used: usize,
+        max_len: usize,
     ) {
-        <span class="macro">debug_assert!</span>(<span class="ident">max_len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">15</span>);
+        <span class="macro">debug_assert!</span>(max_len &lt;= <span class="number">15</span>);
 
-        <span class="kw">if</span> <span class="ident">num_used</span> <span class="op">&gt;</span> <span class="number">1</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num_above_max</span> <span class="op">=</span> <span class="number">0u16</span>;
-            <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">l</span> <span class="kw">in</span> <span class="ident">num_codes</span>[(<span class="ident">max_len</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="number">1</span>)..].<span class="ident">iter</span>() {
-                <span class="ident">num_above_max</span> <span class="op">+</span><span class="op">=</span> <span class="ident">l</span>;
+        <span class="kw">if </span>num_used &gt; <span class="number">1 </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>num_above_max = <span class="number">0u16</span>;
+            <span class="kw">for </span><span class="kw-2">&amp;</span>l <span class="kw">in </span>num_codes[(max_len <span class="kw">as </span>usize + <span class="number">1</span>)..].iter() {
+                num_above_max += l;
             }
 
-            <span class="ident">num_codes</span>[<span class="ident">max_len</span>] <span class="op">+</span><span class="op">=</span> <span class="ident">num_above_max</span>;
+            num_codes[max_len] += num_above_max;
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total</span> <span class="op">=</span> <span class="number">0u32</span>;
-            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> (<span class="number">1</span>..<span class="op">=</span><span class="ident">max_len</span>).<span class="ident">rev</span>() {
-                <span class="comment">// This should be safe as max_len won&#39;t be higher than 15, and num_codes[i] can&#39;t</span>
-                <span class="comment">// be higher than 288,</span>
-                <span class="comment">// and 288 &lt;&lt; 15 will not be anywhere close to overflowing 32 bits</span>
-                <span class="ident">total</span> <span class="op">+</span><span class="op">=</span> (<span class="ident">u32::from</span>(<span class="ident">num_codes</span>[<span class="ident">i</span>])) <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="ident">max_len</span> <span class="op">-</span> <span class="ident">i</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>total = <span class="number">0u32</span>;
+            <span class="kw">for </span>i <span class="kw">in </span>(<span class="number">1</span>..=max_len).rev() {
+                <span class="comment">// This should be safe as max_len won&#39;t be higher than 15, and num_codes[i] can&#39;t
+                // be higher than 288,
+                // and 288 &lt;&lt; 15 will not be anywhere close to overflowing 32 bits
+                </span>total += (u32::from(num_codes[i])) &lt;&lt; (max_len - i);
             }
 
-            <span class="comment">// miniz uses unsigned long here. 32-bits should be sufficient though,</span>
-            <span class="comment">// as max_len won&#39;t be longer than 15 anyhow.</span>
-            <span class="kw">while</span> <span class="ident">total</span> <span class="op">!</span><span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">max_len</span> {
-                <span class="ident">num_codes</span>[<span class="ident">max_len</span>] <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-                <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> (<span class="number">1</span>..<span class="ident">max_len</span>).<span class="ident">rev</span>() {
-                    <span class="kw">if</span> <span class="ident">num_codes</span>[<span class="ident">i</span>] <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                        <span class="ident">num_codes</span>[<span class="ident">i</span>] <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-                        <span class="ident">num_codes</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">+</span><span class="op">=</span> <span class="number">2</span>;
+            <span class="comment">// miniz uses unsigned long here. 32-bits should be sufficient though,
+            // as max_len won&#39;t be longer than 15 anyhow.
+            </span><span class="kw">while </span>total != <span class="number">1u32 </span>&lt;&lt; max_len {
+                num_codes[max_len] -= <span class="number">1</span>;
+                <span class="kw">for </span>i <span class="kw">in </span>(<span class="number">1</span>..max_len).rev() {
+                    <span class="kw">if </span>num_codes[i] != <span class="number">0 </span>{
+                        num_codes[i] -= <span class="number">1</span>;
+                        num_codes[i + <span class="number">1</span>] += <span class="number">2</span>;
                         <span class="kw">break</span>;
                     }
                 }
-                <span class="ident">total</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+                total -= <span class="number">1</span>;
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-    <span class="doccomment">/// Convenience wrapper for tests.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_lengths</span>(<span class="ident">frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>], <span class="ident">max_len</span>: <span class="ident">usize</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lens</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">frequencies</span>.<span class="ident">len</span>()];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leaves</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="ident">in_place_lengths</span>(<span class="ident">frequencies</span>, <span class="ident">max_len</span>, <span class="kw-2">&amp;mut</span> <span class="ident">leaves</span>, <span class="ident">lens</span>.<span class="ident">as_mut_slice</span>());
-        <span class="ident">lens</span>
+    <span class="attribute">#[cfg(test)]
+    </span><span class="doccomment">/// Convenience wrapper for tests.
+    </span><span class="kw">pub fn </span>gen_lengths(frequencies: <span class="kw-2">&amp;</span>[u16], max_len: usize) -&gt; Vec&lt;u8&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>lens = <span class="macro">vec!</span>[<span class="number">0u8</span>; frequencies.len()];
+        <span class="kw">let </span><span class="kw-2">mut </span>leaves = Vec::new();
+        in_place_lengths(frequencies, max_len, <span class="kw-2">&amp;mut </span>leaves, lens.as_mut_slice());
+        lens
     }
 
-    <span class="doccomment">/// Generate huffman code lengths, using the algorithm described by</span>
-    <span class="doccomment">/// Moffat and Katajainen in In-Place Calculation of Minimum-Redundancy Codes</span>
-    <span class="doccomment">/// https://people.eng.unimelb.edu.au/ammoffat/abstracts/mk95wads.html</span>
-    <span class="doccomment">/// and it&#39;s implementation.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is significantly faster, and seems to generally create lengths that result in length</span>
-    <span class="doccomment">/// tables that are better compressible than the algorithm used previously. The downside of this</span>
-    <span class="doccomment">/// algorithm is that it&#39;s not length-limited, so if too long code lengths are generated,</span>
-    <span class="doccomment">/// it might result in a sub-optimal tables as the length-restricting function isn&#39;t optimal.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_place_lengths</span>(
-        <span class="ident">frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
-        <span class="ident">max_len</span>: <span class="ident">usize</span>,
-        <span class="kw-2">mut</span> <span class="ident">leaves</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;</span>,
-        <span class="ident">lengths</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>],
+    <span class="doccomment">/// Generate huffman code lengths, using the algorithm described by
+    /// Moffat and Katajainen in In-Place Calculation of Minimum-Redundancy Codes
+    /// https://people.eng.unimelb.edu.au/ammoffat/abstracts/mk95wads.html
+    /// and it&#39;s implementation.
+    ///
+    /// This is significantly faster, and seems to generally create lengths that result in length
+    /// tables that are better compressible than the algorithm used previously. The downside of this
+    /// algorithm is that it&#39;s not length-limited, so if too long code lengths are generated,
+    /// it might result in a sub-optimal tables as the length-restricting function isn&#39;t optimal.
+    </span><span class="kw">pub fn </span>in_place_lengths(
+        frequencies: <span class="kw-2">&amp;</span>[u16],
+        max_len: usize,
+        <span class="kw-2">mut </span>leaves: <span class="kw-2">&amp;mut </span>Vec&lt;Node&gt;,
+        lengths: <span class="kw-2">&amp;mut </span>[u8],
     ) {
-        <span class="macro">debug_assert!</span>(<span class="ident">lengths</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">frequencies</span>.<span class="ident">len</span>());
+        <span class="macro">debug_assert!</span>(lengths.len() &gt;= frequencies.len());
 
-        <span class="kw">for</span> <span class="ident">l</span> <span class="kw">in</span> <span class="ident">lengths</span>.<span class="ident">iter_mut</span>() {
-            <span class="kw-2">*</span><span class="ident">l</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">for </span>l <span class="kw">in </span>lengths.iter_mut() {
+            <span class="kw-2">*</span>l = <span class="number">0</span>;
         }
 
-        <span class="comment">// Clear any previous leaves in the leaf buffer.</span>
-        <span class="ident">leaves</span>.<span class="ident">clear</span>();
+        <span class="comment">// Clear any previous leaves in the leaf buffer.
+        </span>leaves.clear();
 
-        <span class="comment">// Discard zero length nodes as they won&#39;t be given a code and thus don&#39;t need to</span>
-        <span class="comment">// participate in code length generation and create a new vec of the remaining</span>
-        <span class="comment">// symbols and weights.</span>
-        <span class="ident">leaves</span>.<span class="ident">extend</span>(<span class="ident">frequencies</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>().<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">n</span>, <span class="ident">f</span>)<span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">f</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                <span class="prelude-val">Some</span>(<span class="ident">Node</span> {
-                    <span class="ident">value</span>: <span class="ident">u32::from</span>(<span class="kw-2">*</span><span class="ident">f</span>),
-                    <span class="ident">symbol</span>: <span class="ident">n</span> <span class="kw">as</span> <span class="ident">u16</span>,
+        <span class="comment">// Discard zero length nodes as they won&#39;t be given a code and thus don&#39;t need to
+        // participate in code length generation and create a new vec of the remaining
+        // symbols and weights.
+        </span>leaves.extend(frequencies.iter().enumerate().filter_map(|(n, f)| {
+            <span class="kw">if </span><span class="kw-2">*</span>f &gt; <span class="number">0 </span>{
+                <span class="prelude-val">Some</span>(Node {
+                    value: u32::from(<span class="kw-2">*</span>f),
+                    symbol: n <span class="kw">as </span>u16,
                 })
-            } <span class="kw">else</span> {
-                <span class="prelude-val">None</span>
-            }
+            } <span class="kw">else </span>{
+                <span class="prelude-val">None
+            </span>}
         }));
 
-        <span class="comment">// Special cases with zero or 1 value having a non-zero frequency</span>
-        <span class="kw">if</span> <span class="ident">leaves</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-            <span class="ident">lengths</span>[<span class="ident">leaves</span>[<span class="number">0</span>].<span class="ident">symbol</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">=</span> <span class="number">1</span>;
+        <span class="comment">// Special cases with zero or 1 value having a non-zero frequency
+        </span><span class="kw">if </span>leaves.len() == <span class="number">1 </span>{
+            lengths[leaves[<span class="number">0</span>].symbol <span class="kw">as </span>usize] = <span class="number">1</span>;
             <span class="kw">return</span>;
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">leaves</span>.<span class="ident">is_empty</span>() {
+        } <span class="kw">else if </span>leaves.is_empty() {
             <span class="kw">return</span>;
         }
 
-        <span class="comment">// Sort the leaves by value. As the sort in the standard library is stable, we don&#39;t</span>
-        <span class="comment">// have to worry about the symbol code here.</span>
-        <span class="ident">leaves</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">value</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">value</span>));
+        <span class="comment">// Sort the leaves by value. As the sort in the standard library is stable, we don&#39;t
+        // have to worry about the symbol code here.
+        </span>leaves.sort_by(|a, b| a.value.cmp(<span class="kw-2">&amp;</span>b.value));
 
-        <span class="ident">step_1</span>(<span class="kw-2">&amp;mut</span> <span class="ident">leaves</span>);
-        <span class="ident">step_2</span>(<span class="kw-2">&amp;mut</span> <span class="ident">leaves</span>);
+        step_1(<span class="kw-2">&amp;mut </span>leaves);
+        step_2(<span class="kw-2">&amp;mut </span>leaves);
 
-        <span class="comment">// Count how many codes of each length used, for usage in the next section.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num_codes</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="ident">NUM_CODES_LENGTH</span>];
-        <span class="kw">for</span> <span class="ident">l</span> <span class="kw">in</span> <span class="ident">leaves</span>.<span class="ident">iter</span>() {
-            <span class="ident">num_codes</span>[<span class="ident">l</span>.<span class="ident">value</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="comment">// Count how many codes of each length used, for usage in the next section.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>num_codes = [<span class="number">0u16</span>; NUM_CODES_LENGTH];
+        <span class="kw">for </span>l <span class="kw">in </span>leaves.iter() {
+            num_codes[l.value <span class="kw">as </span>usize] += <span class="number">1</span>;
         }
 
-        <span class="comment">// As the algorithm used here doesn&#39;t limit the maximum length that can be generated</span>
-        <span class="comment">// we need to make sure none of the lengths exceed `max_len`</span>
-        <span class="ident">enforce_max_code_lengths</span>(<span class="kw-2">&amp;mut</span> <span class="ident">num_codes</span>, <span class="ident">leaves</span>.<span class="ident">len</span>(), <span class="ident">max_len</span>);
+        <span class="comment">// As the algorithm used here doesn&#39;t limit the maximum length that can be generated
+        // we need to make sure none of the lengths exceed `max_len`
+        </span>enforce_max_code_lengths(<span class="kw-2">&amp;mut </span>num_codes, leaves.len(), max_len);
 
-        <span class="comment">// Output the actual lengths</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leaf_it</span> <span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">iter</span>().<span class="ident">rev</span>();
-        <span class="comment">// Start at 1 since the length table is already filled with zeroes.</span>
-        <span class="kw">for</span> (<span class="kw-2">&amp;</span><span class="ident">n_codes</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">num_codes</span>[<span class="number">1</span>..<span class="op">=</span><span class="ident">max_len</span>].<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="number">1</span>..<span class="op">=</span>(<span class="ident">max_len</span> <span class="kw">as</span> <span class="ident">u8</span>)) {
-            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">n_codes</span> {
-                <span class="ident">lengths</span>[<span class="ident">leaf_it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">symbol</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">=</span> <span class="ident">i</span>;
+        <span class="comment">// Output the actual lengths
+        </span><span class="kw">let </span><span class="kw-2">mut </span>leaf_it = leaves.iter().rev();
+        <span class="comment">// Start at 1 since the length table is already filled with zeroes.
+        </span><span class="kw">for </span>(<span class="kw-2">&amp;</span>n_codes, i) <span class="kw">in </span>num_codes[<span class="number">1</span>..=max_len].iter().zip(<span class="number">1</span>..=(max_len <span class="kw">as </span>u8)) {
+            <span class="kw">for _ in </span><span class="number">0</span>..n_codes {
+                lengths[leaf_it.next().unwrap().symbol <span class="kw">as </span>usize] = i;
             }
         }
 
-        <span class="macro">debug_assert_eq!</span>(<span class="ident">leaf_it</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+        <span class="macro">debug_assert_eq!</span>(leaf_it.next(), <span class="prelude-val">None</span>);
         <span class="macro">debug_assert!</span>(
-            <span class="ident">validate_lengths</span>(<span class="ident">lengths</span>),
-            <span class="string">&quot;The generated length codes were not valid!&quot;</span>
-        );
+            validate_lengths(lengths),
+            <span class="string">&quot;The generated length codes were not valid!&quot;
+        </span>);
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman_table::NUM_LITERALS_AND_LENGTHS</span>;
-    <span class="kw">use</span> <span class="ident">std::u16</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::huffman_table::NUM_LITERALS_AND_LENGTHS;
+    <span class="kw">use </span>std::u16;
 
-    <span class="kw">fn</span> <span class="ident">lit</span>(<span class="ident">value</span>: <span class="ident">u8</span>) -&gt; <span class="ident">EncodedLength</span> {
-        <span class="ident">EncodedLength::Length</span>(<span class="ident">value</span>)
+    <span class="kw">fn </span>lit(value: u8) -&gt; EncodedLength {
+        EncodedLength::Length(value)
     }
 
-    <span class="kw">fn</span> <span class="ident">zero</span>(<span class="ident">repeats</span>: <span class="ident">u8</span>) -&gt; <span class="ident">EncodedLength</span> {
-        <span class="kw">match</span> <span class="ident">repeats</span> {
-            <span class="number">0</span>..<span class="op">=</span><span class="number">1</span> =&gt; <span class="ident">EncodedLength::Length</span>(<span class="number">0</span>),
-            <span class="number">2</span>..<span class="op">=</span><span class="number">10</span> =&gt; <span class="ident">EncodedLength::RepeatZero3Bits</span>(<span class="ident">repeats</span>),
-            <span class="kw">_</span> =&gt; <span class="ident">EncodedLength::RepeatZero7Bits</span>(<span class="ident">repeats</span>),
+    <span class="kw">fn </span>zero(repeats: u8) -&gt; EncodedLength {
+        <span class="kw">match </span>repeats {
+            <span class="number">0</span>..=<span class="number">1 </span>=&gt; EncodedLength::Length(<span class="number">0</span>),
+            <span class="number">2</span>..=<span class="number">10 </span>=&gt; EncodedLength::RepeatZero3Bits(repeats),
+            <span class="kw">_ </span>=&gt; EncodedLength::RepeatZero7Bits(repeats),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">copy</span>(<span class="ident">copies</span>: <span class="ident">u8</span>) -&gt; <span class="ident">EncodedLength</span> {
-        <span class="ident">EncodedLength::CopyPrevious</span>(<span class="ident">copies</span>)
+    <span class="kw">fn </span>copy(copies: u8) -&gt; EncodedLength {
+        EncodedLength::CopyPrevious(copies)
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_encode_lengths</span>() {
-        <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman_table::FIXED_CODE_LENGTHS</span>;
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>(<span class="ident">FIXED_CODE_LENGTHS</span>.<span class="ident">iter</span>());
-        <span class="comment">// There are no lengths lower than 6 in the fixed table</span>
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>.<span class="number">1</span>[<span class="number">0</span>..<span class="number">7</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
-        <span class="comment">// Neither are there any lengths above 9</span>
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>.<span class="number">1</span>[<span class="number">10</span>..<span class="number">16</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
-        <span class="comment">// Also there are no zero-length codes so there shouldn&#39;t be any repetitions of zero</span>
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>.<span class="number">1</span>[<span class="number">17</span>..<span class="number">19</span>], [<span class="number">0</span>, <span class="number">0</span>]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_encode_lengths() {
+        <span class="kw">use </span><span class="kw">crate</span>::huffman_table::FIXED_CODE_LENGTHS;
+        <span class="kw">let </span>enc = encode_lengths(FIXED_CODE_LENGTHS.iter());
+        <span class="comment">// There are no lengths lower than 6 in the fixed table
+        </span><span class="macro">assert_eq!</span>(enc.<span class="number">1</span>[<span class="number">0</span>..<span class="number">7</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
+        <span class="comment">// Neither are there any lengths above 9
+        </span><span class="macro">assert_eq!</span>(enc.<span class="number">1</span>[<span class="number">10</span>..<span class="number">16</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
+        <span class="comment">// Also there are no zero-length codes so there shouldn&#39;t be any repetitions of zero
+        </span><span class="macro">assert_eq!</span>(enc.<span class="number">1</span>[<span class="number">17</span>..<span class="number">19</span>], [<span class="number">0</span>, <span class="number">0</span>]);
 
-        <span class="kw">let</span> <span class="ident">test_lengths</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">15</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>];
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>(<span class="ident">test_lengths</span>.<span class="ident">iter</span>()).<span class="number">0</span>;
+        <span class="kw">let </span>test_lengths = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">15</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>];
+        <span class="kw">let </span>enc = encode_lengths(test_lengths.iter()).<span class="number">0</span>;
         <span class="macro">assert_eq!</span>(
-            <span class="ident">enc</span>,
+            enc,
             <span class="macro">vec!</span>[
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">5</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">15</span>),
-                <span class="ident">lit</span>(<span class="number">1</span>),
-                <span class="ident">zero</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">2</span>),
-                <span class="ident">lit</span>(<span class="number">4</span>),
-                <span class="ident">copy</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">5</span>),
-                <span class="ident">copy</span>(<span class="number">3</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">5</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">15</span>),
+                lit(<span class="number">1</span>),
+                zero(<span class="number">3</span>),
+                lit(<span class="number">2</span>),
+                lit(<span class="number">4</span>),
+                copy(<span class="number">3</span>),
+                lit(<span class="number">3</span>),
+                lit(<span class="number">5</span>),
+                copy(<span class="number">3</span>),
             ]
         );
-        <span class="kw">let</span> <span class="ident">test_lengths</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>(<span class="ident">test_lengths</span>.<span class="ident">iter</span>()).<span class="number">0</span>;
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>, <span class="macro">vec!</span>[<span class="ident">zero</span>(<span class="number">3</span>), <span class="ident">lit</span>(<span class="number">5</span>), <span class="ident">lit</span>(<span class="number">2</span>), <span class="ident">lit</span>(<span class="number">3</span>), <span class="ident">zero</span>(<span class="number">3</span>)]);
+        <span class="kw">let </span>test_lengths = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
+        <span class="kw">let </span>enc = encode_lengths(test_lengths.iter()).<span class="number">0</span>;
+        <span class="macro">assert_eq!</span>(enc, <span class="macro">vec!</span>[zero(<span class="number">3</span>), lit(<span class="number">5</span>), lit(<span class="number">2</span>), lit(<span class="number">3</span>), zero(<span class="number">3</span>)]);
 
-        <span class="kw">let</span> <span class="ident">test_lengths</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>(<span class="ident">test_lengths</span>.<span class="ident">iter</span>()).<span class="number">0</span>;
+        <span class="kw">let </span>test_lengths = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>];
+        <span class="kw">let </span>enc = encode_lengths(test_lengths.iter()).<span class="number">0</span>;
         <span class="macro">assert_eq!</span>(
-            <span class="ident">enc</span>,
+            enc,
             <span class="macro">vec!</span>[
-                <span class="ident">zero</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">5</span>),
-                <span class="ident">lit</span>(<span class="number">4</span>),
-                <span class="ident">copy</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
+                zero(<span class="number">3</span>),
+                lit(<span class="number">3</span>),
+                lit(<span class="number">3</span>),
+                lit(<span class="number">3</span>),
+                lit(<span class="number">5</span>),
+                lit(<span class="number">4</span>),
+                copy(<span class="number">3</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">0</span>),
             ]
         );
 
-        <span class="kw">let</span> <span class="ident">lens</span> <span class="op">=</span> [
+        <span class="kw">let </span>lens = [
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
@@ -1169,9 +1163,9 @@
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>,
         ];
 
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">encode_lengths</span>(<span class="ident">lens</span>.<span class="ident">iter</span>()).<span class="number">0</span>;
+        <span class="kw">let _ </span>= encode_lengths(lens.iter()).<span class="number">0</span>;
 
-        <span class="kw">let</span> <span class="ident">lens</span> <span class="op">=</span> [
+        <span class="kw">let </span>lens = [
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">7</span>,
             <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">0</span>,
@@ -1181,110 +1175,110 @@
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">4</span>,
-            <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="comment">/* litlen */</span>
-            <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">3</span>,
+            <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="comment">/* litlen */
+            </span><span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">3</span>,
             <span class="number">4</span>,
         ];
 
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>(<span class="ident">lens</span>.<span class="ident">iter</span>()).<span class="number">0</span>;
+        <span class="kw">let </span>enc = encode_lengths(lens.iter()).<span class="number">0</span>;
 
         <span class="macro">assert_eq!</span>(
-            <span class="kw-2">&amp;</span><span class="ident">enc</span>[..<span class="number">10</span>],
+            <span class="kw-2">&amp;</span>enc[..<span class="number">10</span>],
             <span class="kw-2">&amp;</span>[
-                <span class="ident">zero</span>(<span class="number">10</span>),
-                <span class="ident">lit</span>(<span class="number">9</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">9</span>),
-                <span class="ident">zero</span>(<span class="number">18</span>),
-                <span class="ident">lit</span>(<span class="number">6</span>),
-                <span class="ident">zero</span>(<span class="number">3</span>),
-                <span class="ident">lit</span>(<span class="number">8</span>),
-                <span class="ident">zero</span>(<span class="number">4</span>)
+                zero(<span class="number">10</span>),
+                lit(<span class="number">9</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">9</span>),
+                zero(<span class="number">18</span>),
+                lit(<span class="number">6</span>),
+                zero(<span class="number">3</span>),
+                lit(<span class="number">8</span>),
+                zero(<span class="number">4</span>)
             ]
         );
         <span class="macro">assert_eq!</span>(
-            <span class="kw-2">&amp;</span><span class="ident">enc</span>[<span class="number">10</span>..<span class="number">20</span>],
+            <span class="kw-2">&amp;</span>enc[<span class="number">10</span>..<span class="number">20</span>],
             <span class="kw-2">&amp;</span>[
-                <span class="ident">lit</span>(<span class="number">8</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">0</span>),
-                <span class="ident">lit</span>(<span class="number">7</span>),
-                <span class="ident">lit</span>(<span class="number">8</span>),
-                <span class="ident">lit</span>(<span class="number">7</span>),
-                <span class="ident">lit</span>(<span class="number">8</span>),
-                <span class="ident">lit</span>(<span class="number">6</span>),
-                <span class="ident">lit</span>(<span class="number">6</span>),
-                <span class="ident">lit</span>(<span class="number">8</span>)
+                lit(<span class="number">8</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">0</span>),
+                lit(<span class="number">7</span>),
+                lit(<span class="number">8</span>),
+                lit(<span class="number">7</span>),
+                lit(<span class="number">8</span>),
+                lit(<span class="number">6</span>),
+                lit(<span class="number">6</span>),
+                lit(<span class="number">8</span>)
             ]
         );
 
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>].<span class="ident">iter</span>()).<span class="number">0</span>;
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>, <span class="macro">vec!</span>[<span class="ident">lit</span>(<span class="number">1</span>), <span class="ident">lit</span>(<span class="number">1</span>), <span class="ident">lit</span>(<span class="number">1</span>), <span class="ident">lit</span>(<span class="number">2</span>)]);
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>([<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>].<span class="ident">iter</span>()).<span class="number">0</span>;
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>, <span class="macro">vec!</span>[<span class="ident">lit</span>(<span class="number">0</span>), <span class="ident">lit</span>(<span class="number">0</span>), <span class="ident">lit</span>(<span class="number">3</span>)]);
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">2</span>].<span class="ident">iter</span>()).<span class="number">0</span>;
-        <span class="macro">assert_eq!</span>(<span class="ident">enc</span>, <span class="macro">vec!</span>[<span class="ident">zero</span>(<span class="number">3</span>), <span class="ident">lit</span>(<span class="number">5</span>), <span class="ident">lit</span>(<span class="number">2</span>)]);
+        <span class="kw">let </span>enc = encode_lengths([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>].iter()).<span class="number">0</span>;
+        <span class="macro">assert_eq!</span>(enc, <span class="macro">vec!</span>[lit(<span class="number">1</span>), lit(<span class="number">1</span>), lit(<span class="number">1</span>), lit(<span class="number">2</span>)]);
+        <span class="kw">let </span>enc = encode_lengths([<span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>].iter()).<span class="number">0</span>;
+        <span class="macro">assert_eq!</span>(enc, <span class="macro">vec!</span>[lit(<span class="number">0</span>), lit(<span class="number">0</span>), lit(<span class="number">3</span>)]);
+        <span class="kw">let </span>enc = encode_lengths([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">2</span>].iter()).<span class="number">0</span>;
+        <span class="macro">assert_eq!</span>(enc, <span class="macro">vec!</span>[zero(<span class="number">3</span>), lit(<span class="number">5</span>), lit(<span class="number">2</span>)]);
 
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>].<span class="ident">iter</span>()).<span class="number">0</span>;
-        <span class="macro">assert!</span>(<span class="kw-2">*</span><span class="ident">enc</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">lit</span>(<span class="number">5</span>));
+        <span class="kw">let </span>enc = encode_lengths([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>].iter()).<span class="number">0</span>;
+        <span class="macro">assert!</span>(<span class="kw-2">*</span>enc.last().unwrap() != lit(<span class="number">5</span>));
 
-        <span class="kw">let</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">encode_lengths</span>([<span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>].<span class="ident">iter</span>()).<span class="number">0</span>;
-        <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">enc</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>(), <span class="ident">zero</span>(<span class="number">0</span>));
+        <span class="kw">let </span>enc = encode_lengths([<span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>].iter()).<span class="number">0</span>;
+        <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>enc.last().unwrap(), zero(<span class="number">0</span>));
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_lengths_from_frequencies</span>() {
-        <span class="kw">let</span> <span class="ident">frequencies</span> <span class="op">=</span> [<span class="number">1</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">14</span>];
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_lengths_from_frequencies() {
+        <span class="kw">let </span>frequencies = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">14</span>];
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> [<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">frequencies</span>, <span class="number">4</span>);
+        <span class="kw">let </span>expected = [<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
+        <span class="kw">let </span>res = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>frequencies, <span class="number">4</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">res</span>.<span class="ident">as_slice</span>());
+        <span class="macro">assert_eq!</span>(expected, res.as_slice());
 
-        <span class="kw">let</span> <span class="ident">frequencies</span> <span class="op">=</span> [<span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">14</span>];
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> [<span class="number">4</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
+        <span class="kw">let </span>frequencies = [<span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">14</span>];
+        <span class="kw">let </span>expected = [<span class="number">4</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
 
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">frequencies</span>, <span class="number">4</span>);
+        <span class="kw">let </span>res = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>frequencies, <span class="number">4</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">res</span>.<span class="ident">as_slice</span>());
+        <span class="macro">assert_eq!</span>(expected, res.as_slice());
 
-        <span class="kw">let</span> <span class="ident">frequencies</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">25</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">4</span>];
+        <span class="kw">let </span>frequencies = [<span class="number">0</span>, <span class="number">25</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">4</span>];
 
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">frequencies</span>, <span class="number">4</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">res</span>[<span class="number">0</span>], <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">res</span>[<span class="number">2</span>], <span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">res</span>[<span class="number">1</span>] <span class="op">&lt;</span> <span class="number">4</span>);
+        <span class="kw">let </span>res = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>frequencies, <span class="number">4</span>);
+        <span class="macro">assert_eq!</span>(res[<span class="number">0</span>], <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(res[<span class="number">2</span>], <span class="number">0</span>);
+        <span class="macro">assert!</span>(res[<span class="number">1</span>] &lt; <span class="number">4</span>);
 
-        <span class="comment">// Only one value</span>
-        <span class="kw">let</span> <span class="ident">frequencies</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">55</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">frequencies</span>, <span class="number">5</span>);
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">res</span>.<span class="ident">as_slice</span>());
+        <span class="comment">// Only one value
+        </span><span class="kw">let </span>frequencies = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">55</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
+        <span class="kw">let </span>res = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>frequencies, <span class="number">5</span>);
+        <span class="kw">let </span>expected = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
+        <span class="macro">assert_eq!</span>(expected, res.as_slice());
 
-        <span class="comment">// No values</span>
-        <span class="kw">let</span> <span class="ident">frequencies</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">30</span>];
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">frequencies</span>, <span class="number">5</span>);
-        <span class="kw">for</span> (<span class="ident">a</span>, <span class="ident">b</span>) <span class="kw">in</span> <span class="ident">frequencies</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">res</span>.<span class="ident">iter</span>()) {
-            <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">a</span>, (<span class="kw-2">*</span><span class="ident">b</span>).<span class="ident">into</span>());
+        <span class="comment">// No values
+        </span><span class="kw">let </span>frequencies = [<span class="number">0</span>; <span class="number">30</span>];
+        <span class="kw">let </span>res = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>frequencies, <span class="number">5</span>);
+        <span class="kw">for </span>(a, b) <span class="kw">in </span>frequencies.iter().zip(res.iter()) {
+            <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>a, (<span class="kw-2">*</span>b).into());
         }
-        <span class="comment">// assert_eq!(frequencies, res.as_slice());</span>
+        <span class="comment">// assert_eq!(frequencies, res.as_slice());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">frequencies</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>; <span class="ident">NUM_LITERALS_AND_LENGTHS</span>];
-        <span class="ident">frequencies</span>[<span class="number">55</span>] <span class="op">=</span> <span class="ident">u16::MAX</span> <span class="op">/</span> <span class="number">3</span>;
-        <span class="ident">frequencies</span>[<span class="number">125</span>] <span class="op">=</span> <span class="ident">u16::MAX</span> <span class="op">/</span> <span class="number">3</span>;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>frequencies = <span class="macro">vec!</span>[<span class="number">3</span>; NUM_LITERALS_AND_LENGTHS];
+        frequencies[<span class="number">55</span>] = u16::MAX / <span class="number">3</span>;
+        frequencies[<span class="number">125</span>] = u16::MAX / <span class="number">3</span>;
 
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">frequencies</span>, <span class="number">15</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="ident">len</span>(), <span class="ident">NUM_LITERALS_AND_LENGTHS</span>);
-        <span class="macro">assert!</span>(<span class="ident">res</span>[<span class="number">55</span>] <span class="op">&lt;</span> <span class="number">3</span>);
-        <span class="macro">assert!</span>(<span class="ident">res</span>[<span class="number">125</span>] <span class="op">&lt;</span> <span class="number">3</span>);
+        <span class="kw">let </span>res = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>frequencies, <span class="number">15</span>);
+        <span class="macro">assert_eq!</span>(res.len(), NUM_LITERALS_AND_LENGTHS);
+        <span class="macro">assert!</span>(res[<span class="number">55</span>] &lt; <span class="number">3</span>);
+        <span class="macro">assert!</span>(res[<span class="number">125</span>] &lt; <span class="number">3</span>);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="doccomment">/// Test if the bit lengths for a set of frequencies are optimal (give the best compression</span>
-    <span class="doccomment">/// give the provided frequencies).</span>
-    <span class="kw">fn</span> <span class="ident">optimal_lengths</span>() {
-        <span class="kw">let</span> <span class="ident">freqs</span> <span class="op">=</span> [
+    <span class="attribute">#[test]
+    </span><span class="doccomment">/// Test if the bit lengths for a set of frequencies are optimal (give the best compression
+    /// give the provided frequencies).
+    </span><span class="kw">fn </span>optimal_lengths() {
+        <span class="kw">let </span>freqs = [
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">44</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">68</span>, <span class="number">0</span>, <span class="number">14</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">12</span>, <span class="number">14</span>, <span class="number">9</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>,
             <span class="number">0</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">2</span>,
@@ -1297,35 +1291,34 @@
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">126</span>, <span class="number">114</span>, <span class="number">66</span>, <span class="number">31</span>, <span class="number">41</span>, <span class="number">25</span>, <span class="number">15</span>, <span class="number">21</span>, <span class="number">20</span>, <span class="number">16</span>, <span class="number">15</span>, <span class="number">10</span>, <span class="number">7</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">1</span>,
         ];
 
-        <span class="kw">let</span> <span class="ident">lens</span> <span class="op">=</span> <span class="ident">huffman_lengths_from_frequency</span>(<span class="kw-2">&amp;</span><span class="ident">freqs</span>, <span class="number">15</span>);
+        <span class="kw">let </span>lens = huffman_lengths_from_frequency(<span class="kw-2">&amp;</span>freqs, <span class="number">15</span>);
 
-        <span class="comment">// Lengths produced by miniz for this frequency table for comparison</span>
-        <span class="comment">// the number of total bits encoded with these huffman codes is 7701</span>
-        <span class="comment">// NOTE: There can be more than one set of optimal lengths for a set of frequencies,</span>
-        <span class="comment">// (though there may be a difference in how well the table itself can be represented)</span>
-        <span class="comment">// so testing for a specific length table is not ideal since different algorithms</span>
-        <span class="comment">// may produce different length tables.</span>
-        <span class="comment">// let lens3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 0, 0, 0, 0, 4, 0, 7, 0, 0, 0, 0, 9, 8, 8, 10, 0, 7, 7, 7, 10, 8, 7, 8,</span>
-        <span class="comment">// 10, 10, 8, 10, 10, 0, 0, 10, 9, 0, 8, 0, 0, 0, 8, 8, 10, 9, 8, 9, 9, 9, 7, 0,</span>
-        <span class="comment">// 0, 9, 10, 8, 8, 7, 0, 8, 7, 8, 9, 0, 0, 10, 9, 0, 7, 7, 8, 0, 10, 9, 6, 7, 6,</span>
-        <span class="comment">// 6, 5, 6, 7, 7, 5, 0, 8, 5, 7, 5, 5, 6, 10, 6, 5, 5, 6, 9, 8, 7, 7, 10, 10, 0,</span>
-        <span class="comment">// 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
-        <span class="comment">// 0, 0, 10, 4, 4, 4, 5, 5, 6, 7, 6, 6, 6, 6, 7, 8, 8, 10, 10];</span>
-        <span class="comment">//</span>
+        <span class="comment">// Lengths produced by miniz for this frequency table for comparison
+        // the number of total bits encoded with these huffman codes is 7701
+        // NOTE: There can be more than one set of optimal lengths for a set of frequencies,
+        // (though there may be a difference in how well the table itself can be represented)
+        // so testing for a specific length table is not ideal since different algorithms
+        // may produce different length tables.
+        // let lens3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // 0, 0, 0, 0, 0,
+        // 0, 0, 0, 0, 0, 0, 4, 0, 7, 0, 0, 0, 0, 9, 8, 8, 10, 0, 7, 7, 7, 10, 8, 7, 8,
+        // 10, 10, 8, 10, 10, 0, 0, 10, 9, 0, 8, 0, 0, 0, 8, 8, 10, 9, 8, 9, 9, 9, 7, 0,
+        // 0, 9, 10, 8, 8, 7, 0, 8, 7, 8, 9, 0, 0, 10, 9, 0, 7, 7, 8, 0, 10, 9, 6, 7, 6,
+        // 6, 5, 6, 7, 7, 5, 0, 8, 5, 7, 5, 5, 6, 10, 6, 5, 5, 6, 9, 8, 7, 7, 10, 10, 0,
+        // 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        // 0, 0, 10, 4, 4, 4, 5, 5, 6, 7, 6, 6, 6, 6, 7, 8, 8, 10, 10];
+        //
 
-        <span class="kw">let</span> <span class="ident">num_bits</span> <span class="op">=</span> <span class="ident">lens</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">zip</span>(<span class="ident">freqs</span>.<span class="ident">iter</span>())
-            .<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">a</span>, (<span class="kw-2">&amp;</span><span class="ident">f</span>, <span class="kw-2">&amp;</span><span class="ident">l</span>)<span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> (<span class="ident">f</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">*</span> <span class="ident">l</span>));
-        <span class="macro">assert_eq!</span>(<span class="ident">num_bits</span>, <span class="number">7701</span>);
+        </span><span class="kw">let </span>num_bits = lens
+            .iter()
+            .zip(freqs.iter())
+            .fold(<span class="number">0</span>, |a, (<span class="kw-2">&amp;</span>f, <span class="kw-2">&amp;</span>l)| a + (f <span class="kw">as </span>u16 * l));
+        <span class="macro">assert_eq!</span>(num_bits, <span class="number">7701</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

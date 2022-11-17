@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/block/writer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../exr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/block/writer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../exr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -459,242 +453,242 @@
 <span id="453">453</span>
 <span id="454">454</span>
 <span id="455">455</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Composable structures to handle writing an image.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Composable structures to handle writing an image.
 
 
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::io::Seek</span>;
-<span class="kw">use</span> <span class="ident">std::iter::Peekable</span>;
-<span class="kw">use</span> <span class="ident">std::ops::Not</span>;
+</span><span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::io::Seek;
+<span class="kw">use </span>std::iter::Peekable;
+<span class="kw">use </span>std::ops::Not;
 
-<span class="kw">use</span> <span class="ident">smallvec::alloc::collections::BTreeMap</span>;
+<span class="kw">use </span>smallvec::alloc::collections::BTreeMap;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block::UncompressedBlock</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block::chunk</span>::{<span class="ident">Chunk</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::compression::Compression</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>, <span class="ident">UnitResult</span>, <span class="ident">usize_to_u64</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::io</span>::{<span class="ident">Data</span>, <span class="ident">Tracking</span>, <span class="ident">Write</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::meta</span>::{<span class="ident">Headers</span>, <span class="ident">MetaData</span>, <span class="ident">OffsetTables</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::meta::attribute::LineOrder</span>;
+<span class="kw">use </span><span class="kw">crate</span>::block::UncompressedBlock;
+<span class="kw">use </span><span class="kw">crate</span>::block::chunk::{Chunk};
+<span class="kw">use </span><span class="kw">crate</span>::compression::Compression;
+<span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>, UnitResult, usize_to_u64};
+<span class="kw">use </span><span class="kw">crate</span>::io::{Data, Tracking, Write};
+<span class="kw">use </span><span class="kw">crate</span>::meta::{Headers, MetaData, OffsetTables};
+<span class="kw">use </span><span class="kw">crate</span>::meta::attribute::LineOrder;
 
-<span class="doccomment">/// Write an exr file by writing one chunk after another in a closure.</span>
-<span class="doccomment">/// In the closure, you are provided a chunk writer, which should be used to write all the chunks.</span>
-<span class="doccomment">/// Assumes the your write destination is buffered.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_chunks_with</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span>(
-    <span class="ident">buffered_write</span>: <span class="ident">W</span>, <span class="ident">headers</span>: <span class="ident">Headers</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>,
-    <span class="ident">write_chunks</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">MetaData</span>, <span class="kw-2">&amp;mut</span> <span class="ident">ChunkWriter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>) -&gt; <span class="ident">UnitResult</span>
-) -&gt; <span class="ident">UnitResult</span> {
-    <span class="comment">// this closure approach ensures that after writing all chunks, the file is always completed and checked and flushed</span>
-    <span class="kw">let</span> (<span class="ident">meta</span>, <span class="kw-2">mut</span> <span class="ident">writer</span>) <span class="op">=</span> <span class="ident">ChunkWriter::new_for_buffered</span>(<span class="ident">buffered_write</span>, <span class="ident">headers</span>, <span class="ident">pedantic</span>)<span class="question-mark">?</span>;
-    <span class="ident">write_chunks</span>(<span class="ident">meta</span>, <span class="kw-2">&amp;mut</span> <span class="ident">writer</span>)<span class="question-mark">?</span>;
-    <span class="ident">writer</span>.<span class="ident">complete_meta_data</span>()
+<span class="doccomment">/// Write an exr file by writing one chunk after another in a closure.
+/// In the closure, you are provided a chunk writer, which should be used to write all the chunks.
+/// Assumes the your write destination is buffered.
+</span><span class="kw">pub fn </span>write_chunks_with&lt;W: Write + Seek&gt;(
+    buffered_write: W, headers: Headers, pedantic: bool,
+    write_chunks: <span class="kw">impl </span>FnOnce(MetaData, <span class="kw-2">&amp;mut </span>ChunkWriter&lt;W&gt;) -&gt; UnitResult
+) -&gt; UnitResult {
+    <span class="comment">// this closure approach ensures that after writing all chunks, the file is always completed and checked and flushed
+    </span><span class="kw">let </span>(meta, <span class="kw-2">mut </span>writer) = ChunkWriter::new_for_buffered(buffered_write, headers, pedantic)<span class="question-mark">?</span>;
+    write_chunks(meta, <span class="kw-2">&amp;mut </span>writer)<span class="question-mark">?</span>;
+    writer.complete_meta_data()
 }
 
-<span class="doccomment">/// Can consume compressed pixel chunks, writing them a file.</span>
-<span class="doccomment">/// Use `sequential_blocks_compressor` or `parallel_blocks_compressor` to compress your data,</span>
-<span class="doccomment">/// or use `compress_all_blocks_sequential` or `compress_all_blocks_parallel`.</span>
-<span class="doccomment">/// Use `on_progress` to obtain a new writer</span>
-<span class="doccomment">/// that triggers a callback for each block.</span>
-<span class="comment">// #[must_use]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChunkWriter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="ident">header_count</span>: <span class="ident">usize</span>,
-    <span class="ident">byte_writer</span>: <span class="ident">Tracking</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>,
-    <span class="ident">chunk_indices_byte_location</span>: <span class="ident">std::ops::Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">chunk_indices_increasing_y</span>: <span class="ident">OffsetTables</span>,
-    <span class="ident">chunk_count</span>: <span class="ident">usize</span>, <span class="comment">// TODO compose?</span>
+<span class="doccomment">/// Can consume compressed pixel chunks, writing them a file.
+/// Use `sequential_blocks_compressor` or `parallel_blocks_compressor` to compress your data,
+/// or use `compress_all_blocks_sequential` or `compress_all_blocks_parallel`.
+/// Use `on_progress` to obtain a new writer
+/// that triggers a callback for each block.
+</span><span class="comment">// #[must_use]
+</span><span class="attribute">#[derive(Debug)]
+#[must_use]
+</span><span class="kw">pub struct </span>ChunkWriter&lt;W&gt; {
+    header_count: usize,
+    byte_writer: Tracking&lt;W&gt;,
+    chunk_indices_byte_location: std::ops::Range&lt;usize&gt;,
+    chunk_indices_increasing_y: OffsetTables,
+    chunk_count: usize, <span class="comment">// TODO compose?
+</span>}
+
+<span class="doccomment">/// A new writer that triggers a callback
+/// for each block written to the inner writer.
+</span><span class="attribute">#[derive(Debug)]
+#[must_use]
+</span><span class="kw">pub struct </span>OnProgressChunkWriter&lt;<span class="lifetime">&#39;w</span>, W, F&gt; {
+    chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W,
+    written_chunks: usize,
+    on_progress: F,
 }
 
-<span class="doccomment">/// A new writer that triggers a callback</span>
-<span class="doccomment">/// for each block written to the inner writer.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OnProgressChunkWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span>, <span class="ident">F</span><span class="op">&gt;</span> {
-    <span class="ident">chunk_writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
-    <span class="ident">written_chunks</span>: <span class="ident">usize</span>,
-    <span class="ident">on_progress</span>: <span class="ident">F</span>,
-}
+<span class="doccomment">/// Write chunks to a byte destination.
+/// Then write each chunk with `writer.write_chunk(chunk)`.
+</span><span class="kw">pub trait </span>ChunksWriter: Sized {
 
-<span class="doccomment">/// Write chunks to a byte destination.</span>
-<span class="doccomment">/// Then write each chunk with `writer.write_chunk(chunk)`.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ChunksWriter</span>: <span class="ident">Sized</span> {
+    <span class="doccomment">/// The total number of chunks that the complete file will contain.
+    </span><span class="kw">fn </span>total_chunks_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-    <span class="doccomment">/// The total number of chunks that the complete file will contain.</span>
-    <span class="kw">fn</span> <span class="ident">total_chunks_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+    <span class="doccomment">/// Any more calls will result in an error and have no effect.
+    /// If writing results in an error, the file and the writer
+    /// may remain in an invalid state and should not be used further.
+    /// Errors when the chunk at this index was already written.
+    </span><span class="kw">fn </span>write_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, chunk: Chunk) -&gt; UnitResult;
 
-    <span class="doccomment">/// Any more calls will result in an error and have no effect.</span>
-    <span class="doccomment">/// If writing results in an error, the file and the writer</span>
-    <span class="doccomment">/// may remain in an invalid state and should not be used further.</span>
-    <span class="doccomment">/// Errors when the chunk at this index was already written.</span>
-    <span class="kw">fn</span> <span class="ident">write_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index_in_header_increasing_y</span>: <span class="ident">usize</span>, <span class="ident">chunk</span>: <span class="ident">Chunk</span>) -&gt; <span class="ident">UnitResult</span>;
-
-    <span class="doccomment">/// Obtain a new writer that calls the specified closure for each block that is written to this writer.</span>
-    <span class="kw">fn</span> <span class="ident">on_progress</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">on_progress</span>: <span class="ident">F</span>) -&gt; <span class="ident">OnProgressChunkWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>) {
-        <span class="ident">OnProgressChunkWriter</span> { <span class="ident">chunk_writer</span>: <span class="self">self</span>, <span class="ident">written_chunks</span>: <span class="number">0</span>, <span class="ident">on_progress</span> }
+    <span class="doccomment">/// Obtain a new writer that calls the specified closure for each block that is written to this writer.
+    </span><span class="kw">fn </span>on_progress&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, on_progress: F) -&gt; OnProgressChunkWriter&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>, F&gt; <span class="kw">where </span>F: FnMut(f64) {
+        OnProgressChunkWriter { chunk_writer: <span class="self">self</span>, written_chunks: <span class="number">0</span>, on_progress }
     }
 
-    <span class="doccomment">/// Obtain a new writer that can compress blocks to chunks, which are then passed to this writer.</span>
-    <span class="kw">fn</span> <span class="ident">sequential_blocks_compressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">MetaData</span>) -&gt; <span class="ident">SequentialBlocksCompressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">SequentialBlocksCompressor::new</span>(<span class="ident">meta</span>, <span class="self">self</span>)
+    <span class="doccomment">/// Obtain a new writer that can compress blocks to chunks, which are then passed to this writer.
+    </span><span class="kw">fn </span>sequential_blocks_compressor&lt;<span class="lifetime">&#39;w</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData) -&gt; SequentialBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, <span class="self">Self</span>&gt; {
+        SequentialBlocksCompressor::new(meta, <span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Obtain a new writer that can compress blocks to chunks on multiple threads, which are then passed to this writer.</span>
-    <span class="doccomment">/// Returns none if the sequential compressor should be used instead (thread pool creation failure or too large performance overhead).</span>
-    <span class="kw">fn</span> <span class="ident">parallel_blocks_compressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">MetaData</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ParallelBlocksCompressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">threadpool::Builder::new</span>()
-            .<span class="ident">thread_name</span>(<span class="string">&quot;OpenEXR Block Compressor&quot;</span>.<span class="ident">to_string</span>())
-            <span class="comment">// todo no more threads than remaining block count (self.len())</span>
-            .<span class="ident">build</span>();
+    <span class="doccomment">/// Obtain a new writer that can compress blocks to chunks on multiple threads, which are then passed to this writer.
+    /// Returns none if the sequential compressor should be used instead (thread pool creation failure or too large performance overhead).
+    </span><span class="kw">fn </span>parallel_blocks_compressor&lt;<span class="lifetime">&#39;w</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData) -&gt; <span class="prelude-ty">Option</span>&lt;ParallelBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, <span class="self">Self</span>&gt;&gt; {
+        <span class="kw">let </span>pool = threadpool::Builder::new()
+            .thread_name(<span class="string">&quot;OpenEXR Block Compressor&quot;</span>.to_string())
+            <span class="comment">// todo no more threads than remaining block count (self.len())
+            </span>.build();
 
-        <span class="ident">ParallelBlocksCompressor::new</span>(<span class="ident">meta</span>, <span class="self">self</span>, <span class="ident">pool</span>)
+        ParallelBlocksCompressor::new(meta, <span class="self">self</span>, pool)
     }
 
-    <span class="doccomment">/// Compresses all blocks to the file.</span>
-    <span class="doccomment">/// The index of the block must be in increasing line order within the header.</span>
-    <span class="doccomment">/// Obtain iterator with `MetaData::collect_ordered_blocks(...)` or similar methods.</span>
-    <span class="kw">fn</span> <span class="ident">compress_all_blocks_sequential</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">blocks</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(<span class="ident">usize</span>, <span class="ident">UncompressedBlock</span>)<span class="op">&gt;</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sequential_blocks_compressor</span>(<span class="ident">meta</span>);
+    <span class="doccomment">/// Compresses all blocks to the file.
+    /// The index of the block must be in increasing line order within the header.
+    /// Obtain iterator with `MetaData::collect_ordered_blocks(...)` or similar methods.
+    </span><span class="kw">fn </span>compress_all_blocks_sequential(<span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span>MetaData, blocks: <span class="kw">impl </span>Iterator&lt;Item=(usize, UncompressedBlock)&gt;) -&gt; UnitResult {
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = <span class="self">self</span>.sequential_blocks_compressor(meta);
 
-        <span class="comment">// TODO check block order if line order is not unspecified!</span>
-        <span class="kw">for</span> (<span class="ident">index_in_header_increasing_y</span>, <span class="ident">block</span>) <span class="kw">in</span> <span class="ident">blocks</span> {
-            <span class="ident">writer</span>.<span class="ident">compress_block</span>(<span class="ident">index_in_header_increasing_y</span>, <span class="ident">block</span>)<span class="question-mark">?</span>;
+        <span class="comment">// TODO check block order if line order is not unspecified!
+        </span><span class="kw">for </span>(index_in_header_increasing_y, block) <span class="kw">in </span>blocks {
+            writer.compress_block(index_in_header_increasing_y, block)<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// TODO debug_assert_eq!(self.is_complete());</span>
-        <span class="prelude-val">Ok</span>(())
+        <span class="comment">// TODO debug_assert_eq!(self.is_complete());
+        </span><span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Compresses all blocks to the file.</span>
-    <span class="doccomment">/// The index of the block must be in increasing line order within the header.</span>
-    <span class="doccomment">/// Obtain iterator with `MetaData::collect_ordered_blocks(...)` or similar methods.</span>
-    <span class="kw">fn</span> <span class="ident">compress_all_blocks_parallel</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">blocks</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(<span class="ident">usize</span>, <span class="ident">UncompressedBlock</span>)<span class="op">&gt;</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parallel_writer</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">parallel_blocks_compressor</span>(<span class="ident">meta</span>) {
-            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="self">self</span>.<span class="ident">compress_all_blocks_sequential</span>(<span class="ident">meta</span>, <span class="ident">blocks</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">writer</span>) =&gt; <span class="ident">writer</span>,
+    <span class="doccomment">/// Compresses all blocks to the file.
+    /// The index of the block must be in increasing line order within the header.
+    /// Obtain iterator with `MetaData::collect_ordered_blocks(...)` or similar methods.
+    </span><span class="kw">fn </span>compress_all_blocks_parallel(<span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span>MetaData, blocks: <span class="kw">impl </span>Iterator&lt;Item=(usize, UncompressedBlock)&gt;) -&gt; UnitResult {
+        <span class="kw">let </span><span class="kw-2">mut </span>parallel_writer = <span class="kw">match </span><span class="self">self</span>.parallel_blocks_compressor(meta) {
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="self">self</span>.compress_all_blocks_sequential(meta, blocks),
+            <span class="prelude-val">Some</span>(writer) =&gt; writer,
         };
 
-        <span class="comment">// TODO check block order if line order is not unspecified!</span>
-        <span class="kw">for</span> (<span class="ident">index_in_header_increasing_y</span>, <span class="ident">block</span>) <span class="kw">in</span> <span class="ident">blocks</span> {
-            <span class="ident">parallel_writer</span>.<span class="ident">add_block_to_compression_queue</span>(<span class="ident">index_in_header_increasing_y</span>, <span class="ident">block</span>)<span class="question-mark">?</span>;
+        <span class="comment">// TODO check block order if line order is not unspecified!
+        </span><span class="kw">for </span>(index_in_header_increasing_y, block) <span class="kw">in </span>blocks {
+            parallel_writer.add_block_to_compression_queue(index_in_header_increasing_y, block)<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// TODO debug_assert_eq!(self.is_complete());</span>
-        <span class="prelude-val">Ok</span>(())
+        <span class="comment">// TODO debug_assert_eq!(self.is_complete());
+        </span><span class="prelude-val">Ok</span>(())
     }
 }
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="ident">ChunksWriter</span> <span class="kw">for</span> <span class="ident">ChunkWriter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span> {
+<span class="kw">impl</span>&lt;W&gt; ChunksWriter <span class="kw">for </span>ChunkWriter&lt;W&gt; <span class="kw">where </span>W: Write + Seek {
 
-    <span class="doccomment">/// The total number of chunks that the complete file will contain.</span>
-    <span class="kw">fn</span> <span class="ident">total_chunks_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> { <span class="self">self</span>.<span class="ident">chunk_count</span> }
+    <span class="doccomment">/// The total number of chunks that the complete file will contain.
+    </span><span class="kw">fn </span>total_chunks_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize { <span class="self">self</span>.chunk_count }
 
-    <span class="doccomment">/// Any more calls will result in an error and have no effect.</span>
-    <span class="doccomment">/// If writing results in an error, the file and the writer</span>
-    <span class="doccomment">/// may remain in an invalid state and should not be used further.</span>
-    <span class="doccomment">/// Errors when the chunk at this index was already written.</span>
-    <span class="kw">fn</span> <span class="ident">write_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index_in_header_increasing_y</span>: <span class="ident">usize</span>, <span class="ident">chunk</span>: <span class="ident">Chunk</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">let</span> <span class="ident">header_chunk_indices</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">chunk_indices_increasing_y</span>[<span class="ident">chunk</span>.<span class="ident">layer_index</span>];
+    <span class="doccomment">/// Any more calls will result in an error and have no effect.
+    /// If writing results in an error, the file and the writer
+    /// may remain in an invalid state and should not be used further.
+    /// Errors when the chunk at this index was already written.
+    </span><span class="kw">fn </span>write_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, chunk: Chunk) -&gt; UnitResult {
+        <span class="kw">let </span>header_chunk_indices = <span class="kw-2">&amp;mut </span><span class="self">self</span>.chunk_indices_increasing_y[chunk.layer_index];
 
-        <span class="kw">if</span> <span class="ident">index_in_header_increasing_y</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">header_chunk_indices</span>.<span class="ident">len</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;too large chunk index&quot;</span>));
+        <span class="kw">if </span>index_in_header_increasing_y &gt;= header_chunk_indices.len() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;too large chunk index&quot;</span>));
         }
 
-        <span class="kw">let</span> <span class="ident">chunk_index_slot</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">header_chunk_indices</span>[<span class="ident">index_in_header_increasing_y</span>];
-        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">chunk_index_slot</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="macro">format!</span>(<span class="string">&quot;chunk at index {} is already written&quot;</span>, <span class="ident">index_in_header_increasing_y</span>)));
+        <span class="kw">let </span>chunk_index_slot = <span class="kw-2">&amp;mut </span>header_chunk_indices[index_in_header_increasing_y];
+        <span class="kw">if </span><span class="kw-2">*</span>chunk_index_slot != <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="macro">format!</span>(<span class="string">&quot;chunk at index {} is already written&quot;</span>, index_in_header_increasing_y)));
         }
 
-        <span class="kw-2">*</span><span class="ident">chunk_index_slot</span> <span class="op">=</span> <span class="ident">usize_to_u64</span>(<span class="self">self</span>.<span class="ident">byte_writer</span>.<span class="ident">byte_position</span>());
-        <span class="ident">chunk</span>.<span class="ident">write</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">byte_writer</span>, <span class="self">self</span>.<span class="ident">header_count</span>)<span class="question-mark">?</span>;
+        <span class="kw-2">*</span>chunk_index_slot = usize_to_u64(<span class="self">self</span>.byte_writer.byte_position());
+        chunk.write(<span class="kw-2">&amp;mut </span><span class="self">self</span>.byte_writer, <span class="self">self</span>.header_count)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="ident">ChunkWriter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span> {
-    <span class="comment">// -- the following functions are private, because they must be called in a strict order --</span>
+<span class="kw">impl</span>&lt;W&gt; ChunkWriter&lt;W&gt; <span class="kw">where </span>W: Write + Seek {
+    <span class="comment">// -- the following functions are private, because they must be called in a strict order --
 
-    <span class="doccomment">/// Writes the meta data and zeroed offset tables as a placeholder.</span>
-    <span class="kw">fn</span> <span class="ident">new_for_buffered</span>(<span class="ident">buffered_byte_writer</span>: <span class="ident">W</span>, <span class="ident">headers</span>: <span class="ident">Headers</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">MetaData</span>, <span class="self">Self</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">write</span> <span class="op">=</span> <span class="ident">Tracking::new</span>(<span class="ident">buffered_byte_writer</span>);
-        <span class="kw">let</span> <span class="ident">requirements</span> <span class="op">=</span> <span class="ident">MetaData::write_validating_to_buffered</span>(<span class="kw-2">&amp;mut</span> <span class="ident">write</span>, <span class="ident">headers</span>.<span class="ident">as_slice</span>(), <span class="ident">pedantic</span>)<span class="question-mark">?</span>;
+    </span><span class="doccomment">/// Writes the meta data and zeroed offset tables as a placeholder.
+    </span><span class="kw">fn </span>new_for_buffered(buffered_byte_writer: W, headers: Headers, pedantic: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(MetaData, <span class="self">Self</span>)&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>write = Tracking::new(buffered_byte_writer);
+        <span class="kw">let </span>requirements = MetaData::write_validating_to_buffered(<span class="kw-2">&amp;mut </span>write, headers.as_slice(), pedantic)<span class="question-mark">?</span>;
 
-        <span class="comment">// TODO: use increasing line order where possible, but this requires us to know whether we want to be parallel right now</span>
-        <span class="comment">/*// if non-parallel compression, we always use increasing order anyways
+        <span class="comment">// TODO: use increasing line order where possible, but this requires us to know whether we want to be parallel right now
+        /*// if non-parallel compression, we always use increasing order anyways
         if !parallel || !has_compression {
             for header in &amp;mut headers {
                 if header.line_order == LineOrder::Unspecified {
                     header.line_order = LineOrder::Increasing;
                 }
             }
-        }*/</span>
+        }*/
 
-        <span class="kw">let</span> <span class="ident">offset_table_size</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">header</span><span class="op">|</span> <span class="ident">header</span>.<span class="ident">chunk_count</span>).<span class="ident">sum</span>();
+        </span><span class="kw">let </span>offset_table_size: usize = headers.iter().map(|header| header.chunk_count).sum();
 
-        <span class="kw">let</span> <span class="ident">offset_table_start_byte</span> <span class="op">=</span> <span class="ident">write</span>.<span class="ident">byte_position</span>();
-        <span class="kw">let</span> <span class="ident">offset_table_end_byte</span> <span class="op">=</span> <span class="ident">write</span>.<span class="ident">byte_position</span>() <span class="op">+</span> <span class="ident">offset_table_size</span> <span class="op">*</span> <span class="ident">u64::BYTE_SIZE</span>;
+        <span class="kw">let </span>offset_table_start_byte = write.byte_position();
+        <span class="kw">let </span>offset_table_end_byte = write.byte_position() + offset_table_size * u64::BYTE_SIZE;
 
-        <span class="comment">// skip offset tables, filling with 0, will be updated after the last chunk has been written</span>
-        <span class="ident">write</span>.<span class="ident">seek_write_to</span>(<span class="ident">offset_table_end_byte</span>)<span class="question-mark">?</span>;
+        <span class="comment">// skip offset tables, filling with 0, will be updated after the last chunk has been written
+        </span>write.seek_write_to(offset_table_end_byte)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">header_count</span> <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> <span class="ident">chunk_indices_increasing_y</span> <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">header</span><span class="op">|</span> <span class="macro">vec!</span>[<span class="number">0_u64</span>; <span class="ident">header</span>.<span class="ident">chunk_count</span>]).<span class="ident">collect</span>();
+        <span class="kw">let </span>header_count = headers.len();
+        <span class="kw">let </span>chunk_indices_increasing_y = headers.iter()
+            .map(|header| <span class="macro">vec!</span>[<span class="number">0_u64</span>; header.chunk_count]).collect();
 
-        <span class="kw">let</span> <span class="ident">meta_data</span> <span class="op">=</span> <span class="ident">MetaData</span> { <span class="ident">requirements</span>, <span class="ident">headers</span> };
+        <span class="kw">let </span>meta_data = MetaData { requirements, headers };
 
-        <span class="prelude-val">Ok</span>((<span class="ident">meta_data</span>, <span class="ident">ChunkWriter</span> {
-            <span class="ident">header_count</span>,
-            <span class="ident">byte_writer</span>: <span class="ident">write</span>,
-            <span class="ident">chunk_count</span>: <span class="ident">offset_table_size</span>,
-            <span class="ident">chunk_indices_byte_location</span>: <span class="ident">offset_table_start_byte</span> .. <span class="ident">offset_table_end_byte</span>,
-            <span class="ident">chunk_indices_increasing_y</span>,
+        <span class="prelude-val">Ok</span>((meta_data, ChunkWriter {
+            header_count,
+            byte_writer: write,
+            chunk_count: offset_table_size,
+            chunk_indices_byte_location: offset_table_start_byte .. offset_table_end_byte,
+            chunk_indices_increasing_y,
         }))
     }
 
-    <span class="doccomment">/// Seek back to the meta data, write offset tables, and flush the byte writer.</span>
-    <span class="doccomment">/// Leaves the writer seeked to the middle of the file.</span>
-    <span class="kw">fn</span> <span class="ident">complete_meta_data</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">chunk_indices_increasing_y</span>.<span class="ident">iter</span>().<span class="ident">flatten</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">index</span><span class="op">|</span> <span class="ident">index</span> <span class="op">==</span> <span class="number">0</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;some chunks are not written yet&quot;</span>))
+    <span class="doccomment">/// Seek back to the meta data, write offset tables, and flush the byte writer.
+    /// Leaves the writer seeked to the middle of the file.
+    </span><span class="kw">fn </span>complete_meta_data(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; UnitResult {
+        <span class="kw">if </span><span class="self">self</span>.chunk_indices_increasing_y.iter().flatten().any(|<span class="kw-2">&amp;</span>index| index == <span class="number">0</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;some chunks are not written yet&quot;</span>))
         }
 
-        <span class="comment">// write all offset tables</span>
-        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.<span class="ident">byte_writer</span>.<span class="ident">byte_position</span>(), <span class="self">self</span>.<span class="ident">chunk_indices_byte_location</span>.<span class="ident">end</span>, <span class="string">&quot;offset table has already been updated&quot;</span>);
-        <span class="self">self</span>.<span class="ident">byte_writer</span>.<span class="ident">seek_write_to</span>(<span class="self">self</span>.<span class="ident">chunk_indices_byte_location</span>.<span class="ident">start</span>)<span class="question-mark">?</span>;
+        <span class="comment">// write all offset tables
+        </span><span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.byte_writer.byte_position(), <span class="self">self</span>.chunk_indices_byte_location.end, <span class="string">&quot;offset table has already been updated&quot;</span>);
+        <span class="self">self</span>.byte_writer.seek_write_to(<span class="self">self</span>.chunk_indices_byte_location.start)<span class="question-mark">?</span>;
 
-        <span class="kw">for</span> <span class="ident">table</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">chunk_indices_increasing_y</span> {
-            <span class="ident">u64::write_slice</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">byte_writer</span>, <span class="ident">table</span>.<span class="ident">as_slice</span>())<span class="question-mark">?</span>;
+        <span class="kw">for </span>table <span class="kw">in </span><span class="self">self</span>.chunk_indices_increasing_y {
+            u64::write_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>.byte_writer, table.as_slice())<span class="question-mark">?</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">byte_writer</span>.<span class="ident">flush</span>()<span class="question-mark">?</span>; <span class="comment">// make sure we catch all (possibly delayed) io errors before returning</span>
-        <span class="prelude-val">Ok</span>(())
+        <span class="self">self</span>.byte_writer.flush()<span class="question-mark">?</span>; <span class="comment">// make sure we catch all (possibly delayed) io errors before returning
+        </span><span class="prelude-val">Ok</span>(())
     }
 
 }
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">ChunksWriter</span> <span class="kw">for</span> <span class="ident">OnProgressChunkWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="lifetime">&#39;w</span> <span class="op">+</span> <span class="ident">ChunksWriter</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>) {
-    <span class="kw">fn</span> <span class="ident">total_chunks_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">chunk_writer</span>.<span class="ident">total_chunks_count</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W, F&gt; ChunksWriter <span class="kw">for </span>OnProgressChunkWriter&lt;<span class="lifetime">&#39;w</span>, W, F&gt; <span class="kw">where </span>W: <span class="lifetime">&#39;w </span>+ ChunksWriter, F: FnMut(f64) {
+    <span class="kw">fn </span>total_chunks_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.chunk_writer.total_chunks_count()
     }
 
-    <span class="kw">fn</span> <span class="ident">write_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index_in_header_increasing_y</span>: <span class="ident">usize</span>, <span class="ident">chunk</span>: <span class="ident">Chunk</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">let</span> <span class="ident">total_chunks</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">total_chunks_count</span>();
-        <span class="kw">let</span> <span class="ident">on_progress</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">on_progress</span>;
+    <span class="kw">fn </span>write_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, chunk: Chunk) -&gt; UnitResult {
+        <span class="kw">let </span>total_chunks = <span class="self">self</span>.total_chunks_count();
+        <span class="kw">let </span>on_progress = <span class="kw-2">&amp;mut </span><span class="self">self</span>.on_progress;
 
-        <span class="comment">// guarantee on_progress being called with 0 once</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">written_chunks</span> <span class="op">==</span> <span class="number">0</span> { <span class="ident">on_progress</span>(<span class="number">0.0</span>); }
+        <span class="comment">// guarantee on_progress being called with 0 once
+        </span><span class="kw">if </span><span class="self">self</span>.written_chunks == <span class="number">0 </span>{ on_progress(<span class="number">0.0</span>); }
 
-        <span class="self">self</span>.<span class="ident">chunk_writer</span>.<span class="ident">write_chunk</span>(<span class="ident">index_in_header_increasing_y</span>, <span class="ident">chunk</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.chunk_writer.write_chunk(index_in_header_increasing_y, chunk)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">written_chunks</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="self">self</span>.written_chunks += <span class="number">1</span>;
 
-        <span class="ident">on_progress</span>({
-            <span class="comment">// guarantee finishing with progress 1.0 for last block at least once, float division might slightly differ from 1.0</span>
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">written_chunks</span> <span class="op">==</span> <span class="ident">total_chunks</span> { <span class="number">1.0</span> }
-            <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">written_chunks</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">total_chunks</span> <span class="kw">as</span> <span class="ident">f64</span> }
+        on_progress({
+            <span class="comment">// guarantee finishing with progress 1.0 for last block at least once, float division might slightly differ from 1.0
+            </span><span class="kw">if </span><span class="self">self</span>.written_chunks == total_chunks { <span class="number">1.0 </span>}
+            <span class="kw">else </span>{ <span class="self">self</span>.written_chunks <span class="kw">as </span>f64 / total_chunks <span class="kw">as </span>f64 }
         });
 
         <span class="prelude-val">Ok</span>(())
@@ -702,209 +696,209 @@
 }
 
 
-<span class="doccomment">/// Write blocks that appear in any order and reorder them before writing.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SortedBlocksWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="ident">chunk_writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
-    <span class="ident">pending_chunks</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">usize</span>, (<span class="ident">usize</span>, <span class="ident">Chunk</span>)<span class="op">&gt;</span>,
-    <span class="ident">unwritten_chunk_indices</span>: <span class="ident">Peekable</span><span class="op">&lt;</span><span class="ident">std::ops::Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">requires_sorting</span>: <span class="ident">bool</span>, <span class="comment">// using this instead of Option, because of borrowing</span>
-}
+<span class="doccomment">/// Write blocks that appear in any order and reorder them before writing.
+</span><span class="attribute">#[derive(Debug)]
+#[must_use]
+</span><span class="kw">pub struct </span>SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt; {
+    chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W,
+    pending_chunks: BTreeMap&lt;usize, (usize, Chunk)&gt;,
+    unwritten_chunk_indices: Peekable&lt;std::ops::Range&lt;usize&gt;&gt;,
+    requires_sorting: bool, <span class="comment">// using this instead of Option, because of borrowing
+</span>}
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">SortedBlocksWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">ChunksWriter</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W&gt; SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt; <span class="kw">where </span>W: ChunksWriter {
 
-    <span class="doccomment">/// New sorting writer. Returns `None` if sorting is not required.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">meta_data</span>: <span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">chunk_writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="ident">W</span>) -&gt; <span class="ident">SortedBlocksWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">requires_sorting</span> <span class="op">=</span> <span class="ident">meta_data</span>.<span class="ident">headers</span>.<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="ident">header</span><span class="op">|</span> <span class="ident">header</span>.<span class="ident">line_order</span> <span class="op">!</span><span class="op">=</span> <span class="ident">LineOrder::Unspecified</span>);
+    <span class="doccomment">/// New sorting writer. Returns `None` if sorting is not required.
+    </span><span class="kw">pub fn </span>new(meta_data: <span class="kw-2">&amp;</span>MetaData, chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W) -&gt; SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt; {
+        <span class="kw">let </span>requires_sorting = meta_data.headers.iter()
+            .any(|header| header.line_order != LineOrder::Unspecified);
 
-        <span class="kw">let</span> <span class="ident">total_chunk_count</span> <span class="op">=</span> <span class="ident">chunk_writer</span>.<span class="ident">total_chunks_count</span>();
+        <span class="kw">let </span>total_chunk_count = chunk_writer.total_chunks_count();
 
-        <span class="ident">SortedBlocksWriter</span> {
-            <span class="ident">pending_chunks</span>: <span class="ident">BTreeMap::new</span>(),
-            <span class="ident">unwritten_chunk_indices</span>: (<span class="number">0</span> .. <span class="ident">total_chunk_count</span>).<span class="ident">peekable</span>(),
-            <span class="ident">requires_sorting</span>,
-            <span class="ident">chunk_writer</span>
+        SortedBlocksWriter {
+            pending_chunks: BTreeMap::new(),
+            unwritten_chunk_indices: (<span class="number">0 </span>.. total_chunk_count).peekable(),
+            requires_sorting,
+            chunk_writer
         }
     }
 
-    <span class="doccomment">/// Write the chunk or stash it. In the closure, write all chunks that can be written now.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_or_stash_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">chunk_index_in_file</span>: <span class="ident">usize</span>, <span class="ident">chunk_y_index</span>: <span class="ident">usize</span>, <span class="ident">chunk</span>: <span class="ident">Chunk</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">requires_sorting</span>.<span class="ident">not</span>() {
-            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">chunk_writer</span>.<span class="ident">write_chunk</span>(<span class="ident">chunk_y_index</span>, <span class="ident">chunk</span>);
+    <span class="doccomment">/// Write the chunk or stash it. In the closure, write all chunks that can be written now.
+    </span><span class="kw">pub fn </span>write_or_stash_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>, chunk_index_in_file: usize, chunk_y_index: usize, chunk: Chunk) -&gt; UnitResult {
+        <span class="kw">if </span><span class="self">self</span>.requires_sorting.not() {
+            <span class="kw">return </span><span class="self">self</span>.chunk_writer.write_chunk(chunk_y_index, chunk);
         }
 
-        <span class="comment">// write this chunk now if possible</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">unwritten_chunk_indices</span>.<span class="ident">peek</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">chunk_index_in_file</span>){
-            <span class="self">self</span>.<span class="ident">chunk_writer</span>.<span class="ident">write_chunk</span>(<span class="ident">chunk_y_index</span>, <span class="ident">chunk</span>)<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">unwritten_chunk_indices</span>.<span class="ident">next</span>().<span class="ident">expect</span>(<span class="string">&quot;peeked chunk index is missing&quot;</span>);
+        <span class="comment">// write this chunk now if possible
+        </span><span class="kw">if </span><span class="self">self</span>.unwritten_chunk_indices.peek() == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>chunk_index_in_file){
+            <span class="self">self</span>.chunk_writer.write_chunk(chunk_y_index, chunk)<span class="question-mark">?</span>;
+            <span class="self">self</span>.unwritten_chunk_indices.next().expect(<span class="string">&quot;peeked chunk index is missing&quot;</span>);
 
-            <span class="comment">// write all pending blocks that are immediate successors of this block</span>
-            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">next_chunk_y_index</span>, <span class="ident">next_chunk</span>)) <span class="op">=</span> <span class="self">self</span>
-                .<span class="ident">unwritten_chunk_indices</span>.<span class="ident">peek</span>().<span class="ident">cloned</span>()
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">pending_chunks</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>))
+            <span class="comment">// write all pending blocks that are immediate successors of this block
+            </span><span class="kw">while let </span><span class="prelude-val">Some</span>((next_chunk_y_index, next_chunk)) = <span class="self">self
+                </span>.unwritten_chunk_indices.peek().cloned()
+                .and_then(|id| <span class="self">self</span>.pending_chunks.remove(<span class="kw-2">&amp;</span>id))
             {
-                <span class="self">self</span>.<span class="ident">chunk_writer</span>.<span class="ident">write_chunk</span>(<span class="ident">next_chunk_y_index</span>, <span class="ident">next_chunk</span>)<span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">unwritten_chunk_indices</span>.<span class="ident">next</span>().<span class="ident">expect</span>(<span class="string">&quot;peeked chunk index is missing&quot;</span>);
+                <span class="self">self</span>.chunk_writer.write_chunk(next_chunk_y_index, next_chunk)<span class="question-mark">?</span>;
+                <span class="self">self</span>.unwritten_chunk_indices.next().expect(<span class="string">&quot;peeked chunk index is missing&quot;</span>);
             }
         }
 
-        <span class="kw">else</span> {
-            <span class="comment">// the argument block is not to be written now,</span>
-            <span class="comment">// and all the pending blocks are not next up either,</span>
-            <span class="comment">// so just stash this block</span>
-            <span class="self">self</span>.<span class="ident">pending_chunks</span>.<span class="ident">insert</span>(<span class="ident">chunk_index_in_file</span>, (<span class="ident">chunk_y_index</span>, <span class="ident">chunk</span>));
+        <span class="kw">else </span>{
+            <span class="comment">// the argument block is not to be written now,
+            // and all the pending blocks are not next up either,
+            // so just stash this block
+            </span><span class="self">self</span>.pending_chunks.insert(chunk_index_in_file, (chunk_y_index, chunk));
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Where the chunks will be written to.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_chunks_writer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">W</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">chunk_writer</span>
+    <span class="doccomment">/// Where the chunks will be written to.
+    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>W {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.chunk_writer
     }
 }
 
 
 
-<span class="doccomment">/// Compress blocks to a chunk writer in this thread.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SequentialBlocksCompressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">MetaData</span>,
-    <span class="ident">chunks_writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
+<span class="doccomment">/// Compress blocks to a chunk writer in this thread.
+</span><span class="attribute">#[derive(Debug)]
+#[must_use]
+</span><span class="kw">pub struct </span>SequentialBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; {
+    meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData,
+    chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">SequentialBlocksCompressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="lifetime">&#39;w</span> <span class="op">+</span> <span class="ident">ChunksWriter</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W&gt; SequentialBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; <span class="kw">where </span>W: <span class="lifetime">&#39;w </span>+ ChunksWriter {
 
-    <span class="doccomment">/// New blocks writer.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">MetaData</span>, <span class="ident">chunks_writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="ident">W</span>) -&gt; <span class="self">Self</span> { <span class="self">Self</span> { <span class="ident">meta</span>, <span class="ident">chunks_writer</span>, } }
+    <span class="doccomment">/// New blocks writer.
+    </span><span class="kw">pub fn </span>new(meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData, chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W) -&gt; <span class="self">Self </span>{ <span class="self">Self </span>{ meta, chunks_writer, } }
 
-    <span class="doccomment">/// This is where the compressed blocks are written to.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_chunks_writer</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">W</span> { <span class="self">self</span>.<span class="ident">chunks_writer</span> }
+    <span class="doccomment">/// This is where the compressed blocks are written to.
+    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>W { <span class="self">self</span>.chunks_writer }
 
-    <span class="doccomment">/// Compress a single block immediately. The index of the block must be in increasing line order.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compress_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index_in_header_increasing_y</span>: <span class="ident">usize</span>, <span class="ident">block</span>: <span class="ident">UncompressedBlock</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="self">self</span>.<span class="ident">chunks_writer</span>.<span class="ident">write_chunk</span>(
-            <span class="ident">index_in_header_increasing_y</span>,
-            <span class="ident">block</span>.<span class="ident">compress_to_chunk</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">headers</span>)<span class="question-mark">?</span>
-        )
+    <span class="doccomment">/// Compress a single block immediately. The index of the block must be in increasing line order.
+    </span><span class="kw">pub fn </span>compress_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, block: UncompressedBlock) -&gt; UnitResult {
+        <span class="self">self</span>.chunks_writer.write_chunk(
+            index_in_header_increasing_y,
+            block.compress_to_chunk(<span class="kw-2">&amp;</span><span class="self">self</span>.meta.headers)<span class="question-mark">?
+        </span>)
     }
 }
 
-<span class="doccomment">/// Compress blocks to a chunk writer with multiple threads.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParallelBlocksCompressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">MetaData</span>,
-    <span class="ident">sorted_writer</span>: <span class="ident">SortedBlocksWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Compress blocks to a chunk writer with multiple threads.
+</span><span class="attribute">#[derive(Debug)]
+#[must_use]
+</span><span class="kw">pub struct </span>ParallelBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; {
+    meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData,
+    sorted_writer: SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt;,
 
-    <span class="ident">sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Chunk</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">receiver</span>: <span class="ident">flume::Receiver</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">Chunk</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">pool</span>: <span class="ident">threadpool::ThreadPool</span>,
+    sender: flume::Sender&lt;<span class="prelude-ty">Result</span>&lt;(usize, usize, Chunk)&gt;&gt;,
+    receiver: flume::Receiver&lt;<span class="prelude-ty">Result</span>&lt;(usize, usize, Chunk)&gt;&gt;,
+    pool: threadpool::ThreadPool,
 
-    <span class="ident">currently_compressing_count</span>: <span class="ident">usize</span>,
-    <span class="ident">written_chunk_count</span>: <span class="ident">usize</span>, <span class="comment">// used to check for last chunk</span>
-    <span class="ident">max_threads</span>: <span class="ident">usize</span>,
-    <span class="ident">next_incoming_chunk_index</span>: <span class="ident">usize</span>, <span class="comment">// used to remember original chunk order</span>
-}
+    currently_compressing_count: usize,
+    written_chunk_count: usize, <span class="comment">// used to check for last chunk
+    </span>max_threads: usize,
+    next_incoming_chunk_index: usize, <span class="comment">// used to remember original chunk order
+</span>}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">ParallelBlocksCompressor</span><span class="op">&lt;</span><span class="lifetime">&#39;w</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="lifetime">&#39;w</span> <span class="op">+</span> <span class="ident">ChunksWriter</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W&gt; ParallelBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; <span class="kw">where </span>W: <span class="lifetime">&#39;w </span>+ ChunksWriter {
 
-    <span class="doccomment">/// New blocks writer. Returns none if sequential compression should be used.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">MetaData</span>, <span class="ident">chunks_writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">pool</span>: <span class="ident">threadpool::ThreadPool</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">meta</span>.<span class="ident">headers</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span><span class="ident">head</span><span class="op">|</span><span class="ident">head</span>.<span class="ident">compression</span> <span class="op">==</span> <span class="ident">Compression::Uncompressed</span>) {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
+    <span class="doccomment">/// New blocks writer. Returns none if sequential compression should be used.
+    </span><span class="kw">pub fn </span>new(meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData, chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W, pool: threadpool::ThreadPool) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">if </span>meta.headers.iter().all(|head|head.compression == Compression::Uncompressed) {
+            <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">max_threads</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">max_count</span>().<span class="ident">max</span>(<span class="number">1</span>).<span class="ident">min</span>(<span class="ident">chunks_writer</span>.<span class="ident">total_chunks_count</span>()) <span class="op">+</span> <span class="number">2</span>; <span class="comment">// ca one block for each thread at all times</span>
-        <span class="kw">let</span> (<span class="ident">send</span>, <span class="ident">recv</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>(); <span class="comment">// TODO bounded channel simplifies logic?</span>
+        <span class="kw">let </span>max_threads = pool.max_count().max(<span class="number">1</span>).min(chunks_writer.total_chunks_count()) + <span class="number">2</span>; <span class="comment">// ca one block for each thread at all times
+        </span><span class="kw">let </span>(send, recv) = flume::unbounded(); <span class="comment">// TODO bounded channel simplifies logic?
 
-        <span class="prelude-val">Some</span>(<span class="self">Self</span> {
-            <span class="ident">sorted_writer</span>: <span class="ident">SortedBlocksWriter::new</span>(<span class="ident">meta</span>, <span class="ident">chunks_writer</span>),
-            <span class="ident">next_incoming_chunk_index</span>: <span class="number">0</span>,
-            <span class="ident">currently_compressing_count</span>: <span class="number">0</span>,
-            <span class="ident">written_chunk_count</span>: <span class="number">0</span>,
-            <span class="ident">sender</span>: <span class="ident">send</span>,
-            <span class="ident">receiver</span>: <span class="ident">recv</span>,
-            <span class="ident">max_threads</span>,
-            <span class="ident">pool</span>,
-            <span class="ident">meta</span>,
+        </span><span class="prelude-val">Some</span>(<span class="self">Self </span>{
+            sorted_writer: SortedBlocksWriter::new(meta, chunks_writer),
+            next_incoming_chunk_index: <span class="number">0</span>,
+            currently_compressing_count: <span class="number">0</span>,
+            written_chunk_count: <span class="number">0</span>,
+            sender: send,
+            receiver: recv,
+            max_threads,
+            pool,
+            meta,
         })
     }
 
-    <span class="doccomment">/// This is where the compressed blocks are written to.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_chunks_writer</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;w</span> <span class="ident">W</span> { <span class="self">self</span>.<span class="ident">sorted_writer</span>.<span class="ident">inner_chunks_writer</span>() }
+    <span class="doccomment">/// This is where the compressed blocks are written to.
+    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>W { <span class="self">self</span>.sorted_writer.inner_chunks_writer() }
 
-    <span class="comment">// private, as may underflow counter in release mode</span>
-    <span class="kw">fn</span> <span class="ident">write_next_queued_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">currently_compressing_count</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;cannot wait for chunks as there are none left&quot;</span>);
+    <span class="comment">// private, as may underflow counter in release mode
+    </span><span class="kw">fn </span>write_next_queued_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; UnitResult {
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.currently_compressing_count &gt; <span class="number">0</span>, <span class="string">&quot;cannot wait for chunks as there are none left&quot;</span>);
 
-        <span class="macro">assert_eq!</span>( <span class="comment">// propagate panics (in release mode unlikely, but possible of course)</span>
-                    <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">panic_count</span>(), <span class="number">0</span>,
+        <span class="macro">assert_eq!</span>( <span class="comment">// propagate panics (in release mode unlikely, but possible of course)
+                    </span><span class="self">self</span>.pool.panic_count(), <span class="number">0</span>,
                     <span class="string">&quot;OpenEXR compressor thread panicked \
             (maybe a debug assertion failed) - \
-            Use non-parallel decompression to see panic messages.&quot;</span>
-        );
+            Use non-parallel decompression to see panic messages.&quot;
+        </span>);
 
-        <span class="kw">let</span> <span class="ident">some_compressed_chunk</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;cannot receive compressed block&quot;</span>);
+        <span class="kw">let </span>some_compressed_chunk = <span class="self">self</span>.receiver.recv()
+            .expect(<span class="string">&quot;cannot receive compressed block&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">currently_compressing_count</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="kw">let</span> (<span class="ident">chunk_file_index</span>, <span class="ident">chunk_y_index</span>, <span class="ident">chunk</span>) <span class="op">=</span> <span class="ident">some_compressed_chunk</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">sorted_writer</span>.<span class="ident">write_or_stash_chunk</span>(<span class="ident">chunk_file_index</span>, <span class="ident">chunk_y_index</span>, <span class="ident">chunk</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.currently_compressing_count -= <span class="number">1</span>;
+        <span class="kw">let </span>(chunk_file_index, chunk_y_index, chunk) = some_compressed_chunk<span class="question-mark">?</span>;
+        <span class="self">self</span>.sorted_writer.write_or_stash_chunk(chunk_file_index, chunk_y_index, chunk)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">written_chunk_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="self">self</span>.written_chunk_count += <span class="number">1</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Wait until all currently compressing chunks in the compressor have been written.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_all_queued_chunks</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">currently_compressing_count</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">write_next_queued_chunk</span>()<span class="question-mark">?</span>;
+    <span class="doccomment">/// Wait until all currently compressing chunks in the compressor have been written.
+    </span><span class="kw">pub fn </span>write_all_queued_chunks(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; UnitResult {
+        <span class="kw">while </span><span class="self">self</span>.currently_compressing_count &gt; <span class="number">0 </span>{
+            <span class="self">self</span>.write_next_queued_chunk()<span class="question-mark">?</span>;
         }
 
-        <span class="macro">debug_assert_eq!</span>(<span class="self">self</span>.<span class="ident">currently_compressing_count</span>, <span class="number">0</span>, <span class="string">&quot;counter does not match block count&quot;</span>);
+        <span class="macro">debug_assert_eq!</span>(<span class="self">self</span>.currently_compressing_count, <span class="number">0</span>, <span class="string">&quot;counter does not match block count&quot;</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Add a single block to the compressor queue. The index of the block must be in increasing line order.</span>
-    <span class="doccomment">/// When calling this function for the last block, this method waits until all the blocks have been written.</span>
-    <span class="doccomment">/// This only works when you write as many blocks as the image expects, otherwise you can use `wait_for_all_remaining_chunks`.</span>
-    <span class="doccomment">/// Waits for a block from the queue to be written, if the queue already has enough items.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_block_to_compression_queue</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index_in_header_increasing_y</span>: <span class="ident">usize</span>, <span class="ident">block</span>: <span class="ident">UncompressedBlock</span>) -&gt; <span class="ident">UnitResult</span> {
+    <span class="doccomment">/// Add a single block to the compressor queue. The index of the block must be in increasing line order.
+    /// When calling this function for the last block, this method waits until all the blocks have been written.
+    /// This only works when you write as many blocks as the image expects, otherwise you can use `wait_for_all_remaining_chunks`.
+    /// Waits for a block from the queue to be written, if the queue already has enough items.
+    </span><span class="kw">pub fn </span>add_block_to_compression_queue(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, block: UncompressedBlock) -&gt; UnitResult {
 
-        <span class="comment">// if pipe is full, block to wait for a slot to free up</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">currently_compressing_count</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">max_threads</span> {
-            <span class="self">self</span>.<span class="ident">write_next_queued_chunk</span>()<span class="question-mark">?</span>;
+        <span class="comment">// if pipe is full, block to wait for a slot to free up
+        </span><span class="kw">if </span><span class="self">self</span>.currently_compressing_count &gt;= <span class="self">self</span>.max_threads {
+            <span class="self">self</span>.write_next_queued_chunk()<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// add the argument chunk to the compression queueue</span>
-        <span class="kw">let</span> <span class="ident">index_in_file</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_incoming_chunk_index</span>;
-        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">clone</span>();
-        <span class="kw">let</span> <span class="ident">meta</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">clone</span>();
+        <span class="comment">// add the argument chunk to the compression queueue
+        </span><span class="kw">let </span>index_in_file = <span class="self">self</span>.next_incoming_chunk_index;
+        <span class="kw">let </span>sender = <span class="self">self</span>.sender.clone();
+        <span class="kw">let </span>meta = <span class="self">self</span>.meta.clone();
 
-        <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">execute</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span>{
-            <span class="kw">let</span> <span class="ident">compressed_or_err</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">compress_to_chunk</span>(<span class="kw-2">&amp;</span><span class="ident">meta</span>.<span class="ident">headers</span>);
+        <span class="self">self</span>.pool.execute(<span class="kw">move </span>||{
+            <span class="kw">let </span>compressed_or_err = block.compress_to_chunk(<span class="kw-2">&amp;</span>meta.headers);
 
-            <span class="comment">// by now, decompressing could have failed in another thread.</span>
-            <span class="comment">// the error is then already handled, so we simply</span>
-            <span class="comment">// don&#39;t send the decompressed block and do nothing</span>
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">compressed_or_err</span>.<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">compressed</span><span class="op">|</span> (<span class="ident">index_in_file</span>, <span class="ident">index_in_header_increasing_y</span>, <span class="ident">compressed</span>)));
+            <span class="comment">// by now, decompressing could have failed in another thread.
+            // the error is then already handled, so we simply
+            // don&#39;t send the decompressed block and do nothing
+            </span><span class="kw">let _ </span>= sender.send(compressed_or_err.map(<span class="kw">move </span>|compressed| (index_in_file, index_in_header_increasing_y, compressed)));
         });
 
-        <span class="self">self</span>.<span class="ident">currently_compressing_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="self">self</span>.<span class="ident">next_incoming_chunk_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="self">self</span>.currently_compressing_count += <span class="number">1</span>;
+        <span class="self">self</span>.next_incoming_chunk_index += <span class="number">1</span>;
 
-        <span class="comment">// if this is the last chunk, wait for all chunks to complete before returning</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">written_chunk_count</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">currently_compressing_count</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">inner_chunks_writer</span>().<span class="ident">total_chunks_count</span>() {
-            <span class="self">self</span>.<span class="ident">write_all_queued_chunks</span>()<span class="question-mark">?</span>;
+        <span class="comment">// if this is the last chunk, wait for all chunks to complete before returning
+        </span><span class="kw">if </span><span class="self">self</span>.written_chunk_count + <span class="self">self</span>.currently_compressing_count == <span class="self">self</span>.inner_chunks_writer().total_chunks_count() {
+            <span class="self">self</span>.write_all_queued_chunks()<span class="question-mark">?</span>;
             <span class="macro">debug_assert_eq!</span>(
-                <span class="self">self</span>.<span class="ident">written_chunk_count</span>, <span class="self">self</span>.<span class="ident">inner_chunks_writer</span>().<span class="ident">total_chunks_count</span>(),
-                <span class="string">&quot;written chunk count mismatch&quot;</span>
-            );
+                <span class="self">self</span>.written_chunk_count, <span class="self">self</span>.inner_chunks_writer().total_chunks_count(),
+                <span class="string">&quot;written chunk count mismatch&quot;
+            </span>);
         }
 
 
@@ -915,5 +909,4 @@
 
 
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

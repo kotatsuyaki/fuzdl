@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/webp/decoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/webp/decoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -366,355 +360,355 @@
 <span id="360">360</span>
 <span id="361">361</span>
 <span id="362">362</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">LittleEndian</span>, <span class="ident">ReadBytesExt</span>};
-<span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Cursor</span>, <span class="ident">Error</span>, <span class="ident">Read</span>};
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error</span>, <span class="ident">fmt</span>, <span class="ident">mem</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>byteorder::{LittleEndian, ReadBytesExt};
+<span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Cursor, Error, Read};
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>std::{error, fmt, mem};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">DecodingError</span>, <span class="ident">ImageError</span>, <span class="ident">ImageResult</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::{<span class="ident">ImageDecoder</span>, <span class="ident">ImageFormat</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">color</span>, <span class="ident">AnimationDecoder</span>, <span class="ident">Frames</span>};
+<span class="kw">use </span><span class="kw">crate</span>::error::{DecodingError, ImageError, ImageResult};
+<span class="kw">use </span><span class="kw">crate</span>::image::{ImageDecoder, ImageFormat};
+<span class="kw">use crate</span>::{color, AnimationDecoder, Frames};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::lossless</span>::{<span class="ident">LosslessDecoder</span>, <span class="ident">LosslessFrame</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::vp8</span>::{<span class="ident">Frame</span> <span class="kw">as</span> <span class="ident">VP8Frame</span>, <span class="ident">Vp8Decoder</span>};
+<span class="kw">use </span><span class="kw">super</span>::lossless::{LosslessDecoder, LosslessFrame};
+<span class="kw">use </span><span class="kw">super</span>::vp8::{Frame <span class="kw">as </span>VP8Frame, Vp8Decoder};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::extended</span>::{<span class="ident">read_extended_header</span>, <span class="ident">ExtendedImage</span>};
+<span class="kw">use </span><span class="kw">super</span>::extended::{read_extended_header, ExtendedImage};
 
-<span class="doccomment">/// All errors that can occur when attempting to parse a WEBP container</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">DecoderError</span> {
-    <span class="doccomment">/// RIFF&#39;s &quot;RIFF&quot; signature not found or invalid</span>
-    <span class="ident">RiffSignatureInvalid</span>([<span class="ident">u8</span>; <span class="number">4</span>]),
-    <span class="doccomment">/// WebP&#39;s &quot;WEBP&quot; signature not found or invalid</span>
-    <span class="ident">WebpSignatureInvalid</span>([<span class="ident">u8</span>; <span class="number">4</span>]),
-    <span class="doccomment">/// Chunk Header was incorrect or invalid in its usage</span>
-    <span class="ident">ChunkHeaderInvalid</span>([<span class="ident">u8</span>; <span class="number">4</span>]),
+<span class="doccomment">/// All errors that can occur when attempting to parse a WEBP container
+</span><span class="attribute">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>DecoderError {
+    <span class="doccomment">/// RIFF&#39;s &quot;RIFF&quot; signature not found or invalid
+    </span>RiffSignatureInvalid([u8; <span class="number">4</span>]),
+    <span class="doccomment">/// WebP&#39;s &quot;WEBP&quot; signature not found or invalid
+    </span>WebpSignatureInvalid([u8; <span class="number">4</span>]),
+    <span class="doccomment">/// Chunk Header was incorrect or invalid in its usage
+    </span>ChunkHeaderInvalid([u8; <span class="number">4</span>]),
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">DecoderError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">struct</span> <span class="ident">SignatureWriter</span>([<span class="ident">u8</span>; <span class="number">4</span>]);
-        <span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SignatureWriter</span> {
-            <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">struct </span>SignatureWriter([u8; <span class="number">4</span>]);
+        <span class="kw">impl </span>fmt::Display <span class="kw">for </span>SignatureWriter {
+            <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
                 <span class="macro">write!</span>(
-                    <span class="ident">f</span>,
+                    f,
                     <span class="string">&quot;[{:#04X?}, {:#04X?}, {:#04X?}, {:#04X?}]&quot;</span>,
                     <span class="self">self</span>.<span class="number">0</span>[<span class="number">0</span>], <span class="self">self</span>.<span class="number">0</span>[<span class="number">1</span>], <span class="self">self</span>.<span class="number">0</span>[<span class="number">2</span>], <span class="self">self</span>.<span class="number">0</span>[<span class="number">3</span>]
                 )
             }
         }
 
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">DecoderError::RiffSignatureInvalid</span>(<span class="ident">riff</span>) =&gt; <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(
+        <span class="kw">match </span><span class="self">self </span>{
+            DecoderError::RiffSignatureInvalid(riff) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
                 <span class="string">&quot;Invalid RIFF signature: {}&quot;</span>,
-                <span class="ident">SignatureWriter</span>(<span class="kw-2">*</span><span class="ident">riff</span>)
+                SignatureWriter(<span class="kw-2">*</span>riff)
             )),
-            <span class="ident">DecoderError::WebpSignatureInvalid</span>(<span class="ident">webp</span>) =&gt; <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(
+            DecoderError::WebpSignatureInvalid(webp) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
                 <span class="string">&quot;Invalid WebP signature: {}&quot;</span>,
-                <span class="ident">SignatureWriter</span>(<span class="kw-2">*</span><span class="ident">webp</span>)
+                SignatureWriter(<span class="kw-2">*</span>webp)
             )),
-            <span class="ident">DecoderError::ChunkHeaderInvalid</span>(<span class="ident">header</span>) =&gt; <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(
+            DecoderError::ChunkHeaderInvalid(header) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
                 <span class="string">&quot;Invalid Chunk header: {}&quot;</span>,
-                <span class="ident">SignatureWriter</span>(<span class="kw-2">*</span><span class="ident">header</span>)
+                SignatureWriter(<span class="kw-2">*</span>header)
             )),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DecoderError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ImageError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">DecoderError</span>) -&gt; <span class="ident">ImageError</span> {
-        <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(<span class="ident">ImageFormat::WebP</span>.<span class="ident">into</span>(), <span class="ident">e</span>))
+<span class="kw">impl </span>From&lt;DecoderError&gt; <span class="kw">for </span>ImageError {
+    <span class="kw">fn </span>from(e: DecoderError) -&gt; ImageError {
+        ImageError::Decoding(DecodingError::new(ImageFormat::WebP.into(), e))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">error::Error</span> <span class="kw">for</span> <span class="ident">DecoderError</span> {}
+<span class="kw">impl </span>error::Error <span class="kw">for </span>DecoderError {}
 
-<span class="doccomment">/// All possible RIFF chunks in a WebP image file</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">WebPRiffChunk</span> {
-    <span class="ident">RIFF</span>,
-    <span class="ident">WEBP</span>,
-    <span class="ident">VP8</span>,
-    <span class="ident">VP8L</span>,
-    <span class="ident">VP8X</span>,
-    <span class="ident">ANIM</span>,
-    <span class="ident">ANMF</span>,
-    <span class="ident">ALPH</span>,
-    <span class="ident">ICCP</span>,
-    <span class="ident">EXIF</span>,
-    <span class="ident">XMP</span>,
+<span class="doccomment">/// All possible RIFF chunks in a WebP image file
+</span><span class="attribute">#[allow(clippy::upper_case_acronyms)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>WebPRiffChunk {
+    RIFF,
+    WEBP,
+    VP8,
+    VP8L,
+    VP8X,
+    ANIM,
+    ANMF,
+    ALPH,
+    ICCP,
+    EXIF,
+    XMP,
 }
 
-<span class="kw">impl</span> <span class="ident">WebPRiffChunk</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_fourcc</span>(<span class="ident">chunk_fourcc</span>: [<span class="ident">u8</span>; <span class="number">4</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">chunk_fourcc</span> {
-            <span class="string">b&quot;RIFF&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::RIFF</span>),
-            <span class="string">b&quot;WEBP&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::WEBP</span>),
-            <span class="string">b&quot;VP8 &quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::VP8</span>),
-            <span class="string">b&quot;VP8L&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::VP8L</span>),
-            <span class="string">b&quot;VP8X&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::VP8X</span>),
-            <span class="string">b&quot;ANIM&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ANIM</span>),
-            <span class="string">b&quot;ANMF&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ANMF</span>),
-            <span class="string">b&quot;ALPH&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ALPH</span>),
-            <span class="string">b&quot;ICCP&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ICCP</span>),
-            <span class="string">b&quot;EXIF&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::EXIF</span>),
-            <span class="string">b&quot;XMP &quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::XMP</span>),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">DecoderError::ChunkHeaderInvalid</span>(<span class="ident">chunk_fourcc</span>).<span class="ident">into</span>()),
+<span class="kw">impl </span>WebPRiffChunk {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>from_fourcc(chunk_fourcc: [u8; <span class="number">4</span>]) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span>chunk_fourcc {
+            <span class="string">b&quot;RIFF&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::RIFF),
+            <span class="string">b&quot;WEBP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::WEBP),
+            <span class="string">b&quot;VP8 &quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8),
+            <span class="string">b&quot;VP8L&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8L),
+            <span class="string">b&quot;VP8X&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8X),
+            <span class="string">b&quot;ANIM&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ANIM),
+            <span class="string">b&quot;ANMF&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ANMF),
+            <span class="string">b&quot;ALPH&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ALPH),
+            <span class="string">b&quot;ICCP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ICCP),
+            <span class="string">b&quot;EXIF&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::EXIF),
+            <span class="string">b&quot;XMP &quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::XMP),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(DecoderError::ChunkHeaderInvalid(chunk_fourcc).into()),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">to_fourcc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [<span class="ident">u8</span>; <span class="number">4</span>] {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::RIFF</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;RIFF&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::WEBP</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;WEBP&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::VP8</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8 &quot;</span>,
-            <span class="ident"><span class="self">Self</span>::VP8L</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8L&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::VP8X</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8X&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::ANIM</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;ANIM&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::ANMF</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;ANMF&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::ALPH</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;ALPH&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::ICCP</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;ICCP&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::EXIF</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;EXIF&quot;</span>,
-            <span class="ident"><span class="self">Self</span>::XMP</span> =&gt; <span class="kw-2">*</span><span class="string">b&quot;XMP &quot;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>to_fourcc(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u8; <span class="number">4</span>] {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::RIFF =&gt; <span class="kw-2">*</span><span class="string">b&quot;RIFF&quot;</span>,
+            <span class="self">Self</span>::WEBP =&gt; <span class="kw-2">*</span><span class="string">b&quot;WEBP&quot;</span>,
+            <span class="self">Self</span>::VP8 =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8 &quot;</span>,
+            <span class="self">Self</span>::VP8L =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8L&quot;</span>,
+            <span class="self">Self</span>::VP8X =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8X&quot;</span>,
+            <span class="self">Self</span>::ANIM =&gt; <span class="kw-2">*</span><span class="string">b&quot;ANIM&quot;</span>,
+            <span class="self">Self</span>::ANMF =&gt; <span class="kw-2">*</span><span class="string">b&quot;ANMF&quot;</span>,
+            <span class="self">Self</span>::ALPH =&gt; <span class="kw-2">*</span><span class="string">b&quot;ALPH&quot;</span>,
+            <span class="self">Self</span>::ICCP =&gt; <span class="kw-2">*</span><span class="string">b&quot;ICCP&quot;</span>,
+            <span class="self">Self</span>::EXIF =&gt; <span class="kw-2">*</span><span class="string">b&quot;EXIF&quot;</span>,
+            <span class="self">Self</span>::XMP =&gt; <span class="kw-2">*</span><span class="string">b&quot;XMP &quot;</span>,
         }
     }
 }
 
-<span class="kw">enum</span> <span class="ident">WebPImage</span> {
-    <span class="ident">Lossy</span>(<span class="ident">VP8Frame</span>),
-    <span class="ident">Lossless</span>(<span class="ident">LosslessFrame</span>),
-    <span class="ident">Extended</span>(<span class="ident">ExtendedImage</span>),
+<span class="kw">enum </span>WebPImage {
+    Lossy(VP8Frame),
+    Lossless(LosslessFrame),
+    Extended(ExtendedImage),
 }
 
-<span class="doccomment">/// WebP Image format decoder. Currently only supports lossy RGB images or lossless RGBA images.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WebPDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">r</span>: <span class="ident">R</span>,
-    <span class="ident">image</span>: <span class="ident">WebPImage</span>,
+<span class="doccomment">/// WebP Image format decoder. Currently only supports lossy RGB images or lossless RGBA images.
+</span><span class="kw">pub struct </span>WebPDecoder&lt;R&gt; {
+    r: R,
+    image: WebPImage,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">WebPDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new WebPDecoder from the Reader ```r```.</span>
-    <span class="doccomment">/// This function takes ownership of the Reader.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">r</span>: <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">WebPDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">WebPImage::Lossy</span>(<span class="ident">Default::default</span>());
+<span class="kw">impl</span>&lt;R: Read&gt; WebPDecoder&lt;R&gt; {
+    <span class="doccomment">/// Create a new WebPDecoder from the Reader ```r```.
+    /// This function takes ownership of the Reader.
+    </span><span class="kw">pub fn </span>new(r: R) -&gt; ImageResult&lt;WebPDecoder&lt;R&gt;&gt; {
+        <span class="kw">let </span>image = WebPImage::Lossy(Default::default());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">WebPDecoder</span> { <span class="ident">r</span>, <span class="ident">image</span> };
-        <span class="ident">decoder</span>.<span class="ident">read_data</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">decoder</span>)
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = WebPDecoder { r, image };
+        decoder.read_data()<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(decoder)
     }
 
-    <span class="comment">//reads the 12 bytes of the WebP file header</span>
-    <span class="kw">fn</span> <span class="ident">read_riff_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">riff</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
-        <span class="self">self</span>.<span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">riff</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">riff</span> <span class="op">!</span><span class="op">=</span> <span class="string">b&quot;RIFF&quot;</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::RiffSignatureInvalid</span>(<span class="ident">riff</span>).<span class="ident">into</span>());
+    <span class="comment">//reads the 12 bytes of the WebP file header
+    </span><span class="kw">fn </span>read_riff_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;u32&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>riff = [<span class="number">0</span>; <span class="number">4</span>];
+        <span class="self">self</span>.r.read_exact(<span class="kw-2">&amp;mut </span>riff)<span class="question-mark">?</span>;
+        <span class="kw">if </span><span class="kw-2">&amp;</span>riff != <span class="string">b&quot;RIFF&quot; </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::RiffSignatureInvalid(riff).into());
         }
 
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>size = <span class="self">self</span>.r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">webp</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
-        <span class="self">self</span>.<span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">webp</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">webp</span> <span class="op">!</span><span class="op">=</span> <span class="string">b&quot;WEBP&quot;</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::WebpSignatureInvalid</span>(<span class="ident">webp</span>).<span class="ident">into</span>());
+        <span class="kw">let </span><span class="kw-2">mut </span>webp = [<span class="number">0</span>; <span class="number">4</span>];
+        <span class="self">self</span>.r.read_exact(<span class="kw-2">&amp;mut </span>webp)<span class="question-mark">?</span>;
+        <span class="kw">if </span><span class="kw-2">&amp;</span>webp != <span class="string">b&quot;WEBP&quot; </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::WebpSignatureInvalid(webp).into());
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">size</span>)
+        <span class="prelude-val">Ok</span>(size)
     }
 
-    <span class="comment">//reads the chunk header, decodes the frame and returns the inner decoder</span>
-    <span class="kw">fn</span> <span class="ident">read_frame</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">WebPImage</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">chunk</span> <span class="op">=</span> <span class="ident">read_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">r</span>)<span class="question-mark">?</span>;
+    <span class="comment">//reads the chunk header, decodes the frame and returns the inner decoder
+    </span><span class="kw">fn </span>read_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;WebPImage&gt; {
+        <span class="kw">let </span>chunk = read_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>.r)<span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">chunk</span> {
-            <span class="prelude-val">Some</span>((<span class="ident">cursor</span>, <span class="ident">WebPRiffChunk::VP8</span>)) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vp8_decoder</span> <span class="op">=</span> <span class="ident">Vp8Decoder::new</span>(<span class="ident">cursor</span>);
-                <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">vp8_decoder</span>.<span class="ident">decode_frame</span>()<span class="question-mark">?</span>;
+        <span class="kw">match </span>chunk {
+            <span class="prelude-val">Some</span>((cursor, WebPRiffChunk::VP8)) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>vp8_decoder = Vp8Decoder::new(cursor);
+                <span class="kw">let </span>frame = vp8_decoder.decode_frame()<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Ok</span>(<span class="ident">WebPImage::Lossy</span>(<span class="ident">frame</span>.<span class="ident">clone</span>()))
+                <span class="prelude-val">Ok</span>(WebPImage::Lossy(frame.clone()))
             }
-            <span class="prelude-val">Some</span>((<span class="ident">cursor</span>, <span class="ident">WebPRiffChunk::VP8L</span>)) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lossless_decoder</span> <span class="op">=</span> <span class="ident">LosslessDecoder::new</span>(<span class="ident">cursor</span>);
-                <span class="kw">let</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">lossless_decoder</span>.<span class="ident">decode_frame</span>()<span class="question-mark">?</span>;
+            <span class="prelude-val">Some</span>((cursor, WebPRiffChunk::VP8L)) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>lossless_decoder = LosslessDecoder::new(cursor);
+                <span class="kw">let </span>frame = lossless_decoder.decode_frame()<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Ok</span>(<span class="ident">WebPImage::Lossless</span>(<span class="ident">frame</span>.<span class="ident">clone</span>()))
+                <span class="prelude-val">Ok</span>(WebPImage::Lossless(frame.clone()))
             }
-            <span class="prelude-val">Some</span>((<span class="kw-2">mut</span> <span class="ident">cursor</span>, <span class="ident">WebPRiffChunk::VP8X</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">read_extended_header</span>(<span class="kw-2">&amp;mut</span> <span class="ident">cursor</span>)<span class="question-mark">?</span>;
+            <span class="prelude-val">Some</span>((<span class="kw-2">mut </span>cursor, WebPRiffChunk::VP8X)) =&gt; {
+                <span class="kw">let </span>info = read_extended_header(<span class="kw-2">&amp;mut </span>cursor)<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">ExtendedImage::read_extended_chunks</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">r</span>, <span class="ident">info</span>)<span class="question-mark">?</span>;
+                <span class="kw">let </span>image = ExtendedImage::read_extended_chunks(<span class="kw-2">&amp;mut </span><span class="self">self</span>.r, info)<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Ok</span>(<span class="ident">WebPImage::Extended</span>(<span class="ident">image</span>))
+                <span class="prelude-val">Ok</span>(WebPImage::Extended(image))
             }
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ImageError::IoError</span>(<span class="ident">Error::from</span>(
-                <span class="ident">io::ErrorKind::UnexpectedEof</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ImageError::IoError(Error::from(
+                io::ErrorKind::UnexpectedEof,
             ))),
-            <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">chunk</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">DecoderError::ChunkHeaderInvalid</span>(<span class="ident">chunk</span>.<span class="ident">to_fourcc</span>()).<span class="ident">into</span>()),
+            <span class="prelude-val">Some</span>((<span class="kw">_</span>, chunk)) =&gt; <span class="prelude-val">Err</span>(DecoderError::ChunkHeaderInvalid(chunk.to_fourcc()).into()),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">read_data</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">_size</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">read_riff_header</span>()<span class="question-mark">?</span>;
+    <span class="kw">fn </span>read_data(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span>_size = <span class="self">self</span>.read_riff_header()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">read_frame</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>image = <span class="self">self</span>.read_frame()<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">image</span> <span class="op">=</span> <span class="ident">image</span>;
+        <span class="self">self</span>.image = image;
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">read_len_cursor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">r</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>read_len_cursor&lt;R&gt;(r: <span class="kw-2">&amp;mut </span>R) -&gt; ImageResult&lt;Cursor&lt;Vec&lt;u8&gt;&gt;&gt;
+<span class="kw">where
+    </span>R: Read,
 {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">u64::from</span>(<span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>len = u64::from(r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>);
 
-    <span class="kw">if</span> <span class="ident">len</span> <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">1</span> {
-        <span class="comment">// RIFF chunks containing an uneven number of bytes append</span>
-        <span class="comment">// an extra 0x00 at the end of the chunk</span>
-        <span class="comment">//</span>
-        <span class="comment">// The addition cannot overflow since we have a u64 that was created from a u32</span>
-        <span class="ident">len</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">if </span>len % <span class="number">2 </span>== <span class="number">1 </span>{
+        <span class="comment">// RIFF chunks containing an uneven number of bytes append
+        // an extra 0x00 at the end of the chunk
+        //
+        // The addition cannot overflow since we have a u64 that was created from a u32
+        </span>len += <span class="number">1</span>;
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">framedata</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-    <span class="ident">r</span>.<span class="ident">by_ref</span>().<span class="ident">take</span>(<span class="ident">len</span>).<span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="ident">framedata</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>framedata = Vec::new();
+    r.by_ref().take(len).read_to_end(<span class="kw-2">&amp;mut </span>framedata)<span class="question-mark">?</span>;
 
-    <span class="comment">//remove padding byte</span>
-    <span class="kw">if</span> <span class="ident">len</span> <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">1</span> {
-        <span class="ident">framedata</span>.<span class="ident">pop</span>();
+    <span class="comment">//remove padding byte
+    </span><span class="kw">if </span>len % <span class="number">2 </span>== <span class="number">1 </span>{
+        framedata.pop();
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">io::Cursor::new</span>(<span class="ident">framedata</span>))
+    <span class="prelude-val">Ok</span>(io::Cursor::new(framedata))
 }
 
-<span class="doccomment">/// Reads a chunk</span>
-<span class="doccomment">/// Returns an error if the chunk header is not a valid webp header or some other reading error</span>
-<span class="doccomment">/// Returns None if and only if we hit end of file reading the four character code of the chunk</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">read_chunk</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">r</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">WebPRiffChunk</span>)<span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span>,
+<span class="doccomment">/// Reads a chunk
+/// Returns an error if the chunk header is not a valid webp header or some other reading error
+/// Returns None if and only if we hit end of file reading the four character code of the chunk
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>read_chunk&lt;R&gt;(r: <span class="kw-2">&amp;mut </span>R) -&gt; ImageResult&lt;<span class="prelude-ty">Option</span>&lt;(Cursor&lt;Vec&lt;u8&gt;&gt;, WebPRiffChunk)&gt;&gt;
+<span class="kw">where
+    </span>R: Read,
 {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chunk_fourcc</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
-    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">chunk_fourcc</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>chunk_fourcc = [<span class="number">0</span>; <span class="number">4</span>];
+    <span class="kw">let </span>result = r.read_exact(<span class="kw-2">&amp;mut </span>chunk_fourcc);
 
-    <span class="kw">match</span> <span class="ident">result</span> {
+    <span class="kw">match </span>result {
         <span class="prelude-val">Ok</span>(()) =&gt; {}
-        <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-            <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">io::ErrorKind::UnexpectedEof</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">into</span>());
+        <span class="prelude-val">Err</span>(err) =&gt; {
+            <span class="kw">if </span>err.kind() == io::ErrorKind::UnexpectedEof {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(err.into());
             }
         }
     }
 
-    <span class="kw">let</span> <span class="ident">chunk</span> <span class="op">=</span> <span class="ident">WebPRiffChunk::from_fourcc</span>(<span class="ident">chunk_fourcc</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>chunk = WebPRiffChunk::from_fourcc(chunk_fourcc)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">cursor</span> <span class="op">=</span> <span class="ident">read_len_cursor</span>(<span class="ident">r</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>cursor = read_len_cursor(r)<span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>((<span class="ident">cursor</span>, <span class="ident">chunk</span>)))
+    <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>((cursor, chunk)))
 }
 
-<span class="doccomment">/// Wrapper struct around a `Cursor&lt;Vec&lt;u8&gt;&gt;`</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WebpReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>);
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">WebpReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
+<span class="doccomment">/// Wrapper struct around a `Cursor&lt;Vec&lt;u8&gt;&gt;`
+</span><span class="kw">pub struct </span>WebpReader&lt;R&gt;(Cursor&lt;Vec&lt;u8&gt;&gt;, PhantomData&lt;R&gt;);
+<span class="kw">impl</span>&lt;R&gt; Read <span class="kw">for </span>WebpReader&lt;R&gt; {
+    <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.read(buf)
     }
-    <span class="kw">fn</span> <span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">position</span>() <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">buf</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">mem::swap</span>(<span class="ident">buf</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_mut</span>());
-            <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read_to_end</span>(<span class="ident">buf</span>)
+    <span class="kw">fn </span>read_to_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.position() == <span class="number">0 </span>&amp;&amp; buf.is_empty() {
+            mem::swap(buf, <span class="self">self</span>.<span class="number">0</span>.get_mut());
+            <span class="prelude-val">Ok</span>(buf.len())
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.<span class="number">0</span>.read_to_end(buf)
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">ImageDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WebPDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Reader</span> <span class="op">=</span> <span class="ident">WebpReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>WebPDecoder&lt;R&gt; {
+    <span class="kw">type </span>Reader = WebpReader&lt;R&gt;;
 
-    <span class="kw">fn</span> <span class="ident">dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">image</span> {
-            <span class="ident">WebPImage::Lossy</span>(<span class="ident">vp8_frame</span>) =&gt; {
-                (<span class="ident">u32::from</span>(<span class="ident">vp8_frame</span>.<span class="ident">width</span>), <span class="ident">u32::from</span>(<span class="ident">vp8_frame</span>.<span class="ident">height</span>))
+    <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.image {
+            WebPImage::Lossy(vp8_frame) =&gt; {
+                (u32::from(vp8_frame.width), u32::from(vp8_frame.height))
             }
-            <span class="ident">WebPImage::Lossless</span>(<span class="ident">lossless_frame</span>) =&gt; (
-                <span class="ident">u32::from</span>(<span class="ident">lossless_frame</span>.<span class="ident">width</span>),
-                <span class="ident">u32::from</span>(<span class="ident">lossless_frame</span>.<span class="ident">height</span>),
+            WebPImage::Lossless(lossless_frame) =&gt; (
+                u32::from(lossless_frame.width),
+                u32::from(lossless_frame.height),
             ),
-            <span class="ident">WebPImage::Extended</span>(<span class="ident">extended</span>) =&gt; <span class="ident">extended</span>.<span class="ident">dimensions</span>(),
+            WebPImage::Extended(extended) =&gt; extended.dimensions(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">color::ColorType</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">image</span> {
-            <span class="ident">WebPImage::Lossy</span>(<span class="kw">_</span>) =&gt; <span class="ident">color::ColorType::Rgb8</span>,
-            <span class="ident">WebPImage::Lossless</span>(<span class="kw">_</span>) =&gt; <span class="ident">color::ColorType::Rgba8</span>,
-            <span class="ident">WebPImage::Extended</span>(<span class="ident">extended</span>) =&gt; <span class="ident">extended</span>.<span class="ident">color_type</span>(),
+    <span class="kw">fn </span>color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; color::ColorType {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.image {
+            WebPImage::Lossy(<span class="kw">_</span>) =&gt; color::ColorType::Rgb8,
+            WebPImage::Lossless(<span class="kw">_</span>) =&gt; color::ColorType::Rgba8,
+            WebPImage::Extended(extended) =&gt; extended.color_type(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">image</span> {
-            <span class="ident">WebPImage::Lossy</span>(<span class="ident">vp8_frame</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">vp8_frame</span>.<span class="ident">get_buf_size</span>()];
-                <span class="ident">vp8_frame</span>.<span class="ident">fill_rgb</span>(<span class="ident">data</span>.<span class="ident">as_mut_slice</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">WebpReader</span>(<span class="ident">Cursor::new</span>(<span class="ident">data</span>), <span class="ident">PhantomData</span>))
+    <span class="kw">fn </span>into_reader(<span class="self">self</span>) -&gt; ImageResult&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.image {
+            WebPImage::Lossy(vp8_frame) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">0</span>; vp8_frame.get_buf_size()];
+                vp8_frame.fill_rgb(data.as_mut_slice());
+                <span class="prelude-val">Ok</span>(WebpReader(Cursor::new(data), PhantomData))
             }
-            <span class="ident">WebPImage::Lossless</span>(<span class="ident">lossless_frame</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">lossless_frame</span>.<span class="ident">get_buf_size</span>()];
-                <span class="ident">lossless_frame</span>.<span class="ident">fill_rgba</span>(<span class="ident">data</span>.<span class="ident">as_mut_slice</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">WebpReader</span>(<span class="ident">Cursor::new</span>(<span class="ident">data</span>), <span class="ident">PhantomData</span>))
+            WebPImage::Lossless(lossless_frame) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">0</span>; lossless_frame.get_buf_size()];
+                lossless_frame.fill_rgba(data.as_mut_slice());
+                <span class="prelude-val">Ok</span>(WebpReader(Cursor::new(data), PhantomData))
             }
-            <span class="ident">WebPImage::Extended</span>(<span class="ident">extended</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">extended</span>.<span class="ident">get_buf_size</span>()];
-                <span class="ident">extended</span>.<span class="ident">fill_buf</span>(<span class="ident">data</span>.<span class="ident">as_mut_slice</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">WebpReader</span>(<span class="ident">Cursor::new</span>(<span class="ident">data</span>), <span class="ident">PhantomData</span>))
+            WebPImage::Extended(extended) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">0</span>; extended.get_buf_size()];
+                extended.fill_buf(data.as_mut_slice());
+                <span class="prelude-val">Ok</span>(WebpReader(Cursor::new(data), PhantomData))
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">read_image</span>(<span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">assert_eq!</span>(<span class="ident">u64::try_from</span>(<span class="ident">buf</span>.<span class="ident">len</span>()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">total_bytes</span>()));
+    <span class="kw">fn </span>read_image(<span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; ImageResult&lt;()&gt; {
+        <span class="macro">assert_eq!</span>(u64::try_from(buf.len()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.total_bytes()));
 
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">image</span> {
-            <span class="ident">WebPImage::Lossy</span>(<span class="ident">vp8_frame</span>) =&gt; {
-                <span class="ident">vp8_frame</span>.<span class="ident">fill_rgb</span>(<span class="ident">buf</span>);
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.image {
+            WebPImage::Lossy(vp8_frame) =&gt; {
+                vp8_frame.fill_rgb(buf);
             }
-            <span class="ident">WebPImage::Lossless</span>(<span class="ident">lossless_frame</span>) =&gt; {
-                <span class="ident">lossless_frame</span>.<span class="ident">fill_rgba</span>(<span class="ident">buf</span>);
+            WebPImage::Lossless(lossless_frame) =&gt; {
+                lossless_frame.fill_rgba(buf);
             }
-            <span class="ident">WebPImage::Extended</span>(<span class="ident">extended</span>) =&gt; {
-                <span class="ident">extended</span>.<span class="ident">fill_buf</span>(<span class="ident">buf</span>);
+            WebPImage::Extended(extended) =&gt; {
+                extended.fill_buf(buf);
             }
         }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">AnimationDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WebPDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">into_frames</span>(<span class="self">self</span>) -&gt; <span class="ident">Frames</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">image</span> {
-            <span class="ident">WebPImage::Lossy</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">WebPImage::Lossless</span>(<span class="kw">_</span>) =&gt; {
-                <span class="ident">Frames::new</span>(<span class="ident">Box::new</span>(<span class="ident">std::iter::empty</span>()))
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; AnimationDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>WebPDecoder&lt;R&gt; {
+    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; Frames&lt;<span class="lifetime">&#39;a</span>&gt; {
+        <span class="kw">match </span><span class="self">self</span>.image {
+            WebPImage::Lossy(<span class="kw">_</span>) | WebPImage::Lossless(<span class="kw">_</span>) =&gt; {
+                Frames::new(Box::new(std::iter::empty()))
             }
-            <span class="ident">WebPImage::Extended</span>(<span class="ident">extended_image</span>) =&gt; <span class="ident">extended_image</span>.<span class="ident">into_frames</span>(),
+            WebPImage::Extended(extended_image) =&gt; extended_image.into_frames(),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">add_with_overflow_size</span>() {
-        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>add_with_overflow_size() {
+        <span class="kw">let </span>bytes = <span class="macro">vec!</span>[
             <span class="number">0x52</span>, <span class="number">0x49</span>, <span class="number">0x46</span>, <span class="number">0x46</span>, <span class="number">0xaf</span>, <span class="number">0x37</span>, <span class="number">0x80</span>, <span class="number">0x47</span>, <span class="number">0x57</span>, <span class="number">0x45</span>, <span class="number">0x42</span>, <span class="number">0x50</span>, <span class="number">0x6c</span>, <span class="number">0x64</span>,
             <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xff</span>, <span class="number">0xfb</span>, <span class="number">0x7e</span>, <span class="number">0x73</span>, <span class="number">0x00</span>, <span class="number">0x06</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>,
             <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x05</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x65</span>, <span class="number">0x65</span>, <span class="number">0x65</span>, <span class="number">0x65</span>, <span class="number">0x65</span>, <span class="number">0x65</span>,
@@ -723,11 +717,10 @@
             <span class="number">0x49</span>, <span class="number">0x54</span>, <span class="number">0x55</span>, <span class="number">0x50</span>, <span class="number">0x4c</span>, <span class="number">0x54</span>, <span class="number">0x59</span>, <span class="number">0x50</span>, <span class="number">0x45</span>, <span class="number">0x33</span>, <span class="number">0x37</span>, <span class="number">0x44</span>, <span class="number">0x4d</span>, <span class="number">0x46</span>,
         ];
 
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">std::io::Cursor::new</span>(<span class="ident">bytes</span>);
+        <span class="kw">let </span>data = std::io::Cursor::new(bytes);
 
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">WebPDecoder::new</span>(<span class="ident">data</span>);
+        <span class="kw">let _ </span>= WebPDecoder::new(data);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

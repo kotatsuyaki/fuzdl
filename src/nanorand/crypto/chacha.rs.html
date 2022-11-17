@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/nanorand-0.7.0/src/crypto/chacha.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>chacha.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../nanorand/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../nanorand/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../nanorand/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/nanorand-0.7.0/src/crypto/chacha.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>chacha.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../nanorand/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../nanorand/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../nanorand/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -152,154 +146,153 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
-</pre><pre class="rust"><code><span class="kw">const</span> <span class="ident">CHACHA_TAU</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;expand 32-byte k&quot;</span>;
+</pre><pre class="rust"><code><span class="kw">const </span>CHACHA_TAU: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;expand 32-byte k&quot;</span>;
 
-<span class="kw">fn</span> <span class="ident">chacha_quarter_round</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u32</span>; <span class="number">16</span>], <span class="ident">a</span>: <span class="ident">usize</span>, <span class="ident">b</span>: <span class="ident">usize</span>, <span class="ident">c</span>: <span class="ident">usize</span>, <span class="ident">d</span>: <span class="ident">usize</span>) {
-	<span class="ident">state</span>[<span class="ident">a</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">a</span>].<span class="ident">wrapping_add</span>(<span class="ident">state</span>[<span class="ident">b</span>]);
-	<span class="ident">state</span>[<span class="ident">d</span>] <span class="op">^</span><span class="op">=</span> <span class="ident">state</span>[<span class="ident">a</span>];
-	<span class="ident">state</span>[<span class="ident">d</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">d</span>].<span class="ident">rotate_left</span>(<span class="number">16</span>);
+<span class="kw">fn </span>chacha_quarter_round(state: <span class="kw-2">&amp;mut </span>[u32; <span class="number">16</span>], a: usize, b: usize, c: usize, d: usize) {
+	state[a] = state[a].wrapping_add(state[b]);
+	state[d] ^= state[a];
+	state[d] = state[d].rotate_left(<span class="number">16</span>);
 
-	<span class="ident">state</span>[<span class="ident">c</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">c</span>].<span class="ident">wrapping_add</span>(<span class="ident">state</span>[<span class="ident">d</span>]);
-	<span class="ident">state</span>[<span class="ident">b</span>] <span class="op">^</span><span class="op">=</span> <span class="ident">state</span>[<span class="ident">c</span>];
-	<span class="ident">state</span>[<span class="ident">b</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">b</span>].<span class="ident">rotate_left</span>(<span class="number">12</span>);
+	state[c] = state[c].wrapping_add(state[d]);
+	state[b] ^= state[c];
+	state[b] = state[b].rotate_left(<span class="number">12</span>);
 
-	<span class="ident">state</span>[<span class="ident">a</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">a</span>].<span class="ident">wrapping_add</span>(<span class="ident">state</span>[<span class="ident">b</span>]);
-	<span class="ident">state</span>[<span class="ident">d</span>] <span class="op">^</span><span class="op">=</span> <span class="ident">state</span>[<span class="ident">a</span>];
-	<span class="ident">state</span>[<span class="ident">d</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">d</span>].<span class="ident">rotate_left</span>(<span class="number">8</span>);
+	state[a] = state[a].wrapping_add(state[b]);
+	state[d] ^= state[a];
+	state[d] = state[d].rotate_left(<span class="number">8</span>);
 
-	<span class="ident">state</span>[<span class="ident">c</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">c</span>].<span class="ident">wrapping_add</span>(<span class="ident">state</span>[<span class="ident">d</span>]);
-	<span class="ident">state</span>[<span class="ident">b</span>] <span class="op">^</span><span class="op">=</span> <span class="ident">state</span>[<span class="ident">c</span>];
-	<span class="ident">state</span>[<span class="ident">b</span>] <span class="op">=</span> <span class="ident">state</span>[<span class="ident">b</span>].<span class="ident">rotate_left</span>(<span class="number">7</span>);
+	state[c] = state[c].wrapping_add(state[d]);
+	state[b] ^= state[c];
+	state[b] = state[b].rotate_left(<span class="number">7</span>);
 }
 
-<span class="kw">const</span> <span class="kw">fn</span> <span class="ident">chacha_pack</span>(<span class="ident">unpacked</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">idx</span>: <span class="ident">usize</span>) -&gt; <span class="ident">u32</span> {
-	(<span class="ident">unpacked</span>[<span class="ident">idx</span>] <span class="kw">as</span> <span class="ident">u32</span>)
-		<span class="op">|</span> ((<span class="ident">unpacked</span>[<span class="ident">idx</span> <span class="op">+</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span>)
-		<span class="op">|</span> ((<span class="ident">unpacked</span>[<span class="ident">idx</span> <span class="op">+</span> <span class="number">2</span>] <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">16</span>)
-		<span class="op">|</span> ((<span class="ident">unpacked</span>[<span class="ident">idx</span> <span class="op">+</span> <span class="number">3</span>] <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">24</span>)
+<span class="kw">const fn </span>chacha_pack(unpacked: <span class="kw-2">&amp;</span>[u8], idx: usize) -&gt; u32 {
+	(unpacked[idx] <span class="kw">as </span>u32)
+		| ((unpacked[idx + <span class="number">1</span>] <span class="kw">as </span>u32) &lt;&lt; <span class="number">8</span>)
+		| ((unpacked[idx + <span class="number">2</span>] <span class="kw">as </span>u32) &lt;&lt; <span class="number">16</span>)
+		| ((unpacked[idx + <span class="number">3</span>] <span class="kw">as </span>u32) &lt;&lt; <span class="number">24</span>)
 }
 
-<span class="doccomment">/// Do one ChaCha round on the input data.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chacha_block</span><span class="op">&lt;</span><span class="kw">const</span> <span class="ident">ROUNDS</span>: <span class="ident">u8</span><span class="op">&gt;</span>(<span class="ident">input</span>: [<span class="ident">u32</span>; <span class="number">16</span>]) -&gt; [<span class="ident">u32</span>; <span class="number">16</span>] {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">input</span>;
-	<span class="macro">assert_eq!</span>(<span class="ident">ROUNDS</span> <span class="op">%</span> <span class="number">2</span>, <span class="number">0</span>, <span class="string">&quot;ChaCha rounds must be divisble by 2!&quot;</span>);
-	<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> (<span class="number">0</span>..<span class="ident">ROUNDS</span>).<span class="ident">step_by</span>(<span class="number">2</span>) {
-		<span class="comment">// Odd rounds</span>
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">12</span>);
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">13</span>);
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">14</span>);
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">15</span>);
-		<span class="comment">// Even rounds</span>
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>);
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">11</span>, <span class="number">12</span>);
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">13</span>);
-		<span class="ident">chacha_quarter_round</span>(<span class="kw-2">&amp;mut</span> <span class="ident">x</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">14</span>);
+<span class="doccomment">/// Do one ChaCha round on the input data.
+</span><span class="kw">pub fn </span>chacha_block&lt;<span class="kw">const </span>ROUNDS: u8&gt;(input: [u32; <span class="number">16</span>]) -&gt; [u32; <span class="number">16</span>] {
+	<span class="kw">let </span><span class="kw-2">mut </span>x = input;
+	<span class="macro">assert_eq!</span>(ROUNDS % <span class="number">2</span>, <span class="number">0</span>, <span class="string">&quot;ChaCha rounds must be divisble by 2!&quot;</span>);
+	<span class="kw">for _ in </span>(<span class="number">0</span>..ROUNDS).step_by(<span class="number">2</span>) {
+		<span class="comment">// Odd rounds
+		</span>chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">0</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">12</span>);
+		chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">1</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">13</span>);
+		chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">2</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">14</span>);
+		chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">3</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">15</span>);
+		<span class="comment">// Even rounds
+		</span>chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>);
+		chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">1</span>, <span class="number">6</span>, <span class="number">11</span>, <span class="number">12</span>);
+		chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">2</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">13</span>);
+		chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">3</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">14</span>);
 	}
-	<span class="ident">x</span>.<span class="ident">iter_mut</span>()
-		.<span class="ident">zip</span>(<span class="ident">input</span>.<span class="ident">iter</span>())
-		.<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">l</span>, <span class="ident">r</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="kw-2">*</span><span class="ident">r</span>));
-	<span class="ident">x</span>
+	x.iter_mut()
+		.zip(input.iter())
+		.for_each(|(l, r)| <span class="kw-2">*</span>l = l.wrapping_add(<span class="kw-2">*</span>r));
+	x
 }
 
-<span class="doccomment">/// Initialize the ChaCha internal state, with a 256-bit key and 64-bit nonce.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">chacha_init</span>(<span class="ident">key</span>: [<span class="ident">u8</span>; <span class="number">32</span>], <span class="ident">nonce</span>: [<span class="ident">u8</span>; <span class="number">8</span>]) -&gt; [<span class="ident">u32</span>; <span class="number">16</span>] {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">16</span>];
-	<span class="ident">state</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="ident">CHACHA_TAU</span>, <span class="number">0</span>);
-	<span class="ident">state</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="ident">CHACHA_TAU</span>, <span class="number">4</span>);
-	<span class="ident">state</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="ident">CHACHA_TAU</span>, <span class="number">8</span>);
-	<span class="ident">state</span>[<span class="number">3</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="ident">CHACHA_TAU</span>, <span class="number">12</span>);
+<span class="doccomment">/// Initialize the ChaCha internal state, with a 256-bit key and 64-bit nonce.
+</span><span class="kw">pub const fn </span>chacha_init(key: [u8; <span class="number">32</span>], nonce: [u8; <span class="number">8</span>]) -&gt; [u32; <span class="number">16</span>] {
+	<span class="kw">let </span><span class="kw-2">mut </span>state = [<span class="number">0u32</span>; <span class="number">16</span>];
+	state[<span class="number">0</span>] = chacha_pack(CHACHA_TAU, <span class="number">0</span>);
+	state[<span class="number">1</span>] = chacha_pack(CHACHA_TAU, <span class="number">4</span>);
+	state[<span class="number">2</span>] = chacha_pack(CHACHA_TAU, <span class="number">8</span>);
+	state[<span class="number">3</span>] = chacha_pack(CHACHA_TAU, <span class="number">12</span>);
 
-	<span class="ident">state</span>[<span class="number">4</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">0</span>);
-	<span class="ident">state</span>[<span class="number">5</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">4</span>);
-	<span class="ident">state</span>[<span class="number">6</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">8</span>);
-	<span class="ident">state</span>[<span class="number">7</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">12</span>);
-	<span class="ident">state</span>[<span class="number">8</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">16</span>);
-	<span class="ident">state</span>[<span class="number">9</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">20</span>);
-	<span class="ident">state</span>[<span class="number">10</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">24</span>);
-	<span class="ident">state</span>[<span class="number">11</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="number">28</span>);
+	state[<span class="number">4</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">0</span>);
+	state[<span class="number">5</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">4</span>);
+	state[<span class="number">6</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">8</span>);
+	state[<span class="number">7</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">12</span>);
+	state[<span class="number">8</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">16</span>);
+	state[<span class="number">9</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">20</span>);
+	state[<span class="number">10</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">24</span>);
+	state[<span class="number">11</span>] = chacha_pack(<span class="kw-2">&amp;</span>key, <span class="number">28</span>);
 
-	<span class="comment">// 64-bit counter</span>
-	<span class="ident">state</span>[<span class="number">12</span>] <span class="op">=</span> <span class="number">0</span>;
-	<span class="ident">state</span>[<span class="number">13</span>] <span class="op">=</span> <span class="number">0</span>;
-	<span class="comment">// Nonce</span>
-	<span class="ident">state</span>[<span class="number">14</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">nonce</span>, <span class="number">0</span>);
-	<span class="ident">state</span>[<span class="number">15</span>] <span class="op">=</span> <span class="ident">chacha_pack</span>(<span class="kw-2">&amp;</span><span class="ident">nonce</span>, <span class="number">4</span>);
-	<span class="ident">state</span>
+	<span class="comment">// 64-bit counter
+	</span>state[<span class="number">12</span>] = <span class="number">0</span>;
+	state[<span class="number">13</span>] = <span class="number">0</span>;
+	<span class="comment">// Nonce
+	</span>state[<span class="number">14</span>] = chacha_pack(<span class="kw-2">&amp;</span>nonce, <span class="number">0</span>);
+	state[<span class="number">15</span>] = chacha_pack(<span class="kw-2">&amp;</span>nonce, <span class="number">4</span>);
+	state
 }
 
-<span class="doccomment">/// Increment the 64-bit counter of the internal ChaCha20 state by 1.</span>
-<span class="doccomment">/// Returns `false` if it overflows, `true` otherwise.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chacha_increment_counter</span>(<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u32</span>; <span class="number">16</span>]) -&gt; <span class="ident">bool</span> {
-	<span class="kw">let</span> <span class="ident">counter</span> <span class="op">=</span> ((<span class="ident">state</span>[<span class="number">13</span>] <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">32</span>) <span class="op">|</span> (<span class="ident">state</span>[<span class="number">12</span>] <span class="kw">as</span> <span class="ident">u64</span>);
-	<span class="kw">match</span> <span class="ident">counter</span>.<span class="ident">checked_add</span>(<span class="number">1</span>) {
-		<span class="prelude-val">Some</span>(<span class="ident">new_counter</span>) =&gt; {
-			<span class="ident">state</span>[<span class="number">12</span>] <span class="op">=</span> (<span class="ident">new_counter</span> <span class="op">&amp;</span> <span class="number">0xFFFFFFFF</span>) <span class="kw">as</span> <span class="ident">u32</span>;
-			<span class="ident">state</span>[<span class="number">13</span>] <span class="op">=</span> ((<span class="ident">counter</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">32</span>) <span class="op">&amp;</span> <span class="number">0xFFFFFFFF</span>) <span class="kw">as</span> <span class="ident">u32</span>;
-			<span class="bool-val">true</span>
-		}
-		<span class="prelude-val">None</span> =&gt; <span class="bool-val">false</span>,
+<span class="doccomment">/// Increment the 64-bit counter of the internal ChaCha20 state by 1.
+/// Returns `false` if it overflows, `true` otherwise.
+</span><span class="kw">pub fn </span>chacha_increment_counter(state: <span class="kw-2">&amp;mut </span>[u32; <span class="number">16</span>]) -&gt; bool {
+	<span class="kw">let </span>counter = ((state[<span class="number">13</span>] <span class="kw">as </span>u64) &lt;&lt; <span class="number">32</span>) | (state[<span class="number">12</span>] <span class="kw">as </span>u64);
+	<span class="kw">match </span>counter.checked_add(<span class="number">1</span>) {
+		<span class="prelude-val">Some</span>(new_counter) =&gt; {
+			state[<span class="number">12</span>] = (new_counter &amp; <span class="number">0xFFFFFFFF</span>) <span class="kw">as </span>u32;
+			state[<span class="number">13</span>] = ((counter &gt;&gt; <span class="number">32</span>) &amp; <span class="number">0xFFFFFFFF</span>) <span class="kw">as </span>u32;
+			<span class="bool-val">true
+		</span>}
+		<span class="prelude-val">None </span>=&gt; <span class="bool-val">false</span>,
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>std::convert::TryInto;
 
-	<span class="macro">macro_rules!</span> <span class="ident">ietf_test_vector</span> {
-		(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key_hex</span>: <span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">nonce_hex</span>: <span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">keystream_hex</span>: <span class="ident">tt</span>) =&gt; {
-			<span class="kw">let</span> <span class="ident">key</span>: [<span class="ident">u8</span>; <span class="number">32</span>] <span class="op">=</span> <span class="ident">hex::decode</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">key_hex</span>).<span class="ident">unwrap</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>();
-			<span class="kw">let</span> <span class="ident">nonce</span>: [<span class="ident">u8</span>; <span class="number">8</span>] <span class="op">=</span> <span class="ident">hex::decode</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">nonce_hex</span>).<span class="ident">unwrap</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>();
-			<span class="kw">let</span> <span class="ident">expected_keystream</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hex::decode</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">keystream_hex</span>).<span class="ident">unwrap</span>();
+	<span class="macro">macro_rules! </span>ietf_test_vector {
+		(<span class="macro-nonterminal">$key_hex</span>: tt, <span class="macro-nonterminal">$nonce_hex</span>: tt, <span class="macro-nonterminal">$keystream_hex</span>: tt) =&gt; {
+			<span class="kw">let </span>key: [u8; <span class="number">32</span>] = hex::decode(<span class="macro-nonterminal">$key_hex</span>).unwrap().try_into().unwrap();
+			<span class="kw">let </span>nonce: [u8; <span class="number">8</span>] = hex::decode(<span class="macro-nonterminal">$nonce_hex</span>).unwrap().try_into().unwrap();
+			<span class="kw">let </span>expected_keystream: Vec&lt;u8&gt; = hex::decode(<span class="macro-nonterminal">$keystream_hex</span>).unwrap();
 
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">chacha_init</span>(<span class="ident">key</span>, <span class="ident">nonce</span>);
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keystream</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">expected_keystream</span>.<span class="ident">len</span>());
+			<span class="kw">let </span><span class="kw-2">mut </span>state = chacha_init(key, nonce);
+			<span class="kw">let </span><span class="kw-2">mut </span>keystream: Vec&lt;u8&gt; = Vec::with_capacity(expected_keystream.len());
 
-			<span class="kw">while</span> <span class="ident">expected_keystream</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">keystream</span>.<span class="ident">len</span>() {
-				<span class="ident">chacha_block</span>::<span class="op">&lt;</span><span class="number">20</span><span class="op">&gt;</span>(<span class="ident">state</span>)
-					.<span class="ident">iter</span>()
-					.<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">packed</span><span class="op">|</span> <span class="ident">keystream</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">packed</span>.<span class="ident">to_le_bytes</span>()));
-				<span class="ident">chacha_increment_counter</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>);
+			<span class="kw">while </span>expected_keystream.len() &gt; keystream.len() {
+				chacha_block::&lt;<span class="number">20</span>&gt;(state)
+					.iter()
+					.for_each(|packed| keystream.extend_from_slice(<span class="kw-2">&amp;</span>packed.to_le_bytes()));
+				chacha_increment_counter(<span class="kw-2">&amp;mut </span>state);
 			}
-			<span class="ident">keystream</span>.<span class="ident">resize</span>(<span class="ident">expected_keystream</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+			keystream.resize(expected_keystream.len(), <span class="number">0</span>);
 
-			<span class="macro">assert_eq!</span>(<span class="ident">keystream</span>, <span class="ident">expected_keystream</span>);
+			<span class="macro">assert_eq!</span>(keystream, expected_keystream);
 		};
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_ietf_chacha20_test_vectors</span>() {
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_ietf_chacha20_test_vectors() {
 		<span class="macro">ietf_test_vector!</span>(
 			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>,
 			<span class="string">&quot;0000000000000000&quot;</span>,
-			<span class="string">&quot;76b8e0ada0f13d90405d6ae55386bd28bdd219b8a08ded1aa836efcc8b770dc7da41597c5157488d7724e03fb8d84a376a43b8f41518a11cc387b669b2ee6586&quot;</span>
-		);
+			<span class="string">&quot;76b8e0ada0f13d90405d6ae55386bd28bdd219b8a08ded1aa836efcc8b770dc7da41597c5157488d7724e03fb8d84a376a43b8f41518a11cc387b669b2ee6586&quot;
+		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
 			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000001&quot;</span>,
 			<span class="string">&quot;0000000000000000&quot;</span>,
-			<span class="string">&quot;4540f05a9f1fb296d7736e7b208e3c96eb4fe1834688d2604f450952ed432d41bbe2a0b6ea7566d2a5d1e7e20d42af2c53d792b1c43fea817e9ad275ae546963&quot;</span>
-		);
+			<span class="string">&quot;4540f05a9f1fb296d7736e7b208e3c96eb4fe1834688d2604f450952ed432d41bbe2a0b6ea7566d2a5d1e7e20d42af2c53d792b1c43fea817e9ad275ae546963&quot;
+		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
 			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>,
 			<span class="string">&quot;0000000000000001&quot;</span>,
-			<span class="string">&quot;de9cba7bf3d69ef5e786dc63973f653a0b49e015adbff7134fcb7df137821031e85a050278a7084527214f73efc7fa5b5277062eb7a0433e445f41e3&quot;</span>
-		);
+			<span class="string">&quot;de9cba7bf3d69ef5e786dc63973f653a0b49e015adbff7134fcb7df137821031e85a050278a7084527214f73efc7fa5b5277062eb7a0433e445f41e3&quot;
+		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
 			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>,
 			<span class="string">&quot;0100000000000000&quot;</span>,
-			<span class="string">&quot;ef3fdfd6c61578fbf5cf35bd3dd33b8009631634d21e42ac33960bd138e50d32111e4caf237ee53ca8ad6426194a88545ddc497a0b466e7d6bbdb0041b2f586b&quot;</span>
-		);
+			<span class="string">&quot;ef3fdfd6c61578fbf5cf35bd3dd33b8009631634d21e42ac33960bd138e50d32111e4caf237ee53ca8ad6426194a88545ddc497a0b466e7d6bbdb0041b2f586b&quot;
+		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
 			<span class="string">&quot;000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f&quot;</span>,
 			<span class="string">&quot;0001020304050607&quot;</span>,
-			<span class="string">&quot;f798a189f195e66982105ffb640bb7757f579da31602fc93ec01ac56f85ac3c134a4547b733b46413042c9440049176905d3be59ea1c53f15916155c2be8241a38008b9a26bc35941e2444177c8ade6689de95264986d95889fb60e84629c9bd9a5acb1cc118be563eb9b3a4a472f82e09a7e778492b562ef7130e88dfe031c79db9d4f7c7a899151b9a475032b63fc385245fe054e3dd5a97a5f576fe064025d3ce042c566ab2c507b138db853e3d6959660996546cc9c4a6eafdc777c040d70eaf46f76dad3979e5c5360c3317166a1c894c94a371876a94df7628fe4eaaf2ccb27d5aaae0ad7ad0f9d4b6ad3b54098746d4524d38407a6deb3ab78fab78c9&quot;</span>
-		);
+			<span class="string">&quot;f798a189f195e66982105ffb640bb7757f579da31602fc93ec01ac56f85ac3c134a4547b733b46413042c9440049176905d3be59ea1c53f15916155c2be8241a38008b9a26bc35941e2444177c8ade6689de95264986d95889fb60e84629c9bd9a5acb1cc118be563eb9b3a4a472f82e09a7e778492b562ef7130e88dfe031c79db9d4f7c7a899151b9a475032b63fc385245fe054e3dd5a97a5f576fe064025d3ce042c566ab2c507b138db853e3d6959660996546cc9c4a6eafdc777c040d70eaf46f76dad3979e5c5360c3317166a1c894c94a371876a94df7628fe4eaaf2ccb27d5aaae0ad7ad0f9d4b6ad3b54098746d4524d38407a6deb3ab78fab78c9&quot;
+		</span>);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="nanorand" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="nanorand" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/compression/piz/wavelet.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>wavelet.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../exr/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/compression/piz/wavelet.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>wavelet.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../exr/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -427,426 +421,425 @@
 <span id="421">421</span>
 <span id="422">422</span>
 </pre><pre class="rust"><code>
-<span class="doccomment">//! Wavelet encoding and decoding.</span>
-<span class="comment">// see https://github.com/AcademySoftwareFoundation/openexr/blob/8cd1b9210855fa4f6923c1b94df8a86166be19b1/OpenEXR/IlmImf/ImfWav.cpp</span>
+<span class="doccomment">//! Wavelet encoding and decoding.
+</span><span class="comment">// see https://github.com/AcademySoftwareFoundation/openexr/blob/8cd1b9210855fa4f6923c1b94df8a86166be19b1/OpenEXR/IlmImf/ImfWav.cpp
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::IoResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::math::Vec2</span>;
+</span><span class="kw">use </span><span class="kw">crate</span>::error::IoResult;
+<span class="kw">use </span><span class="kw">crate</span>::math::Vec2;
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>], <span class="ident">count</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">max_value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">is_14_bit</span>(<span class="ident">max_value</span>) { <span class="ident">encode_14_or_16_bit</span>(<span class="ident">buffer</span>, <span class="ident">count</span>, <span class="ident">size</span>, <span class="bool-val">true</span>) }
-    <span class="kw">else</span> { <span class="ident">encode_14_or_16_bit</span>(<span class="ident">buffer</span>, <span class="ident">count</span>, <span class="ident">size</span>, <span class="bool-val">false</span>) }
+<span class="attribute">#[allow(unused)]
+#[inline]
+</span><span class="kw">pub fn </span>encode(buffer: <span class="kw-2">&amp;mut </span>[u16], count: Vec2&lt;usize&gt;, size: Vec2&lt;usize&gt;, max_value: u16) -&gt; IoResult&lt;()&gt; {
+    <span class="kw">if </span>is_14_bit(max_value) { encode_14_or_16_bit(buffer, count, size, <span class="bool-val">true</span>) }
+    <span class="kw">else </span>{ encode_14_or_16_bit(buffer, count, size, <span class="bool-val">false</span>) }
 }
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_14_or_16_bit</span>(
-    <span class="ident">buffer</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>],
-    <span class="ident">Vec2</span>(<span class="ident">count_x</span>, <span class="ident">count_y</span>): <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">Vec2</span>(<span class="ident">offset_x</span>, <span class="ident">offset_y</span>): <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">is_14_bit</span>: <span class="ident">bool</span> <span class="comment">// true if maximum buffer[i] value &lt; (1 &lt;&lt; 14)</span>
-) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+<span class="attribute">#[allow(unused)]
+#[inline]
+</span><span class="kw">pub fn </span>encode_14_or_16_bit(
+    buffer: <span class="kw-2">&amp;mut </span>[u16],
+    Vec2(count_x, count_y): Vec2&lt;usize&gt;,
+    Vec2(offset_x, offset_y): Vec2&lt;usize&gt;,
+    is_14_bit: bool <span class="comment">// true if maximum buffer[i] value &lt; (1 &lt;&lt; 14)
+</span>) -&gt; IoResult&lt;()&gt;
 {
-    <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">count_x</span>.<span class="ident">min</span>(<span class="ident">count_y</span>);
-    <span class="kw">let</span> <span class="ident">encode</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_14_bit</span> { <span class="ident">encode_14bit</span> } <span class="kw">else</span> { <span class="ident">encode_16bit</span> }; <span class="comment">// assume inlining and constant propagation</span>
+    <span class="kw">let </span>count = count_x.min(count_y);
+    <span class="kw">let </span>encode = <span class="kw">if </span>is_14_bit { encode_14bit } <span class="kw">else </span>{ encode_16bit }; <span class="comment">// assume inlining and constant propagation
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>; <span class="comment">// TODO i32?</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p2</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">2</span>; <span class="comment">// TODO what is p??</span>
+    </span><span class="kw">let </span><span class="kw-2">mut </span>p: usize = <span class="number">1</span>; <span class="comment">// TODO i32?
+    </span><span class="kw">let </span><span class="kw-2">mut </span>p2: usize = <span class="number">2</span>; <span class="comment">// TODO what is p??
 
-    <span class="kw">while</span> <span class="ident">p2</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">count</span> {
+    </span><span class="kw">while </span>p2 &lt;= count {
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position_y</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="ident">end_y</span> <span class="op">=</span> <span class="number">0</span> <span class="op">+</span> <span class="ident">offset_y</span> <span class="op">*</span> (<span class="ident">count_y</span> <span class="op">-</span> <span class="ident">p2</span>);
-        <span class="kw">let</span> (<span class="ident">offset1_x</span>, <span class="ident">offset1_y</span>) <span class="op">=</span> (<span class="ident">offset_x</span> <span class="op">*</span> <span class="ident">p</span>, <span class="ident">offset_y</span> <span class="op">*</span> <span class="ident">p</span>);
-        <span class="kw">let</span> (<span class="ident">offset2_x</span>, <span class="ident">offset2_y</span>) <span class="op">=</span> (<span class="ident">offset_x</span> <span class="op">*</span> <span class="ident">p2</span>, <span class="ident">offset_y</span> <span class="op">*</span> <span class="ident">p2</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>position_y = <span class="number">0</span>;
+        <span class="kw">let </span>end_y = <span class="number">0 </span>+ offset_y * (count_y - p2);
+        <span class="kw">let </span>(offset1_x, offset1_y) = (offset_x * p, offset_y * p);
+        <span class="kw">let </span>(offset2_x, offset2_y) = (offset_x * p2, offset_y * p2);
 
-        <span class="comment">// y-loop</span>
-        <span class="kw">while</span> <span class="ident">position_y</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_y</span> { <span class="comment">// TODO: for py in (index..ey).nth(offset_2.0)</span>
+        <span class="comment">// y-loop
+        </span><span class="kw">while </span>position_y &lt;= end_y { <span class="comment">// TODO: for py in (index..ey).nth(offset_2.0)
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position_x</span> <span class="op">=</span> <span class="ident">position_y</span>;
-            <span class="kw">let</span> <span class="ident">end_x</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset_x</span> <span class="op">*</span> (<span class="ident">count_x</span> <span class="op">-</span> <span class="ident">p2</span>);
+            </span><span class="kw">let </span><span class="kw-2">mut </span>position_x = position_y;
+            <span class="kw">let </span>end_x = position_x + offset_x * (count_x - p2);
 
-            <span class="comment">// x-loop</span>
-            <span class="kw">while</span> <span class="ident">position_x</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_x</span> {
-                <span class="kw">let</span> <span class="ident">pos_right</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_x</span>;
-                <span class="kw">let</span> <span class="ident">pos_top</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_y</span>;
-                <span class="kw">let</span> <span class="ident">pos_top_right</span> <span class="op">=</span> <span class="ident">pos_top</span> <span class="op">+</span> <span class="ident">offset1_x</span>;
+            <span class="comment">// x-loop
+            </span><span class="kw">while </span>position_x &lt;= end_x {
+                <span class="kw">let </span>pos_right = position_x + offset1_x;
+                <span class="kw">let </span>pos_top = position_x + offset1_y;
+                <span class="kw">let </span>pos_top_right = pos_top + offset1_x;
 
-                <span class="macro">assert!</span>(<span class="ident">position_x</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
-                <span class="macro">assert!</span>(<span class="ident">pos_right</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
-                <span class="macro">assert!</span>(<span class="ident">pos_top</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
-                <span class="macro">assert!</span>(<span class="ident">pos_top_right</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
+                <span class="macro">assert!</span>(position_x &lt; buffer.len());
+                <span class="macro">assert!</span>(pos_right &lt; buffer.len());
+                <span class="macro">assert!</span>(pos_top &lt; buffer.len());
+                <span class="macro">assert!</span>(pos_top_right &lt; buffer.len());
 
-                <span class="kw">if</span> <span class="ident">is_14_bit</span> {
-                    <span class="macro">debug_assert!</span>(<span class="ident"><span class="self">self</span>::is_14_bit</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>]));
-                    <span class="macro">debug_assert!</span>(<span class="ident"><span class="self">self</span>::is_14_bit</span>(<span class="ident">buffer</span>[<span class="ident">pos_right</span>]));
+                <span class="kw">if </span>is_14_bit {
+                    <span class="macro">debug_assert!</span>(<span class="self">self</span>::is_14_bit(buffer[position_x]));
+                    <span class="macro">debug_assert!</span>(<span class="self">self</span>::is_14_bit(buffer[pos_right]));
                 }
 
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">right</span>) <span class="op">=</span> <span class="ident">encode</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>], <span class="ident">buffer</span>[<span class="ident">pos_right</span>]);
-                <span class="kw">let</span> (<span class="ident">top</span>, <span class="ident">top_right</span>) <span class="op">=</span> <span class="ident">encode</span>(<span class="ident">buffer</span>[<span class="ident">pos_top</span>], <span class="ident">buffer</span>[<span class="ident">pos_top_right</span>]);
+                <span class="kw">let </span>(center, right) = encode(buffer[position_x], buffer[pos_right]);
+                <span class="kw">let </span>(top, top_right) = encode(buffer[pos_top], buffer[pos_top_right]);
 
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">top</span>) <span class="op">=</span> <span class="ident">encode</span>(<span class="ident">center</span>, <span class="ident">top</span>);
-                <span class="kw">let</span> (<span class="ident">right</span>, <span class="ident">top_right</span>) <span class="op">=</span> <span class="ident">encode</span>(<span class="ident">right</span>, <span class="ident">top_right</span>);
+                <span class="kw">let </span>(center, top) = encode(center, top);
+                <span class="kw">let </span>(right, top_right) = encode(right, top_right);
 
-                <span class="ident">buffer</span>[<span class="ident">position_x</span>] <span class="op">=</span> <span class="ident">center</span>; <span class="comment">// TODO rustify</span>
-                <span class="ident">buffer</span>[<span class="ident">pos_top</span>] <span class="op">=</span> <span class="ident">top</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_right</span>] <span class="op">=</span> <span class="ident">right</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_top_right</span>] <span class="op">=</span> <span class="ident">top_right</span>;
+                buffer[position_x] = center; <span class="comment">// TODO rustify
+                </span>buffer[pos_top] = top;
+                buffer[pos_right] = right;
+                buffer[pos_top_right] = top_right;
 
-                <span class="ident">position_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset2_x</span>;
+                position_x += offset2_x;
             }
 
-            <span class="comment">// encode remaining odd pixel column</span>
-            <span class="kw">if</span> <span class="ident">count_x</span> <span class="op">&amp;</span> <span class="ident">p</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="kw">let</span> <span class="ident">pos_top</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_y</span>;
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">top</span>) <span class="op">=</span> <span class="ident">encode</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>], <span class="ident">buffer</span>[<span class="ident">pos_top</span>]);
+            <span class="comment">// encode remaining odd pixel column
+            </span><span class="kw">if </span>count_x &amp; p != <span class="number">0 </span>{
+                <span class="kw">let </span>pos_top = position_x + offset1_y;
+                <span class="kw">let </span>(center, top) = encode(buffer[position_x], buffer[pos_top]);
 
-                <span class="ident">buffer</span>[<span class="ident">position_x</span>] <span class="op">=</span> <span class="ident">center</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_top</span>] <span class="op">=</span> <span class="ident">top</span>;
+                buffer[position_x] = center;
+                buffer[pos_top] = top;
             }
 
-            <span class="ident">position_y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset2_y</span>;
+            position_y += offset2_y;
         }
 
-        <span class="comment">// encode possibly remaining odd row</span>
-        <span class="kw">if</span> <span class="ident">count_y</span> <span class="op">&amp;</span> <span class="ident">p</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position_x</span> <span class="op">=</span> <span class="ident">position_y</span>;
-            <span class="kw">let</span> <span class="ident">end_x</span> <span class="op">=</span> <span class="ident">position_y</span> <span class="op">+</span> <span class="ident">offset_x</span> <span class="op">*</span> (<span class="ident">count_x</span> <span class="op">-</span> <span class="ident">p2</span>);
+        <span class="comment">// encode possibly remaining odd row
+        </span><span class="kw">if </span>count_y &amp; p != <span class="number">0 </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>position_x = position_y;
+            <span class="kw">let </span>end_x = position_y + offset_x * (count_x - p2);
 
-            <span class="kw">while</span> <span class="ident">position_x</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_x</span> {
-                <span class="kw">let</span> <span class="ident">pos_right</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_x</span>;
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">right</span>) <span class="op">=</span> <span class="ident">encode</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>], <span class="ident">buffer</span>[<span class="ident">pos_right</span>]);
+            <span class="kw">while </span>position_x &lt;= end_x {
+                <span class="kw">let </span>pos_right = position_x + offset1_x;
+                <span class="kw">let </span>(center, right) = encode(buffer[position_x], buffer[pos_right]);
 
-                <span class="ident">buffer</span>[<span class="ident">pos_right</span>] <span class="op">=</span> <span class="ident">right</span>;
-                <span class="ident">buffer</span>[<span class="ident">position_x</span>] <span class="op">=</span> <span class="ident">center</span>;
+                buffer[pos_right] = right;
+                buffer[position_x] = center;
 
-                <span class="ident">position_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset2_x</span>;
+                position_x += offset2_x;
             }
         }
 
-        <span class="ident">p</span> <span class="op">=</span> <span class="ident">p2</span>;
-        <span class="ident">p2</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="op">=</span> <span class="number">1</span>;
+        p = p2;
+        p2 &lt;&lt;= <span class="number">1</span>;
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode</span>(<span class="ident">buffer</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>], <span class="ident">count</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">max_value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">is_14_bit</span>(<span class="ident">max_value</span>) { <span class="ident">decode_14_or_16_bit</span>(<span class="ident">buffer</span>, <span class="ident">count</span>, <span class="ident">size</span>, <span class="bool-val">true</span>) }
-    <span class="kw">else</span> { <span class="ident">decode_14_or_16_bit</span>(<span class="ident">buffer</span>, <span class="ident">count</span>, <span class="ident">size</span>, <span class="bool-val">false</span>) }
+<span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>decode(buffer: <span class="kw-2">&amp;mut </span>[u16], count: Vec2&lt;usize&gt;, size: Vec2&lt;usize&gt;, max_value: u16) -&gt; IoResult&lt;()&gt; {
+    <span class="kw">if </span>is_14_bit(max_value) { decode_14_or_16_bit(buffer, count, size, <span class="bool-val">true</span>) }
+    <span class="kw">else </span>{ decode_14_or_16_bit(buffer, count, size, <span class="bool-val">false</span>) }
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_14_or_16_bit</span>(
-    <span class="ident">buffer</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u16</span>],
-    <span class="ident">Vec2</span>(<span class="ident">count_x</span>, <span class="ident">count_y</span>): <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">Vec2</span>(<span class="ident">offset_x</span>, <span class="ident">offset_y</span>): <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">is_14_bit</span>: <span class="ident">bool</span> <span class="comment">// true if maximum buffer[i] value &lt; (1 &lt;&lt; 14)</span>
-) -&gt; <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+<span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>decode_14_or_16_bit(
+    buffer: <span class="kw-2">&amp;mut </span>[u16],
+    Vec2(count_x, count_y): Vec2&lt;usize&gt;,
+    Vec2(offset_x, offset_y): Vec2&lt;usize&gt;,
+    is_14_bit: bool <span class="comment">// true if maximum buffer[i] value &lt; (1 &lt;&lt; 14)
+</span>) -&gt; IoResult&lt;()&gt;
 {
-    <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">count_x</span>.<span class="ident">min</span>(<span class="ident">count_y</span>);
-    <span class="kw">let</span> <span class="ident">decode</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_14_bit</span> { <span class="ident">decode_14bit</span> } <span class="kw">else</span> { <span class="ident">decode_16bit</span> }; <span class="comment">// assume inlining and constant propagation</span>
+    <span class="kw">let </span>count = count_x.min(count_y);
+    <span class="kw">let </span>decode = <span class="kw">if </span>is_14_bit { decode_14bit } <span class="kw">else </span>{ decode_16bit }; <span class="comment">// assume inlining and constant propagation
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>; <span class="comment">// TODO i32?</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p2</span>: <span class="ident">usize</span>; <span class="comment">// TODO i32?</span>
+    </span><span class="kw">let </span><span class="kw-2">mut </span>p: usize = <span class="number">1</span>; <span class="comment">// TODO i32?
+    </span><span class="kw">let </span><span class="kw-2">mut </span>p2: usize; <span class="comment">// TODO i32?
 
-    <span class="comment">// search max level</span>
-    <span class="kw">while</span> <span class="ident">p</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">count</span> {
-        <span class="ident">p</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="op">=</span> <span class="number">1</span>;
+    // search max level
+    </span><span class="kw">while </span>p &lt;= count {
+        p &lt;&lt;= <span class="number">1</span>;
     }
 
-    <span class="ident">p</span> <span class="op">&gt;</span><span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span>;
-    <span class="ident">p2</span> <span class="op">=</span> <span class="ident">p</span>;
-    <span class="ident">p</span> <span class="op">&gt;</span><span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span>;
+    p &gt;&gt;= <span class="number">1</span>;
+    p2 = p;
+    p &gt;&gt;= <span class="number">1</span>;
 
-    <span class="kw">while</span> <span class="ident">p</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span> {
+    <span class="kw">while </span>p &gt;= <span class="number">1 </span>{
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position_y</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="ident">end_y</span> <span class="op">=</span> <span class="number">0</span> <span class="op">+</span> <span class="ident">offset_y</span> <span class="op">*</span> (<span class="ident">count_y</span> <span class="op">-</span> <span class="ident">p2</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>position_y = <span class="number">0</span>;
+        <span class="kw">let </span>end_y = <span class="number">0 </span>+ offset_y * (count_y - p2);
 
-        <span class="kw">let</span> (<span class="ident">offset1_x</span>, <span class="ident">offset1_y</span>) <span class="op">=</span> (<span class="ident">offset_x</span> <span class="op">*</span> <span class="ident">p</span>, <span class="ident">offset_y</span> <span class="op">*</span> <span class="ident">p</span>);
-        <span class="kw">let</span> (<span class="ident">offset2_x</span>, <span class="ident">offset2_y</span>) <span class="op">=</span> (<span class="ident">offset_x</span> <span class="op">*</span> <span class="ident">p2</span>, <span class="ident">offset_y</span> <span class="op">*</span> <span class="ident">p2</span>);
+        <span class="kw">let </span>(offset1_x, offset1_y) = (offset_x * p, offset_y * p);
+        <span class="kw">let </span>(offset2_x, offset2_y) = (offset_x * p2, offset_y * p2);
 
-        <span class="macro">debug_assert_ne!</span>(<span class="ident">offset_x</span>, <span class="number">0</span>, <span class="string">&quot;offset should not be zero&quot;</span>);
-        <span class="macro">debug_assert_ne!</span>(<span class="ident">offset_y</span>, <span class="number">0</span>, <span class="string">&quot;offset should not be zero&quot;</span>);
+        <span class="macro">debug_assert_ne!</span>(offset_x, <span class="number">0</span>, <span class="string">&quot;offset should not be zero&quot;</span>);
+        <span class="macro">debug_assert_ne!</span>(offset_y, <span class="number">0</span>, <span class="string">&quot;offset should not be zero&quot;</span>);
 
-        <span class="kw">while</span> <span class="ident">position_y</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_y</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position_x</span> <span class="op">=</span> <span class="ident">position_y</span>;
-            <span class="kw">let</span> <span class="ident">end_x</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset_x</span> <span class="op">*</span> (<span class="ident">count_x</span> <span class="op">-</span> <span class="ident">p2</span>);
+        <span class="kw">while </span>position_y &lt;= end_y {
+            <span class="kw">let </span><span class="kw-2">mut </span>position_x = position_y;
+            <span class="kw">let </span>end_x = position_x + offset_x * (count_x - p2);
 
-            <span class="kw">while</span> <span class="ident">position_x</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_x</span> {
-                <span class="kw">let</span> <span class="ident">pos_right</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_x</span>;
-                <span class="kw">let</span> <span class="ident">pos_top</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_y</span>;
-                <span class="kw">let</span> <span class="ident">pos_top_right</span> <span class="op">=</span> <span class="ident">pos_top</span> <span class="op">+</span> <span class="ident">offset1_x</span>;
+            <span class="kw">while </span>position_x &lt;= end_x {
+                <span class="kw">let </span>pos_right = position_x + offset1_x;
+                <span class="kw">let </span>pos_top = position_x + offset1_y;
+                <span class="kw">let </span>pos_top_right = pos_top + offset1_x;
 
-                <span class="macro">assert!</span>(<span class="ident">position_x</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
-                <span class="macro">assert!</span>(<span class="ident">pos_right</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
-                <span class="macro">assert!</span>(<span class="ident">pos_top</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
-                <span class="macro">assert!</span>(<span class="ident">pos_top_right</span> <span class="op">&lt;</span> <span class="ident">buffer</span>.<span class="ident">len</span>());
+                <span class="macro">assert!</span>(position_x &lt; buffer.len());
+                <span class="macro">assert!</span>(pos_right &lt; buffer.len());
+                <span class="macro">assert!</span>(pos_top &lt; buffer.len());
+                <span class="macro">assert!</span>(pos_top_right &lt; buffer.len());
 
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">top</span>) <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>], <span class="ident">buffer</span>[<span class="ident">pos_top</span>]);
-                <span class="kw">let</span> (<span class="ident">right</span>, <span class="ident">top_right</span>) <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">buffer</span>[<span class="ident">pos_right</span>], <span class="ident">buffer</span>[<span class="ident">pos_top_right</span>]);
+                <span class="kw">let </span>(center, top) = decode(buffer[position_x], buffer[pos_top]);
+                <span class="kw">let </span>(right, top_right) = decode(buffer[pos_right], buffer[pos_top_right]);
 
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">right</span>) <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">center</span>, <span class="ident">right</span>);
-                <span class="kw">let</span> (<span class="ident">top</span>, <span class="ident">top_right</span>) <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">top</span>, <span class="ident">top_right</span>);
+                <span class="kw">let </span>(center, right) = decode(center, right);
+                <span class="kw">let </span>(top, top_right) = decode(top, top_right);
 
-                <span class="ident">buffer</span>[<span class="ident">position_x</span>] <span class="op">=</span> <span class="ident">center</span>; <span class="comment">// TODO rustify</span>
-                <span class="ident">buffer</span>[<span class="ident">pos_top</span>] <span class="op">=</span> <span class="ident">top</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_right</span>] <span class="op">=</span> <span class="ident">right</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_top_right</span>] <span class="op">=</span> <span class="ident">top_right</span>;
+                buffer[position_x] = center; <span class="comment">// TODO rustify
+                </span>buffer[pos_top] = top;
+                buffer[pos_right] = right;
+                buffer[pos_top_right] = top_right;
 
-                <span class="ident">position_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset2_x</span>;
+                position_x += offset2_x;
             }
 
-            <span class="comment">// decode last odd remaining x value</span>
-            <span class="kw">if</span> <span class="ident">count_x</span> <span class="op">&amp;</span> <span class="ident">p</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="kw">let</span> <span class="ident">pos_top</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_y</span>;
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">top</span>) <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>], <span class="ident">buffer</span>[<span class="ident">pos_top</span>]);
+            <span class="comment">// decode last odd remaining x value
+            </span><span class="kw">if </span>count_x &amp; p != <span class="number">0 </span>{
+                <span class="kw">let </span>pos_top = position_x + offset1_y;
+                <span class="kw">let </span>(center, top) = decode(buffer[position_x], buffer[pos_top]);
 
-                <span class="ident">buffer</span>[<span class="ident">position_x</span>] <span class="op">=</span> <span class="ident">center</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_top</span>] <span class="op">=</span> <span class="ident">top</span>;
+                buffer[position_x] = center;
+                buffer[pos_top] = top;
             }
 
-            <span class="ident">position_y</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset2_y</span>;
+            position_y += offset2_y;
         }
 
-        <span class="comment">// decode remaining odd row</span>
-        <span class="kw">if</span> <span class="ident">count_y</span> <span class="op">&amp;</span> <span class="ident">p</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position_x</span> <span class="op">=</span> <span class="ident">position_y</span>;
-            <span class="kw">let</span> <span class="ident">end_x</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset_x</span> <span class="op">*</span> (<span class="ident">count_x</span> <span class="op">-</span> <span class="ident">p2</span>);
+        <span class="comment">// decode remaining odd row
+        </span><span class="kw">if </span>count_y &amp; p != <span class="number">0 </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>position_x = position_y;
+            <span class="kw">let </span>end_x = position_x + offset_x * (count_x - p2);
 
-            <span class="kw">while</span> <span class="ident">position_x</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">end_x</span> {
-                <span class="kw">let</span> <span class="ident">pos_right</span> <span class="op">=</span> <span class="ident">position_x</span> <span class="op">+</span> <span class="ident">offset1_x</span>;
-                <span class="kw">let</span> (<span class="ident">center</span>, <span class="ident">right</span>) <span class="op">=</span> <span class="ident">decode</span>(<span class="ident">buffer</span>[<span class="ident">position_x</span>], <span class="ident">buffer</span>[<span class="ident">pos_right</span>]);
+            <span class="kw">while </span>position_x &lt;= end_x {
+                <span class="kw">let </span>pos_right = position_x + offset1_x;
+                <span class="kw">let </span>(center, right) = decode(buffer[position_x], buffer[pos_right]);
 
-                <span class="ident">buffer</span>[<span class="ident">position_x</span>] <span class="op">=</span> <span class="ident">center</span>;
-                <span class="ident">buffer</span>[<span class="ident">pos_right</span>] <span class="op">=</span> <span class="ident">right</span>;
+                buffer[position_x] = center;
+                buffer[pos_right] = right;
 
-                <span class="ident">position_x</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset2_x</span>;
+                position_x += offset2_x;
             }
         }
 
-        <span class="ident">p2</span> <span class="op">=</span> <span class="ident">p</span>;
-        <span class="ident">p</span> <span class="op">&gt;</span><span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span>;
+        p2 = p;
+        p &gt;&gt;= <span class="number">1</span>;
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">is_14_bit</span>(<span class="ident">value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">value</span> <span class="op">&lt;</span> (<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">14</span>)
+<span class="attribute">#[inline]
+</span><span class="kw">fn </span>is_14_bit(value: u16) -&gt; bool {
+    value &lt; (<span class="number">1 </span>&lt;&lt; <span class="number">14</span>)
 }
 
-<span class="doccomment">/// Untransformed data values should be less than (1 &lt;&lt; 14).</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-<span class="kw">fn</span> <span class="ident">encode_14bit</span>(<span class="ident">a</span>: <span class="ident">u16</span>, <span class="ident">b</span>: <span class="ident">u16</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>) {
-    <span class="kw">let</span> (<span class="ident">a</span>, <span class="ident">b</span>) <span class="op">=</span> (<span class="ident">a</span> <span class="kw">as</span> <span class="ident">i16</span>, <span class="ident">b</span> <span class="kw">as</span> <span class="ident">i16</span>);
+<span class="doccomment">/// Untransformed data values should be less than (1 &lt;&lt; 14).
+</span><span class="attribute">#[inline]
+#[allow(unused)]
+</span><span class="kw">fn </span>encode_14bit(a: u16, b: u16) -&gt; (u16, u16) {
+    <span class="kw">let </span>(a, b) = (a <span class="kw">as </span>i16, b <span class="kw">as </span>i16);
 
-    <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> (<span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>;
-    <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">a</span> <span class="op">-</span> <span class="ident">b</span>;
+    <span class="kw">let </span>m = (a + b) &gt;&gt; <span class="number">1</span>;
+    <span class="kw">let </span>d = a - b;
 
-    (<span class="ident">m</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">d</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="comment">// TODO explicitly wrap?</span>
-}
+    (m <span class="kw">as </span>u16, d <span class="kw">as </span>u16) <span class="comment">// TODO explicitly wrap?
+</span>}
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-<span class="kw">fn</span> <span class="ident">decode_14bit</span>(<span class="ident">l</span>: <span class="ident">u16</span>, <span class="ident">h</span>: <span class="ident">u16</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>) {
-    <span class="kw">let</span> (<span class="ident">l</span>, <span class="ident">h</span>) <span class="op">=</span> (<span class="ident">l</span> <span class="kw">as</span> <span class="ident">i16</span>, <span class="ident">h</span> <span class="kw">as</span> <span class="ident">i16</span>);
+<span class="attribute">#[inline]
+#[allow(unused)]
+</span><span class="kw">fn </span>decode_14bit(l: u16, h: u16) -&gt; (u16, u16) {
+    <span class="kw">let </span>(l, h) = (l <span class="kw">as </span>i16, h <span class="kw">as </span>i16);
 
-    <span class="kw">let</span> <span class="ident">hi</span> <span class="op">=</span> <span class="ident">h</span> <span class="kw">as</span> <span class="ident">i32</span>;
-    <span class="kw">let</span> <span class="ident">ai</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">+</span> (<span class="ident">hi</span> <span class="op">&amp;</span> <span class="number">1</span>) <span class="op">+</span> (<span class="ident">hi</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>);
+    <span class="kw">let </span>hi = h <span class="kw">as </span>i32;
+    <span class="kw">let </span>ai = l <span class="kw">as </span>i32 + (hi &amp; <span class="number">1</span>) + (hi &gt;&gt; <span class="number">1</span>);
 
-    <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">ai</span> <span class="kw">as</span> <span class="ident">i16</span>; <span class="comment">// TODO explicitly wrap?</span>
-    <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> (<span class="ident">ai</span> <span class="op">-</span> <span class="ident">hi</span>) <span class="kw">as</span> <span class="ident">i16</span>; <span class="comment">// TODO explicitly wrap?</span>
+    <span class="kw">let </span>a = ai <span class="kw">as </span>i16; <span class="comment">// TODO explicitly wrap?
+    </span><span class="kw">let </span>b = (ai - hi) <span class="kw">as </span>i16; <span class="comment">// TODO explicitly wrap?
 
-    (<span class="ident">a</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">b</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="comment">// TODO explicitly wrap?</span>
-}
-
-
-<span class="kw">const</span> <span class="ident">BIT_COUNT</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">16</span>;
-<span class="kw">const</span> <span class="ident">OFFSET</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="ident">BIT_COUNT</span> <span class="op">-</span> <span class="number">1</span>);
-<span class="kw">const</span> <span class="ident">MOD_MASK</span>: <span class="ident">i32</span> <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">BIT_COUNT</span>) <span class="op">-</span> <span class="number">1</span>;
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">encode_16bit</span>(<span class="ident">a</span>: <span class="ident">u16</span>, <span class="ident">b</span>: <span class="ident">u16</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>) {
-    <span class="kw">let</span> (<span class="ident">a</span>, <span class="ident">b</span>) <span class="op">=</span> (<span class="ident">a</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">b</span> <span class="kw">as</span> <span class="ident">i32</span>);
-
-    <span class="kw">let</span> <span class="ident">a_offset</span> <span class="op">=</span> (<span class="ident">a</span> <span class="op">+</span> <span class="ident">OFFSET</span>) <span class="op">&amp;</span> <span class="ident">MOD_MASK</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> (<span class="ident">a_offset</span> <span class="op">+</span> <span class="ident">b</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>;
-    <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">a_offset</span> <span class="op">-</span> <span class="ident">b</span>;
-
-    <span class="kw">if</span> <span class="ident">d</span> <span class="op">&lt;</span> <span class="number">0</span> { <span class="ident">m</span> <span class="op">=</span> (<span class="ident">m</span> <span class="op">+</span> <span class="ident">OFFSET</span>) <span class="op">&amp;</span> <span class="ident">MOD_MASK</span>; }
-    <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">d</span> <span class="op">&amp;</span> <span class="ident">MOD_MASK</span>;
-
-    (<span class="ident">m</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">d</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="comment">// TODO explicitly wrap?</span>
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">decode_16bit</span>(<span class="ident">l</span>: <span class="ident">u16</span>, <span class="ident">h</span>: <span class="ident">u16</span>) -&gt; (<span class="ident">u16</span>, <span class="ident">u16</span>) {
-    <span class="kw">let</span> (<span class="ident">m</span>, <span class="ident">d</span>) <span class="op">=</span> (<span class="ident">l</span> <span class="kw">as</span> <span class="ident">i32</span>, <span class="ident">h</span> <span class="kw">as</span> <span class="ident">i32</span>);
-
-    <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> (<span class="ident">m</span> <span class="op">-</span> (<span class="ident">d</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>)) <span class="op">&amp;</span> <span class="ident">MOD_MASK</span>;
-    <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> (<span class="ident">d</span> <span class="op">+</span> <span class="ident">b</span> <span class="op">-</span> <span class="ident">OFFSET</span>) <span class="op">&amp;</span> <span class="ident">MOD_MASK</span>;
-
-    (<span class="ident">a</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">b</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="comment">// TODO explicitly wrap?</span>
-}
+    </span>(a <span class="kw">as </span>u16, b <span class="kw">as </span>u16) <span class="comment">// TODO explicitly wrap?
+</span>}
 
 
+<span class="kw">const </span>BIT_COUNT: i32 = <span class="number">16</span>;
+<span class="kw">const </span>OFFSET: i32 = <span class="number">1 </span>&lt;&lt; (BIT_COUNT - <span class="number">1</span>);
+<span class="kw">const </span>MOD_MASK: i32 = (<span class="number">1 </span>&lt;&lt; BIT_COUNT) - <span class="number">1</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::math::Vec2</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::compression::piz::wavelet::is_14_bit</span>;
+<span class="attribute">#[inline]
+</span><span class="kw">fn </span>encode_16bit(a: u16, b: u16) -&gt; (u16, u16) {
+    <span class="kw">let </span>(a, b) = (a <span class="kw">as </span>i32, b <span class="kw">as </span>i32);
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">roundtrip_14_bit_values</span>(){
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [
+    <span class="kw">let </span>a_offset = (a + OFFSET) &amp; MOD_MASK;
+    <span class="kw">let </span><span class="kw-2">mut </span>m = (a_offset + b) &gt;&gt; <span class="number">1</span>;
+    <span class="kw">let </span>d = a_offset - b;
+
+    <span class="kw">if </span>d &lt; <span class="number">0 </span>{ m = (m + OFFSET) &amp; MOD_MASK; }
+    <span class="kw">let </span>d = d &amp; MOD_MASK;
+
+    (m <span class="kw">as </span>u16, d <span class="kw">as </span>u16) <span class="comment">// TODO explicitly wrap?
+</span>}
+
+<span class="attribute">#[inline]
+</span><span class="kw">fn </span>decode_16bit(l: u16, h: u16) -&gt; (u16, u16) {
+    <span class="kw">let </span>(m, d) = (l <span class="kw">as </span>i32, h <span class="kw">as </span>i32);
+
+    <span class="kw">let </span>b = (m - (d &gt;&gt; <span class="number">1</span>)) &amp; MOD_MASK;
+    <span class="kw">let </span>a = (d + b - OFFSET) &amp; MOD_MASK;
+
+    (a <span class="kw">as </span>u16, b <span class="kw">as </span>u16) <span class="comment">// TODO explicitly wrap?
+</span>}
+
+
+
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">crate</span>::math::Vec2;
+    <span class="kw">use </span><span class="kw">crate</span>::compression::piz::wavelet::is_14_bit;
+
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>roundtrip_14_bit_values(){
+        <span class="kw">let </span>data = [
             (<span class="number">13</span>, <span class="number">54</span>), (<span class="number">3</span>, <span class="number">123</span>), (<span class="number">423</span>, <span class="number">53</span>), (<span class="number">1</span>, <span class="number">23</span>), (<span class="number">23</span>, <span class="number">515</span>), (<span class="number">513</span>, <span class="number">43</span>),
             (<span class="number">16374</span>, <span class="number">16381</span>), (<span class="number">16284</span>, <span class="number">3</span>), (<span class="number">2</span>, <span class="number">1</span>), (<span class="number">0</span>, <span class="number">0</span>), (<span class="number">0</span>, <span class="number">4</span>), (<span class="number">3</span>, <span class="number">0</span>)
         ];
 
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">values</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">data</span> {
-            <span class="kw">let</span> (<span class="ident">l</span>, <span class="ident">h</span>) <span class="op">=</span> <span class="ident"><span class="kw">super</span>::encode_14bit</span>(<span class="ident">values</span>.<span class="number">0</span>, <span class="ident">values</span>.<span class="number">1</span>);
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::decode_14bit</span>(<span class="ident">l</span>, <span class="ident">h</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">values</span>, <span class="ident">result</span>);
+        <span class="kw">for </span><span class="kw-2">&amp;</span>values <span class="kw">in </span><span class="kw-2">&amp;</span>data {
+            <span class="kw">let </span>(l, h) = <span class="kw">super</span>::encode_14bit(values.<span class="number">0</span>, values.<span class="number">1</span>);
+            <span class="kw">let </span>result = <span class="kw">super</span>::decode_14bit(l, h);
+            <span class="macro">assert_eq!</span>(values, result);
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">roundtrip_16_bit_values</span>(){
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>roundtrip_16_bit_values(){
+        <span class="kw">let </span>data = [
             (<span class="number">13</span>, <span class="number">54</span>), (<span class="number">3</span>, <span class="number">123</span>), (<span class="number">423</span>, <span class="number">53</span>), (<span class="number">1</span>, <span class="number">23</span>), (<span class="number">23</span>, <span class="number">515</span>), (<span class="number">513</span>, <span class="number">43</span>),
             (<span class="number">16385</span>, <span class="number">56384</span>), (<span class="number">18384</span>, <span class="number">36384</span>), (<span class="number">2</span>, <span class="number">1</span>), (<span class="number">0</span>, <span class="number">0</span>), (<span class="number">0</span>, <span class="number">4</span>), (<span class="number">3</span>, <span class="number">0</span>)
         ];
 
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">values</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">data</span> {
-            <span class="kw">let</span> (<span class="ident">l</span>, <span class="ident">h</span>) <span class="op">=</span> <span class="ident"><span class="kw">super</span>::encode_16bit</span>(<span class="ident">values</span>.<span class="number">0</span>, <span class="ident">values</span>.<span class="number">1</span>);
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::decode_16bit</span>(<span class="ident">l</span>, <span class="ident">h</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">values</span>, <span class="ident">result</span>);
+        <span class="kw">for </span><span class="kw-2">&amp;</span>values <span class="kw">in </span><span class="kw-2">&amp;</span>data {
+            <span class="kw">let </span>(l, h) = <span class="kw">super</span>::encode_16bit(values.<span class="number">0</span>, values.<span class="number">1</span>);
+            <span class="kw">let </span>result = <span class="kw">super</span>::decode_16bit(l, h);
+            <span class="macro">assert_eq!</span>(values, result);
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">roundtrip_14bit_image</span>(){
-        <span class="kw">let</span> <span class="ident">data</span>: [<span class="ident">u16</span>; <span class="number">6</span> <span class="op">*</span> <span class="number">4</span>] <span class="op">=</span> [
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>roundtrip_14bit_image(){
+        <span class="kw">let </span>data: [u16; <span class="number">6 </span>* <span class="number">4</span>] = [
             <span class="number">13</span>, <span class="number">54</span>, <span class="number">3</span>, <span class="number">123</span>, <span class="number">423</span>, <span class="number">53</span>,
             <span class="number">1</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">515</span>, <span class="number">513</span>, <span class="number">43</span>,
             <span class="number">16374</span>, <span class="number">16381</span>, <span class="number">16284</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">0</span>,
         ];
 
-        <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">max</span>().<span class="ident">unwrap</span>();
-        <span class="macro">debug_assert!</span>(<span class="ident">is_14_bit</span>(<span class="ident">max</span>));
+        <span class="kw">let </span>max = <span class="kw-2">*</span>data.iter().max().unwrap();
+        <span class="macro">debug_assert!</span>(is_14_bit(max));
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">clone</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>transformed = data.clone();
 
-        <span class="ident"><span class="kw">super</span>::encode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">transformed</span>, <span class="ident">Vec2</span>(<span class="number">6</span>, <span class="number">4</span>), <span class="ident">Vec2</span>(<span class="number">1</span>,<span class="number">6</span>), <span class="ident">max</span>).<span class="ident">unwrap</span>();
-        <span class="ident"><span class="kw">super</span>::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">transformed</span>, <span class="ident">Vec2</span>(<span class="number">6</span>, <span class="number">4</span>), <span class="ident">Vec2</span>(<span class="number">1</span>,<span class="number">6</span>), <span class="ident">max</span>).<span class="ident">unwrap</span>();
+        <span class="kw">super</span>::encode(<span class="kw-2">&amp;mut </span>transformed, Vec2(<span class="number">6</span>, <span class="number">4</span>), Vec2(<span class="number">1</span>,<span class="number">6</span>), max).unwrap();
+        <span class="kw">super</span>::decode(<span class="kw-2">&amp;mut </span>transformed, Vec2(<span class="number">6</span>, <span class="number">4</span>), Vec2(<span class="number">1</span>,<span class="number">6</span>), max).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">data</span>, <span class="ident">transformed</span>);
+        <span class="macro">assert_eq!</span>(data, transformed);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">roundtrip_16bit_image</span>(){
-        <span class="kw">let</span> <span class="ident">data</span>: [<span class="ident">u16</span>; <span class="number">6</span> <span class="op">*</span> <span class="number">4</span>] <span class="op">=</span> [
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>roundtrip_16bit_image(){
+        <span class="kw">let </span>data: [u16; <span class="number">6 </span>* <span class="number">4</span>] = [
             <span class="number">13</span>, <span class="number">54</span>, <span class="number">3</span>, <span class="number">123</span>, <span class="number">423</span>, <span class="number">53</span>,
             <span class="number">1</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">515</span>, <span class="number">513</span>, <span class="number">43</span>,
             <span class="number">16385</span>, <span class="number">56384</span>, <span class="number">18384</span>, <span class="number">36384</span>, <span class="number">2</span>, <span class="number">1</span>,
             <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">0</span>,
         ];
 
-        <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">max</span>().<span class="ident">unwrap</span>();
-        <span class="macro">debug_assert!</span>(<span class="op">!</span><span class="ident">is_14_bit</span>(<span class="ident">max</span>));
+        <span class="kw">let </span>max = <span class="kw-2">*</span>data.iter().max().unwrap();
+        <span class="macro">debug_assert!</span>(!is_14_bit(max));
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">clone</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>transformed = data.clone();
 
-        <span class="ident"><span class="kw">super</span>::encode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">transformed</span>, <span class="ident">Vec2</span>(<span class="number">6</span>, <span class="number">4</span>), <span class="ident">Vec2</span>(<span class="number">1</span>,<span class="number">6</span>), <span class="ident">max</span>).<span class="ident">unwrap</span>();
-        <span class="ident"><span class="kw">super</span>::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">transformed</span>, <span class="ident">Vec2</span>(<span class="number">6</span>, <span class="number">4</span>), <span class="ident">Vec2</span>(<span class="number">1</span>,<span class="number">6</span>), <span class="ident">max</span>).<span class="ident">unwrap</span>();
+        <span class="kw">super</span>::encode(<span class="kw-2">&amp;mut </span>transformed, Vec2(<span class="number">6</span>, <span class="number">4</span>), Vec2(<span class="number">1</span>,<span class="number">6</span>), max).unwrap();
+        <span class="kw">super</span>::decode(<span class="kw-2">&amp;mut </span>transformed, Vec2(<span class="number">6</span>, <span class="number">4</span>), Vec2(<span class="number">1</span>,<span class="number">6</span>), max).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">data</span>, <span class="ident">transformed</span>);
+        <span class="macro">assert_eq!</span>(data, transformed);
     }
 
-    <span class="doccomment">/// inspired by https://github.com/AcademySoftwareFoundation/openexr/blob/master/OpenEXR/IlmImfTest/testWav.cpp</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">ground_truth</span>(){
-        <span class="ident">test_size</span>(<span class="number">1</span>, <span class="number">1</span>);
-        <span class="ident">test_size</span>(<span class="number">2</span>, <span class="number">2</span>);
-        <span class="ident">test_size</span>(<span class="number">32</span>, <span class="number">32</span>);
-        <span class="ident">test_size</span>(<span class="number">1024</span>, <span class="number">16</span>);
-        <span class="ident">test_size</span>(<span class="number">16</span>, <span class="number">1024</span>);
-        <span class="ident">test_size</span>(<span class="number">997</span>, <span class="number">37</span>);
-        <span class="ident">test_size</span>(<span class="number">37</span>, <span class="number">997</span>);
-        <span class="ident">test_size</span>(<span class="number">1024</span>, <span class="number">1024</span>);
-        <span class="ident">test_size</span>(<span class="number">997</span>, <span class="number">997</span>);
+    <span class="doccomment">/// inspired by https://github.com/AcademySoftwareFoundation/openexr/blob/master/OpenEXR/IlmImfTest/testWav.cpp
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>ground_truth(){
+        test_size(<span class="number">1</span>, <span class="number">1</span>);
+        test_size(<span class="number">2</span>, <span class="number">2</span>);
+        test_size(<span class="number">32</span>, <span class="number">32</span>);
+        test_size(<span class="number">1024</span>, <span class="number">16</span>);
+        test_size(<span class="number">16</span>, <span class="number">1024</span>);
+        test_size(<span class="number">997</span>, <span class="number">37</span>);
+        test_size(<span class="number">37</span>, <span class="number">997</span>);
+        test_size(<span class="number">1024</span>, <span class="number">1024</span>);
+        test_size(<span class="number">997</span>, <span class="number">997</span>);
 
-        <span class="kw">fn</span> <span class="ident">test_size</span>(<span class="ident">x</span>: <span class="ident">usize</span>, <span class="ident">y</span>: <span class="ident">usize</span>) {
-            <span class="kw">let</span> <span class="ident">xy</span> <span class="op">=</span> <span class="ident">Vec2</span>(<span class="ident">x</span>, <span class="ident">y</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">noise_14bit</span>(<span class="ident">xy</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">noise_16bit</span>(<span class="ident">xy</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">1</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0xffff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0x3fff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0x3ffe</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0x3fff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0xfffe</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">solid</span>(<span class="ident">xy</span>, <span class="number">0xffff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">verticals</span>(<span class="ident">xy</span>, <span class="number">0xffff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">verticals</span>(<span class="ident">xy</span>, <span class="number">0x3fff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">horizontals</span>(<span class="ident">xy</span>, <span class="number">0xffff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">horizontals</span>(<span class="ident">xy</span>, <span class="number">0x3fff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">diagonals</span>(<span class="ident">xy</span>, <span class="number">0xffff</span>), <span class="ident">xy</span>);
-            <span class="ident">roundtrip</span>(<span class="ident">diagonals</span>(<span class="ident">xy</span>, <span class="number">0x3fff</span>), <span class="ident">xy</span>);
+        <span class="kw">fn </span>test_size(x: usize, y: usize) {
+            <span class="kw">let </span>xy = Vec2(x, y);
+            roundtrip(noise_14bit(xy), xy);
+            roundtrip(noise_16bit(xy), xy);
+            roundtrip(solid(xy, <span class="number">0</span>), xy);
+            roundtrip(solid(xy, <span class="number">1</span>), xy);
+            roundtrip(solid(xy, <span class="number">0xffff</span>), xy);
+            roundtrip(solid(xy, <span class="number">0x3fff</span>), xy);
+            roundtrip(solid(xy, <span class="number">0x3ffe</span>), xy);
+            roundtrip(solid(xy, <span class="number">0x3fff</span>), xy);
+            roundtrip(solid(xy, <span class="number">0xfffe</span>), xy);
+            roundtrip(solid(xy, <span class="number">0xffff</span>), xy);
+            roundtrip(verticals(xy, <span class="number">0xffff</span>), xy);
+            roundtrip(verticals(xy, <span class="number">0x3fff</span>), xy);
+            roundtrip(horizontals(xy, <span class="number">0xffff</span>), xy);
+            roundtrip(horizontals(xy, <span class="number">0x3fff</span>), xy);
+            roundtrip(diagonals(xy, <span class="number">0xffff</span>), xy);
+            roundtrip(diagonals(xy, <span class="number">0x3fff</span>), xy);
         }
 
-        <span class="kw">fn</span> <span class="ident">roundtrip</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>){
-            <span class="macro">assert_eq!</span>(<span class="ident">data</span>.<span class="ident">len</span>(), <span class="ident">size</span>.<span class="ident">area</span>());
+        <span class="kw">fn </span>roundtrip(data: Vec&lt;u16&gt;, size: Vec2&lt;usize&gt;){
+            <span class="macro">assert_eq!</span>(data.len(), size.area());
 
-            <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">max</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">Vec2</span>(<span class="number">1</span>, <span class="ident">size</span>.<span class="number">0</span>);
+            <span class="kw">let </span>max = <span class="kw-2">*</span>data.iter().max().unwrap();
+            <span class="kw">let </span>offset = Vec2(<span class="number">1</span>, size.<span class="number">0</span>);
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">transformed</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">clone</span>();
-            <span class="ident"><span class="kw">super</span>::encode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">transformed</span>, <span class="ident">size</span>, <span class="ident">offset</span>, <span class="ident">max</span>).<span class="ident">unwrap</span>();
-            <span class="ident"><span class="kw">super</span>::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">transformed</span>, <span class="ident">size</span>, <span class="ident">offset</span>, <span class="ident">max</span>).<span class="ident">unwrap</span>();
+            <span class="kw">let </span><span class="kw-2">mut </span>transformed = data.clone();
+            <span class="kw">super</span>::encode(<span class="kw-2">&amp;mut </span>transformed, size, offset, max).unwrap();
+            <span class="kw">super</span>::decode(<span class="kw-2">&amp;mut </span>transformed, size, offset, max).unwrap();
 
-            <span class="macro">assert_eq!</span>(<span class="ident">data</span>, <span class="ident">transformed</span>);
+            <span class="macro">assert_eq!</span>(data, transformed);
         }
 
-        <span class="kw">fn</span> <span class="ident">noise_14bit</span>(<span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-            (<span class="number">0</span>..<span class="ident">size</span>.<span class="ident">area</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>() <span class="op">&amp;</span> <span class="number">0x3fff</span>) <span class="kw">as</span> <span class="ident">u16</span>).<span class="ident">collect</span>()
+        <span class="kw">fn </span>noise_14bit(size: Vec2&lt;usize&gt;) -&gt; Vec&lt;u16&gt; {
+            (<span class="number">0</span>..size.area()).map(|<span class="kw">_</span>| (rand::random::&lt;i32&gt;() &amp; <span class="number">0x3fff</span>) <span class="kw">as </span>u16).collect()
         }
 
-        <span class="kw">fn</span> <span class="ident">noise_16bit</span>(<span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-            (<span class="number">0</span>..<span class="ident">size</span>.<span class="ident">area</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">rand::random</span>::<span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>()).<span class="ident">collect</span>()
+        <span class="kw">fn </span>noise_16bit(size: Vec2&lt;usize&gt;) -&gt; Vec&lt;u16&gt; {
+            (<span class="number">0</span>..size.area()).map(|<span class="kw">_</span>| rand::random::&lt;u16&gt;()).collect()
         }
 
-        <span class="kw">fn</span> <span class="ident">solid</span>(<span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-            <span class="macro">vec!</span>[<span class="ident">value</span>; <span class="ident">size</span>.<span class="ident">area</span>()]
+        <span class="kw">fn </span>solid(size: Vec2&lt;usize&gt;, value: u16) -&gt; Vec&lt;u16&gt; {
+            <span class="macro">vec!</span>[value; size.area()]
         }
 
-        <span class="kw">fn</span> <span class="ident">verticals</span>(<span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">max_value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-            <span class="ident">std::iter::repeat_with</span>(<span class="op">|</span><span class="op">|</span> (<span class="number">0</span> .. <span class="ident">size</span>.<span class="number">0</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&amp;</span> <span class="number">1</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="ident">max_value</span> }))
-                .<span class="ident">take</span>(<span class="ident">size</span>.<span class="number">1</span>).<span class="ident">flatten</span>().<span class="ident">collect</span>()
+        <span class="kw">fn </span>verticals(size: Vec2&lt;usize&gt;, max_value: u16) -&gt; Vec&lt;u16&gt; {
+            std::iter::repeat_with(|| (<span class="number">0 </span>.. size.<span class="number">0</span>).map(|x| <span class="kw">if </span>x &amp; <span class="number">1 </span>!= <span class="number">0 </span>{ <span class="number">0 </span>} <span class="kw">else </span>{ max_value }))
+                .take(size.<span class="number">1</span>).flatten().collect()
         }
 
-        <span class="kw">fn</span> <span class="ident">horizontals</span>(<span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">max_value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-            (<span class="number">0</span> .. <span class="ident">size</span>.<span class="number">1</span>)
-                .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">y</span><span class="op">|</span> <span class="ident">std::iter::repeat</span>(<span class="kw">if</span> <span class="ident">y</span> <span class="op">&amp;</span> <span class="number">1</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="ident">max_value</span> }).<span class="ident">take</span>(<span class="ident">size</span>.<span class="number">0</span>))
-                .<span class="ident">collect</span>()
+        <span class="kw">fn </span>horizontals(size: Vec2&lt;usize&gt;, max_value: u16) -&gt; Vec&lt;u16&gt; {
+            (<span class="number">0 </span>.. size.<span class="number">1</span>)
+                .flat_map(|y| std::iter::repeat(<span class="kw">if </span>y &amp; <span class="number">1 </span>!= <span class="number">0 </span>{ <span class="number">0 </span>} <span class="kw">else </span>{ max_value }).take(size.<span class="number">0</span>))
+                .collect()
         }
 
-        <span class="kw">fn</span> <span class="ident">diagonals</span>(<span class="ident">size</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">max_value</span>: <span class="ident">u16</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-            (<span class="number">0</span> .. <span class="ident">size</span>.<span class="number">1</span>).<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">y</span><span class="op">|</span> {
-                (<span class="number">0</span> .. <span class="ident">size</span>.<span class="number">0</span>).<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw">if</span> (<span class="ident">x</span> <span class="op">+</span> <span class="ident">y</span>) <span class="op">&amp;</span> <span class="number">1</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="ident">max_value</span> })
-            }).<span class="ident">collect</span>()
+        <span class="kw">fn </span>diagonals(size: Vec2&lt;usize&gt;, max_value: u16) -&gt; Vec&lt;u16&gt; {
+            (<span class="number">0 </span>.. size.<span class="number">1</span>).flat_map(|y| {
+                (<span class="number">0 </span>.. size.<span class="number">0</span>).map(<span class="kw">move </span>|x| <span class="kw">if </span>(x + y) &amp; <span class="number">1 </span>!= <span class="number">0 </span>{ <span class="number">0 </span>} <span class="kw">else </span>{ max_value })
+            }).collect()
         }
 
     }
 }</code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

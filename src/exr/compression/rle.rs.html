@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/compression/rle.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../exr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/compression/rle.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../exr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -116,118 +110,117 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::optimize_bytes</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Error</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Result</span>;
+</pre><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">super</span>::optimize_bytes::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">super</span>::Error;
+<span class="kw">use </span><span class="kw">super</span>::Result;
 
-<span class="comment">// inspired by  https://github.com/openexr/openexr/blob/master/OpenEXR/IlmImf/ImfRle.cpp</span>
+<span class="comment">// inspired by  https://github.com/openexr/openexr/blob/master/OpenEXR/IlmImf/ImfRle.cpp
 
-<span class="kw">const</span> <span class="ident">MIN_RUN_LENGTH</span> : <span class="ident">usize</span> <span class="op">=</span> <span class="number">3</span>;
-<span class="kw">const</span> <span class="ident">MAX_RUN_LENGTH</span> : <span class="ident">usize</span> <span class="op">=</span> <span class="number">127</span>;
+</span><span class="kw">const </span>MIN_RUN_LENGTH : usize = <span class="number">3</span>;
+<span class="kw">const </span>MAX_RUN_LENGTH : usize = <span class="number">127</span>;
 
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decompress_bytes</span>(
-    <span class="ident">channels</span>: <span class="kw-2">&amp;</span><span class="ident">ChannelList</span>,
-    <span class="ident">compressed</span>: <span class="ident">ByteVec</span>,
-    <span class="ident">rectangle</span>: <span class="ident">IntegerBounds</span>,
-    <span class="ident">expected_byte_size</span>: <span class="ident">usize</span>,
-    <span class="ident">pedantic</span>: <span class="ident">bool</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ByteVec</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="ident">compressed</span>.<span class="ident">as_slice</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decompressed</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">expected_byte_size</span>.<span class="ident">min</span>(<span class="number">8</span><span class="kw-2">*</span><span class="number">2048</span>));
+<span class="kw">pub fn </span>decompress_bytes(
+    channels: <span class="kw-2">&amp;</span>ChannelList,
+    compressed: ByteVec,
+    rectangle: IntegerBounds,
+    expected_byte_size: usize,
+    pedantic: bool,
+) -&gt; <span class="prelude-ty">Result</span>&lt;ByteVec&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>remaining = compressed.as_slice();
+    <span class="kw">let </span><span class="kw-2">mut </span>decompressed = Vec::with_capacity(expected_byte_size.min(<span class="number">8</span><span class="kw-2">*</span><span class="number">2048</span>));
 
-    <span class="kw">while</span> <span class="op">!</span><span class="ident">remaining</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">decompressed</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">expected_byte_size</span> {
-        <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">take_1</span>(<span class="kw-2">&amp;mut</span> <span class="ident">remaining</span>)<span class="question-mark">?</span> <span class="kw">as</span> <span class="ident">i8</span> <span class="kw">as</span> <span class="ident">i32</span>;
+    <span class="kw">while </span>!remaining.is_empty() &amp;&amp; decompressed.len() != expected_byte_size {
+        <span class="kw">let </span>count = take_1(<span class="kw-2">&amp;mut </span>remaining)<span class="question-mark">? </span><span class="kw">as </span>i8 <span class="kw">as </span>i32;
 
-        <span class="kw">if</span> <span class="ident">count</span> <span class="op">&lt;</span> <span class="number">0</span> {
-            <span class="comment">// take the next &#39;-count&#39; bytes as-is</span>
-            <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">take_n</span>(<span class="kw-2">&amp;mut</span> <span class="ident">remaining</span>, (<span class="op">-</span><span class="ident">count</span>) <span class="kw">as</span> <span class="ident">usize</span>)<span class="question-mark">?</span>;
-            <span class="ident">decompressed</span>.<span class="ident">extend_from_slice</span>(<span class="ident">values</span>);
+        <span class="kw">if </span>count &lt; <span class="number">0 </span>{
+            <span class="comment">// take the next &#39;-count&#39; bytes as-is
+            </span><span class="kw">let </span>values = take_n(<span class="kw-2">&amp;mut </span>remaining, (-count) <span class="kw">as </span>usize)<span class="question-mark">?</span>;
+            decompressed.extend_from_slice(values);
         }
-        <span class="kw">else</span> {
-            <span class="comment">// repeat the next value &#39;count + 1&#39; times</span>
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">take_1</span>(<span class="kw-2">&amp;mut</span> <span class="ident">remaining</span>)<span class="question-mark">?</span>;
-            <span class="ident">decompressed</span>.<span class="ident">resize</span>(<span class="ident">decompressed</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">value</span>);
+        <span class="kw">else </span>{
+            <span class="comment">// repeat the next value &#39;count + 1&#39; times
+            </span><span class="kw">let </span>value = take_1(<span class="kw-2">&amp;mut </span>remaining)<span class="question-mark">?</span>;
+            decompressed.resize(decompressed.len() + count <span class="kw">as </span>usize + <span class="number">1</span>, value);
         }
     }
 
-    <span class="kw">if</span> <span class="ident">pedantic</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">remaining</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;data amount&quot;</span>));
+    <span class="kw">if </span>pedantic &amp;&amp; !remaining.is_empty() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;data amount&quot;</span>));
     }
 
-    <span class="ident">differences_to_samples</span>(<span class="kw-2">&amp;mut</span> <span class="ident">decompressed</span>);
-    <span class="ident">interleave_byte_blocks</span>(<span class="kw-2">&amp;mut</span> <span class="ident">decompressed</span>);
-    <span class="prelude-val">Ok</span>(<span class="ident"><span class="kw">super</span>::convert_little_endian_to_current</span>(<span class="kw-2">&amp;</span><span class="ident">decompressed</span>, <span class="ident">channels</span>, <span class="ident">rectangle</span>))<span class="comment">// TODO no alloc</span>
-}
+    differences_to_samples(<span class="kw-2">&amp;mut </span>decompressed);
+    interleave_byte_blocks(<span class="kw-2">&amp;mut </span>decompressed);
+    <span class="prelude-val">Ok</span>(<span class="kw">super</span>::convert_little_endian_to_current(<span class="kw-2">&amp;</span>decompressed, channels, rectangle))<span class="comment">// TODO no alloc
+</span>}
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compress_bytes</span>(<span class="ident">channels</span>: <span class="kw-2">&amp;</span><span class="ident">ChannelList</span>, <span class="ident">uncompressed</span>: <span class="ident">Bytes</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">rectangle</span>: <span class="ident">IntegerBounds</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ByteVec</span><span class="op">&gt;</span> {
-    <span class="comment">// see https://github.com/AcademySoftwareFoundation/openexr/blob/3bd93f85bcb74c77255f28cdbb913fdbfbb39dfe/OpenEXR/IlmImf/ImfTiledOutputFile.cpp#L750-L842</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::convert_current_to_little_endian</span>(<span class="ident">uncompressed</span>, <span class="ident">channels</span>, <span class="ident">rectangle</span>);<span class="comment">// TODO no alloc</span>
+<span class="kw">pub fn </span>compress_bytes(channels: <span class="kw-2">&amp;</span>ChannelList, uncompressed: Bytes&lt;<span class="lifetime">&#39;_</span>&gt;, rectangle: IntegerBounds) -&gt; <span class="prelude-ty">Result</span>&lt;ByteVec&gt; {
+    <span class="comment">// see https://github.com/AcademySoftwareFoundation/openexr/blob/3bd93f85bcb74c77255f28cdbb913fdbfbb39dfe/OpenEXR/IlmImf/ImfTiledOutputFile.cpp#L750-L842
+    </span><span class="kw">let </span><span class="kw-2">mut </span>data = <span class="kw">super</span>::convert_current_to_little_endian(uncompressed, channels, rectangle);<span class="comment">// TODO no alloc
 
-    <span class="ident">separate_bytes_fragments</span>(<span class="kw-2">&amp;mut</span> <span class="ident">data</span>);
-    <span class="ident">samples_to_differences</span>(<span class="kw-2">&amp;mut</span> <span class="ident">data</span>);
+    </span>separate_bytes_fragments(<span class="kw-2">&amp;mut </span>data);
+    samples_to_differences(<span class="kw-2">&amp;mut </span>data);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">compressed</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">data</span>.<span class="ident">len</span>());
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_start</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_end</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>compressed = Vec::with_capacity(data.len());
+    <span class="kw">let </span><span class="kw-2">mut </span>run_start = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>run_end = <span class="number">1</span>;
 
-    <span class="kw">while</span> <span class="ident">run_start</span> <span class="op">&lt;</span> <span class="ident">data</span>.<span class="ident">len</span>() {
-        <span class="kw">while</span>
-            <span class="ident">run_end</span> <span class="op">&lt;</span> <span class="ident">data</span>.<span class="ident">len</span>()
-                <span class="op">&amp;&amp;</span> <span class="ident">data</span>[<span class="ident">run_start</span>] <span class="op">==</span> <span class="ident">data</span>[<span class="ident">run_end</span>]
-                <span class="op">&amp;&amp;</span> (<span class="ident">run_end</span> <span class="op">-</span> <span class="ident">run_start</span>) <span class="kw">as</span> <span class="ident">i32</span> <span class="op">-</span> <span class="number">1</span> <span class="op">&lt;</span> <span class="ident">MAX_RUN_LENGTH</span> <span class="kw">as</span> <span class="ident">i32</span>
+    <span class="kw">while </span>run_start &lt; data.len() {
+        <span class="kw">while
+            </span>run_end &lt; data.len()
+                &amp;&amp; data[run_start] == data[run_end]
+                &amp;&amp; (run_end - run_start) <span class="kw">as </span>i32 - <span class="number">1 </span>&lt; MAX_RUN_LENGTH <span class="kw">as </span>i32
             {
-                <span class="ident">run_end</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                run_end += <span class="number">1</span>;
             }
 
-        <span class="kw">if</span> <span class="ident">run_end</span> <span class="op">-</span> <span class="ident">run_start</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">MIN_RUN_LENGTH</span> {
-            <span class="ident">compressed</span>.<span class="ident">push</span>(((<span class="ident">run_end</span> <span class="op">-</span> <span class="ident">run_start</span>) <span class="kw">as</span> <span class="ident">i32</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">u8</span>);
-            <span class="ident">compressed</span>.<span class="ident">push</span>(<span class="ident">data</span>[<span class="ident">run_start</span>]);
-            <span class="ident">run_start</span> <span class="op">=</span> <span class="ident">run_end</span>;
+        <span class="kw">if </span>run_end - run_start &gt;= MIN_RUN_LENGTH {
+            compressed.push(((run_end - run_start) <span class="kw">as </span>i32 - <span class="number">1</span>) <span class="kw">as </span>u8);
+            compressed.push(data[run_start]);
+            run_start = run_end;
 
-        } <span class="kw">else</span> {
-            <span class="kw">while</span>
-                <span class="ident">run_end</span> <span class="op">&lt;</span> <span class="ident">data</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> (
-                    (<span class="ident">run_end</span> <span class="op">+</span> <span class="number">1</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">data</span>.<span class="ident">len</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">data</span>[<span class="ident">run_end</span>] <span class="op">!</span><span class="op">=</span> <span class="ident">data</span>[<span class="ident">run_end</span> <span class="op">+</span> <span class="number">1</span>])
-                        <span class="op">|</span><span class="op">|</span> (<span class="ident">run_end</span> <span class="op">+</span> <span class="number">2</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">data</span>.<span class="ident">len</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">data</span>[<span class="ident">run_end</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">!</span><span class="op">=</span> <span class="ident">data</span>[<span class="ident">run_end</span> <span class="op">+</span> <span class="number">2</span>])
-                ) <span class="op">&amp;&amp;</span> <span class="ident">run_end</span> <span class="op">-</span> <span class="ident">run_start</span> <span class="op">&lt;</span> <span class="ident">MAX_RUN_LENGTH</span>
+        } <span class="kw">else </span>{
+            <span class="kw">while
+                </span>run_end &lt; data.len() &amp;&amp; (
+                    (run_end + <span class="number">1 </span>&gt;= data.len() || data[run_end] != data[run_end + <span class="number">1</span>])
+                        || (run_end + <span class="number">2 </span>&gt;= data.len() || data[run_end + <span class="number">1</span>] != data[run_end + <span class="number">2</span>])
+                ) &amp;&amp; run_end - run_start &lt; MAX_RUN_LENGTH
                 {
-                    <span class="ident">run_end</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    run_end += <span class="number">1</span>;
                 }
 
-            <span class="ident">compressed</span>.<span class="ident">push</span>((<span class="ident">run_start</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">-</span> <span class="ident">run_end</span> <span class="kw">as</span> <span class="ident">i32</span>) <span class="kw">as</span> <span class="ident">u8</span>);
-            <span class="ident">compressed</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[<span class="ident">run_start</span> .. <span class="ident">run_end</span>]);
+            compressed.push((run_start <span class="kw">as </span>i32 - run_end <span class="kw">as </span>i32) <span class="kw">as </span>u8);
+            compressed.extend_from_slice(<span class="kw-2">&amp;</span>data[run_start .. run_end]);
 
-            <span class="ident">run_start</span> <span class="op">=</span> <span class="ident">run_end</span>;
-            <span class="ident">run_end</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+            run_start = run_end;
+            run_end += <span class="number">1</span>;
         }
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">compressed</span>)
+    <span class="prelude-val">Ok</span>(compressed)
 }
 
-<span class="kw">fn</span> <span class="ident">take_1</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">slice</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">slice</span>[<span class="number">0</span>];
-        <span class="kw-2">*</span><span class="ident">slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">slice</span>[<span class="number">1</span>..];
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+<span class="kw">fn </span>take_1(slice: <span class="kw-2">&amp;mut &amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;u8&gt; {
+    <span class="kw">if </span>!slice.is_empty() {
+        <span class="kw">let </span>result = slice[<span class="number">0</span>];
+        <span class="kw-2">*</span>slice = <span class="kw-2">&amp;</span>slice[<span class="number">1</span>..];
+        <span class="prelude-val">Ok</span>(result)
 
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;compressed data&quot;</span>))
+    } <span class="kw">else </span>{
+        <span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;compressed data&quot;</span>))
     }
 }
 
-<span class="kw">fn</span> <span class="ident">take_n</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>], <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">n</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">slice</span>.<span class="ident">len</span>() {
-        <span class="kw">let</span> (<span class="ident">front</span>, <span class="ident">back</span>) <span class="op">=</span> <span class="ident">slice</span>.<span class="ident">split_at</span>(<span class="ident">n</span>);
-        <span class="kw-2">*</span><span class="ident">slice</span> <span class="op">=</span> <span class="ident">back</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">front</span>)
+<span class="kw">fn </span>take_n&lt;<span class="lifetime">&#39;s</span>&gt;(slice: <span class="kw-2">&amp;mut &amp;</span><span class="lifetime">&#39;s </span>[u8], n: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;s </span>[u8]&gt; {
+    <span class="kw">if </span>n &lt;= slice.len() {
+        <span class="kw">let </span>(front, back) = slice.split_at(n);
+        <span class="kw-2">*</span>slice = back;
+        <span class="prelude-val">Ok</span>(front)
 
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;compressed data&quot;</span>))
+    } <span class="kw">else </span>{
+        <span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;compressed data&quot;</span>))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

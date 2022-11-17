@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/decoder/stream.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../tiff/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/decoder/stream.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../tiff/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -491,287 +485,287 @@
 <span id="485">485</span>
 <span id="486">486</span>
 <span id="487">487</span>
-</pre><pre class="rust"><code><span class="doccomment">//! All IO functionality needed for TIFF decoding</span>
+</pre><pre class="rust"><code><span class="doccomment">//! All IO functionality needed for TIFF decoding
 
-<span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">BufRead</span>, <span class="ident">BufReader</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>, <span class="ident">SeekFrom</span>, <span class="ident">Take</span>};
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+</span><span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::io::{<span class="self">self</span>, BufRead, BufReader, Read, Seek, SeekFrom, Take};
+<span class="kw">use </span>std::sync::Arc;
 
-<span class="doccomment">/// Byte order of the TIFF file.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ByteOrder</span> {
-    <span class="doccomment">/// little endian byte order</span>
-    <span class="ident">LittleEndian</span>,
-    <span class="doccomment">/// big endian byte order</span>
-    <span class="ident">BigEndian</span>,
+<span class="doccomment">/// Byte order of the TIFF file.
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
+</span><span class="kw">pub enum </span>ByteOrder {
+    <span class="doccomment">/// little endian byte order
+    </span>LittleEndian,
+    <span class="doccomment">/// big endian byte order
+    </span>BigEndian,
 }
 
-<span class="doccomment">/// Reader that is aware of the byte order.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EndianReader</span>: <span class="ident">Read</span> {
-    <span class="doccomment">/// Byte order that should be adhered to</span>
-    <span class="kw">fn</span> <span class="ident">byte_order</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ByteOrder</span>;
+<span class="doccomment">/// Reader that is aware of the byte order.
+</span><span class="kw">pub trait </span>EndianReader: Read {
+    <span class="doccomment">/// Byte order that should be adhered to
+    </span><span class="kw">fn </span>byte_order(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ByteOrder;
 
-    <span class="doccomment">/// Reads an u16</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_u16</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">2</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">u16::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">u16::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an u16
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;u16, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">2</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; u16::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; u16::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an i8</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_i8</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">i8</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">1</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">i8::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">i8::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an i8
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_i8(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;i8, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">1</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; i8::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; i8::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an i16</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_i16</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">i16</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">2</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">i16::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">i16::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an i16
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_i16(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;i16, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">2</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; i16::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; i16::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an u32</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_u32</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">4</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">u32::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">u32::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an u32
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;u32, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">4</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; u32::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; u32::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an i32</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_i32</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">i32</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">4</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">i32::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">i32::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an i32
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_i32(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;i32, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">4</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; i32::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; i32::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an u64</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_u64</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">8</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">u64::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">u64::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an u64
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;u64, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">8</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; u64::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; u64::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an i64</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_i64</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">i64</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">8</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">i64::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">i64::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an i64
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_i64(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;i64, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">8</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; i64::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; i64::from_be_bytes(n),
         })
     }
 
-    <span class="doccomment">/// Reads an f32</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_f32</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">f32</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">4</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">f32::from_bits</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">u32::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">u32::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an f32
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_f32(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;f32, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">4</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(f32::from_bits(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; u32::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; u32::from_be_bytes(n),
         }))
     }
 
-    <span class="doccomment">/// Reads an f64</span>
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">read_f64</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">8</span>];
-        <span class="self">self</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">n</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">f64::from_bits</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">byte_order</span>() {
-            <span class="ident">ByteOrder::LittleEndian</span> =&gt; <span class="ident">u64::from_le_bytes</span>(<span class="ident">n</span>),
-            <span class="ident">ByteOrder::BigEndian</span> =&gt; <span class="ident">u64::from_be_bytes</span>(<span class="ident">n</span>),
+    <span class="doccomment">/// Reads an f64
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_f64(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;f64, io::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>n = [<span class="number">0u8</span>; <span class="number">8</span>];
+        <span class="self">self</span>.read_exact(<span class="kw-2">&amp;mut </span>n)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(f64::from_bits(<span class="kw">match </span><span class="self">self</span>.byte_order() {
+            ByteOrder::LittleEndian =&gt; u64::from_le_bytes(n),
+            ByteOrder::BigEndian =&gt; u64::from_be_bytes(n),
         }))
     }
 }
 
-<span class="doccomment">///</span>
-<span class="doccomment">/// # READERS</span>
-<span class="doccomment">///</span>
+<span class="doccomment">///
+/// # READERS
+///
 
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Deflate Reader</span>
-<span class="doccomment">///</span>
+///
+/// ## Deflate Reader
+///
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">DeflateReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">flate2::read::ZlibDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+</span><span class="kw">pub type </span>DeflateReader&lt;R&gt; = flate2::read::ZlibDecoder&lt;R&gt;;
 
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## LZW Reader</span>
-<span class="doccomment">///</span>
+<span class="doccomment">///
+/// ## LZW Reader
+///
 
-<span class="doccomment">/// Reader that decompresses LZW streams</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LZWReader</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> {
-    <span class="ident">reader</span>: <span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">Take</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">decoder</span>: <span class="ident">weezl::decode::Decoder</span>,
+/// Reader that decompresses LZW streams
+</span><span class="kw">pub struct </span>LZWReader&lt;R: Read&gt; {
+    reader: BufReader&lt;Take&lt;R&gt;&gt;,
+    decoder: weezl::decode::Decoder,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">LZWReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Wraps a reader</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">reader</span>: <span class="ident">R</span>, <span class="ident">compressed_length</span>: <span class="ident">usize</span>) -&gt; <span class="ident">LZWReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-        <span class="self">Self</span> {
-            <span class="ident">reader</span>: <span class="ident">BufReader::with_capacity</span>(
-                (<span class="number">32</span> <span class="op">*</span> <span class="number">1024</span>).<span class="ident">min</span>(<span class="ident">compressed_length</span>),
-                <span class="ident">reader</span>.<span class="ident">take</span>(<span class="ident">u64::try_from</span>(<span class="ident">compressed_length</span>).<span class="ident">unwrap</span>()),
+<span class="kw">impl</span>&lt;R: Read&gt; LZWReader&lt;R&gt; {
+    <span class="doccomment">/// Wraps a reader
+    </span><span class="kw">pub fn </span>new(reader: R, compressed_length: usize) -&gt; LZWReader&lt;R&gt; {
+        <span class="self">Self </span>{
+            reader: BufReader::with_capacity(
+                (<span class="number">32 </span>* <span class="number">1024</span>).min(compressed_length),
+                reader.take(u64::try_from(compressed_length).unwrap()),
             ),
-            <span class="ident">decoder</span>: <span class="ident">weezl::decode::Decoder::with_tiff_size_switch</span>(<span class="ident">weezl::BitOrder::Msb</span>, <span class="number">8</span>),
+            decoder: weezl::decode::Decoder::with_tiff_size_switch(weezl::BitOrder::Msb, <span class="number">8</span>),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">LZWReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decoder</span>.<span class="ident">decode_bytes</span>(<span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">fill_buf</span>()<span class="question-mark">?</span>, <span class="ident">buf</span>);
-            <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">consume</span>(<span class="ident">result</span>.<span class="ident">consumed_in</span>);
+<span class="kw">impl</span>&lt;R: Read&gt; Read <span class="kw">for </span>LZWReader&lt;R&gt; {
+    <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>result = <span class="self">self</span>.decoder.decode_bytes(<span class="self">self</span>.reader.fill_buf()<span class="question-mark">?</span>, buf);
+            <span class="self">self</span>.reader.consume(result.consumed_in);
 
-            <span class="kw">match</span> <span class="ident">result</span>.<span class="ident">status</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">weezl::LzwStatus::Ok</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">consumed_out</span> <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">match </span>result.status {
+                <span class="prelude-val">Ok</span>(weezl::LzwStatus::Ok) =&gt; {
+                    <span class="kw">if </span>result.consumed_out == <span class="number">0 </span>{
                         <span class="kw">continue</span>;
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">result</span>.<span class="ident">consumed_out</span>);
+                    } <span class="kw">else </span>{
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(result.consumed_out);
                     }
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">weezl::LzwStatus::NoProgress</span>) =&gt; {
-                    <span class="macro">assert_eq!</span>(<span class="ident">result</span>.<span class="ident">consumed_in</span>, <span class="number">0</span>);
-                    <span class="macro">assert_eq!</span>(<span class="ident">result</span>.<span class="ident">consumed_out</span>, <span class="number">0</span>);
-                    <span class="macro">assert!</span>(<span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">buffer</span>().<span class="ident">is_empty</span>());
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(
-                        <span class="ident">io::ErrorKind::UnexpectedEof</span>,
+                <span class="prelude-val">Ok</span>(weezl::LzwStatus::NoProgress) =&gt; {
+                    <span class="macro">assert_eq!</span>(result.consumed_in, <span class="number">0</span>);
+                    <span class="macro">assert_eq!</span>(result.consumed_out, <span class="number">0</span>);
+                    <span class="macro">assert!</span>(<span class="self">self</span>.reader.buffer().is_empty());
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(io::Error::new(
+                        io::ErrorKind::UnexpectedEof,
                         <span class="string">&quot;no lzw end code found&quot;</span>,
                     ));
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">weezl::LzwStatus::Done</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">result</span>.<span class="ident">consumed_out</span>);
+                <span class="prelude-val">Ok</span>(weezl::LzwStatus::Done) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(result.consumed_out);
                 }
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(<span class="ident">io::ErrorKind::InvalidData</span>, <span class="ident">err</span>)),
+                <span class="prelude-val">Err</span>(err) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(io::Error::new(io::ErrorKind::InvalidData, err)),
             }
         }
     }
 }
 
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## JPEG Reader (for &quot;new-style&quot; JPEG format (TIFF compression tag 7))</span>
-<span class="doccomment">///</span>
+<span class="doccomment">///
+/// ## JPEG Reader (for &quot;new-style&quot; JPEG format (TIFF compression tag 7))
+///
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">JpegReader</span> {
-    <span class="ident">jpeg_tables</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>JpegReader {
+    jpeg_tables: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;u8&gt;&gt;&gt;,
 
-    <span class="ident">buffer</span>: <span class="ident">io::Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    buffer: io::Cursor&lt;Vec&lt;u8&gt;&gt;,
 
-    <span class="ident">offset</span>: <span class="ident">usize</span>,
+    offset: usize,
 }
 
-<span class="kw">impl</span> <span class="ident">JpegReader</span> {
-    <span class="doccomment">/// Constructs new JpegReader wrapping a SmartReader.</span>
-    <span class="doccomment">/// Because JPEG compression in TIFF allows to save quantization and/or huffman tables in one</span>
-    <span class="doccomment">/// central location, the constructor accepts this data as `jpeg_tables` here containing either</span>
-    <span class="doccomment">/// or both.</span>
-    <span class="doccomment">/// These `jpeg_tables` are simply prepended to the remaining jpeg image data.</span>
-    <span class="doccomment">/// Because these `jpeg_tables` start with a `SOI` (HEX: `0xFFD8`) or __start of image__ marker</span>
-    <span class="doccomment">/// which is also at the beginning of the remaining JPEG image data and would</span>
-    <span class="doccomment">/// confuse the JPEG renderer, one of these has to be taken off. In this case the first two</span>
-    <span class="doccomment">/// bytes of the remaining JPEG data is removed because it follows `jpeg_tables`.</span>
-    <span class="doccomment">/// Similary, `jpeg_tables` ends with a `EOI` (HEX: `0xFFD9`) or __end of image__ marker,</span>
-    <span class="doccomment">/// this has to be removed as well (last two bytes of `jpeg_tables`).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(
-        <span class="kw-2">mut</span> <span class="ident">reader</span>: <span class="ident">R</span>,
-        <span class="ident">length</span>: <span class="ident">u64</span>,
-        <span class="ident">jpeg_tables</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">JpegReader</span><span class="op">&gt;</span> {
-        <span class="comment">// Read jpeg image data</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">segment</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">length</span> <span class="kw">as</span> <span class="ident">usize</span>];
+<span class="kw">impl </span>JpegReader {
+    <span class="doccomment">/// Constructs new JpegReader wrapping a SmartReader.
+    /// Because JPEG compression in TIFF allows to save quantization and/or huffman tables in one
+    /// central location, the constructor accepts this data as `jpeg_tables` here containing either
+    /// or both.
+    /// These `jpeg_tables` are simply prepended to the remaining jpeg image data.
+    /// Because these `jpeg_tables` start with a `SOI` (HEX: `0xFFD8`) or __start of image__ marker
+    /// which is also at the beginning of the remaining JPEG image data and would
+    /// confuse the JPEG renderer, one of these has to be taken off. In this case the first two
+    /// bytes of the remaining JPEG data is removed because it follows `jpeg_tables`.
+    /// Similary, `jpeg_tables` ends with a `EOI` (HEX: `0xFFD9`) or __end of image__ marker,
+    /// this has to be removed as well (last two bytes of `jpeg_tables`).
+    </span><span class="kw">pub fn </span>new&lt;R: Read&gt;(
+        <span class="kw-2">mut </span>reader: R,
+        length: u64,
+        jpeg_tables: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;u8&gt;&gt;&gt;,
+    ) -&gt; io::Result&lt;JpegReader&gt; {
+        <span class="comment">// Read jpeg image data
+        </span><span class="kw">let </span><span class="kw-2">mut </span>segment = <span class="macro">vec!</span>[<span class="number">0</span>; length <span class="kw">as </span>usize];
 
-        <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">segment</span>[..])<span class="question-mark">?</span>;
+        reader.read_exact(<span class="kw-2">&amp;mut </span>segment[..])<span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">jpeg_tables</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">jpeg_tables</span>) =&gt; {
+        <span class="kw">match </span>jpeg_tables {
+            <span class="prelude-val">Some</span>(jpeg_tables) =&gt; {
                 <span class="macro">assert!</span>(
-                    <span class="ident">jpeg_tables</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span>,
+                    jpeg_tables.len() &gt;= <span class="number">2</span>,
                     <span class="string">&quot;jpeg_tables, if given, must be at least 2 bytes long. Got {:?}&quot;</span>,
-                    <span class="ident">jpeg_tables</span>
+                    jpeg_tables
                 );
 
                 <span class="macro">assert!</span>(
-                    <span class="ident">length</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span>,
+                    length &gt;= <span class="number">2</span>,
                     <span class="string">&quot;if jpeg_tables is given, length must be at least 2 bytes long, got {}&quot;</span>,
-                    <span class="ident">length</span>
+                    length
                 );
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">io::Cursor::new</span>(<span class="ident">segment</span>);
-                <span class="comment">// Skip the first two bytes (marker bytes)</span>
-                <span class="ident">buffer</span>.<span class="ident">seek</span>(<span class="ident">SeekFrom::Start</span>(<span class="number">2</span>))<span class="question-mark">?</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>buffer = io::Cursor::new(segment);
+                <span class="comment">// Skip the first two bytes (marker bytes)
+                </span>buffer.seek(SeekFrom::Start(<span class="number">2</span>))<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Ok</span>(<span class="ident">JpegReader</span> {
-                    <span class="ident">buffer</span>,
-                    <span class="ident">jpeg_tables</span>: <span class="prelude-val">Some</span>(<span class="ident">jpeg_tables</span>),
-                    <span class="ident">offset</span>: <span class="number">0</span>,
+                <span class="prelude-val">Ok</span>(JpegReader {
+                    buffer,
+                    jpeg_tables: <span class="prelude-val">Some</span>(jpeg_tables),
+                    offset: <span class="number">0</span>,
                 })
             }
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">JpegReader</span> {
-                <span class="ident">buffer</span>: <span class="ident">io::Cursor::new</span>(<span class="ident">segment</span>),
-                <span class="ident">jpeg_tables</span>: <span class="prelude-val">None</span>,
-                <span class="ident">offset</span>: <span class="number">0</span>,
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(JpegReader {
+                buffer: io::Cursor::new(segment),
+                jpeg_tables: <span class="prelude-val">None</span>,
+                offset: <span class="number">0</span>,
             }),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">JpegTagApp14Transform</span> {
-    <span class="comment">// App14TransformYCCK = 2,</span>
-    <span class="comment">// App14TransformYCbCr = 1,</span>
-    <span class="ident">App14TransformUnknown</span> <span class="op">=</span> <span class="number">0</span>,
+<span class="attribute">#[repr(u8)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>JpegTagApp14Transform {
+    <span class="comment">// App14TransformYCCK = 2,
+    // App14TransformYCbCr = 1,
+    </span>App14TransformUnknown = <span class="number">0</span>,
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">add_app14segment</span>(<span class="ident">jpeg_tables</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">transform</span>: <span class="ident">JpegTagApp14Transform</span>) {
-    <span class="comment">// Add JPEG Tag APP14 Adobe segment to jpeg_tables.</span>
-    <span class="comment">// This segment stores image encoding information for DCT filters.</span>
-    <span class="comment">// When `transform` value is 0 which is defined as Unknown, jpeg-decoder interpret the</span>
-    <span class="comment">// color-space of image as RGB(3 channels) or CMYK(4).</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">app14_offset</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dht_offset</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-    <span class="kw">for</span> (<span class="ident">offset</span>, <span class="ident">window</span>) <span class="kw">in</span> <span class="ident">jpeg_tables</span>.<span class="ident">windows</span>(<span class="number">2</span>).<span class="ident">enumerate</span>() {
-        <span class="kw">if</span> <span class="ident">window</span> <span class="op">==</span> [<span class="number">0xff</span>, <span class="number">0xee</span>] {
-            <span class="ident">app14_offset</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>add_app14segment(jpeg_tables: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;, transform: JpegTagApp14Transform) {
+    <span class="comment">// Add JPEG Tag APP14 Adobe segment to jpeg_tables.
+    // This segment stores image encoding information for DCT filters.
+    // When `transform` value is 0 which is defined as Unknown, jpeg-decoder interpret the
+    // color-space of image as RGB(3 channels) or CMYK(4).
+    </span><span class="kw">let </span><span class="kw-2">mut </span>app14_offset = <span class="prelude-val">None</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>dht_offset = <span class="prelude-val">None</span>;
+    <span class="kw">for </span>(offset, window) <span class="kw">in </span>jpeg_tables.windows(<span class="number">2</span>).enumerate() {
+        <span class="kw">if </span>window == [<span class="number">0xff</span>, <span class="number">0xee</span>] {
+            app14_offset = <span class="prelude-val">Some</span>(offset);
             <span class="kw">break</span>;
         }
-        <span class="kw">if</span> <span class="ident">window</span> <span class="op">==</span> [<span class="number">0xff</span>, <span class="number">0xc4</span>] {
-            <span class="ident">dht_offset</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">offset</span>);
+        <span class="kw">if </span>window == [<span class="number">0xff</span>, <span class="number">0xc4</span>] {
+            dht_offset = <span class="prelude-val">Some</span>(offset);
         }
     }
-    <span class="kw">match</span> (<span class="ident">app14_offset</span>, <span class="ident">dht_offset</span>) {
-        (<span class="prelude-val">Some</span>(<span class="ident">i</span>), <span class="kw">_</span>) =&gt; {
-            <span class="ident">jpeg_tables</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">16</span>] <span class="op">=</span> <span class="ident">transform</span> <span class="kw">as</span> <span class="ident">u8</span>;
+    <span class="kw">match </span>(app14_offset, dht_offset) {
+        (<span class="prelude-val">Some</span>(i), <span class="kw">_</span>) =&gt; {
+            jpeg_tables[i + <span class="number">16</span>] = transform <span class="kw">as </span>u8;
         }
-        (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">sos_offset</span>)) =&gt; {
-            <span class="kw">let</span> <span class="ident">app14segment</span>: [<span class="ident">u8</span>; <span class="number">16</span>] <span class="op">=</span> [
+        (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(sos_offset)) =&gt; {
+            <span class="kw">let </span>app14segment: [u8; <span class="number">16</span>] = [
                 <span class="number">0xff</span>,
                 <span class="number">0xee</span>,
                 <span class="number">0x00</span>,
@@ -787,197 +781,196 @@
                 <span class="number">0x00</span>,
                 <span class="number">0x00</span>,
                 <span class="number">0x00</span>,
-                <span class="ident">transform</span> <span class="kw">as</span> <span class="ident">u8</span>,
+                transform <span class="kw">as </span>u8,
             ];
-            <span class="ident">jpeg_tables</span>.<span class="ident">splice</span>(<span class="ident">sos_offset</span>..<span class="ident">sos_offset</span>, <span class="ident">app14segment</span>.<span class="ident">iter</span>().<span class="ident">copied</span>());
+            jpeg_tables.splice(sos_offset..sos_offset, app14segment.iter().copied());
         }
         (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; {}
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">JpegReader</span> {
-    <span class="comment">// #[inline]</span>
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> <span class="number">0</span>;
+<span class="kw">impl </span>Read <span class="kw">for </span>JpegReader {
+    <span class="comment">// #[inline]
+    </span><span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>start = <span class="number">0</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">jpeg_tables</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">jpeg_tables</span> {
-            <span class="kw">if</span> <span class="ident">jpeg_tables</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">2</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">offset</span> {
-                <span class="comment">// Read (rest of) jpeg_tables to buf (without the last two bytes)</span>
-                <span class="kw">let</span> <span class="ident">size_remaining</span> <span class="op">=</span> <span class="ident">jpeg_tables</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span> <span class="op">-</span> <span class="number">2</span>;
-                <span class="kw">let</span> <span class="ident">to_copy</span> <span class="op">=</span> <span class="ident">size_remaining</span>.<span class="ident">min</span>(<span class="ident">buf</span>.<span class="ident">len</span>());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(jpeg_tables) = <span class="kw-2">&amp;</span><span class="self">self</span>.jpeg_tables {
+            <span class="kw">if </span>jpeg_tables.len() - <span class="number">2 </span>&gt; <span class="self">self</span>.offset {
+                <span class="comment">// Read (rest of) jpeg_tables to buf (without the last two bytes)
+                </span><span class="kw">let </span>size_remaining = jpeg_tables.len() - <span class="self">self</span>.offset - <span class="number">2</span>;
+                <span class="kw">let </span>to_copy = size_remaining.min(buf.len());
 
-                <span class="ident">buf</span>[<span class="ident">start</span>..<span class="ident">start</span> <span class="op">+</span> <span class="ident">to_copy</span>]
-                    .<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">jpeg_tables</span>[<span class="self">self</span>.<span class="ident">offset</span>..<span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span> <span class="ident">to_copy</span>]);
+                buf[start..start + to_copy]
+                    .copy_from_slice(<span class="kw-2">&amp;</span>jpeg_tables[<span class="self">self</span>.offset..<span class="self">self</span>.offset + to_copy]);
 
-                <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">to_copy</span>;
+                <span class="self">self</span>.offset += to_copy;
 
-                <span class="kw">if</span> <span class="ident">to_copy</span> <span class="op">==</span> <span class="ident">buf</span>.<span class="ident">len</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">to_copy</span>);
+                <span class="kw">if </span>to_copy == buf.len() {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(to_copy);
                 }
 
-                <span class="ident">start</span> <span class="op">+</span><span class="op">=</span> <span class="ident">to_copy</span>;
+                start += to_copy;
             }
         }
 
-        <span class="kw">let</span> <span class="ident">read</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>[<span class="ident">start</span>..])<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="ident">read</span>;
+        <span class="kw">let </span>read = <span class="self">self</span>.buffer.read(<span class="kw-2">&amp;mut </span>buf[start..])<span class="question-mark">?</span>;
+        <span class="self">self</span>.offset += read;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">read</span> <span class="op">+</span> <span class="ident">start</span>)
+        <span class="prelude-val">Ok</span>(read + start)
     }
 }
 
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## PackBits Reader</span>
-<span class="doccomment">///</span>
+<span class="doccomment">///
+/// ## PackBits Reader
+///
 
-<span class="kw">enum</span> <span class="ident">PackBitsReaderState</span> {
-    <span class="ident">Header</span>,
-    <span class="ident">Literal</span>,
-    <span class="ident">Repeat</span> { <span class="ident">value</span>: <span class="ident">u8</span> },
+</span><span class="kw">enum </span>PackBitsReaderState {
+    Header,
+    Literal,
+    Repeat { value: u8 },
 }
 
-<span class="doccomment">/// Reader that unpacks Apple&#39;s `PackBits` format</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PackBitsReader</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> {
-    <span class="ident">reader</span>: <span class="ident">Take</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-    <span class="ident">state</span>: <span class="ident">PackBitsReaderState</span>,
-    <span class="ident">count</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Reader that unpacks Apple&#39;s `PackBits` format
+</span><span class="kw">pub struct </span>PackBitsReader&lt;R: Read&gt; {
+    reader: Take&lt;R&gt;,
+    state: PackBitsReaderState,
+    count: usize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">PackBitsReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Wraps a reader</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">reader</span>: <span class="ident">R</span>, <span class="ident">length</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">reader</span>: <span class="ident">reader</span>.<span class="ident">take</span>(<span class="ident">length</span>),
-            <span class="ident">state</span>: <span class="ident">PackBitsReaderState::Header</span>,
-            <span class="ident">count</span>: <span class="number">0</span>,
+<span class="kw">impl</span>&lt;R: Read&gt; PackBitsReader&lt;R&gt; {
+    <span class="doccomment">/// Wraps a reader
+    </span><span class="kw">pub fn </span>new(reader: R, length: u64) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            reader: reader.take(length),
+            state: PackBitsReaderState::Header,
+            count: <span class="number">0</span>,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">PackBitsReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">while</span> <span class="kw">let</span> <span class="ident">PackBitsReaderState::Header</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">limit</span>() <span class="op">==</span> <span class="number">0</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>);
+<span class="kw">impl</span>&lt;R: Read&gt; Read <span class="kw">for </span>PackBitsReader&lt;R&gt; {
+    <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">while let </span>PackBitsReaderState::Header = <span class="self">self</span>.state {
+            <span class="kw">if </span><span class="self">self</span>.reader.limit() == <span class="number">0 </span>{
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="number">0</span>);
             }
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">header</span>: [<span class="ident">u8</span>; <span class="number">1</span>] <span class="op">=</span> [<span class="number">0</span>];
-            <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">header</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">header</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">i8</span>;
-            <span class="kw">if</span> <span class="ident">h</span> <span class="op">&gt;</span><span class="op">=</span> <span class="op">-</span><span class="number">127</span> <span class="op">&amp;&amp;</span> <span class="ident">h</span> <span class="op">&lt;</span><span class="op">=</span> <span class="op">-</span><span class="number">1</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span>: [<span class="ident">u8</span>; <span class="number">1</span>] <span class="op">=</span> [<span class="number">0</span>];
-                <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">data</span>)<span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">PackBitsReaderState::Repeat</span> { <span class="ident">value</span>: <span class="ident">data</span>[<span class="number">0</span>] };
-                <span class="self">self</span>.<span class="ident">count</span> <span class="op">=</span> (<span class="number">1</span> <span class="op">-</span> <span class="ident">h</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">h</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">PackBitsReaderState::Literal</span>;
-                <span class="self">self</span>.<span class="ident">count</span> <span class="op">=</span> <span class="ident">h</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="number">1</span>;
-            } <span class="kw">else</span> {
-                <span class="comment">// h = -128 is a no-op.</span>
-            }
+            <span class="kw">let </span><span class="kw-2">mut </span>header: [u8; <span class="number">1</span>] = [<span class="number">0</span>];
+            <span class="self">self</span>.reader.read_exact(<span class="kw-2">&amp;mut </span>header)<span class="question-mark">?</span>;
+            <span class="kw">let </span>h = header[<span class="number">0</span>] <span class="kw">as </span>i8;
+            <span class="kw">if </span>h &gt;= -<span class="number">127 </span>&amp;&amp; h &lt;= -<span class="number">1 </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>data: [u8; <span class="number">1</span>] = [<span class="number">0</span>];
+                <span class="self">self</span>.reader.read_exact(<span class="kw-2">&amp;mut </span>data)<span class="question-mark">?</span>;
+                <span class="self">self</span>.state = PackBitsReaderState::Repeat { value: data[<span class="number">0</span>] };
+                <span class="self">self</span>.count = (<span class="number">1 </span>- h <span class="kw">as </span>isize) <span class="kw">as </span>usize;
+            } <span class="kw">else if </span>h &gt;= <span class="number">0 </span>{
+                <span class="self">self</span>.state = PackBitsReaderState::Literal;
+                <span class="self">self</span>.count = h <span class="kw">as </span>usize + <span class="number">1</span>;
+            } <span class="kw">else </span>{
+                <span class="comment">// h = -128 is a no-op.
+            </span>}
         }
 
-        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">len</span>().<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">count</span>);
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">state</span> {
-            <span class="ident">PackBitsReaderState::Literal</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>[..<span class="ident">length</span>])<span class="question-mark">?</span>;
+        <span class="kw">let </span>length = buf.len().min(<span class="self">self</span>.count);
+        <span class="kw">match </span><span class="self">self</span>.state {
+            PackBitsReaderState::Literal =&gt; {
+                <span class="self">self</span>.reader.read(<span class="kw-2">&amp;mut </span>buf[..length])<span class="question-mark">?</span>;
             }
-            <span class="ident">PackBitsReaderState::Repeat</span> { <span class="ident">value</span> } =&gt; {
-                <span class="kw">for</span> <span class="ident">b</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">buf</span>[..<span class="ident">length</span>] {
-                    <span class="kw-2">*</span><span class="ident">b</span> <span class="op">=</span> <span class="ident">value</span>;
+            PackBitsReaderState::Repeat { value } =&gt; {
+                <span class="kw">for </span>b <span class="kw">in </span><span class="kw-2">&amp;mut </span>buf[..length] {
+                    <span class="kw-2">*</span>b = value;
                 }
             }
-            <span class="ident">PackBitsReaderState::Header</span> =&gt; <span class="macro">unreachable!</span>(),
+            PackBitsReaderState::Header =&gt; <span class="macro">unreachable!</span>(),
         }
 
-        <span class="self">self</span>.<span class="ident">count</span> <span class="op">-</span><span class="op">=</span> <span class="ident">length</span>;
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">count</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">PackBitsReaderState::Header</span>;
+        <span class="self">self</span>.count -= length;
+        <span class="kw">if </span><span class="self">self</span>.count == <span class="number">0 </span>{
+            <span class="self">self</span>.state = PackBitsReaderState::Header;
         }
-        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">length</span>);
+        <span class="kw">return </span><span class="prelude-val">Ok</span>(length);
     }
 }
 
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## SmartReader Reader</span>
-<span class="doccomment">///</span>
+<span class="doccomment">///
+/// ## SmartReader Reader
+///
 
-<span class="doccomment">/// Reader that is aware of the byte order.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span>,
+/// Reader that is aware of the byte order.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>SmartReader&lt;R&gt;
+<span class="kw">where
+    </span>R: Read,
 {
-    <span class="ident">reader</span>: <span class="ident">R</span>,
-    <span class="kw">pub</span> <span class="ident">byte_order</span>: <span class="ident">ByteOrder</span>,
+    reader: R,
+    <span class="kw">pub </span>byte_order: ByteOrder,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span>,
+<span class="kw">impl</span>&lt;R&gt; SmartReader&lt;R&gt;
+<span class="kw">where
+    </span>R: Read,
 {
-    <span class="doccomment">/// Wraps a reader</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap</span>(<span class="ident">reader</span>: <span class="ident">R</span>, <span class="ident">byte_order</span>: <span class="ident">ByteOrder</span>) -&gt; <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-        <span class="ident">SmartReader</span> { <span class="ident">reader</span>, <span class="ident">byte_order</span> }
+    <span class="doccomment">/// Wraps a reader
+    </span><span class="kw">pub fn </span>wrap(reader: R, byte_order: ByteOrder) -&gt; SmartReader&lt;R&gt; {
+        SmartReader { reader, byte_order }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) -&gt; <span class="ident">R</span> {
-        <span class="self">self</span>.<span class="ident">reader</span>
+    <span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; R {
+        <span class="self">self</span>.reader
     }
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">goto_offset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">offset</span>: <span class="ident">u64</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">seek</span>(<span class="ident">io::SeekFrom::Start</span>(<span class="ident">offset</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; SmartReader&lt;R&gt; {
+    <span class="kw">pub fn </span>goto_offset(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: u64) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.seek(io::SeekFrom::Start(offset)).map(|<span class="kw">_</span>| ())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">EndianReader</span> <span class="kw">for</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span>,
+<span class="kw">impl</span>&lt;R&gt; EndianReader <span class="kw">for </span>SmartReader&lt;R&gt;
+<span class="kw">where
+    </span>R: Read,
 {
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">byte_order</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ByteOrder</span> {
-        <span class="self">self</span>.<span class="ident">byte_order</span>
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>byte_order(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ByteOrder {
+        <span class="self">self</span>.byte_order
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
+<span class="kw">impl</span>&lt;R: Read&gt; Read <span class="kw">for </span>SmartReader&lt;R&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="self">self</span>.reader.read(buf)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">Seek</span> <span class="kw">for</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">seek</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">io::SeekFrom</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">seek</span>(<span class="ident">pos</span>)
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; Seek <span class="kw">for </span>SmartReader&lt;R&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>seek(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pos: io::SeekFrom) -&gt; io::Result&lt;u64&gt; {
+        <span class="self">self</span>.reader.seek(pos)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_packbits</span>() {
-        <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_packbits() {
+        <span class="kw">let </span>encoded = <span class="macro">vec!</span>[
             <span class="number">0xFE</span>, <span class="number">0xAA</span>, <span class="number">0x02</span>, <span class="number">0x80</span>, <span class="number">0x00</span>, <span class="number">0x2A</span>, <span class="number">0xFD</span>, <span class="number">0xAA</span>, <span class="number">0x03</span>, <span class="number">0x80</span>, <span class="number">0x00</span>, <span class="number">0x2A</span>, <span class="number">0x22</span>, <span class="number">0xF7</span>,
             <span class="number">0xAA</span>,
         ];
-        <span class="kw">let</span> <span class="ident">encoded_len</span> <span class="op">=</span> <span class="ident">encoded</span>.<span class="ident">len</span>();
+        <span class="kw">let </span>encoded_len = encoded.len();
 
-        <span class="kw">let</span> <span class="ident">buff</span> <span class="op">=</span> <span class="ident">io::Cursor::new</span>(<span class="ident">encoded</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">PackBitsReader::new</span>(<span class="ident">buff</span>, <span class="ident">encoded_len</span> <span class="kw">as</span> <span class="ident">u64</span>);
+        <span class="kw">let </span>buff = io::Cursor::new(encoded);
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = PackBitsReader::new(buff, encoded_len <span class="kw">as </span>u64);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="ident">decoder</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="ident">decoded</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>decoded = Vec::new();
+        decoder.read_to_end(<span class="kw-2">&amp;mut </span>decoded).unwrap();
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">vec!</span>[
+        <span class="kw">let </span>expected = <span class="macro">vec!</span>[
             <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0x80</span>, <span class="number">0x00</span>, <span class="number">0x2A</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0x80</span>, <span class="number">0x00</span>, <span class="number">0x2A</span>, <span class="number">0x22</span>,
             <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>, <span class="number">0xAA</span>,
         ];
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="ident">expected</span>);
+        <span class="macro">assert_eq!</span>(decoded, expected);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

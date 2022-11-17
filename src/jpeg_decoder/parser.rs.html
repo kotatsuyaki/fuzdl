@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/jpeg-decoder-0.2.6/src/parser.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../jpeg_decoder/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/jpeg-decoder-0.2.6/src/parser.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../jpeg_decoder/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -689,691 +683,690 @@
 <span id="683">683</span>
 <span id="684">684</span>
 <span id="685">685</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">alloc::borrow::ToOwned</span>;
-<span class="kw">use</span> <span class="ident">alloc</span>::{<span class="ident">format</span>, <span class="ident">vec</span>};
-<span class="kw">use</span> <span class="ident">alloc::vec::Vec</span>;
-<span class="kw">use</span> <span class="ident">core::ops</span>::{<span class="self">self</span>, <span class="ident">Range</span>};
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Read</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">read_u16_from_be</span>, <span class="ident">read_u8</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>, <span class="ident">UnsupportedFeature</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman</span>::{<span class="ident">HuffmanTable</span>, <span class="ident">HuffmanTableClass</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::marker::Marker</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::marker::Marker</span>::<span class="kw-2">*</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>alloc::borrow::ToOwned;
+<span class="kw">use </span>alloc::{format, vec};
+<span class="kw">use </span>alloc::vec::Vec;
+<span class="kw">use </span>core::ops::{<span class="self">self</span>, Range};
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Read};
+<span class="kw">use crate</span>::{read_u16_from_be, read_u8};
+<span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>, UnsupportedFeature};
+<span class="kw">use </span><span class="kw">crate</span>::huffman::{HuffmanTable, HuffmanTableClass};
+<span class="kw">use </span><span class="kw">crate</span>::marker::Marker;
+<span class="kw">use </span><span class="kw">crate</span>::marker::Marker::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Dimensions</span> {
-    <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">u16</span>,
-    <span class="kw">pub</span> <span class="ident">height</span>: <span class="ident">u16</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub struct </span>Dimensions {
+    <span class="kw">pub </span>width: u16,
+    <span class="kw">pub </span>height: u16,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EntropyCoding</span> {
-    <span class="ident">Huffman</span>,
-    <span class="ident">Arithmetic</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub enum </span>EntropyCoding {
+    Huffman,
+    Arithmetic,
 }
 
-<span class="doccomment">/// Represents the coding process of an image.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CodingProcess</span> {
-    <span class="doccomment">/// Sequential Discrete Cosine Transform</span>
-    <span class="ident">DctSequential</span>,
-    <span class="doccomment">/// Progressive Discrete Cosine Transform</span>
-    <span class="ident">DctProgressive</span>,
-    <span class="doccomment">/// Lossless</span>
-    <span class="ident">Lossless</span>,
+<span class="doccomment">/// Represents the coding process of an image.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub enum </span>CodingProcess {
+    <span class="doccomment">/// Sequential Discrete Cosine Transform
+    </span>DctSequential,
+    <span class="doccomment">/// Progressive Discrete Cosine Transform
+    </span>DctProgressive,
+    <span class="doccomment">/// Lossless
+    </span>Lossless,
 }
 
-<span class="comment">// Table H.1</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Predictor</span> {
-    <span class="ident">NoPrediction</span>,
-    <span class="ident">Ra</span>,
-    <span class="ident">Rb</span>,
-    <span class="ident">Rc</span>,
-    <span class="ident">RaRbRc1</span>, <span class="comment">// Ra + Rb - Rc</span>
-    <span class="ident">RaRbRc2</span>, <span class="comment">// Ra + ((Rb - Rc) &gt;&gt; 1)</span>
-    <span class="ident">RaRbRc3</span>, <span class="comment">// Rb + ((Ra - Rb) &gt;&gt; 1)</span>
-    <span class="ident">RaRb</span>,    <span class="comment">// (Ra + Rb)/2</span>
+<span class="comment">// Table H.1
+</span><span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub enum </span>Predictor {
+    NoPrediction,
+    Ra,
+    Rb,
+    Rc,
+    RaRbRc1, <span class="comment">// Ra + Rb - Rc
+    </span>RaRbRc2, <span class="comment">// Ra + ((Rb - Rc) &gt;&gt; 1)
+    </span>RaRbRc3, <span class="comment">// Rb + ((Ra - Rb) &gt;&gt; 1)
+    </span>RaRb,    <span class="comment">// (Ra + Rb)/2
+</span>}
+
+
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>FrameInfo {
+    <span class="kw">pub </span>is_baseline: bool,
+    <span class="kw">pub </span>is_differential: bool,
+    <span class="kw">pub </span>coding_process: CodingProcess,
+    <span class="kw">pub </span>entropy_coding: EntropyCoding,
+    <span class="kw">pub </span>precision: u8,
+
+    <span class="kw">pub </span>image_size: Dimensions,
+    <span class="kw">pub </span>output_size: Dimensions,
+    <span class="kw">pub </span>mcu_size: Dimensions,
+    <span class="kw">pub </span>components: Vec&lt;Component&gt;,
 }
 
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ScanInfo {
+    <span class="kw">pub </span>component_indices: Vec&lt;usize&gt;,
+    <span class="kw">pub </span>dc_table_indices: Vec&lt;usize&gt;,
+    <span class="kw">pub </span>ac_table_indices: Vec&lt;usize&gt;,
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FrameInfo</span> {
-    <span class="kw">pub</span> <span class="ident">is_baseline</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">is_differential</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">coding_process</span>: <span class="ident">CodingProcess</span>,
-    <span class="kw">pub</span> <span class="ident">entropy_coding</span>: <span class="ident">EntropyCoding</span>,
-    <span class="kw">pub</span> <span class="ident">precision</span>: <span class="ident">u8</span>,
+    <span class="kw">pub </span>spectral_selection: Range&lt;u8&gt;,
+    <span class="kw">pub </span>predictor_selection: Predictor, <span class="comment">// for lossless
+    </span><span class="kw">pub </span>successive_approximation_high: u8,
+    <span class="kw">pub </span>successive_approximation_low: u8,
+    <span class="kw">pub </span>point_transform: u8, <span class="comment">// for lossless
+</span>}
 
-    <span class="kw">pub</span> <span class="ident">image_size</span>: <span class="ident">Dimensions</span>,
-    <span class="kw">pub</span> <span class="ident">output_size</span>: <span class="ident">Dimensions</span>,
-    <span class="kw">pub</span> <span class="ident">mcu_size</span>: <span class="ident">Dimensions</span>,
-    <span class="kw">pub</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub struct </span>Component {
+    <span class="kw">pub </span>identifier: u8,
+
+    <span class="kw">pub </span>horizontal_sampling_factor: u8,
+    <span class="kw">pub </span>vertical_sampling_factor: u8,
+
+    <span class="kw">pub </span>quantization_table_index: usize,
+
+    <span class="kw">pub </span>dct_scale: usize,
+
+    <span class="kw">pub </span>size: Dimensions,
+    <span class="kw">pub </span>block_size: Dimensions,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScanInfo</span> {
-    <span class="kw">pub</span> <span class="ident">component_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">dc_table_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">ac_table_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-
-    <span class="kw">pub</span> <span class="ident">spectral_selection</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">predictor_selection</span>: <span class="ident">Predictor</span>, <span class="comment">// for lossless</span>
-    <span class="kw">pub</span> <span class="ident">successive_approximation_high</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">successive_approximation_low</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">point_transform</span>: <span class="ident">u8</span>, <span class="comment">// for lossless</span>
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub enum </span>AppData {
+    Adobe(AdobeColorTransform),
+    Jfif,
+    Avi1,
+    Icc(IccChunk),
+    Exif(Vec&lt;u8&gt;),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Component</span> {
-    <span class="kw">pub</span> <span class="ident">identifier</span>: <span class="ident">u8</span>,
-
-    <span class="kw">pub</span> <span class="ident">horizontal_sampling_factor</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">vertical_sampling_factor</span>: <span class="ident">u8</span>,
-
-    <span class="kw">pub</span> <span class="ident">quantization_table_index</span>: <span class="ident">usize</span>,
-
-    <span class="kw">pub</span> <span class="ident">dct_scale</span>: <span class="ident">usize</span>,
-
-    <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">Dimensions</span>,
-    <span class="kw">pub</span> <span class="ident">block_size</span>: <span class="ident">Dimensions</span>,
+<span class="comment">// http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/JPEG.html#Adobe
+</span><span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub enum </span>AdobeColorTransform {
+    <span class="comment">// RGB or CMYK
+    </span>Unknown,
+    YCbCr,
+    <span class="comment">// YCbCrK
+    </span>YCCK,
+}
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>IccChunk {
+    <span class="kw">pub </span>num_markers: u8,
+    <span class="kw">pub </span>seq_no: u8,
+    <span class="kw">pub </span>data: Vec&lt;u8&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AppData</span> {
-    <span class="ident">Adobe</span>(<span class="ident">AdobeColorTransform</span>),
-    <span class="ident">Jfif</span>,
-    <span class="ident">Avi1</span>,
-    <span class="ident">Icc</span>(<span class="ident">IccChunk</span>),
-    <span class="ident">Exif</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
-}
-
-<span class="comment">// http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/JPEG.html#Adobe</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AdobeColorTransform</span> {
-    <span class="comment">// RGB or CMYK</span>
-    <span class="ident">Unknown</span>,
-    <span class="ident">YCbCr</span>,
-    <span class="comment">// YCbCrK</span>
-    <span class="ident">YCCK</span>,
-}
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IccChunk</span> {
-    <span class="kw">pub</span> <span class="ident">num_markers</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">seq_no</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">FrameInfo</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_idct_size</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">idct_size</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">for</span> <span class="ident">component</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">components</span> {
-            <span class="ident">component</span>.<span class="ident">dct_scale</span> <span class="op">=</span> <span class="ident">idct_size</span>;
+<span class="kw">impl </span>FrameInfo {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>update_idct_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, idct_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">for </span>component <span class="kw">in </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.components {
+            component.dct_scale = idct_size;
         }
 
-        <span class="ident">update_component_sizes</span>(<span class="self">self</span>.<span class="ident">image_size</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">components</span>)<span class="question-mark">?</span>;
+        update_component_sizes(<span class="self">self</span>.image_size, <span class="kw-2">&amp;mut </span><span class="self">self</span>.components)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">output_size</span> <span class="op">=</span> <span class="ident">Dimensions</span> {
-            <span class="ident">width</span>: (<span class="self">self</span>.<span class="ident">image_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">idct_size</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="number">8.0</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u16</span>,
-            <span class="ident">height</span>: (<span class="self">self</span>.<span class="ident">image_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="ident">idct_size</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> <span class="number">8.0</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u16</span>
+        <span class="self">self</span>.output_size = Dimensions {
+            width: (<span class="self">self</span>.image_size.width <span class="kw">as </span>f32 * idct_size <span class="kw">as </span>f32 / <span class="number">8.0</span>).ceil() <span class="kw">as </span>u16,
+            height: (<span class="self">self</span>.image_size.height <span class="kw">as </span>f32 * idct_size <span class="kw">as </span>f32 / <span class="number">8.0</span>).ceil() <span class="kw">as </span>u16
         };
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">fn</span> <span class="ident">read_length</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">marker</span>: <span class="ident">Marker</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-    <span class="macro">assert!</span>(<span class="ident">marker</span>.<span class="ident">has_length</span>());
+<span class="kw">fn </span>read_length&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R, marker: Marker) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
+    <span class="macro">assert!</span>(marker.has_length());
 
-    <span class="comment">// length is including itself.</span>
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">read_u16_from_be</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>);
+    <span class="comment">// length is including itself.
+    </span><span class="kw">let </span>length = usize::from(read_u16_from_be(reader)<span class="question-mark">?</span>);
 
-    <span class="kw">if</span> <span class="ident">length</span> <span class="op">&lt;</span> <span class="number">2</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;encountered {:?} with invalid length {}&quot;</span>, <span class="ident">marker</span>, <span class="ident">length</span>)));
+    <span class="kw">if </span>length &lt; <span class="number">2 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;encountered {:?} with invalid length {}&quot;</span>, marker, length)));
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">length</span> <span class="op">-</span> <span class="number">2</span>)
+    <span class="prelude-val">Ok</span>(length - <span class="number">2</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">skip_bytes</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">length</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">length</span> <span class="kw">as</span> <span class="ident">u64</span>;
-    <span class="kw">let</span> <span class="ident">to_skip</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">reader</span>.<span class="ident">by_ref</span>().<span class="ident">take</span>(<span class="ident">length</span>);
-    <span class="kw">let</span> <span class="ident">copied</span> <span class="op">=</span> <span class="ident">io::copy</span>(<span class="ident">to_skip</span>, <span class="kw-2">&amp;mut</span> <span class="ident">io::sink</span>())<span class="question-mark">?</span>;
-    <span class="kw">if</span> <span class="ident">copied</span> <span class="op">&lt;</span> <span class="ident">length</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error::Io</span>(<span class="ident">io::ErrorKind::UnexpectedEof</span>.<span class="ident">into</span>()))
-    } <span class="kw">else</span> {
+<span class="kw">fn </span>skip_bytes&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R, length: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">let </span>length = length <span class="kw">as </span>u64;
+    <span class="kw">let </span>to_skip = <span class="kw-2">&amp;mut </span>reader.by_ref().take(length);
+    <span class="kw">let </span>copied = io::copy(to_skip, <span class="kw-2">&amp;mut </span>io::sink())<span class="question-mark">?</span>;
+    <span class="kw">if </span>copied &lt; length {
+        <span class="prelude-val">Err</span>(Error::Io(io::ErrorKind::UnexpectedEof.into()))
+    } <span class="kw">else </span>{
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="comment">// Section B.2.2</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_sof</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">marker</span>: <span class="ident">Marker</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FrameInfo</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">marker</span>)<span class="question-mark">?</span>;
+<span class="comment">// Section B.2.2
+</span><span class="kw">pub fn </span>parse_sof&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R, marker: Marker) -&gt; <span class="prelude-ty">Result</span>&lt;FrameInfo&gt; {
+    <span class="kw">let </span>length = read_length(reader, marker)<span class="question-mark">?</span>;
 
-    <span class="kw">if</span> <span class="ident">length</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">6</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid length in SOF&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>length &lt;= <span class="number">6 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid length in SOF&quot;</span>.to_owned()));
     }
 
-    <span class="kw">let</span> <span class="ident">is_baseline</span> <span class="op">=</span> <span class="ident">marker</span> <span class="op">==</span> <span class="ident">SOF</span>(<span class="number">0</span>);
-    <span class="kw">let</span> <span class="ident">is_differential</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">marker</span> {
-        <span class="ident">SOF</span>(<span class="number">0</span> ..<span class="op">=</span> <span class="number">3</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">9</span> ..<span class="op">=</span> <span class="number">11</span>)  =&gt; <span class="bool-val">false</span>,
-        <span class="ident">SOF</span>(<span class="number">5</span> ..<span class="op">=</span> <span class="number">7</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">13</span> ..<span class="op">=</span> <span class="number">15</span>) =&gt; <span class="bool-val">true</span>,
-        <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(),
+    <span class="kw">let </span>is_baseline = marker == SOF(<span class="number">0</span>);
+    <span class="kw">let </span>is_differential = <span class="kw">match </span>marker {
+        SOF(<span class="number">0 </span>..= <span class="number">3</span>) | SOF(<span class="number">9 </span>..= <span class="number">11</span>)  =&gt; <span class="bool-val">false</span>,
+        SOF(<span class="number">5 </span>..= <span class="number">7</span>) | SOF(<span class="number">13 </span>..= <span class="number">15</span>) =&gt; <span class="bool-val">true</span>,
+        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
     };
-    <span class="kw">let</span> <span class="ident">coding_process</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">marker</span> {
-        <span class="ident">SOF</span>(<span class="number">0</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">1</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">5</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">9</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">13</span>) =&gt; <span class="ident">CodingProcess::DctSequential</span>,
-        <span class="ident">SOF</span>(<span class="number">2</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">6</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">10</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">14</span>)         =&gt; <span class="ident">CodingProcess::DctProgressive</span>,
-        <span class="ident">SOF</span>(<span class="number">3</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">7</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">11</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">15</span>)         =&gt; <span class="ident">CodingProcess::Lossless</span>,
-        <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(),
+    <span class="kw">let </span>coding_process = <span class="kw">match </span>marker {
+        SOF(<span class="number">0</span>) | SOF(<span class="number">1</span>) | SOF(<span class="number">5</span>) | SOF(<span class="number">9</span>) | SOF(<span class="number">13</span>) =&gt; CodingProcess::DctSequential,
+        SOF(<span class="number">2</span>) | SOF(<span class="number">6</span>) | SOF(<span class="number">10</span>) | SOF(<span class="number">14</span>)         =&gt; CodingProcess::DctProgressive,
+        SOF(<span class="number">3</span>) | SOF(<span class="number">7</span>) | SOF(<span class="number">11</span>) | SOF(<span class="number">15</span>)         =&gt; CodingProcess::Lossless,
+        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
     };
-    <span class="kw">let</span> <span class="ident">entropy_coding</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">marker</span> {
-        <span class="ident">SOF</span>(<span class="number">0</span> ..<span class="op">=</span> <span class="number">3</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">5</span> ..<span class="op">=</span> <span class="number">7</span>)     =&gt; <span class="ident">EntropyCoding::Huffman</span>,
-        <span class="ident">SOF</span>(<span class="number">9</span> ..<span class="op">=</span> <span class="number">11</span>) <span class="op">|</span> <span class="ident">SOF</span>(<span class="number">13</span> ..<span class="op">=</span> <span class="number">15</span>)  =&gt; <span class="ident">EntropyCoding::Arithmetic</span>,
-        <span class="kw">_</span> =&gt; <span class="macro">panic!</span>(),
+    <span class="kw">let </span>entropy_coding = <span class="kw">match </span>marker {
+        SOF(<span class="number">0 </span>..= <span class="number">3</span>) | SOF(<span class="number">5 </span>..= <span class="number">7</span>)     =&gt; EntropyCoding::Huffman,
+        SOF(<span class="number">9 </span>..= <span class="number">11</span>) | SOF(<span class="number">13 </span>..= <span class="number">15</span>)  =&gt; EntropyCoding::Arithmetic,
+        <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
     };
 
-    <span class="kw">let</span> <span class="ident">precision</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>precision = read_u8(reader)<span class="question-mark">?</span>;
 
-    <span class="kw">match</span> <span class="ident">precision</span> {
-        <span class="number">8</span> =&gt; {},
-        <span class="number">12</span> =&gt; {
-            <span class="kw">if</span> <span class="ident">is_baseline</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;12 bit sample precision is not allowed in baseline&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">match </span>precision {
+        <span class="number">8 </span>=&gt; {},
+        <span class="number">12 </span>=&gt; {
+            <span class="kw">if </span>is_baseline {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;12 bit sample precision is not allowed in baseline&quot;</span>.to_owned()));
             }
         },
-        <span class="kw">_</span> =&gt; {
-            <span class="kw">if</span> <span class="ident">coding_process</span> <span class="op">!</span><span class="op">=</span> <span class="ident">CodingProcess::Lossless</span> <span class="op">|</span><span class="op">|</span> <span class="ident">precision</span> <span class="op">&gt;</span> <span class="number">16</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid precision {} in frame header&quot;</span>, <span class="ident">precision</span>)))
+        <span class="kw">_ </span>=&gt; {
+            <span class="kw">if </span>coding_process != CodingProcess::Lossless || precision &gt; <span class="number">16 </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid precision {} in frame header&quot;</span>, precision)))
             }
         },
     }
 
-    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">read_u16_from_be</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">read_u16_from_be</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>height = read_u16_from_be(reader)<span class="question-mark">?</span>;
+    <span class="kw">let </span>width = read_u16_from_be(reader)<span class="question-mark">?</span>;
 
-    <span class="comment">// height:</span>
-    <span class="comment">// &quot;Value 0 indicates that the number of lines shall be defined by the DNL marker and</span>
-    <span class="comment">//     parameters at the end of the first scan (see B.2.5).&quot;</span>
-    <span class="kw">if</span> <span class="ident">height</span> <span class="op">==</span> <span class="number">0</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Unsupported</span>(<span class="ident">UnsupportedFeature::DNL</span>));
+    <span class="comment">// height:
+    // &quot;Value 0 indicates that the number of lines shall be defined by the DNL marker and
+    //     parameters at the end of the first scan (see B.2.5).&quot;
+    </span><span class="kw">if </span>height == <span class="number">0 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Unsupported(UnsupportedFeature::DNL));
     }
 
-    <span class="kw">if</span> <span class="ident">width</span> <span class="op">==</span> <span class="number">0</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;zero width in frame header&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>width == <span class="number">0 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;zero width in frame header&quot;</span>.to_owned()));
     }
 
-    <span class="kw">let</span> <span class="ident">component_count</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>component_count = read_u8(reader)<span class="question-mark">?</span>;
 
-    <span class="kw">if</span> <span class="ident">component_count</span> <span class="op">==</span> <span class="number">0</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;zero component count in frame header&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>component_count == <span class="number">0 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;zero component count in frame header&quot;</span>.to_owned()));
     }
-    <span class="kw">if</span> <span class="ident">coding_process</span> <span class="op">==</span> <span class="ident">CodingProcess::DctProgressive</span> <span class="op">&amp;&amp;</span> <span class="ident">component_count</span> <span class="op">&gt;</span> <span class="number">4</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;progressive frame with more than 4 components&quot;</span>.<span class="ident">to_owned</span>()));
-    }
-
-    <span class="kw">if</span> <span class="ident">length</span> <span class="op">!</span><span class="op">=</span> <span class="number">6</span> <span class="op">+</span> <span class="number">3</span> <span class="op">*</span> <span class="ident">component_count</span> <span class="kw">as</span> <span class="ident">usize</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid length in SOF&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>coding_process == CodingProcess::DctProgressive &amp;&amp; component_count &gt; <span class="number">4 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;progressive frame with more than 4 components&quot;</span>.to_owned()));
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">component_count</span> <span class="kw">as</span> <span class="ident">usize</span>);
+    <span class="kw">if </span>length != <span class="number">6 </span>+ <span class="number">3 </span>* component_count <span class="kw">as </span>usize {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid length in SOF&quot;</span>.to_owned()));
+    }
 
-    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">component_count</span> {
-        <span class="kw">let</span> <span class="ident">identifier</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>components: Vec&lt;Component&gt; = Vec::with_capacity(component_count <span class="kw">as </span>usize);
 
-        <span class="comment">// Each component&#39;s identifier must be unique.</span>
-        <span class="kw">if</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">identifier</span> <span class="op">==</span> <span class="ident">identifier</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;duplicate frame component identifier {}&quot;</span>, <span class="ident">identifier</span>)));
+    <span class="kw">for _ in </span><span class="number">0 </span>.. component_count {
+        <span class="kw">let </span>identifier = read_u8(reader)<span class="question-mark">?</span>;
+
+        <span class="comment">// Each component&#39;s identifier must be unique.
+        </span><span class="kw">if </span>components.iter().any(|c| c.identifier == identifier) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;duplicate frame component identifier {}&quot;</span>, identifier)));
         }
 
-        <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">horizontal_sampling_factor</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>;
-        <span class="kw">let</span> <span class="ident">vertical_sampling_factor</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&amp;</span> <span class="number">0x0f</span>;
+        <span class="kw">let </span>byte = read_u8(reader)<span class="question-mark">?</span>;
+        <span class="kw">let </span>horizontal_sampling_factor = byte &gt;&gt; <span class="number">4</span>;
+        <span class="kw">let </span>vertical_sampling_factor = byte &amp; <span class="number">0x0f</span>;
 
-        <span class="kw">if</span> <span class="ident">horizontal_sampling_factor</span> <span class="op">==</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">horizontal_sampling_factor</span> <span class="op">&gt;</span> <span class="number">4</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid horizontal sampling factor {}&quot;</span>, <span class="ident">horizontal_sampling_factor</span>)));
+        <span class="kw">if </span>horizontal_sampling_factor == <span class="number">0 </span>|| horizontal_sampling_factor &gt; <span class="number">4 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid horizontal sampling factor {}&quot;</span>, horizontal_sampling_factor)));
         }
-        <span class="kw">if</span> <span class="ident">vertical_sampling_factor</span> <span class="op">==</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">vertical_sampling_factor</span> <span class="op">&gt;</span> <span class="number">4</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid vertical sampling factor {}&quot;</span>, <span class="ident">vertical_sampling_factor</span>)));
-        }
-
-        <span class="kw">let</span> <span class="ident">quantization_table_index</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">if</span> <span class="ident">quantization_table_index</span> <span class="op">&gt;</span> <span class="number">3</span> <span class="op">|</span><span class="op">|</span> (<span class="ident">coding_process</span> <span class="op">==</span> <span class="ident">CodingProcess::Lossless</span> <span class="op">&amp;&amp;</span> <span class="ident">quantization_table_index</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid quantization table index {}&quot;</span>, <span class="ident">quantization_table_index</span>)));
+        <span class="kw">if </span>vertical_sampling_factor == <span class="number">0 </span>|| vertical_sampling_factor &gt; <span class="number">4 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid vertical sampling factor {}&quot;</span>, vertical_sampling_factor)));
         }
 
-        <span class="ident">components</span>.<span class="ident">push</span>(<span class="ident">Component</span> {
-            <span class="ident">identifier</span>,
-            <span class="ident">horizontal_sampling_factor</span>,
-            <span class="ident">vertical_sampling_factor</span>,
-            <span class="ident">quantization_table_index</span>: <span class="ident">quantization_table_index</span> <span class="kw">as</span> <span class="ident">usize</span>,
-            <span class="ident">dct_scale</span>: <span class="number">8</span>,
-            <span class="ident">size</span>: <span class="ident">Dimensions</span> {<span class="ident">width</span>: <span class="number">0</span>, <span class="ident">height</span>: <span class="number">0</span>},
-            <span class="ident">block_size</span>: <span class="ident">Dimensions</span> {<span class="ident">width</span>: <span class="number">0</span>, <span class="ident">height</span>: <span class="number">0</span>},
+        <span class="kw">let </span>quantization_table_index = read_u8(reader)<span class="question-mark">?</span>;
+
+        <span class="kw">if </span>quantization_table_index &gt; <span class="number">3 </span>|| (coding_process == CodingProcess::Lossless &amp;&amp; quantization_table_index != <span class="number">0</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid quantization table index {}&quot;</span>, quantization_table_index)));
+        }
+
+        components.push(Component {
+            identifier,
+            horizontal_sampling_factor,
+            vertical_sampling_factor,
+            quantization_table_index: quantization_table_index <span class="kw">as </span>usize,
+            dct_scale: <span class="number">8</span>,
+            size: Dimensions {width: <span class="number">0</span>, height: <span class="number">0</span>},
+            block_size: Dimensions {width: <span class="number">0</span>, height: <span class="number">0</span>},
         });
     }
 
-    <span class="kw">let</span> <span class="ident">mcu_size</span> <span class="op">=</span> <span class="ident">update_component_sizes</span>(<span class="ident">Dimensions</span> { <span class="ident">width</span>, <span class="ident">height</span> }, <span class="kw-2">&amp;mut</span> <span class="ident">components</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>mcu_size = update_component_sizes(Dimensions { width, height }, <span class="kw-2">&amp;mut </span>components)<span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>(<span class="ident">FrameInfo</span> {
-        <span class="ident">is_baseline</span>,
-        <span class="ident">is_differential</span>,
-        <span class="ident">coding_process</span>,
-        <span class="ident">entropy_coding</span>,
-        <span class="ident">precision</span>,
-        <span class="ident">image_size</span>: <span class="ident">Dimensions</span> { <span class="ident">width</span>, <span class="ident">height</span> },
-        <span class="ident">output_size</span>: <span class="ident">Dimensions</span> { <span class="ident">width</span>, <span class="ident">height</span> },
-        <span class="ident">mcu_size</span>,
-        <span class="ident">components</span>,
+    <span class="prelude-val">Ok</span>(FrameInfo {
+        is_baseline,
+        is_differential,
+        coding_process,
+        entropy_coding,
+        precision,
+        image_size: Dimensions { width, height },
+        output_size: Dimensions { width, height },
+        mcu_size,
+        components,
     })
 }
 
-<span class="doccomment">/// Returns ceil(x/y), requires x&gt;0</span>
-<span class="kw">fn</span> <span class="ident">ceil_div</span>(<span class="ident">x</span>: <span class="ident">u32</span>, <span class="ident">y</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">y</span> <span class="op">==</span> <span class="number">0</span> {
-        <span class="comment">// TODO Determine how this error is reached. Can we validate input</span>
-        <span class="comment">// earlier and error out then?</span>
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid dimensions&quot;</span>.<span class="ident">to_owned</span>()));
+<span class="doccomment">/// Returns ceil(x/y), requires x&gt;0
+</span><span class="kw">fn </span>ceil_div(x: u32, y: u32) -&gt; <span class="prelude-ty">Result</span>&lt;u16&gt; {
+    <span class="kw">if </span>x == <span class="number">0 </span>|| y == <span class="number">0 </span>{
+        <span class="comment">// TODO Determine how this error is reached. Can we validate input
+        // earlier and error out then?
+        </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid dimensions&quot;</span>.to_owned()));
     }
-    <span class="prelude-val">Ok</span>((<span class="number">1</span> <span class="op">+</span> ((<span class="ident">x</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="ident">y</span>)) <span class="kw">as</span> <span class="ident">u16</span>)
+    <span class="prelude-val">Ok</span>((<span class="number">1 </span>+ ((x - <span class="number">1</span>) / y)) <span class="kw">as </span>u16)
 }
 
-<span class="kw">fn</span> <span class="ident">update_component_sizes</span>(<span class="ident">size</span>: <span class="ident">Dimensions</span>, <span class="ident">components</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">Component</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dimensions</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">h_max</span> <span class="op">=</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">horizontal_sampling_factor</span>).<span class="ident">max</span>().<span class="ident">unwrap</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-    <span class="kw">let</span> <span class="ident">v_max</span> <span class="op">=</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">vertical_sampling_factor</span>).<span class="ident">max</span>().<span class="ident">unwrap</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+<span class="kw">fn </span>update_component_sizes(size: Dimensions, components: <span class="kw-2">&amp;mut </span>[Component]) -&gt; <span class="prelude-ty">Result</span>&lt;Dimensions&gt; {
+    <span class="kw">let </span>h_max = components.iter().map(|c| c.horizontal_sampling_factor).max().unwrap() <span class="kw">as </span>u32;
+    <span class="kw">let </span>v_max = components.iter().map(|c| c.vertical_sampling_factor).max().unwrap() <span class="kw">as </span>u32;
 
-    <span class="kw">let</span> <span class="ident">mcu_size</span> <span class="op">=</span> <span class="ident">Dimensions</span> {
-        <span class="ident">width</span>: <span class="ident">ceil_div</span>(<span class="ident">size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">h_max</span> <span class="op">*</span> <span class="number">8</span>)<span class="question-mark">?</span>,
-        <span class="ident">height</span>: <span class="ident">ceil_div</span>(<span class="ident">size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">v_max</span> <span class="op">*</span> <span class="number">8</span>)<span class="question-mark">?</span>,
+    <span class="kw">let </span>mcu_size = Dimensions {
+        width: ceil_div(size.width <span class="kw">as </span>u32, h_max * <span class="number">8</span>)<span class="question-mark">?</span>,
+        height: ceil_div(size.height <span class="kw">as </span>u32, v_max * <span class="number">8</span>)<span class="question-mark">?</span>,
     };
 
-    <span class="kw">for</span> <span class="ident">component</span> <span class="kw">in</span> <span class="ident">components</span> {
-        <span class="ident">component</span>.<span class="ident">size</span>.<span class="ident">width</span> <span class="op">=</span> <span class="ident">ceil_div</span>(<span class="ident">size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="ident">component</span>.<span class="ident">horizontal_sampling_factor</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="ident">component</span>.<span class="ident">dct_scale</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">h_max</span> <span class="op">*</span> <span class="number">8</span>)<span class="question-mark">?</span>;
-        <span class="ident">component</span>.<span class="ident">size</span>.<span class="ident">height</span> <span class="op">=</span> <span class="ident">ceil_div</span>(<span class="ident">size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="ident">component</span>.<span class="ident">vertical_sampling_factor</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="ident">component</span>.<span class="ident">dct_scale</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">v_max</span> <span class="op">*</span> <span class="number">8</span>)<span class="question-mark">?</span>;
+    <span class="kw">for </span>component <span class="kw">in </span>components {
+        component.size.width = ceil_div(size.width <span class="kw">as </span>u32 * component.horizontal_sampling_factor <span class="kw">as </span>u32 * component.dct_scale <span class="kw">as </span>u32, h_max * <span class="number">8</span>)<span class="question-mark">?</span>;
+        component.size.height = ceil_div(size.height <span class="kw">as </span>u32 * component.vertical_sampling_factor <span class="kw">as </span>u32 * component.dct_scale <span class="kw">as </span>u32, v_max * <span class="number">8</span>)<span class="question-mark">?</span>;
 
-        <span class="ident">component</span>.<span class="ident">block_size</span>.<span class="ident">width</span> <span class="op">=</span> <span class="ident">mcu_size</span>.<span class="ident">width</span> <span class="op">*</span> <span class="ident">component</span>.<span class="ident">horizontal_sampling_factor</span> <span class="kw">as</span> <span class="ident">u16</span>;
-        <span class="ident">component</span>.<span class="ident">block_size</span>.<span class="ident">height</span> <span class="op">=</span> <span class="ident">mcu_size</span>.<span class="ident">height</span> <span class="op">*</span> <span class="ident">component</span>.<span class="ident">vertical_sampling_factor</span> <span class="kw">as</span> <span class="ident">u16</span>;
+        component.block_size.width = mcu_size.width * component.horizontal_sampling_factor <span class="kw">as </span>u16;
+        component.block_size.height = mcu_size.height * component.vertical_sampling_factor <span class="kw">as </span>u16;
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">mcu_size</span>)
+    <span class="prelude-val">Ok</span>(mcu_size)
 }
 
-<span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="kw">fn</span> <span class="ident">test_update_component_sizes</span>() {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">components</span> <span class="op">=</span> [<span class="ident">Component</span> {
-        <span class="ident">identifier</span>: <span class="number">1</span>,
-        <span class="ident">horizontal_sampling_factor</span>: <span class="number">2</span>,
-        <span class="ident">vertical_sampling_factor</span>: <span class="number">2</span>,
-        <span class="ident">quantization_table_index</span>: <span class="number">0</span>,
-        <span class="ident">dct_scale</span>: <span class="number">8</span>,
-        <span class="ident">size</span>: <span class="ident">Dimensions</span> { <span class="ident">width</span>: <span class="number">0</span>, <span class="ident">height</span>: <span class="number">0</span> },
-        <span class="ident">block_size</span>: <span class="ident">Dimensions</span> { <span class="ident">width</span>: <span class="number">0</span>, <span class="ident">height</span>: <span class="number">0</span> },
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_update_component_sizes() {
+    <span class="kw">let </span><span class="kw-2">mut </span>components = [Component {
+        identifier: <span class="number">1</span>,
+        horizontal_sampling_factor: <span class="number">2</span>,
+        vertical_sampling_factor: <span class="number">2</span>,
+        quantization_table_index: <span class="number">0</span>,
+        dct_scale: <span class="number">8</span>,
+        size: Dimensions { width: <span class="number">0</span>, height: <span class="number">0 </span>},
+        block_size: Dimensions { width: <span class="number">0</span>, height: <span class="number">0 </span>},
     }];
-    <span class="kw">let</span> <span class="ident">mcu</span> <span class="op">=</span> <span class="ident">update_component_sizes</span>(
-        <span class="ident">Dimensions</span> { <span class="ident">width</span>: <span class="number">800</span>, <span class="ident">height</span>: <span class="number">280</span> },
-        <span class="kw-2">&amp;mut</span> <span class="ident">components</span>).<span class="ident">unwrap</span>();
-    <span class="macro">assert_eq!</span>(<span class="ident">mcu</span>, <span class="ident">Dimensions</span> { <span class="ident">width</span>: <span class="number">50</span>, <span class="ident">height</span>: <span class="number">18</span> });
-    <span class="macro">assert_eq!</span>(<span class="ident">components</span>[<span class="number">0</span>].<span class="ident">block_size</span>, <span class="ident">Dimensions</span> { <span class="ident">width</span>: <span class="number">100</span>, <span class="ident">height</span>: <span class="number">36</span> });
-    <span class="macro">assert_eq!</span>(<span class="ident">components</span>[<span class="number">0</span>].<span class="ident">size</span>, <span class="ident">Dimensions</span> { <span class="ident">width</span>: <span class="number">800</span>, <span class="ident">height</span>: <span class="number">280</span> });
+    <span class="kw">let </span>mcu = update_component_sizes(
+        Dimensions { width: <span class="number">800</span>, height: <span class="number">280 </span>},
+        <span class="kw-2">&amp;mut </span>components).unwrap();
+    <span class="macro">assert_eq!</span>(mcu, Dimensions { width: <span class="number">50</span>, height: <span class="number">18 </span>});
+    <span class="macro">assert_eq!</span>(components[<span class="number">0</span>].block_size, Dimensions { width: <span class="number">100</span>, height: <span class="number">36 </span>});
+    <span class="macro">assert_eq!</span>(components[<span class="number">0</span>].size, Dimensions { width: <span class="number">800</span>, height: <span class="number">280 </span>});
 }
 
-<span class="comment">// Section B.2.3</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_sos</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">frame</span>: <span class="kw-2">&amp;</span><span class="ident">FrameInfo</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScanInfo</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">SOS</span>)<span class="question-mark">?</span>;
-    <span class="kw">if</span> <span class="number">0</span> <span class="op">==</span> <span class="ident">length</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;zero length in SOS&quot;</span>.<span class="ident">to_owned</span>()));
+<span class="comment">// Section B.2.3
+</span><span class="kw">pub fn </span>parse_sos&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R, frame: <span class="kw-2">&amp;</span>FrameInfo) -&gt; <span class="prelude-ty">Result</span>&lt;ScanInfo&gt; {
+    <span class="kw">let </span>length = read_length(reader, SOS)<span class="question-mark">?</span>;
+    <span class="kw">if </span><span class="number">0 </span>== length {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;zero length in SOS&quot;</span>.to_owned()));
     }
 
-    <span class="kw">let</span> <span class="ident">component_count</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>component_count = read_u8(reader)<span class="question-mark">?</span>;
 
-    <span class="kw">if</span> <span class="ident">component_count</span> <span class="op">==</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">component_count</span> <span class="op">&gt;</span> <span class="number">4</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid component count {} in scan header&quot;</span>, <span class="ident">component_count</span>)));
+    <span class="kw">if </span>component_count == <span class="number">0 </span>|| component_count &gt; <span class="number">4 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid component count {} in scan header&quot;</span>, component_count)));
     }
 
-    <span class="kw">if</span> <span class="ident">length</span> <span class="op">!</span><span class="op">=</span> <span class="number">4</span> <span class="op">+</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">component_count</span> <span class="kw">as</span> <span class="ident">usize</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid length in SOS&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>length != <span class="number">4 </span>+ <span class="number">2 </span>* component_count <span class="kw">as </span>usize {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid length in SOS&quot;</span>.to_owned()));
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">component_indices</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">component_count</span> <span class="kw">as</span> <span class="ident">usize</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dc_table_indices</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">component_count</span> <span class="kw">as</span> <span class="ident">usize</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ac_table_indices</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">component_count</span> <span class="kw">as</span> <span class="ident">usize</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>component_indices = Vec::with_capacity(component_count <span class="kw">as </span>usize);
+    <span class="kw">let </span><span class="kw-2">mut </span>dc_table_indices = Vec::with_capacity(component_count <span class="kw">as </span>usize);
+    <span class="kw">let </span><span class="kw-2">mut </span>ac_table_indices = Vec::with_capacity(component_count <span class="kw">as </span>usize);
 
-    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">component_count</span> {
-        <span class="kw">let</span> <span class="ident">identifier</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">for _ in </span><span class="number">0 </span>.. component_count {
+        <span class="kw">let </span>identifier = read_u8(reader)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">component_index</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">frame</span>.<span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">identifier</span> <span class="op">==</span> <span class="ident">identifier</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>,
-            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;scan component identifier {} does not match any of the component identifiers defined in the frame&quot;</span>, <span class="ident">identifier</span>))),
+        <span class="kw">let </span>component_index = <span class="kw">match </span>frame.components.iter().position(|c| c.identifier == identifier) {
+            <span class="prelude-val">Some</span>(value) =&gt; value,
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;scan component identifier {} does not match any of the component identifiers defined in the frame&quot;</span>, identifier))),
         };
 
-        <span class="comment">// Each of the scan&#39;s components must be unique.</span>
-        <span class="kw">if</span> <span class="ident">component_indices</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">component_index</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;duplicate scan component identifier {}&quot;</span>, <span class="ident">identifier</span>)));
+        <span class="comment">// Each of the scan&#39;s components must be unique.
+        </span><span class="kw">if </span>component_indices.contains(<span class="kw-2">&amp;</span>component_index) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;duplicate scan component identifier {}&quot;</span>, identifier)));
         }
 
-        <span class="comment">// &quot;... the ordering in the scan header shall follow the ordering in the frame header.&quot;</span>
-        <span class="kw">if</span> <span class="ident">component_index</span> <span class="op">&lt;</span> <span class="kw-2">*</span><span class="ident">component_indices</span>.<span class="ident">iter</span>().<span class="ident">max</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="number">0</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;the scan component order does not follow the order in the frame header&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="comment">// &quot;... the ordering in the scan header shall follow the ordering in the frame header.&quot;
+        </span><span class="kw">if </span>component_index &lt; <span class="kw-2">*</span>component_indices.iter().max().unwrap_or(<span class="kw-2">&amp;</span><span class="number">0</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;the scan component order does not follow the order in the frame header&quot;</span>.to_owned()));
         }
 
-        <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">dc_table_index</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>;
-        <span class="kw">let</span> <span class="ident">ac_table_index</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&amp;</span> <span class="number">0x0f</span>;
+        <span class="kw">let </span>byte = read_u8(reader)<span class="question-mark">?</span>;
+        <span class="kw">let </span>dc_table_index = byte &gt;&gt; <span class="number">4</span>;
+        <span class="kw">let </span>ac_table_index = byte &amp; <span class="number">0x0f</span>;
 
-        <span class="kw">if</span> <span class="ident">dc_table_index</span> <span class="op">&gt;</span> <span class="number">3</span> <span class="op">|</span><span class="op">|</span> (<span class="ident">frame</span>.<span class="ident">is_baseline</span> <span class="op">&amp;&amp;</span> <span class="ident">dc_table_index</span> <span class="op">&gt;</span> <span class="number">1</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid dc table index {}&quot;</span>, <span class="ident">dc_table_index</span>)));
+        <span class="kw">if </span>dc_table_index &gt; <span class="number">3 </span>|| (frame.is_baseline &amp;&amp; dc_table_index &gt; <span class="number">1</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid dc table index {}&quot;</span>, dc_table_index)));
         }
-        <span class="kw">if</span> <span class="ident">ac_table_index</span> <span class="op">&gt;</span> <span class="number">3</span> <span class="op">|</span><span class="op">|</span> (<span class="ident">frame</span>.<span class="ident">is_baseline</span> <span class="op">&amp;&amp;</span> <span class="ident">ac_table_index</span> <span class="op">&gt;</span> <span class="number">1</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid ac table index {}&quot;</span>, <span class="ident">ac_table_index</span>)));
+        <span class="kw">if </span>ac_table_index &gt; <span class="number">3 </span>|| (frame.is_baseline &amp;&amp; ac_table_index &gt; <span class="number">1</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid ac table index {}&quot;</span>, ac_table_index)));
         }
 
-        <span class="ident">component_indices</span>.<span class="ident">push</span>(<span class="ident">component_index</span>);
-        <span class="ident">dc_table_indices</span>.<span class="ident">push</span>(<span class="ident">dc_table_index</span> <span class="kw">as</span> <span class="ident">usize</span>);
-        <span class="ident">ac_table_indices</span>.<span class="ident">push</span>(<span class="ident">ac_table_index</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        component_indices.push(component_index);
+        dc_table_indices.push(dc_table_index <span class="kw">as </span>usize);
+        ac_table_indices.push(ac_table_index <span class="kw">as </span>usize);
     }
 
-    <span class="kw">let</span> <span class="ident">blocks_per_mcu</span> <span class="op">=</span> <span class="ident">component_indices</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> {
-        <span class="ident">frame</span>.<span class="ident">components</span>[<span class="ident">i</span>].<span class="ident">horizontal_sampling_factor</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="ident">frame</span>.<span class="ident">components</span>[<span class="ident">i</span>].<span class="ident">vertical_sampling_factor</span> <span class="kw">as</span> <span class="ident">u32</span>
-    }).<span class="ident">fold</span>(<span class="number">0</span>, <span class="ident">ops::Add::add</span>);
+    <span class="kw">let </span>blocks_per_mcu = component_indices.iter().map(|<span class="kw-2">&amp;</span>i| {
+        frame.components[i].horizontal_sampling_factor <span class="kw">as </span>u32 * frame.components[i].vertical_sampling_factor <span class="kw">as </span>u32
+    }).fold(<span class="number">0</span>, ops::Add::add);
 
-    <span class="kw">if</span> <span class="ident">component_count</span> <span class="op">&gt;</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">blocks_per_mcu</span> <span class="op">&gt;</span> <span class="number">10</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;scan with more than one component and more than 10 blocks per MCU&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>component_count &gt; <span class="number">1 </span>&amp;&amp; blocks_per_mcu &gt; <span class="number">10 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;scan with more than one component and more than 10 blocks per MCU&quot;</span>.to_owned()));
     }
 
-    <span class="comment">// Also utilized as &#39;Predictor&#39; in lossless coding, as MEAN in JPEG-LS etc.</span>
-    <span class="kw">let</span> <span class="ident">spectral_selection_start</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-    <span class="comment">// Also utilized as ILV parameter in JPEG-LS.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">spectral_selection_end</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="comment">// Also utilized as &#39;Predictor&#39; in lossless coding, as MEAN in JPEG-LS etc.
+    </span><span class="kw">let </span>spectral_selection_start = read_u8(reader)<span class="question-mark">?</span>;
+    <span class="comment">// Also utilized as ILV parameter in JPEG-LS.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>spectral_selection_end = read_u8(reader)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">successive_approximation_high</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>;
-    <span class="kw">let</span> <span class="ident">successive_approximation_low</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&amp;</span> <span class="number">0x0f</span>;
+    <span class="kw">let </span>byte = read_u8(reader)<span class="question-mark">?</span>;
+    <span class="kw">let </span>successive_approximation_high = byte &gt;&gt; <span class="number">4</span>;
+    <span class="kw">let </span>successive_approximation_low = byte &amp; <span class="number">0x0f</span>;
 
-    <span class="comment">// The Differential Pulse-Mode prediction used (similar to png). Only utilized in Lossless</span>
-    <span class="comment">// coding. Don&#39;t confuse with the JPEG-LS parameter coded using the same scan info portion.</span>
-    <span class="kw">let</span> <span class="ident">predictor_selection</span>;
-    <span class="kw">let</span> <span class="ident">point_transform</span> <span class="op">=</span> <span class="ident">successive_approximation_low</span>;
+    <span class="comment">// The Differential Pulse-Mode prediction used (similar to png). Only utilized in Lossless
+    // coding. Don&#39;t confuse with the JPEG-LS parameter coded using the same scan info portion.
+    </span><span class="kw">let </span>predictor_selection;
+    <span class="kw">let </span>point_transform = successive_approximation_low;
 
-    <span class="kw">if</span> <span class="ident">frame</span>.<span class="ident">coding_process</span> <span class="op">==</span> <span class="ident">CodingProcess::DctProgressive</span> {
-        <span class="ident">predictor_selection</span> <span class="op">=</span> <span class="ident">Predictor::NoPrediction</span>;
-        <span class="kw">if</span> <span class="ident">spectral_selection_end</span> <span class="op">&gt;</span> <span class="number">63</span> <span class="op">|</span><span class="op">|</span> <span class="ident">spectral_selection_start</span> <span class="op">&gt;</span> <span class="ident">spectral_selection_end</span> <span class="op">|</span><span class="op">|</span>
-                (<span class="ident">spectral_selection_start</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">spectral_selection_end</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid spectral selection parameters: ss={}, se={}&quot;</span>, <span class="ident">spectral_selection_start</span>, <span class="ident">spectral_selection_end</span>)));
+    <span class="kw">if </span>frame.coding_process == CodingProcess::DctProgressive {
+        predictor_selection = Predictor::NoPrediction;
+        <span class="kw">if </span>spectral_selection_end &gt; <span class="number">63 </span>|| spectral_selection_start &gt; spectral_selection_end ||
+                (spectral_selection_start == <span class="number">0 </span>&amp;&amp; spectral_selection_end != <span class="number">0</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid spectral selection parameters: ss={}, se={}&quot;</span>, spectral_selection_start, spectral_selection_end)));
         }
-        <span class="kw">if</span> <span class="ident">spectral_selection_start</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">component_count</span> <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;spectral selection scan with AC coefficients can&#39;t have more than one component&quot;</span>.<span class="ident">to_owned</span>()));
-        }
-
-        <span class="kw">if</span> <span class="ident">successive_approximation_high</span> <span class="op">&gt;</span> <span class="number">13</span> <span class="op">|</span><span class="op">|</span> <span class="ident">successive_approximation_low</span> <span class="op">&gt;</span> <span class="number">13</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid successive approximation parameters: ah={}, al={}&quot;</span>, <span class="ident">successive_approximation_high</span>, <span class="ident">successive_approximation_low</span>)));
+        <span class="kw">if </span>spectral_selection_start != <span class="number">0 </span>&amp;&amp; component_count != <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;spectral selection scan with AC coefficients can&#39;t have more than one component&quot;</span>.to_owned()));
         }
 
-        <span class="comment">// Section G.1.1.1.2</span>
-        <span class="comment">// &quot;Each scan which follows the first scan for a given band progressively improves</span>
-        <span class="comment">//     the precision of the coefficients by one bit, until full precision is reached.&quot;</span>
-        <span class="kw">if</span> <span class="ident">successive_approximation_high</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">successive_approximation_high</span> <span class="op">!</span><span class="op">=</span> <span class="ident">successive_approximation_low</span> <span class="op">+</span> <span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;successive approximation scan with more than one bit of improvement&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>successive_approximation_high &gt; <span class="number">13 </span>|| successive_approximation_low &gt; <span class="number">13 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid successive approximation parameters: ah={}, al={}&quot;</span>, successive_approximation_high, successive_approximation_low)));
+        }
+
+        <span class="comment">// Section G.1.1.1.2
+        // &quot;Each scan which follows the first scan for a given band progressively improves
+        //     the precision of the coefficients by one bit, until full precision is reached.&quot;
+        </span><span class="kw">if </span>successive_approximation_high != <span class="number">0 </span>&amp;&amp; successive_approximation_high != successive_approximation_low + <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;successive approximation scan with more than one bit of improvement&quot;</span>.to_owned()));
         }
     }
-    <span class="kw">else</span> <span class="kw">if</span> <span class="ident">frame</span>.<span class="ident">coding_process</span> <span class="op">==</span> <span class="ident">CodingProcess::Lossless</span> {
-        <span class="kw">if</span> <span class="ident">spectral_selection_end</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;spectral selection end shall be zero in lossless scan&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">else if </span>frame.coding_process == CodingProcess::Lossless {
+        <span class="kw">if </span>spectral_selection_end != <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;spectral selection end shall be zero in lossless scan&quot;</span>.to_owned()));
         }
-        <span class="kw">if</span> <span class="ident">successive_approximation_high</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;successive approximation high shall be zero in lossless scan&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>successive_approximation_high != <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;successive approximation high shall be zero in lossless scan&quot;</span>.to_owned()));
         }
-        <span class="ident">predictor_selection</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">spectral_selection_start</span> {
-            <span class="number">0</span> =&gt; <span class="ident">Predictor::NoPrediction</span>,
-            <span class="number">1</span> =&gt; <span class="ident">Predictor::Ra</span>,
-            <span class="number">2</span> =&gt; <span class="ident">Predictor::Rb</span>,
-            <span class="number">3</span> =&gt; <span class="ident">Predictor::Rc</span>,
-            <span class="number">4</span> =&gt; <span class="ident">Predictor::RaRbRc1</span>,
-            <span class="number">5</span> =&gt; <span class="ident">Predictor::RaRbRc2</span>,
-            <span class="number">6</span> =&gt; <span class="ident">Predictor::RaRbRc3</span>,
-            <span class="number">7</span> =&gt; <span class="ident">Predictor::RaRb</span>,
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid predictor selection value: {}&quot;</span>, <span class="ident">spectral_selection_start</span>)));
+        predictor_selection = <span class="kw">match </span>spectral_selection_start {
+            <span class="number">0 </span>=&gt; Predictor::NoPrediction,
+            <span class="number">1 </span>=&gt; Predictor::Ra,
+            <span class="number">2 </span>=&gt; Predictor::Rb,
+            <span class="number">3 </span>=&gt; Predictor::Rc,
+            <span class="number">4 </span>=&gt; Predictor::RaRbRc1,
+            <span class="number">5 </span>=&gt; Predictor::RaRbRc2,
+            <span class="number">6 </span>=&gt; Predictor::RaRbRc3,
+            <span class="number">7 </span>=&gt; Predictor::RaRb,
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid predictor selection value: {}&quot;</span>, spectral_selection_start)));
             },
         };
     }
-    <span class="kw">else</span> {
-        <span class="ident">predictor_selection</span> <span class="op">=</span> <span class="ident">Predictor::NoPrediction</span>;
-        <span class="kw">if</span> <span class="ident">spectral_selection_end</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="ident">spectral_selection_end</span> <span class="op">=</span> <span class="number">63</span>;
+    <span class="kw">else </span>{
+        predictor_selection = Predictor::NoPrediction;
+        <span class="kw">if </span>spectral_selection_end == <span class="number">0 </span>{
+            spectral_selection_end = <span class="number">63</span>;
         }
-        <span class="kw">if</span> <span class="ident">spectral_selection_start</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">spectral_selection_end</span> <span class="op">!</span><span class="op">=</span> <span class="number">63</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;spectral selection is not allowed in non-progressive scan&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>spectral_selection_start != <span class="number">0 </span>|| spectral_selection_end != <span class="number">63 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;spectral selection is not allowed in non-progressive scan&quot;</span>.to_owned()));
         }
-        <span class="kw">if</span> <span class="ident">successive_approximation_high</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">successive_approximation_low</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;successive approximation is not allowed in non-progressive scan&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>successive_approximation_high != <span class="number">0 </span>|| successive_approximation_low != <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;successive approximation is not allowed in non-progressive scan&quot;</span>.to_owned()));
         }
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">ScanInfo</span> {
-        <span class="ident">component_indices</span>,
-        <span class="ident">dc_table_indices</span>,
-        <span class="ident">ac_table_indices</span>,
-        <span class="ident">spectral_selection</span>: <span class="ident">Range</span> {
-            <span class="ident">start</span>: <span class="ident">spectral_selection_start</span>,
-            <span class="ident">end</span>: <span class="ident">spectral_selection_end</span> <span class="op">+</span> <span class="number">1</span>,
+    <span class="prelude-val">Ok</span>(ScanInfo {
+        component_indices,
+        dc_table_indices,
+        ac_table_indices,
+        spectral_selection: Range {
+            start: spectral_selection_start,
+            end: spectral_selection_end + <span class="number">1</span>,
         },
-        <span class="ident">predictor_selection</span>,
-        <span class="ident">successive_approximation_high</span>,
-        <span class="ident">successive_approximation_low</span>,
-        <span class="ident">point_transform</span>,
+        predictor_selection,
+        successive_approximation_high,
+        successive_approximation_low,
+        point_transform,
     })
 }
 
-<span class="comment">// Section B.2.4.1</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_dqt</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">u16</span>; <span class="number">64</span>]<span class="op">&gt;</span>; <span class="number">4</span>]<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">DQT</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tables</span> <span class="op">=</span> [<span class="prelude-val">None</span>; <span class="number">4</span>];
+<span class="comment">// Section B.2.4.1
+</span><span class="kw">pub fn </span>parse_dqt&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R) -&gt; <span class="prelude-ty">Result</span>&lt;[<span class="prelude-ty">Option</span>&lt;[u16; <span class="number">64</span>]&gt;; <span class="number">4</span>]&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>length = read_length(reader, DQT)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>tables = [<span class="prelude-val">None</span>; <span class="number">4</span>];
 
-    <span class="comment">// Each DQT segment may contain multiple quantization tables.</span>
-    <span class="kw">while</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">precision</span> <span class="op">=</span> (<span class="ident">byte</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> (<span class="ident">byte</span> <span class="op">&amp;</span> <span class="number">0x0f</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+    <span class="comment">// Each DQT segment may contain multiple quantization tables.
+    </span><span class="kw">while </span>length &gt; <span class="number">0 </span>{
+        <span class="kw">let </span>byte = read_u8(reader)<span class="question-mark">?</span>;
+        <span class="kw">let </span>precision = (byte &gt;&gt; <span class="number">4</span>) <span class="kw">as </span>usize;
+        <span class="kw">let </span>index = (byte &amp; <span class="number">0x0f</span>) <span class="kw">as </span>usize;
 
-        <span class="comment">// The combination of 8-bit sample precision and 16-bit quantization tables is explicitly</span>
-        <span class="comment">// disallowed by the JPEG spec:</span>
-        <span class="comment">//     &quot;An 8-bit DCT-based process shall not use a 16-bit precision quantization table.&quot;</span>
-        <span class="comment">//     &quot;Pq: Quantization table element precision – Specifies the precision of the Qk</span>
-        <span class="comment">//      values. Value 0 indicates 8-bit Qk values; value 1 indicates 16-bit Qk values. Pq</span>
-        <span class="comment">//      shall be zero for 8 bit sample precision P (see B.2.2).&quot;</span>
-        <span class="comment">// libjpeg allows this behavior though, and there are images in the wild using it. So to</span>
-        <span class="comment">// match libjpeg&#39;s behavior we are deviating from the JPEG spec here.</span>
-        <span class="kw">if</span> <span class="ident">precision</span> <span class="op">&gt;</span> <span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid precision {} in DQT&quot;</span>, <span class="ident">precision</span>)));
+        <span class="comment">// The combination of 8-bit sample precision and 16-bit quantization tables is explicitly
+        // disallowed by the JPEG spec:
+        //     &quot;An 8-bit DCT-based process shall not use a 16-bit precision quantization table.&quot;
+        //     &quot;Pq: Quantization table element precision – Specifies the precision of the Qk
+        //      values. Value 0 indicates 8-bit Qk values; value 1 indicates 16-bit Qk values. Pq
+        //      shall be zero for 8 bit sample precision P (see B.2.2).&quot;
+        // libjpeg allows this behavior though, and there are images in the wild using it. So to
+        // match libjpeg&#39;s behavior we are deviating from the JPEG spec here.
+        </span><span class="kw">if </span>precision &gt; <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid precision {} in DQT&quot;</span>, precision)));
         }
-        <span class="kw">if</span> <span class="ident">index</span> <span class="op">&gt;</span> <span class="number">3</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid destination identifier {} in DQT&quot;</span>, <span class="ident">index</span>)));
+        <span class="kw">if </span>index &gt; <span class="number">3 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid destination identifier {} in DQT&quot;</span>, index)));
         }
-        <span class="kw">if</span> <span class="ident">length</span> <span class="op">&lt;</span> <span class="number">65</span> <span class="op">+</span> <span class="number">64</span> <span class="op">*</span> <span class="ident">precision</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid length in DQT&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>length &lt; <span class="number">65 </span>+ <span class="number">64 </span>* precision {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid length in DQT&quot;</span>.to_owned()));
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">table</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="number">64</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>table = [<span class="number">0u16</span>; <span class="number">64</span>];
 
-        <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">table</span>.<span class="ident">iter_mut</span>() {
-            <span class="kw-2">*</span><span class="ident">item</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">precision</span> {
-                <span class="number">0</span> =&gt; <span class="ident">u16::from</span>(<span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>),
-                <span class="number">1</span> =&gt; <span class="ident">read_u16_from_be</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>,
-                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+        <span class="kw">for </span>item <span class="kw">in </span>table.iter_mut() {
+            <span class="kw-2">*</span>item = <span class="kw">match </span>precision {
+                <span class="number">0 </span>=&gt; u16::from(read_u8(reader)<span class="question-mark">?</span>),
+                <span class="number">1 </span>=&gt; read_u16_from_be(reader)<span class="question-mark">?</span>,
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
             };
         }
 
-        <span class="kw">if</span> <span class="ident">table</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">val</span><span class="op">|</span> <span class="ident">val</span> <span class="op">==</span> <span class="number">0</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;quantization table contains element with a zero value&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>table.iter().any(|<span class="kw-2">&amp;</span>val| val == <span class="number">0</span>) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;quantization table contains element with a zero value&quot;</span>.to_owned()));
         }
 
-        <span class="ident">tables</span>[<span class="ident">index</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">table</span>);
-        <span class="ident">length</span> <span class="op">-</span><span class="op">=</span> <span class="number">65</span> <span class="op">+</span> <span class="number">64</span> <span class="op">*</span> <span class="ident">precision</span>;
+        tables[index] = <span class="prelude-val">Some</span>(table);
+        length -= <span class="number">65 </span>+ <span class="number">64 </span>* precision;
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">tables</span>)
+    <span class="prelude-val">Ok</span>(tables)
 }
 
-<span class="comment">// Section B.2.4.2</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_dht</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">is_baseline</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HuffmanTable</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HuffmanTable</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">DHT</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dc_tables</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ac_tables</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
+<span class="comment">// Section B.2.4.2
+</span><span class="kw">pub fn </span>parse_dht&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R, is_baseline: <span class="prelude-ty">Option</span>&lt;bool&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;<span class="prelude-ty">Option</span>&lt;HuffmanTable&gt;&gt;, Vec&lt;<span class="prelude-ty">Option</span>&lt;HuffmanTable&gt;&gt;)&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>length = read_length(reader, DHT)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>dc_tables = <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>ac_tables = <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
 
-    <span class="comment">// Each DHT segment may contain multiple huffman tables.</span>
-    <span class="kw">while</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="number">17</span> {
-        <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">class</span> <span class="op">=</span> <span class="ident">byte</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>;
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> (<span class="ident">byte</span> <span class="op">&amp;</span> <span class="number">0x0f</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+    <span class="comment">// Each DHT segment may contain multiple huffman tables.
+    </span><span class="kw">while </span>length &gt; <span class="number">17 </span>{
+        <span class="kw">let </span>byte = read_u8(reader)<span class="question-mark">?</span>;
+        <span class="kw">let </span>class = byte &gt;&gt; <span class="number">4</span>;
+        <span class="kw">let </span>index = (byte &amp; <span class="number">0x0f</span>) <span class="kw">as </span>usize;
 
-        <span class="kw">if</span> <span class="ident">class</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">class</span> <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid class {} in DHT&quot;</span>, <span class="ident">class</span>)));
+        <span class="kw">if </span>class != <span class="number">0 </span>&amp;&amp; class != <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid class {} in DHT&quot;</span>, class)));
         }
-        <span class="kw">if</span> <span class="ident">is_baseline</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) <span class="op">&amp;&amp;</span> <span class="ident">index</span> <span class="op">&gt;</span> <span class="number">1</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;a maximum of two huffman tables per class are allowed in baseline&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>is_baseline == <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) &amp;&amp; index &gt; <span class="number">1 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;a maximum of two huffman tables per class are allowed in baseline&quot;</span>.to_owned()));
         }
-        <span class="kw">if</span> <span class="ident">index</span> <span class="op">&gt;</span> <span class="number">3</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(<span class="string">&quot;invalid destination identifier {} in DHT&quot;</span>, <span class="ident">index</span>)));
-        }
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counts</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">16</span>];
-        <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counts</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">counts</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">val</span><span class="op">|</span> <span class="ident">val</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">fold</span>(<span class="number">0</span>, <span class="ident">ops::Add::add</span>);
-
-        <span class="kw">if</span> <span class="ident">size</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;encountered table with zero length in DHT&quot;</span>.<span class="ident">to_owned</span>()));
-        }
-        <span class="kw">else</span> <span class="kw">if</span> <span class="ident">size</span> <span class="op">&gt;</span> <span class="number">256</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;encountered table with excessive length in DHT&quot;</span>.<span class="ident">to_owned</span>()));
-        }
-        <span class="kw">else</span> <span class="kw">if</span> <span class="ident">size</span> <span class="op">&gt;</span> <span class="ident">length</span> <span class="op">-</span> <span class="number">17</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid length in DHT&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>index &gt; <span class="number">3 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(<span class="string">&quot;invalid destination identifier {} in DHT&quot;</span>, index)));
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">values</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">size</span>];
-        <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">values</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>counts = [<span class="number">0u8</span>; <span class="number">16</span>];
+        reader.read_exact(<span class="kw-2">&amp;mut </span>counts)<span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">class</span> {
-            <span class="number">0</span> =&gt; <span class="ident">dc_tables</span>[<span class="ident">index</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HuffmanTable::new</span>(<span class="kw-2">&amp;</span><span class="ident">counts</span>, <span class="kw-2">&amp;</span><span class="ident">values</span>, <span class="ident">HuffmanTableClass::DC</span>)<span class="question-mark">?</span>),
-            <span class="number">1</span> =&gt; <span class="ident">ac_tables</span>[<span class="ident">index</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HuffmanTable::new</span>(<span class="kw-2">&amp;</span><span class="ident">counts</span>, <span class="kw-2">&amp;</span><span class="ident">values</span>, <span class="ident">HuffmanTableClass::AC</span>)<span class="question-mark">?</span>),
-            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+        <span class="kw">let </span>size = counts.iter().map(|<span class="kw-2">&amp;</span>val| val <span class="kw">as </span>usize).fold(<span class="number">0</span>, ops::Add::add);
+
+        <span class="kw">if </span>size == <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;encountered table with zero length in DHT&quot;</span>.to_owned()));
+        }
+        <span class="kw">else if </span>size &gt; <span class="number">256 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;encountered table with excessive length in DHT&quot;</span>.to_owned()));
+        }
+        <span class="kw">else if </span>size &gt; length - <span class="number">17 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid length in DHT&quot;</span>.to_owned()));
         }
 
-        <span class="ident">length</span> <span class="op">-</span><span class="op">=</span> <span class="number">17</span> <span class="op">+</span> <span class="ident">size</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>values = <span class="macro">vec!</span>[<span class="number">0u8</span>; size];
+        reader.read_exact(<span class="kw-2">&amp;mut </span>values)<span class="question-mark">?</span>;
+
+        <span class="kw">match </span>class {
+            <span class="number">0 </span>=&gt; dc_tables[index] = <span class="prelude-val">Some</span>(HuffmanTable::new(<span class="kw-2">&amp;</span>counts, <span class="kw-2">&amp;</span>values, HuffmanTableClass::DC)<span class="question-mark">?</span>),
+            <span class="number">1 </span>=&gt; ac_tables[index] = <span class="prelude-val">Some</span>(HuffmanTable::new(<span class="kw-2">&amp;</span>counts, <span class="kw-2">&amp;</span>values, HuffmanTableClass::AC)<span class="question-mark">?</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+        }
+
+        length -= <span class="number">17 </span>+ size;
     }
 
-    <span class="kw">if</span> <span class="ident">length</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid length in DHT&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>length != <span class="number">0 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid length in DHT&quot;</span>.to_owned()));
     }
 
-    <span class="prelude-val">Ok</span>((<span class="ident">dc_tables</span>, <span class="ident">ac_tables</span>))
+    <span class="prelude-val">Ok</span>((dc_tables, ac_tables))
 }
 
-<span class="comment">// Section B.2.4.4</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_dri</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">DRI</span>)<span class="question-mark">?</span>;
+<span class="comment">// Section B.2.4.4
+</span><span class="kw">pub fn </span>parse_dri&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R) -&gt; <span class="prelude-ty">Result</span>&lt;u16&gt; {
+    <span class="kw">let </span>length = read_length(reader, DRI)<span class="question-mark">?</span>;
 
-    <span class="kw">if</span> <span class="ident">length</span> <span class="op">!</span><span class="op">=</span> <span class="number">2</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;DRI with invalid length&quot;</span>.<span class="ident">to_owned</span>()));
+    <span class="kw">if </span>length != <span class="number">2 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;DRI with invalid length&quot;</span>.to_owned()));
     }
 
-    <span class="prelude-val">Ok</span>(<span class="ident">read_u16_from_be</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>)
+    <span class="prelude-val">Ok</span>(read_u16_from_be(reader)<span class="question-mark">?</span>)
 }
 
-<span class="comment">// Section B.2.4.5</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_com</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">COM</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">length</span>];
+<span class="comment">// Section B.2.4.5
+</span><span class="kw">pub fn </span>parse_com&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;&gt; {
+    <span class="kw">let </span>length = read_length(reader, COM)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0u8</span>; length];
 
-    <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>)<span class="question-mark">?</span>;
+    reader.read_exact(<span class="kw-2">&amp;mut </span>buffer)<span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>(<span class="ident">buffer</span>)
+    <span class="prelude-val">Ok</span>(buffer)
 }
 
-<span class="comment">// Section B.2.4.6</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_app</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">marker</span>: <span class="ident">Marker</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AppData</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">read_length</span>(<span class="ident">reader</span>, <span class="ident">marker</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes_read</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+<span class="comment">// Section B.2.4.6
+</span><span class="kw">pub fn </span>parse_app&lt;R: Read&gt;(reader: <span class="kw-2">&amp;mut </span>R, marker: Marker) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;AppData&gt;&gt; {
+    <span class="kw">let </span>length = read_length(reader, marker)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>bytes_read = <span class="number">0</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="prelude-val">None</span>;
 
-    <span class="kw">match</span> <span class="ident">marker</span> {
-        <span class="ident">APP</span>(<span class="number">0</span>) =&gt; {
-            <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">5</span>];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>)<span class="question-mark">?</span>;
-                <span class="ident">bytes_read</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">len</span>();
+    <span class="kw">match </span>marker {
+        APP(<span class="number">0</span>) =&gt; {
+            <span class="kw">if </span>length &gt;= <span class="number">5 </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0u8</span>; <span class="number">5</span>];
+                reader.read_exact(<span class="kw-2">&amp;mut </span>buffer)<span class="question-mark">?</span>;
+                bytes_read = buffer.len();
 
-                <span class="comment">// http://www.w3.org/Graphics/JPEG/jfif3.pdf</span>
-                <span class="kw">if</span> <span class="ident">buffer</span>[<span class="number">0</span>..<span class="number">5</span>] <span class="op">==</span> <span class="kw-2">*</span><span class="string">b&quot;JFIF\0&quot;</span> {
-                    <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">AppData::Jfif</span>);
-                <span class="comment">// https://sno.phy.queensu.ca/~phil/exiftool/TagNames/JPEG.html#AVI1</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">buffer</span>[<span class="number">0</span>..<span class="number">5</span>] <span class="op">==</span> <span class="kw-2">*</span><span class="string">b&quot;AVI1\0&quot;</span> {
-                    <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">AppData::Avi1</span>);
+                <span class="comment">// http://www.w3.org/Graphics/JPEG/jfif3.pdf
+                </span><span class="kw">if </span>buffer[<span class="number">0</span>..<span class="number">5</span>] == <span class="kw-2">*</span><span class="string">b&quot;JFIF\0&quot; </span>{
+                    result = <span class="prelude-val">Some</span>(AppData::Jfif);
+                <span class="comment">// https://sno.phy.queensu.ca/~phil/exiftool/TagNames/JPEG.html#AVI1
+                </span>} <span class="kw">else if </span>buffer[<span class="number">0</span>..<span class="number">5</span>] == <span class="kw-2">*</span><span class="string">b&quot;AVI1\0&quot; </span>{
+                    result = <span class="prelude-val">Some</span>(AppData::Avi1);
                 }
             }
         }
-        <span class="comment">// Exif Data</span>
-        <span class="ident">APP</span>(<span class="number">1</span>) =&gt; {
-            <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">6</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">6</span>];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>)<span class="question-mark">?</span>;
-                <span class="ident">bytes_read</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">len</span>();
+        <span class="comment">// Exif Data
+        </span>APP(<span class="number">1</span>) =&gt; {
+            <span class="kw">if </span>length &gt;= <span class="number">6 </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0u8</span>; <span class="number">6</span>];
+                reader.read_exact(<span class="kw-2">&amp;mut </span>buffer)<span class="question-mark">?</span>;
+                bytes_read = buffer.len();
 
-                <span class="comment">// https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf</span>
-                <span class="comment">// 4.5.4 Basic Structure of JPEG Compressed Data</span>
-                <span class="kw">if</span> <span class="ident">buffer</span> <span class="op">==</span> <span class="kw-2">*</span><span class="string">b&quot;Exif\x00\x00&quot;</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">length</span> <span class="op">-</span> <span class="ident">bytes_read</span>];
-                    <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">data</span>)<span class="question-mark">?</span>;
-                    <span class="ident">bytes_read</span> <span class="op">+</span><span class="op">=</span> <span class="ident">data</span>.<span class="ident">len</span>();
-                    <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">AppData::Exif</span>(<span class="ident">data</span>));
+                <span class="comment">// https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf
+                // 4.5.4 Basic Structure of JPEG Compressed Data
+                </span><span class="kw">if </span>buffer == <span class="kw-2">*</span><span class="string">b&quot;Exif\x00\x00&quot; </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">0</span>; length - bytes_read];
+                    reader.read_exact(<span class="kw-2">&amp;mut </span>data)<span class="question-mark">?</span>;
+                    bytes_read += data.len();
+                    result = <span class="prelude-val">Some</span>(AppData::Exif(data));
                 }
             }
         }
-        <span class="ident">APP</span>(<span class="number">2</span>) =&gt; {
-            <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="number">14</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">14</span>];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>)<span class="question-mark">?</span>;
-                <span class="ident">bytes_read</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">len</span>();
+        APP(<span class="number">2</span>) =&gt; {
+            <span class="kw">if </span>length &gt; <span class="number">14 </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0u8</span>; <span class="number">14</span>];
+                reader.read_exact(<span class="kw-2">&amp;mut </span>buffer)<span class="question-mark">?</span>;
+                bytes_read = buffer.len();
 
-                <span class="comment">// http://www.color.org/ICC_Minor_Revision_for_Web.pdf</span>
-                <span class="comment">// B.4 Embedding ICC profiles in JFIF files</span>
-                <span class="kw">if</span> <span class="ident">buffer</span>[<span class="number">0</span>..<span class="number">12</span>] <span class="op">==</span> <span class="kw-2">*</span><span class="string">b&quot;ICC_PROFILE\0&quot;</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">length</span> <span class="op">-</span> <span class="ident">bytes_read</span>];
-                    <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">data</span>)<span class="question-mark">?</span>;
-                    <span class="ident">bytes_read</span> <span class="op">+</span><span class="op">=</span> <span class="ident">data</span>.<span class="ident">len</span>();
-                    <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">AppData::Icc</span>(<span class="ident">IccChunk</span> {
-                        <span class="ident">seq_no</span>: <span class="ident">buffer</span>[<span class="number">12</span>],
-                        <span class="ident">num_markers</span>: <span class="ident">buffer</span>[<span class="number">13</span>],
-                        <span class="ident">data</span>,
+                <span class="comment">// http://www.color.org/ICC_Minor_Revision_for_Web.pdf
+                // B.4 Embedding ICC profiles in JFIF files
+                </span><span class="kw">if </span>buffer[<span class="number">0</span>..<span class="number">12</span>] == <span class="kw-2">*</span><span class="string">b&quot;ICC_PROFILE\0&quot; </span>{
+                    <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">0</span>; length - bytes_read];
+                    reader.read_exact(<span class="kw-2">&amp;mut </span>data)<span class="question-mark">?</span>;
+                    bytes_read += data.len();
+                    result = <span class="prelude-val">Some</span>(AppData::Icc(IccChunk {
+                        seq_no: buffer[<span class="number">12</span>],
+                        num_markers: buffer[<span class="number">13</span>],
+                        data,
                     }));
                 }
             }
         }
-        <span class="ident">APP</span>(<span class="number">14</span>) =&gt; {
-            <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">12</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">12</span>];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>)<span class="question-mark">?</span>;
-                <span class="ident">bytes_read</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">len</span>();
+        APP(<span class="number">14</span>) =&gt; {
+            <span class="kw">if </span>length &gt;= <span class="number">12 </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>buffer = [<span class="number">0u8</span>; <span class="number">12</span>];
+                reader.read_exact(<span class="kw-2">&amp;mut </span>buffer)<span class="question-mark">?</span>;
+                bytes_read = buffer.len();
 
-                <span class="comment">// http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/JPEG.html#Adobe</span>
-                <span class="kw">if</span> <span class="ident">buffer</span>[<span class="number">0</span> .. <span class="number">6</span>] <span class="op">==</span> <span class="kw-2">*</span><span class="string">b&quot;Adobe\0&quot;</span> {
-                    <span class="kw">let</span> <span class="ident">color_transform</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">buffer</span>[<span class="number">11</span>] {
-                        <span class="number">0</span> =&gt; <span class="ident">AdobeColorTransform::Unknown</span>,
-                        <span class="number">1</span> =&gt; <span class="ident">AdobeColorTransform::YCbCr</span>,
-                        <span class="number">2</span> =&gt; <span class="ident">AdobeColorTransform::YCCK</span>,
-                        <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;invalid color transform in adobe app segment&quot;</span>.<span class="ident">to_owned</span>())),
+                <span class="comment">// http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/JPEG.html#Adobe
+                </span><span class="kw">if </span>buffer[<span class="number">0 </span>.. <span class="number">6</span>] == <span class="kw-2">*</span><span class="string">b&quot;Adobe\0&quot; </span>{
+                    <span class="kw">let </span>color_transform = <span class="kw">match </span>buffer[<span class="number">11</span>] {
+                        <span class="number">0 </span>=&gt; AdobeColorTransform::Unknown,
+                        <span class="number">1 </span>=&gt; AdobeColorTransform::YCbCr,
+                        <span class="number">2 </span>=&gt; AdobeColorTransform::YCCK,
+                        <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;invalid color transform in adobe app segment&quot;</span>.to_owned())),
                     };
 
-                    <span class="ident">result</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">AppData::Adobe</span>(<span class="ident">color_transform</span>));
+                    result = <span class="prelude-val">Some</span>(AppData::Adobe(color_transform));
                 }
             }
         },
-        <span class="kw">_</span> =&gt; {},
+        <span class="kw">_ </span>=&gt; {},
     }
 
-    <span class="ident">skip_bytes</span>(<span class="ident">reader</span>, <span class="ident">length</span> <span class="op">-</span> <span class="ident">bytes_read</span>)<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+    skip_bytes(reader, length - bytes_read)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(result)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="jpeg_decoder" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="jpeg_decoder" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/jpeg-decoder-0.2.6/src/decoder/lossless.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lossless.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../jpeg_decoder/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/jpeg-decoder-0.2.6/src/decoder/lossless.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lossless.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../jpeg_decoder/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -259,261 +253,260 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::io::Read</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::decoder</span>::{<span class="ident">Decoder</span>, <span class="ident">MAX_COMPONENTS</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman::HuffmanDecoder</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::marker::Marker</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::Predictor</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">Component</span>, <span class="ident">FrameInfo</span>, <span class="ident">ScanInfo</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::io::Read;
+<span class="kw">use </span><span class="kw">crate</span>::decoder::{Decoder, MAX_COMPONENTS};
+<span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span><span class="kw">crate</span>::huffman::HuffmanDecoder;
+<span class="kw">use </span><span class="kw">crate</span>::marker::Marker;
+<span class="kw">use </span><span class="kw">crate</span>::parser::Predictor;
+<span class="kw">use </span><span class="kw">crate</span>::parser::{Component, FrameInfo, ScanInfo};
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">Decoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// decode_scan_lossless</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_scan_lossless</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">frame</span>: <span class="kw-2">&amp;</span><span class="ident">FrameInfo</span>,
-        <span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="ident">ScanInfo</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Marker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">ncomp</span> <span class="op">=</span> <span class="ident">scan</span>.<span class="ident">component_indices</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> <span class="ident">npixel</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="macro">assert!</span>(<span class="ident">ncomp</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">MAX_COMPONENTS</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">0u16</span>; <span class="ident">npixel</span>]; <span class="ident">ncomp</span>];
+<span class="kw">impl</span>&lt;R: Read&gt; Decoder&lt;R&gt; {
+    <span class="doccomment">/// decode_scan_lossless
+    </span><span class="kw">pub fn </span>decode_scan_lossless(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        frame: <span class="kw-2">&amp;</span>FrameInfo,
+        scan: <span class="kw-2">&amp;</span>ScanInfo,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="prelude-ty">Option</span>&lt;Marker&gt;, Vec&lt;Vec&lt;u16&gt;&gt;)&gt; {
+        <span class="kw">let </span>ncomp = scan.component_indices.len();
+        <span class="kw">let </span>npixel = frame.image_size.height <span class="kw">as </span>usize * frame.image_size.width <span class="kw">as </span>usize;
+        <span class="macro">assert!</span>(ncomp &lt;= MAX_COMPONENTS);
+        <span class="kw">let </span><span class="kw-2">mut </span>results = <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">0u16</span>; npixel]; ncomp];
 
-        <span class="kw">let</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">scan</span>
-            .<span class="ident">component_indices</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> <span class="ident">frame</span>.<span class="ident">components</span>[<span class="ident">i</span>].<span class="ident">clone</span>())
-            .<span class="ident">collect</span>();
+        <span class="kw">let </span>components: Vec&lt;Component&gt; = scan
+            .component_indices
+            .iter()
+            .map(|<span class="kw-2">&amp;</span>i| frame.components[i].clone())
+            .collect();
 
-        <span class="comment">// Verify that all required huffman tables has been set.</span>
-        <span class="kw">if</span> <span class="ident">scan</span>
-            .<span class="ident">dc_table_indices</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">dc_huffman_tables</span>[<span class="ident">i</span>].<span class="ident">is_none</span>())
+        <span class="comment">// Verify that all required huffman tables has been set.
+        </span><span class="kw">if </span>scan
+            .dc_table_indices
+            .iter()
+            .any(|<span class="kw-2">&amp;</span>i| <span class="self">self</span>.dc_huffman_tables[i].is_none())
         {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(
-                <span class="string">&quot;scan makes use of unset dc huffman table&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(
+                <span class="string">&quot;scan makes use of unset dc huffman table&quot;</span>.to_owned(),
             ));
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">huffman</span> <span class="op">=</span> <span class="ident">HuffmanDecoder::new</span>();
-        <span class="kw">let</span> <span class="ident">reader</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">reader</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mcus_left_until_restart</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">restart_interval</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">expected_rst_num</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ra</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="ident">MAX_COMPONENTS</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rb</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="ident">MAX_COMPONENTS</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rc</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="ident">MAX_COMPONENTS</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>huffman = HuffmanDecoder::new();
+        <span class="kw">let </span>reader = <span class="kw-2">&amp;mut </span><span class="self">self</span>.reader;
+        <span class="kw">let </span><span class="kw-2">mut </span>mcus_left_until_restart = <span class="self">self</span>.restart_interval;
+        <span class="kw">let </span><span class="kw-2">mut </span>expected_rst_num = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>ra = [<span class="number">0u16</span>; MAX_COMPONENTS];
+        <span class="kw">let </span><span class="kw-2">mut </span>rb = [<span class="number">0u16</span>; MAX_COMPONENTS];
+        <span class="kw">let </span><span class="kw-2">mut </span>rc = [<span class="number">0u16</span>; MAX_COMPONENTS];
 
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let </span>width = frame.image_size.width <span class="kw">as </span>usize;
+        <span class="kw">let </span>height = frame.image_size.height <span class="kw">as </span>usize;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">differences</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">Vec::with_capacity</span>(<span class="ident">npixel</span>); <span class="ident">ncomp</span>];
-        <span class="kw">for</span> <span class="ident">_mcu_y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-            <span class="kw">for</span> <span class="ident">_mcu_x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">restart_interval</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                    <span class="kw">if</span> <span class="ident">mcus_left_until_restart</span> <span class="op">==</span> <span class="number">0</span> {
-                        <span class="kw">match</span> <span class="ident">huffman</span>.<span class="ident">take_marker</span>(<span class="ident">reader</span>)<span class="question-mark">?</span> {
-                            <span class="prelude-val">Some</span>(<span class="ident">Marker::RST</span>(<span class="ident">n</span>)) =&gt; {
-                                <span class="kw">if</span> <span class="ident">n</span> <span class="op">!</span><span class="op">=</span> <span class="ident">expected_rst_num</span> {
-                                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(
+        <span class="kw">let </span><span class="kw-2">mut </span>differences = <span class="macro">vec!</span>[Vec::with_capacity(npixel); ncomp];
+        <span class="kw">for </span>_mcu_y <span class="kw">in </span><span class="number">0</span>..height {
+            <span class="kw">for </span>_mcu_x <span class="kw">in </span><span class="number">0</span>..width {
+                <span class="kw">if </span><span class="self">self</span>.restart_interval &gt; <span class="number">0 </span>{
+                    <span class="kw">if </span>mcus_left_until_restart == <span class="number">0 </span>{
+                        <span class="kw">match </span>huffman.take_marker(reader)<span class="question-mark">? </span>{
+                            <span class="prelude-val">Some</span>(Marker::RST(n)) =&gt; {
+                                <span class="kw">if </span>n != expected_rst_num {
+                                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(
                                         <span class="string">&quot;found RST{} where RST{} was expected&quot;</span>,
-                                        <span class="ident">n</span>, <span class="ident">expected_rst_num</span>
+                                        n, expected_rst_num
                                     )));
                                 }
 
-                                <span class="ident">huffman</span>.<span class="ident">reset</span>();
+                                huffman.reset();
 
-                                <span class="ident">expected_rst_num</span> <span class="op">=</span> (<span class="ident">expected_rst_num</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">%</span> <span class="number">8</span>;
-                                <span class="ident">mcus_left_until_restart</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">restart_interval</span>;
+                                expected_rst_num = (expected_rst_num + <span class="number">1</span>) % <span class="number">8</span>;
+                                mcus_left_until_restart = <span class="self">self</span>.restart_interval;
                             }
-                            <span class="prelude-val">Some</span>(<span class="ident">marker</span>) =&gt; {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(
+                            <span class="prelude-val">Some</span>(marker) =&gt; {
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(
                                     <span class="string">&quot;found marker {:?} inside scan where RST{} was expected&quot;</span>,
-                                    <span class="ident">marker</span>, <span class="ident">expected_rst_num</span>
+                                    marker, expected_rst_num
                                 )))
                             }
-                            <span class="prelude-val">None</span> =&gt; {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="macro">format!</span>(
+                            <span class="prelude-val">None </span>=&gt; {
+                                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="macro">format!</span>(
                                     <span class="string">&quot;no marker found where RST{} was expected&quot;</span>,
-                                    <span class="ident">expected_rst_num</span>
+                                    expected_rst_num
                                 )))
                             }
                         }
                     }
 
-                    <span class="ident">mcus_left_until_restart</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+                    mcus_left_until_restart -= <span class="number">1</span>;
                 }
 
-                <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">_component</span>) <span class="kw">in</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                    <span class="kw">let</span> <span class="ident">dc_table</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dc_huffman_tables</span>[<span class="ident">scan</span>.<span class="ident">dc_table_indices</span>[<span class="ident">i</span>]]
-                        .<span class="ident">as_ref</span>()
-                        .<span class="ident">unwrap</span>();
-                    <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">huffman</span>.<span class="ident">decode</span>(<span class="ident">reader</span>, <span class="ident">dc_table</span>)<span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">value</span> {
-                        <span class="number">0</span> =&gt; <span class="number">0</span>,
-                        <span class="number">1</span>..<span class="op">=</span><span class="number">15</span> =&gt; <span class="ident">huffman</span>.<span class="ident">receive_extend</span>(<span class="ident">reader</span>, <span class="ident">value</span>)<span class="question-mark">?</span> <span class="kw">as</span> <span class="ident">i32</span>,
-                        <span class="number">16</span> =&gt; <span class="number">32768</span>,
-                        <span class="kw">_</span> =&gt; {
-                            <span class="comment">// Section F.1.2.1.1</span>
-                            <span class="comment">// Table F.1</span>
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(
-                                <span class="string">&quot;invalid DC difference magnitude category&quot;</span>.<span class="ident">to_owned</span>(),
+                <span class="kw">for </span>(i, _component) <span class="kw">in </span>components.iter().enumerate() {
+                    <span class="kw">let </span>dc_table = <span class="self">self</span>.dc_huffman_tables[scan.dc_table_indices[i]]
+                        .as_ref()
+                        .unwrap();
+                    <span class="kw">let </span>value = huffman.decode(reader, dc_table)<span class="question-mark">?</span>;
+                    <span class="kw">let </span>diff = <span class="kw">match </span>value {
+                        <span class="number">0 </span>=&gt; <span class="number">0</span>,
+                        <span class="number">1</span>..=<span class="number">15 </span>=&gt; huffman.receive_extend(reader, value)<span class="question-mark">? </span><span class="kw">as </span>i32,
+                        <span class="number">16 </span>=&gt; <span class="number">32768</span>,
+                        <span class="kw">_ </span>=&gt; {
+                            <span class="comment">// Section F.1.2.1.1
+                            // Table F.1
+                            </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(
+                                <span class="string">&quot;invalid DC difference magnitude category&quot;</span>.to_owned(),
                             ));
                         }
                     };
-                    <span class="ident">differences</span>[<span class="ident">i</span>].<span class="ident">push</span>(<span class="ident">diff</span>);
+                    differences[i].push(diff);
                 }
             }
         }
 
-        <span class="kw">if</span> <span class="ident">scan</span>.<span class="ident">predictor_selection</span> <span class="op">==</span> <span class="ident">Predictor::Ra</span> {
-            <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">_component</span>) <span class="kw">in</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="comment">// calculate the top left pixel</span>
-                <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span> <span class="ident">differences</span>[<span class="ident">i</span>][<span class="number">0</span>];
-                <span class="kw">let</span> <span class="ident">prediction</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="ident">frame</span>.<span class="ident">precision</span> <span class="op">-</span> <span class="ident">scan</span>.<span class="ident">point_transform</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">i32</span>;
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ((<span class="ident">prediction</span> <span class="op">+</span> <span class="ident">diff</span>) <span class="op">&amp;</span> <span class="number">0xFFFF</span>) <span class="kw">as</span> <span class="ident">u16</span>; <span class="comment">// modulo 2^16</span>
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">result</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">scan</span>.<span class="ident">point_transform</span>;
-                <span class="ident">results</span>[<span class="ident">i</span>][<span class="number">0</span>] <span class="op">=</span> <span class="ident">result</span>;
+        <span class="kw">if </span>scan.predictor_selection == Predictor::Ra {
+            <span class="kw">for </span>(i, _component) <span class="kw">in </span>components.iter().enumerate() {
+                <span class="comment">// calculate the top left pixel
+                </span><span class="kw">let </span>diff = differences[i][<span class="number">0</span>];
+                <span class="kw">let </span>prediction = <span class="number">1 </span>&lt;&lt; (frame.precision - scan.point_transform - <span class="number">1</span>) <span class="kw">as </span>i32;
+                <span class="kw">let </span>result = ((prediction + diff) &amp; <span class="number">0xFFFF</span>) <span class="kw">as </span>u16; <span class="comment">// modulo 2^16
+                </span><span class="kw">let </span>result = result &lt;&lt; scan.point_transform;
+                results[i][<span class="number">0</span>] = result;
 
-                <span class="comment">// calculate leftmost column, using top pixel as predictor</span>
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">previous</span> <span class="op">=</span> <span class="ident">result</span>;
-                <span class="kw">for</span> <span class="ident">mcu_y</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">height</span> {
-                    <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span> <span class="ident">differences</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span>];
-                    <span class="kw">let</span> <span class="ident">prediction</span> <span class="op">=</span> <span class="ident">previous</span> <span class="kw">as</span> <span class="ident">i32</span>;
-                    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ((<span class="ident">prediction</span> <span class="op">+</span> <span class="ident">diff</span>) <span class="op">&amp;</span> <span class="number">0xFFFF</span>) <span class="kw">as</span> <span class="ident">u16</span>; <span class="comment">// modulo 2^16</span>
-                    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">result</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">scan</span>.<span class="ident">point_transform</span>;
-                    <span class="ident">results</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span>] <span class="op">=</span> <span class="ident">result</span>;
-                    <span class="ident">previous</span> <span class="op">=</span> <span class="ident">result</span>;
+                <span class="comment">// calculate leftmost column, using top pixel as predictor
+                </span><span class="kw">let </span><span class="kw-2">mut </span>previous = result;
+                <span class="kw">for </span>mcu_y <span class="kw">in </span><span class="number">1</span>..height {
+                    <span class="kw">let </span>diff = differences[i][mcu_y * width];
+                    <span class="kw">let </span>prediction = previous <span class="kw">as </span>i32;
+                    <span class="kw">let </span>result = ((prediction + diff) &amp; <span class="number">0xFFFF</span>) <span class="kw">as </span>u16; <span class="comment">// modulo 2^16
+                    </span><span class="kw">let </span>result = result &lt;&lt; scan.point_transform;
+                    results[i][mcu_y * width] = result;
+                    previous = result;
                 }
 
-                <span class="comment">// calculate rows, using left pixel as predictor</span>
-                <span class="kw">for</span> <span class="ident">mcu_y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-                    <span class="kw">for</span> <span class="ident">mcu_x</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">width</span> {
-                        <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span> <span class="ident">differences</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">mcu_x</span>];
-                        <span class="kw">let</span> <span class="ident">prediction</span> <span class="op">=</span> <span class="ident">results</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">mcu_x</span> <span class="op">-</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">i32</span>;
-                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ((<span class="ident">prediction</span> <span class="op">+</span> <span class="ident">diff</span>) <span class="op">&amp;</span> <span class="number">0xFFFF</span>) <span class="kw">as</span> <span class="ident">u16</span>; <span class="comment">// modulo 2^16</span>
-                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">result</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">scan</span>.<span class="ident">point_transform</span>;
-                        <span class="ident">results</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">mcu_x</span>] <span class="op">=</span> <span class="ident">result</span>;
+                <span class="comment">// calculate rows, using left pixel as predictor
+                </span><span class="kw">for </span>mcu_y <span class="kw">in </span><span class="number">0</span>..height {
+                    <span class="kw">for </span>mcu_x <span class="kw">in </span><span class="number">1</span>..width {
+                        <span class="kw">let </span>diff = differences[i][mcu_y * width + mcu_x];
+                        <span class="kw">let </span>prediction = results[i][mcu_y * width + mcu_x - <span class="number">1</span>] <span class="kw">as </span>i32;
+                        <span class="kw">let </span>result = ((prediction + diff) &amp; <span class="number">0xFFFF</span>) <span class="kw">as </span>u16; <span class="comment">// modulo 2^16
+                        </span><span class="kw">let </span>result = result &lt;&lt; scan.point_transform;
+                        results[i][mcu_y * width + mcu_x] = result;
                     }
                 }
             }
-        } <span class="kw">else</span> {
-            <span class="kw">for</span> <span class="ident">mcu_y</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">height</span> {
-                <span class="kw">for</span> <span class="ident">mcu_x</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
-                    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">_component</span>) <span class="kw">in</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                        <span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span> <span class="ident">differences</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">mcu_x</span>];
+        } <span class="kw">else </span>{
+            <span class="kw">for </span>mcu_y <span class="kw">in </span><span class="number">0</span>..height {
+                <span class="kw">for </span>mcu_x <span class="kw">in </span><span class="number">0</span>..width {
+                    <span class="kw">for </span>(i, _component) <span class="kw">in </span>components.iter().enumerate() {
+                        <span class="kw">let </span>diff = differences[i][mcu_y * width + mcu_x];
 
-                        <span class="comment">// The following lines could be further optimized, e.g. moving the checks</span>
-                        <span class="comment">// and updates of the previous values into the prediction function or</span>
-                        <span class="comment">// iterating such that diagonals with mcu_x + mcu_y = const are computed at</span>
-                        <span class="comment">// the same time to exploit independent predictions in this case</span>
-                        <span class="kw">if</span> <span class="ident">mcu_x</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                            <span class="ident">ra</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">results</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="ident">mcu_x</span> <span class="op">-</span> <span class="number">1</span>];
+                        <span class="comment">// The following lines could be further optimized, e.g. moving the checks
+                        // and updates of the previous values into the prediction function or
+                        // iterating such that diagonals with mcu_x + mcu_y = const are computed at
+                        // the same time to exploit independent predictions in this case
+                        </span><span class="kw">if </span>mcu_x &gt; <span class="number">0 </span>{
+                            ra[i] = results[i][mcu_y * frame.image_size.width <span class="kw">as </span>usize + mcu_x - <span class="number">1</span>];
                         }
-                        <span class="kw">if</span> <span class="ident">mcu_y</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                            <span class="ident">rb</span>[<span class="ident">i</span>] <span class="op">=</span>
-                                <span class="ident">results</span>[<span class="ident">i</span>][(<span class="ident">mcu_y</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">*</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="ident">mcu_x</span>];
-                            <span class="kw">if</span> <span class="ident">mcu_x</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                                <span class="ident">rc</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">results</span>[<span class="ident">i</span>]
-                                    [(<span class="ident">mcu_y</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">*</span> <span class="ident">frame</span>.<span class="ident">image_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> (<span class="ident">mcu_x</span> <span class="op">-</span> <span class="number">1</span>)];
+                        <span class="kw">if </span>mcu_y &gt; <span class="number">0 </span>{
+                            rb[i] =
+                                results[i][(mcu_y - <span class="number">1</span>) * frame.image_size.width <span class="kw">as </span>usize + mcu_x];
+                            <span class="kw">if </span>mcu_x &gt; <span class="number">0 </span>{
+                                rc[i] = results[i]
+                                    [(mcu_y - <span class="number">1</span>) * frame.image_size.width <span class="kw">as </span>usize + (mcu_x - <span class="number">1</span>)];
                             }
                         }
-                        <span class="kw">let</span> <span class="ident">prediction</span> <span class="op">=</span> <span class="ident">predict</span>(
-                            <span class="ident">ra</span>[<span class="ident">i</span>] <span class="kw">as</span> <span class="ident">i32</span>,
-                            <span class="ident">rb</span>[<span class="ident">i</span>] <span class="kw">as</span> <span class="ident">i32</span>,
-                            <span class="ident">rc</span>[<span class="ident">i</span>] <span class="kw">as</span> <span class="ident">i32</span>,
-                            <span class="ident">scan</span>.<span class="ident">predictor_selection</span>,
-                            <span class="ident">scan</span>.<span class="ident">point_transform</span>,
-                            <span class="ident">frame</span>.<span class="ident">precision</span>,
-                            <span class="ident">mcu_x</span>,
-                            <span class="ident">mcu_y</span>,
-                            <span class="self">self</span>.<span class="ident">restart_interval</span> <span class="op">&gt;</span> <span class="number">0</span>
-                                <span class="op">&amp;&amp;</span> <span class="ident">mcus_left_until_restart</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">restart_interval</span> <span class="op">-</span> <span class="number">1</span>,
+                        <span class="kw">let </span>prediction = predict(
+                            ra[i] <span class="kw">as </span>i32,
+                            rb[i] <span class="kw">as </span>i32,
+                            rc[i] <span class="kw">as </span>i32,
+                            scan.predictor_selection,
+                            scan.point_transform,
+                            frame.precision,
+                            mcu_x,
+                            mcu_y,
+                            <span class="self">self</span>.restart_interval &gt; <span class="number">0
+                                </span>&amp;&amp; mcus_left_until_restart == <span class="self">self</span>.restart_interval - <span class="number">1</span>,
                         );
-                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ((<span class="ident">prediction</span> <span class="op">+</span> <span class="ident">diff</span>) <span class="op">&amp;</span> <span class="number">0xFFFF</span>) <span class="kw">as</span> <span class="ident">u16</span>; <span class="comment">// modulo 2^16</span>
-                        <span class="ident">results</span>[<span class="ident">i</span>][<span class="ident">mcu_y</span> <span class="op">*</span> <span class="ident">width</span> <span class="op">+</span> <span class="ident">mcu_x</span>] <span class="op">=</span> <span class="ident">result</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">scan</span>.<span class="ident">point_transform</span>;
+                        <span class="kw">let </span>result = ((prediction + diff) &amp; <span class="number">0xFFFF</span>) <span class="kw">as </span>u16; <span class="comment">// modulo 2^16
+                        </span>results[i][mcu_y * width + mcu_x] = result &lt;&lt; scan.point_transform;
                     }
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">marker</span> <span class="op">=</span> <span class="ident">huffman</span>.<span class="ident">take_marker</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">reader</span>)<span class="question-mark">?</span>;
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">Marker::RST</span>(<span class="kw">_</span>)) <span class="op">=</span> <span class="ident">marker</span> {
-            <span class="ident">marker</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">read_marker</span>().<span class="ident">ok</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>marker = huffman.take_marker(<span class="kw-2">&amp;mut </span><span class="self">self</span>.reader)<span class="question-mark">?</span>;
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(Marker::RST(<span class="kw">_</span>)) = marker {
+            marker = <span class="self">self</span>.read_marker().ok();
         }
-        <span class="prelude-val">Ok</span>((<span class="ident">marker</span>, <span class="ident">results</span>))
+        <span class="prelude-val">Ok</span>((marker, results))
     }
 }
 
-<span class="doccomment">/// H.1.2.1</span>
-<span class="kw">fn</span> <span class="ident">predict</span>(
-    <span class="ident">ra</span>: <span class="ident">i32</span>,
-    <span class="ident">rb</span>: <span class="ident">i32</span>,
-    <span class="ident">rc</span>: <span class="ident">i32</span>,
-    <span class="ident">predictor</span>: <span class="ident">Predictor</span>,
-    <span class="ident">point_transform</span>: <span class="ident">u8</span>,
-    <span class="ident">input_precision</span>: <span class="ident">u8</span>,
-    <span class="ident">ix</span>: <span class="ident">usize</span>,
-    <span class="ident">iy</span>: <span class="ident">usize</span>,
-    <span class="ident">restart</span>: <span class="ident">bool</span>,
-) -&gt; <span class="ident">i32</span> {
-    <span class="kw">if</span> (<span class="ident">ix</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">iy</span> <span class="op">==</span> <span class="number">0</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">restart</span> {
-        <span class="comment">// start of first line or restart</span>
-        <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="ident">input_precision</span> <span class="op">-</span> <span class="ident">point_transform</span> <span class="op">-</span> <span class="number">1</span>)
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">iy</span> <span class="op">==</span> <span class="number">0</span> {
-        <span class="comment">// rest of first line</span>
-        <span class="ident">ra</span>
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">ix</span> <span class="op">==</span> <span class="number">0</span> {
-        <span class="comment">// start of other line</span>
-        <span class="ident">rb</span>
-    } <span class="kw">else</span> {
-        <span class="comment">// use predictor Table H.1</span>
-        <span class="kw">match</span> <span class="ident">predictor</span> {
-            <span class="ident">Predictor::NoPrediction</span> =&gt; <span class="number">0</span>,
-            <span class="ident">Predictor::Ra</span> =&gt; <span class="ident">ra</span>,
-            <span class="ident">Predictor::Rb</span> =&gt; <span class="ident">rb</span>,
-            <span class="ident">Predictor::Rc</span> =&gt; <span class="ident">rc</span>,
-            <span class="ident">Predictor::RaRbRc1</span> =&gt; <span class="ident">ra</span> <span class="op">+</span> <span class="ident">rb</span> <span class="op">-</span> <span class="ident">rc</span>,
-            <span class="ident">Predictor::RaRbRc2</span> =&gt; <span class="ident">ra</span> <span class="op">+</span> ((<span class="ident">rb</span> <span class="op">-</span> <span class="ident">rc</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>),
-            <span class="ident">Predictor::RaRbRc3</span> =&gt; <span class="ident">rb</span> <span class="op">+</span> ((<span class="ident">ra</span> <span class="op">-</span> <span class="ident">rc</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">1</span>),
-            <span class="ident">Predictor::RaRb</span> =&gt; (<span class="ident">ra</span> <span class="op">+</span> <span class="ident">rb</span>) <span class="op">/</span> <span class="number">2</span>,
+<span class="doccomment">/// H.1.2.1
+</span><span class="kw">fn </span>predict(
+    ra: i32,
+    rb: i32,
+    rc: i32,
+    predictor: Predictor,
+    point_transform: u8,
+    input_precision: u8,
+    ix: usize,
+    iy: usize,
+    restart: bool,
+) -&gt; i32 {
+    <span class="kw">if </span>(ix == <span class="number">0 </span>&amp;&amp; iy == <span class="number">0</span>) || restart {
+        <span class="comment">// start of first line or restart
+        </span><span class="number">1 </span>&lt;&lt; (input_precision - point_transform - <span class="number">1</span>)
+    } <span class="kw">else if </span>iy == <span class="number">0 </span>{
+        <span class="comment">// rest of first line
+        </span>ra
+    } <span class="kw">else if </span>ix == <span class="number">0 </span>{
+        <span class="comment">// start of other line
+        </span>rb
+    } <span class="kw">else </span>{
+        <span class="comment">// use predictor Table H.1
+        </span><span class="kw">match </span>predictor {
+            Predictor::NoPrediction =&gt; <span class="number">0</span>,
+            Predictor::Ra =&gt; ra,
+            Predictor::Rb =&gt; rb,
+            Predictor::Rc =&gt; rc,
+            Predictor::RaRbRc1 =&gt; ra + rb - rc,
+            Predictor::RaRbRc2 =&gt; ra + ((rb - rc) &gt;&gt; <span class="number">1</span>),
+            Predictor::RaRbRc3 =&gt; rb + ((ra - rc) &gt;&gt; <span class="number">1</span>),
+            Predictor::RaRb =&gt; (ra + rb) / <span class="number">2</span>,
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compute_image_lossless</span>(<span class="ident">frame</span>: <span class="kw-2">&amp;</span><span class="ident">FrameInfo</span>, <span class="kw-2">mut</span> <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="ident">Vec::is_empty</span>) {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;not all components have data&quot;</span>.<span class="ident">to_owned</span>()));
+<span class="kw">pub fn </span>compute_image_lossless(frame: <span class="kw-2">&amp;</span>FrameInfo, <span class="kw-2">mut </span>data: Vec&lt;Vec&lt;u16&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;&gt; {
+    <span class="kw">if </span>data.is_empty() || data.iter().any(Vec::is_empty) {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;not all components have data&quot;</span>.to_owned()));
     }
-    <span class="kw">let</span> <span class="ident">output_size</span> <span class="op">=</span> <span class="ident">frame</span>.<span class="ident">output_size</span>;
-    <span class="kw">let</span> <span class="ident">components</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">frame</span>.<span class="ident">components</span>;
-    <span class="kw">let</span> <span class="ident">ncomp</span> <span class="op">=</span> <span class="ident">components</span>.<span class="ident">len</span>();
+    <span class="kw">let </span>output_size = frame.output_size;
+    <span class="kw">let </span>components = <span class="kw-2">&amp;</span>frame.components;
+    <span class="kw">let </span>ncomp = components.len();
 
-    <span class="kw">if</span> <span class="ident">ncomp</span> <span class="op">==</span> <span class="number">1</span> {
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">convert_to_u8</span>(<span class="ident">frame</span>, <span class="ident">data</span>.<span class="ident">remove</span>(<span class="number">0</span>));
-        <span class="prelude-val">Ok</span>(<span class="ident">decoded</span>)
-    } <span class="kw">else</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoded</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="macro">vec!</span>[<span class="number">0u16</span>; <span class="ident">ncomp</span> <span class="op">*</span> <span class="ident">output_size</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">output_size</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>];
-        <span class="kw">for</span> (<span class="ident">x</span>, <span class="ident">chunk</span>) <span class="kw">in</span> <span class="ident">decoded</span>.<span class="ident">chunks_mut</span>(<span class="ident">ncomp</span>).<span class="ident">enumerate</span>() {
-            <span class="kw">for</span> (<span class="ident">i</span>, (<span class="ident">component_data</span>, <span class="kw">_</span>)) <span class="kw">in</span> <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">components</span>.<span class="ident">iter</span>()).<span class="ident">enumerate</span>() {
-                <span class="ident">chunk</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">component_data</span>[<span class="ident">x</span>];
+    <span class="kw">if </span>ncomp == <span class="number">1 </span>{
+        <span class="kw">let </span>decoded = convert_to_u8(frame, data.remove(<span class="number">0</span>));
+        <span class="prelude-val">Ok</span>(decoded)
+    } <span class="kw">else </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>decoded: Vec&lt;u16&gt; =
+            <span class="macro">vec!</span>[<span class="number">0u16</span>; ncomp * output_size.width <span class="kw">as </span>usize * output_size.height <span class="kw">as </span>usize];
+        <span class="kw">for </span>(x, chunk) <span class="kw">in </span>decoded.chunks_mut(ncomp).enumerate() {
+            <span class="kw">for </span>(i, (component_data, <span class="kw">_</span>)) <span class="kw">in </span>data.iter().zip(components.iter()).enumerate() {
+                chunk[i] = component_data[x];
             }
         }
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">convert_to_u8</span>(<span class="ident">frame</span>, <span class="ident">decoded</span>);
-        <span class="prelude-val">Ok</span>(<span class="ident">decoded</span>)
+        <span class="kw">let </span>decoded = convert_to_u8(frame, decoded);
+        <span class="prelude-val">Ok</span>(decoded)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">convert_to_u8</span>(<span class="ident">frame</span>: <span class="kw-2">&amp;</span><span class="ident">FrameInfo</span>, <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">frame</span>.<span class="ident">precision</span> <span class="op">==</span> <span class="number">8</span> {
-        <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">collect</span>()
-    } <span class="kw">else</span> {
-        <span class="comment">// we output native endian, which is the standard for image-rs</span>
-        <span class="kw">let</span> <span class="ident">ne_bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_ne_bytes</span>()).<span class="ident">collect</span>();
-        <span class="ident">ne_bytes</span>.<span class="ident">concat</span>()
+<span class="kw">fn </span>convert_to_u8(frame: <span class="kw-2">&amp;</span>FrameInfo, data: Vec&lt;u16&gt;) -&gt; Vec&lt;u8&gt; {
+    <span class="kw">if </span>frame.precision == <span class="number">8 </span>{
+        data.iter().map(|x| <span class="kw-2">*</span>x <span class="kw">as </span>u8).collect()
+    } <span class="kw">else </span>{
+        <span class="comment">// we output native endian, which is the standard for image-rs
+        </span><span class="kw">let </span>ne_bytes: Vec&lt;<span class="kw">_</span>&gt; = data.iter().map(|x| x.to_ne_bytes()).collect();
+        ne_bytes.concat()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="jpeg_decoder" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="jpeg_decoder" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

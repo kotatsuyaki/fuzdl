@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/tga/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/tga/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -219,86 +213,86 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::header::Header</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">error::EncodingError</span>, <span class="ident">ColorType</span>, <span class="ident">ImageEncoder</span>, <span class="ident">ImageError</span>, <span class="ident">ImageFormat</span>, <span class="ident">ImageResult</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert::TryFrom</span>, <span class="ident">error</span>, <span class="ident">fmt</span>, <span class="ident">io::Write</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::header::Header;
+<span class="kw">use crate</span>::{error::EncodingError, ColorType, ImageEncoder, ImageError, ImageFormat, ImageResult};
+<span class="kw">use </span>std::{convert::TryFrom, error, fmt, io::Write};
 
-<span class="doccomment">/// Errors that can occur during encoding and saving of a TGA image.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">enum</span> <span class="ident">EncoderError</span> {
-    <span class="doccomment">/// Invalid TGA width.</span>
-    <span class="ident">WidthInvalid</span>(<span class="ident">u32</span>),
+<span class="doccomment">/// Errors that can occur during encoding and saving of a TGA image.
+</span><span class="attribute">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+</span><span class="kw">enum </span>EncoderError {
+    <span class="doccomment">/// Invalid TGA width.
+    </span>WidthInvalid(u32),
 
-    <span class="doccomment">/// Invalid TGA height.</span>
-    <span class="ident">HeightInvalid</span>(<span class="ident">u32</span>),
+    <span class="doccomment">/// Invalid TGA height.
+    </span>HeightInvalid(u32),
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">EncoderError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">EncoderError::WidthInvalid</span>(<span class="ident">s</span>) =&gt; <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid TGA width: {}&quot;</span>, <span class="ident">s</span>)),
-            <span class="ident">EncoderError::HeightInvalid</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid TGA height: {}&quot;</span>, <span class="ident">s</span>))
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>EncoderError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            EncoderError::WidthInvalid(s) =&gt; f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid TGA width: {}&quot;</span>, s)),
+            EncoderError::HeightInvalid(s) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid TGA height: {}&quot;</span>, s))
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">EncoderError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ImageError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">EncoderError</span>) -&gt; <span class="ident">ImageError</span> {
-        <span class="ident">ImageError::Encoding</span>(<span class="ident">EncodingError::new</span>(<span class="ident">ImageFormat::Tga</span>.<span class="ident">into</span>(), <span class="ident">e</span>))
+<span class="kw">impl </span>From&lt;EncoderError&gt; <span class="kw">for </span>ImageError {
+    <span class="kw">fn </span>from(e: EncoderError) -&gt; ImageError {
+        ImageError::Encoding(EncodingError::new(ImageFormat::Tga.into(), e))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">error::Error</span> <span class="kw">for</span> <span class="ident">EncoderError</span> {}
+<span class="kw">impl </span>error::Error <span class="kw">for </span>EncoderError {}
 
-<span class="doccomment">/// TGA encoder.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TgaEncoder</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> {
-    <span class="ident">writer</span>: <span class="ident">W</span>,
+<span class="doccomment">/// TGA encoder.
+</span><span class="kw">pub struct </span>TgaEncoder&lt;W: Write&gt; {
+    writer: W,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">TgaEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new encoder that writes its output to ```w```.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">w</span>: <span class="ident">W</span>) -&gt; <span class="ident">TgaEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="ident">TgaEncoder</span> { <span class="ident">writer</span>: <span class="ident">w</span> }
+<span class="kw">impl</span>&lt;W: Write&gt; TgaEncoder&lt;W&gt; {
+    <span class="doccomment">/// Create a new encoder that writes its output to ```w```.
+    </span><span class="kw">pub fn </span>new(w: W) -&gt; TgaEncoder&lt;W&gt; {
+        TgaEncoder { writer: w }
     }
 
-    <span class="doccomment">/// Encodes the image ```buf``` that has dimensions ```width```</span>
-    <span class="doccomment">/// and ```height``` and ```ColorType``` ```color_type```.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The dimensions of the image must be between 0 and 65535 (inclusive) or</span>
-    <span class="doccomment">/// an error will be returned.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// Validate dimensions.</span>
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">u16::try_from</span>(<span class="ident">width</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ImageError::from</span>(<span class="ident">EncoderError::WidthInvalid</span>(<span class="ident">width</span>)))<span class="question-mark">?</span>;
+    <span class="doccomment">/// Encodes the image ```buf``` that has dimensions ```width```
+    /// and ```height``` and ```ColorType``` ```color_type```.
+    ///
+    /// The dimensions of the image must be between 0 and 65535 (inclusive) or
+    /// an error will be returned.
+    </span><span class="kw">pub fn </span>encode(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        buf: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        color_type: ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="comment">// Validate dimensions.
+        </span><span class="kw">let </span>width = u16::try_from(width)
+            .map_err(|<span class="kw">_</span>| ImageError::from(EncoderError::WidthInvalid(width)))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">u16::try_from</span>(<span class="ident">height</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ImageError::from</span>(<span class="ident">EncoderError::HeightInvalid</span>(<span class="ident">height</span>)))<span class="question-mark">?</span>;
+        <span class="kw">let </span>height = u16::try_from(height)
+            .map_err(|<span class="kw">_</span>| ImageError::from(EncoderError::HeightInvalid(height)))<span class="question-mark">?</span>;
 
-        <span class="comment">// Write out TGA header.</span>
-        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">Header::from_pixel_info</span>(<span class="ident">color_type</span>, <span class="ident">width</span>, <span class="ident">height</span>)<span class="question-mark">?</span>;
-        <span class="ident">header</span>.<span class="ident">write_to</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">writer</span>)<span class="question-mark">?</span>;
+        <span class="comment">// Write out TGA header.
+        </span><span class="kw">let </span>header = Header::from_pixel_info(color_type, width, height)<span class="question-mark">?</span>;
+        header.write_to(<span class="kw-2">&amp;mut </span><span class="self">self</span>.writer)<span class="question-mark">?</span>;
 
-        <span class="comment">// Write out Bgr(a)8 or L(a)8 image data.</span>
-        <span class="kw">match</span> <span class="ident">color_type</span> {
-            <span class="ident">ColorType::Rgb8</span> <span class="op">|</span> <span class="ident">ColorType::Rgba8</span> =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">Vec::from</span>(<span class="ident">buf</span>);
+        <span class="comment">// Write out Bgr(a)8 or L(a)8 image data.
+        </span><span class="kw">match </span>color_type {
+            ColorType::Rgb8 | ColorType::Rgba8 =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>image = Vec::from(buf);
 
-                <span class="kw">for</span> <span class="ident">chunk</span> <span class="kw">in</span> <span class="ident">image</span>.<span class="ident">chunks_mut</span>(<span class="ident">usize::from</span>(<span class="ident">color_type</span>.<span class="ident">bytes_per_pixel</span>())) {
-                    <span class="ident">chunk</span>.<span class="ident">swap</span>(<span class="number">0</span>, <span class="number">2</span>);
+                <span class="kw">for </span>chunk <span class="kw">in </span>image.chunks_mut(usize::from(color_type.bytes_per_pixel())) {
+                    chunk.swap(<span class="number">0</span>, <span class="number">2</span>);
                 }
 
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>)<span class="question-mark">?</span>;
+                <span class="self">self</span>.writer.write_all(<span class="kw-2">&amp;</span>image)<span class="question-mark">?</span>;
             }
-            <span class="kw">_</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="ident">buf</span>)<span class="question-mark">?</span>;
+            <span class="kw">_ </span>=&gt; {
+                <span class="self">self</span>.writer.write_all(buf)<span class="question-mark">?</span>;
             }
         }
 
@@ -306,134 +300,133 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">ImageEncoder</span> <span class="kw">for</span> <span class="ident">TgaEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_image</span>(
+<span class="kw">impl</span>&lt;W: Write&gt; ImageEncoder <span class="kw">for </span>TgaEncoder&lt;W&gt; {
+    <span class="kw">fn </span>write_image(
         <span class="self">self</span>,
-        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encode</span>(<span class="ident">buf</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color_type</span>)
+        buf: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        color_type: ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.encode(buf, width, height, color_type)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">EncoderError</span>, <span class="ident">TgaEncoder</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">codecs::tga::TgaDecoder</span>, <span class="ident">ColorType</span>, <span class="ident">ImageDecoder</span>, <span class="ident">ImageError</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error::Error</span>, <span class="ident">io::Cursor</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{EncoderError, TgaEncoder};
+    <span class="kw">use crate</span>::{codecs::tga::TgaDecoder, ColorType, ImageDecoder, ImageError};
+    <span class="kw">use </span>std::{error::Error, io::Cursor};
 
-    <span class="kw">fn</span> <span class="ident">round_trip_image</span>(<span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>, <span class="ident">c</span>: <span class="ident">ColorType</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded_data</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+    <span class="kw">fn </span>round_trip_image(image: <span class="kw-2">&amp;</span>[u8], width: u32, height: u32, c: ColorType) -&gt; Vec&lt;u8&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>encoded_data = Vec::new();
         {
-            <span class="kw">let</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">TgaEncoder::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded_data</span>);
-            <span class="ident">encoder</span>
-                .<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">c</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;could not encode image&quot;</span>);
+            <span class="kw">let </span>encoder = TgaEncoder::new(<span class="kw-2">&amp;mut </span>encoded_data);
+            encoder
+                .encode(<span class="kw-2">&amp;</span>image, width, height, c)
+                .expect(<span class="string">&quot;could not encode image&quot;</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">TgaDecoder::new</span>(<span class="ident">Cursor::new</span>(<span class="kw-2">&amp;</span><span class="ident">encoded_data</span>)).<span class="ident">expect</span>(<span class="string">&quot;failed to decode&quot;</span>);
+        <span class="kw">let </span>decoder = TgaDecoder::new(Cursor::new(<span class="kw-2">&amp;</span>encoded_data)).expect(<span class="string">&quot;failed to decode&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">decoder</span>.<span class="ident">total_bytes</span>() <span class="kw">as</span> <span class="ident">usize</span>];
-        <span class="ident">decoder</span>.<span class="ident">read_image</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>).<span class="ident">expect</span>(<span class="string">&quot;failed to decode&quot;</span>);
-        <span class="ident">buf</span>
+        <span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0</span>; decoder.total_bytes() <span class="kw">as </span>usize];
+        decoder.read_image(<span class="kw-2">&amp;mut </span>buf).expect(<span class="string">&quot;failed to decode&quot;</span>);
+        buf
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_image_width_too_large</span>() {
-        <span class="comment">// TGA cannot encode images larger than 65,535×65,535</span>
-        <span class="comment">// create a 65,536×1 8-bit black image buffer</span>
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">u16::MAX</span>) <span class="op">+</span> <span class="number">1</span>;
-        <span class="kw">let</span> <span class="ident">dimension</span> <span class="op">=</span> <span class="ident">size</span> <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">size</span>];
-        <span class="comment">// Try to encode an image that is too large</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">TgaEncoder::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">encoder</span>.<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">img</span>, <span class="ident">dimension</span>, <span class="number">1</span>, <span class="ident">ColorType::L8</span>);
-        <span class="kw">match</span> <span class="ident">result</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">ImageError::Encoding</span>(<span class="ident">err</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">err</span>
-                    .<span class="ident">source</span>()
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">EncoderError</span><span class="op">&gt;</span>()
-                    .<span class="ident">unwrap</span>();
-                <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">err</span>, <span class="ident">EncoderError::WidthInvalid</span>(<span class="ident">dimension</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_image_width_too_large() {
+        <span class="comment">// TGA cannot encode images larger than 65,535×65,535
+        // create a 65,536×1 8-bit black image buffer
+        </span><span class="kw">let </span>size = usize::from(u16::MAX) + <span class="number">1</span>;
+        <span class="kw">let </span>dimension = size <span class="kw">as </span>u32;
+        <span class="kw">let </span>img = <span class="macro">vec!</span>[<span class="number">0u8</span>; size];
+        <span class="comment">// Try to encode an image that is too large
+        </span><span class="kw">let </span><span class="kw-2">mut </span>encoded = Vec::new();
+        <span class="kw">let </span>encoder = TgaEncoder::new(<span class="kw-2">&amp;mut </span>encoded);
+        <span class="kw">let </span>result = encoder.encode(<span class="kw-2">&amp;</span>img, dimension, <span class="number">1</span>, ColorType::L8);
+        <span class="kw">match </span>result {
+            <span class="prelude-val">Err</span>(ImageError::Encoding(err)) =&gt; {
+                <span class="kw">let </span>err = err
+                    .source()
+                    .unwrap()
+                    .downcast_ref::&lt;EncoderError&gt;()
+                    .unwrap();
+                <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>err, EncoderError::WidthInvalid(dimension));
             }
-            <span class="ident">other</span> =&gt; <span class="macro">panic!</span>(
+            other =&gt; <span class="macro">panic!</span>(
                 <span class="string">&quot;Encoding an image that is too wide should return a InvalidWidth \
                 it returned {:?} instead&quot;</span>,
-                <span class="ident">other</span>
+                other
             ),
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_image_height_too_large</span>() {
-        <span class="comment">// TGA cannot encode images larger than 65,535×65,535</span>
-        <span class="comment">// create a 65,536×1 8-bit black image buffer</span>
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">u16::MAX</span>) <span class="op">+</span> <span class="number">1</span>;
-        <span class="kw">let</span> <span class="ident">dimension</span> <span class="op">=</span> <span class="ident">size</span> <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="kw">let</span> <span class="ident">img</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">size</span>];
-        <span class="comment">// Try to encode an image that is too large</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">TgaEncoder::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">encoder</span>.<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">img</span>, <span class="number">1</span>, <span class="ident">dimension</span>, <span class="ident">ColorType::L8</span>);
-        <span class="kw">match</span> <span class="ident">result</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">ImageError::Encoding</span>(<span class="ident">err</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">err</span>
-                    .<span class="ident">source</span>()
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">EncoderError</span><span class="op">&gt;</span>()
-                    .<span class="ident">unwrap</span>();
-                <span class="macro">assert_eq!</span>(<span class="kw-2">*</span><span class="ident">err</span>, <span class="ident">EncoderError::HeightInvalid</span>(<span class="ident">dimension</span>));
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_image_height_too_large() {
+        <span class="comment">// TGA cannot encode images larger than 65,535×65,535
+        // create a 65,536×1 8-bit black image buffer
+        </span><span class="kw">let </span>size = usize::from(u16::MAX) + <span class="number">1</span>;
+        <span class="kw">let </span>dimension = size <span class="kw">as </span>u32;
+        <span class="kw">let </span>img = <span class="macro">vec!</span>[<span class="number">0u8</span>; size];
+        <span class="comment">// Try to encode an image that is too large
+        </span><span class="kw">let </span><span class="kw-2">mut </span>encoded = Vec::new();
+        <span class="kw">let </span>encoder = TgaEncoder::new(<span class="kw-2">&amp;mut </span>encoded);
+        <span class="kw">let </span>result = encoder.encode(<span class="kw-2">&amp;</span>img, <span class="number">1</span>, dimension, ColorType::L8);
+        <span class="kw">match </span>result {
+            <span class="prelude-val">Err</span>(ImageError::Encoding(err)) =&gt; {
+                <span class="kw">let </span>err = err
+                    .source()
+                    .unwrap()
+                    .downcast_ref::&lt;EncoderError&gt;()
+                    .unwrap();
+                <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>err, EncoderError::HeightInvalid(dimension));
             }
-            <span class="ident">other</span> =&gt; <span class="macro">panic!</span>(
+            other =&gt; <span class="macro">panic!</span>(
                 <span class="string">&quot;Encoding an image that is too tall should return a InvalidHeight \
                 it returned {:?} instead&quot;</span>,
-                <span class="ident">other</span>
+                other
             ),
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_single_pixel_rgb</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="ident">ColorType::Rgb8</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">len</span>(), <span class="ident">image</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">as_slice</span>(), <span class="ident">image</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_single_pixel_rgb() {
+        <span class="kw">let </span>image = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];
+        <span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">1</span>, <span class="number">1</span>, ColorType::Rgb8);
+        <span class="macro">assert_eq!</span>(decoded.len(), image.len());
+        <span class="macro">assert_eq!</span>(decoded.as_slice(), image);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_single_pixel_rgba</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="ident">ColorType::Rgba8</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">len</span>(), <span class="ident">image</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">as_slice</span>(), <span class="ident">image</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_single_pixel_rgba() {
+        <span class="kw">let </span>image = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
+        <span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">1</span>, <span class="number">1</span>, ColorType::Rgba8);
+        <span class="macro">assert_eq!</span>(decoded.len(), image.len());
+        <span class="macro">assert_eq!</span>(decoded.as_slice(), image);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_gray</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="ident">ColorType::L8</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">len</span>(), <span class="ident">image</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">as_slice</span>(), <span class="ident">image</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_gray() {
+        <span class="kw">let </span>image = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];
+        <span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">3</span>, <span class="number">1</span>, ColorType::L8);
+        <span class="macro">assert_eq!</span>(decoded.len(), image.len());
+        <span class="macro">assert_eq!</span>(decoded.as_slice(), image);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_graya</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="ident">ColorType::La8</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">len</span>(), <span class="ident">image</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">decoded</span>.<span class="ident">as_slice</span>(), <span class="ident">image</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_graya() {
+        <span class="kw">let </span>image = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
+        <span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">1</span>, <span class="number">3</span>, ColorType::La8);
+        <span class="macro">assert_eq!</span>(decoded.len(), image.len());
+        <span class="macro">assert_eq!</span>(decoded.as_slice(), image);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_3px_rgb</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">3</span> <span class="op">*</span> <span class="number">3</span> <span class="op">*</span> <span class="number">3</span>]; <span class="comment">// 3x3 pixels, 3 bytes per pixel</span>
-        <span class="kw">let</span> <span class="ident">_decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="ident">ColorType::Rgb8</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_3px_rgb() {
+        <span class="kw">let </span>image = [<span class="number">0</span>; <span class="number">3 </span>* <span class="number">3 </span>* <span class="number">3</span>]; <span class="comment">// 3x3 pixels, 3 bytes per pixel
+        </span><span class="kw">let </span>_decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">3</span>, <span class="number">3</span>, ColorType::Rgb8);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/decoder/ifd.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ifd.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../tiff/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/decoder/ifd.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ifd.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../tiff/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -680,682 +674,681 @@
 <span id="674">674</span>
 <span id="675">675</span>
 <span id="676">676</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Function for reading TIFF tags</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Function for reading TIFF tags
 
-<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
-<span class="kw">use</span> <span class="ident">std::convert</span>::{<span class="ident">TryFrom</span>, <span class="ident">TryInto</span>};
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>};
-<span class="kw">use</span> <span class="ident">std::mem</span>;
-<span class="kw">use</span> <span class="ident">std::str</span>;
+</span><span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::convert::{TryFrom, TryInto};
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Read, Seek};
+<span class="kw">use </span>std::mem;
+<span class="kw">use </span>std::str;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::stream</span>::{<span class="ident">ByteOrder</span>, <span class="ident">EndianReader</span>, <span class="ident">SmartReader</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tags</span>::{<span class="ident">Tag</span>, <span class="ident">Type</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">TiffError</span>, <span class="ident">TiffFormatError</span>, <span class="ident">TiffResult</span>};
+<span class="kw">use </span><span class="kw">super</span>::stream::{ByteOrder, EndianReader, SmartReader};
+<span class="kw">use </span><span class="kw">crate</span>::tags::{Tag, Type};
+<span class="kw">use crate</span>::{TiffError, TiffFormatError, TiffResult};
 
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::Value</span>::{
-    <span class="ident">Ascii</span>, <span class="ident">Byte</span>, <span class="ident">Double</span>, <span class="ident">Float</span>, <span class="ident">Ifd</span>, <span class="ident">IfdBig</span>, <span class="ident">List</span>, <span class="ident">Rational</span>, <span class="ident">RationalBig</span>, <span class="ident">SRational</span>, <span class="ident">SRationalBig</span>,
-    <span class="ident">Short</span>, <span class="ident">Signed</span>, <span class="ident">SignedBig</span>, <span class="ident">Unsigned</span>, <span class="ident">UnsignedBig</span>,
+<span class="kw">use </span><span class="self">self</span>::Value::{
+    Ascii, Byte, Double, Float, Ifd, IfdBig, List, Rational, RationalBig, SRational, SRationalBig,
+    Short, Signed, SignedBig, Unsigned, UnsignedBig,
 };
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_qualifications</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Value</span> {
-    <span class="ident">Byte</span>(<span class="ident">u8</span>),
-    <span class="ident">Short</span>(<span class="ident">u16</span>),
-    <span class="ident">Signed</span>(<span class="ident">i32</span>),
-    <span class="ident">SignedBig</span>(<span class="ident">i64</span>),
-    <span class="ident">Unsigned</span>(<span class="ident">u32</span>),
-    <span class="ident">UnsignedBig</span>(<span class="ident">u64</span>),
-    <span class="ident">Float</span>(<span class="ident">f32</span>),
-    <span class="ident">Double</span>(<span class="ident">f64</span>),
-    <span class="ident">List</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>),
-    <span class="ident">Rational</span>(<span class="ident">u32</span>, <span class="ident">u32</span>),
-    <span class="ident">RationalBig</span>(<span class="ident">u64</span>, <span class="ident">u64</span>),
-    <span class="ident">SRational</span>(<span class="ident">i32</span>, <span class="ident">i32</span>),
-    <span class="ident">SRationalBig</span>(<span class="ident">i64</span>, <span class="ident">i64</span>),
-    <span class="ident">Ascii</span>(<span class="ident">String</span>),
-    <span class="ident">Ifd</span>(<span class="ident">u32</span>),
-    <span class="ident">IfdBig</span>(<span class="ident">u64</span>),
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span> <span class="comment">// Do not match against this.</span>
-    <span class="ident">__NonExhaustive</span>,
+<span class="attribute">#[allow(unused_qualifications)]
+#[derive(Debug, Clone, PartialEq)]
+</span><span class="kw">pub enum </span>Value {
+    Byte(u8),
+    Short(u16),
+    Signed(i32),
+    SignedBig(i64),
+    Unsigned(u32),
+    UnsignedBig(u64),
+    Float(f32),
+    Double(f64),
+    List(Vec&lt;Value&gt;),
+    Rational(u32, u32),
+    RationalBig(u64, u64),
+    SRational(i32, i32),
+    SRationalBig(i64, i64),
+    Ascii(String),
+    Ifd(u32),
+    IfdBig(u64),
+    <span class="attribute">#[doc(hidden)] </span><span class="comment">// Do not match against this.
+    </span>__NonExhaustive,
 }
 
-<span class="kw">impl</span> <span class="ident">Value</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u8</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Byte</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(<span class="ident">TiffFormatError::ByteExpected</span>(<span class="ident">val</span>))),
+<span class="kw">impl </span>Value {
+    <span class="kw">pub fn </span>into_u8(<span class="self">self</span>) -&gt; TiffResult&lt;u8&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Byte(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(TiffFormatError::ByteExpected(val))),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u16</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Short</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">Unsigned</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">u16::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="ident">UnsignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">u16::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_u16(<span class="self">self</span>) -&gt; TiffResult&lt;u16&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Short(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            Unsigned(val) =&gt; <span class="prelude-val">Ok</span>(u16::try_from(val)<span class="question-mark">?</span>),
+            UnsignedBig(val) =&gt; <span class="prelude-val">Ok</span>(u16::try_from(val)<span class="question-mark">?</span>),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u32</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Short</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">into</span>()),
-            <span class="ident">Unsigned</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">UnsignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">u32::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="ident">Ifd</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">IfdBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">u32::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_u32(<span class="self">self</span>) -&gt; TiffResult&lt;u32&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Short(val) =&gt; <span class="prelude-val">Ok</span>(val.into()),
+            Unsigned(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            UnsignedBig(val) =&gt; <span class="prelude-val">Ok</span>(u32::try_from(val)<span class="question-mark">?</span>),
+            Ifd(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            IfdBig(val) =&gt; <span class="prelude-val">Ok</span>(u32::try_from(val)<span class="question-mark">?</span>),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_i32</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Signed</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">SignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">i32::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_i32(<span class="self">self</span>) -&gt; TiffResult&lt;i32&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Signed(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            SignedBig(val) =&gt; <span class="prelude-val">Ok</span>(i32::try_from(val)<span class="question-mark">?</span>),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u64</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Short</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">into</span>()),
-            <span class="ident">Unsigned</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">into</span>()),
-            <span class="ident">UnsignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">Ifd</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">into</span>()),
-            <span class="ident">IfdBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_u64(<span class="self">self</span>) -&gt; TiffResult&lt;u64&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Short(val) =&gt; <span class="prelude-val">Ok</span>(val.into()),
+            Unsigned(val) =&gt; <span class="prelude-val">Ok</span>(val.into()),
+            UnsignedBig(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            Ifd(val) =&gt; <span class="prelude-val">Ok</span>(val.into()),
+            IfdBig(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_i64</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Signed</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">into</span>()),
-            <span class="ident">SignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_i64(<span class="self">self</span>) -&gt; TiffResult&lt;i64&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Signed(val) =&gt; <span class="prelude-val">Ok</span>(val.into()),
+            SignedBig(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_f32</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Float</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_f32(<span class="self">self</span>) -&gt; TiffResult&lt;f32&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Float(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_f64</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Double</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_f64(<span class="self">self</span>) -&gt; TiffResult&lt;f64&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Double(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_string</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Ascii</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+    <span class="kw">pub fn </span>into_string(<span class="self">self</span>) -&gt; TiffResult&lt;String&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Ascii(val) =&gt; <span class="prelude-val">Ok</span>(val),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u32_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_u32</span>()<span class="question-mark">?</span>)
+    <span class="kw">pub fn </span>into_u32_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;u32&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    new_vec.push(v.into_u32()<span class="question-mark">?</span>)
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Unsigned</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">UnsignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">u32::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>]),
-            <span class="ident">Rational</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">numerator</span>, <span class="ident">denominator</span>]),
-            <span class="ident">RationalBig</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; {
-                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">u32::try_from</span>(<span class="ident">numerator</span>)<span class="question-mark">?</span>, <span class="ident">u32::try_from</span>(<span class="ident">denominator</span>)<span class="question-mark">?</span>])
+            Unsigned(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            UnsignedBig(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[u32::try_from(val)<span class="question-mark">?</span>]),
+            Rational(numerator, denominator) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[numerator, denominator]),
+            RationalBig(numerator, denominator) =&gt; {
+                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[u32::try_from(numerator)<span class="question-mark">?</span>, u32::try_from(denominator)<span class="question-mark">?</span>])
             }
-            <span class="ident">Ifd</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">IfdBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">u32::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>]),
-            <span class="ident">Ascii</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">chars</span>().<span class="ident">map</span>(<span class="ident">u32::from</span>).<span class="ident">collect</span>()),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+            Ifd(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            IfdBig(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[u32::try_from(val)<span class="question-mark">?</span>]),
+            Ascii(val) =&gt; <span class="prelude-val">Ok</span>(val.chars().map(u32::from).collect()),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u8_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_u8</span>()<span class="question-mark">?</span>)
+    <span class="kw">pub fn </span>into_u8_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;u8&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    new_vec.push(v.into_u8()<span class="question-mark">?</span>)
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Byte</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
+            Byte(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
 
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u16_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_u16</span>()<span class="question-mark">?</span>)
+    <span class="kw">pub fn </span>into_u16_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;u16&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    new_vec.push(v.into_u16()<span class="question-mark">?</span>)
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Short</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+            Short(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_i32_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="kw">match</span> <span class="ident">v</span> {
-                        <span class="ident">SRational</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; {
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">numerator</span>);
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">denominator</span>);
+    <span class="kw">pub fn </span>into_i32_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;i32&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    <span class="kw">match </span>v {
+                        SRational(numerator, denominator) =&gt; {
+                            new_vec.push(numerator);
+                            new_vec.push(denominator);
                         }
-                        <span class="ident">SRationalBig</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; {
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">i32::try_from</span>(<span class="ident">numerator</span>)<span class="question-mark">?</span>);
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">i32::try_from</span>(<span class="ident">denominator</span>)<span class="question-mark">?</span>);
+                        SRationalBig(numerator, denominator) =&gt; {
+                            new_vec.push(i32::try_from(numerator)<span class="question-mark">?</span>);
+                            new_vec.push(i32::try_from(denominator)<span class="question-mark">?</span>);
                         }
-                        <span class="kw">_</span> =&gt; <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_i32</span>()<span class="question-mark">?</span>),
+                        <span class="kw">_ </span>=&gt; new_vec.push(v.into_i32()<span class="question-mark">?</span>),
                     }
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Signed</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">SignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">i32::try_from</span>(<span class="ident">val</span>)<span class="question-mark">?</span>]),
-            <span class="ident">SRational</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">numerator</span>, <span class="ident">denominator</span>]),
-            <span class="ident">SRationalBig</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; {
-                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">i32::try_from</span>(<span class="ident">numerator</span>)<span class="question-mark">?</span>, <span class="ident">i32::try_from</span>(<span class="ident">denominator</span>)<span class="question-mark">?</span>])
+            Signed(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            SignedBig(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[i32::try_from(val)<span class="question-mark">?</span>]),
+            SRational(numerator, denominator) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[numerator, denominator]),
+            SRationalBig(numerator, denominator) =&gt; {
+                <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[i32::try_from(numerator)<span class="question-mark">?</span>, i32::try_from(denominator)<span class="question-mark">?</span>])
             }
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_f32_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_f32</span>()<span class="question-mark">?</span>)
+    <span class="kw">pub fn </span>into_f32_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;f32&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    new_vec.push(v.into_f32()<span class="question-mark">?</span>)
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Float</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+            Float(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_f64_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_f64</span>()<span class="question-mark">?</span>)
+    <span class="kw">pub fn </span>into_f64_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;f64&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    new_vec.push(v.into_f64()<span class="question-mark">?</span>)
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Double</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+            Double(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_u64_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_u64</span>()<span class="question-mark">?</span>)
+    <span class="kw">pub fn </span>into_u64_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;u64&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    new_vec.push(v.into_u64()<span class="question-mark">?</span>)
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Unsigned</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>.<span class="ident">into</span>()]),
-            <span class="ident">UnsignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">Rational</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">numerator</span>.<span class="ident">into</span>(), <span class="ident">denominator</span>.<span class="ident">into</span>()]),
-            <span class="ident">RationalBig</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">numerator</span>, <span class="ident">denominator</span>]),
-            <span class="ident">Ifd</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>.<span class="ident">into</span>()]),
-            <span class="ident">IfdBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">Ascii</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">val</span>.<span class="ident">chars</span>().<span class="ident">map</span>(<span class="ident">u32::from</span>).<span class="ident">map</span>(<span class="ident">u64::from</span>).<span class="ident">collect</span>()),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::UnsignedIntegerExpected</span>(<span class="ident">val</span>),
+            Unsigned(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val.into()]),
+            UnsignedBig(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            Rational(numerator, denominator) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[numerator.into(), denominator.into()]),
+            RationalBig(numerator, denominator) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[numerator, denominator]),
+            Ifd(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val.into()]),
+            IfdBig(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            Ascii(val) =&gt; <span class="prelude-val">Ok</span>(val.chars().map(u32::from).map(u64::from).collect()),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::UnsignedIntegerExpected(val),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_i64_vec</span>(<span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">List</span>(<span class="ident">vec</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_vec</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">vec</span>.<span class="ident">len</span>());
-                <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">vec</span> {
-                    <span class="kw">match</span> <span class="ident">v</span> {
-                        <span class="ident">SRational</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; {
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">numerator</span>.<span class="ident">into</span>());
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">denominator</span>.<span class="ident">into</span>());
+    <span class="kw">pub fn </span>into_i64_vec(<span class="self">self</span>) -&gt; TiffResult&lt;Vec&lt;i64&gt;&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            List(vec) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>new_vec = Vec::with_capacity(vec.len());
+                <span class="kw">for </span>v <span class="kw">in </span>vec {
+                    <span class="kw">match </span>v {
+                        SRational(numerator, denominator) =&gt; {
+                            new_vec.push(numerator.into());
+                            new_vec.push(denominator.into());
                         }
-                        <span class="ident">SRationalBig</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; {
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">numerator</span>);
-                            <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">denominator</span>);
+                        SRationalBig(numerator, denominator) =&gt; {
+                            new_vec.push(numerator);
+                            new_vec.push(denominator);
                         }
-                        <span class="kw">_</span> =&gt; <span class="ident">new_vec</span>.<span class="ident">push</span>(<span class="ident">v</span>.<span class="ident">into_i64</span>()<span class="question-mark">?</span>),
+                        <span class="kw">_ </span>=&gt; new_vec.push(v.into_i64()<span class="question-mark">?</span>),
                     }
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">new_vec</span>)
+                <span class="prelude-val">Ok</span>(new_vec)
             }
-            <span class="ident">Signed</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>.<span class="ident">into</span>()]),
-            <span class="ident">SignedBig</span>(<span class="ident">val</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">val</span>]),
-            <span class="ident">SRational</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">numerator</span>.<span class="ident">into</span>(), <span class="ident">denominator</span>.<span class="ident">into</span>()]),
-            <span class="ident">SRationalBig</span>(<span class="ident">numerator</span>, <span class="ident">denominator</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">numerator</span>, <span class="ident">denominator</span>]),
-            <span class="ident">val</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::SignedIntegerExpected</span>(<span class="ident">val</span>),
+            Signed(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val.into()]),
+            SignedBig(val) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[val]),
+            SRational(numerator, denominator) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[numerator.into(), denominator.into()]),
+            SRationalBig(numerator, denominator) =&gt; <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[numerator, denominator]),
+            val =&gt; <span class="prelude-val">Err</span>(TiffError::FormatError(
+                TiffFormatError::SignedIntegerExpected(val),
             )),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Entry</span> {
-    <span class="ident">type_</span>: <span class="ident">Type</span>,
-    <span class="ident">count</span>: <span class="ident">u64</span>,
-    <span class="ident">offset</span>: [<span class="ident">u8</span>; <span class="number">8</span>],
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>Entry {
+    type_: Type,
+    count: u64,
+    offset: [u8; <span class="number">8</span>],
 }
 
-<span class="kw">impl</span> <span class="ident">::std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">Entry</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;mut</span> <span class="ident">::std::fmt::Formatter</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">::std::fmt::Error</span><span class="op">&gt;</span> {
-        <span class="ident">fmt</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+<span class="kw">impl </span>::std::fmt::Debug <span class="kw">for </span>Entry {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>::std::fmt::Formatter) -&gt; <span class="prelude-ty">Result</span>&lt;(), ::std::fmt::Error&gt; {
+        fmt.write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
             <span class="string">&quot;Entry {{ type_: {:?}, count: {:?}, offset: {:?} }}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">type_</span>, <span class="self">self</span>.<span class="ident">count</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">offset</span>
+            <span class="self">self</span>.type_, <span class="self">self</span>.count, <span class="kw-2">&amp;</span><span class="self">self</span>.offset
         ))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Entry</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">count</span>: <span class="ident">u32</span>, <span class="ident">offset</span>: [<span class="ident">u8</span>; <span class="number">4</span>]) -&gt; <span class="ident">Entry</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">to_vec</span>();
-        <span class="ident">offset</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">4</span>]);
-        <span class="ident">Entry::new_u64</span>(<span class="ident">type_</span>, <span class="ident">count</span>.<span class="ident">into</span>(), <span class="ident">offset</span>[..].<span class="ident">try_into</span>().<span class="ident">unwrap</span>())
+<span class="kw">impl </span>Entry {
+    <span class="kw">pub fn </span>new(type_: Type, count: u32, offset: [u8; <span class="number">4</span>]) -&gt; Entry {
+        <span class="kw">let </span><span class="kw-2">mut </span>offset = offset.to_vec();
+        offset.append(<span class="kw-2">&amp;mut </span><span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">4</span>]);
+        Entry::new_u64(type_, count.into(), offset[..].try_into().unwrap())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_u64</span>(<span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">count</span>: <span class="ident">u64</span>, <span class="ident">offset</span>: [<span class="ident">u8</span>; <span class="number">8</span>]) -&gt; <span class="ident">Entry</span> {
-        <span class="ident">Entry</span> {
-            <span class="ident">type_</span>,
-            <span class="ident">count</span>,
-            <span class="ident">offset</span>,
+    <span class="kw">pub fn </span>new_u64(type_: Type, count: u64, offset: [u8; <span class="number">8</span>]) -&gt; Entry {
+        Entry {
+            type_,
+            count,
+            offset,
         }
     }
 
-    <span class="doccomment">/// Returns a mem_reader for the offset/value field</span>
-    <span class="kw">fn</span> <span class="ident">r</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">byte_order</span>: <span class="ident">ByteOrder</span>) -&gt; <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">io::Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">SmartReader::wrap</span>(<span class="ident">io::Cursor::new</span>(<span class="self">self</span>.<span class="ident">offset</span>.<span class="ident">to_vec</span>()), <span class="ident">byte_order</span>)
+    <span class="doccomment">/// Returns a mem_reader for the offset/value field
+    </span><span class="kw">fn </span>r(<span class="kw-2">&amp;</span><span class="self">self</span>, byte_order: ByteOrder) -&gt; SmartReader&lt;io::Cursor&lt;Vec&lt;u8&gt;&gt;&gt; {
+        SmartReader::wrap(io::Cursor::new(<span class="self">self</span>.offset.to_vec()), byte_order)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">val</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span>(
+    <span class="kw">pub fn </span>val&lt;R: Read + Seek&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">limits</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="kw">super</span>::Limits</span>,
-        <span class="ident">bigtiff</span>: <span class="ident">bool</span>,
-        <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
-        <span class="comment">// Case 1: there are no values so we can return immediately.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">count</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">Vec::new</span>()));
+        limits: <span class="kw-2">&amp;</span><span class="kw">super</span>::Limits,
+        bigtiff: bool,
+        reader: <span class="kw-2">&amp;mut </span>SmartReader&lt;R&gt;,
+    ) -&gt; TiffResult&lt;Value&gt; {
+        <span class="comment">// Case 1: there are no values so we can return immediately.
+        </span><span class="kw">if </span><span class="self">self</span>.count == <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(List(Vec::new()));
         }
 
-        <span class="kw">let</span> <span class="ident">bo</span> <span class="op">=</span> <span class="ident">reader</span>.<span class="ident">byte_order</span>();
+        <span class="kw">let </span>bo = reader.byte_order();
 
-        <span class="kw">let</span> <span class="ident">tag_size</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">type_</span> {
-            <span class="ident">Type::BYTE</span> <span class="op">|</span> <span class="ident">Type::SBYTE</span> <span class="op">|</span> <span class="ident">Type::ASCII</span> <span class="op">|</span> <span class="ident">Type::UNDEFINED</span> =&gt; <span class="number">1</span>,
-            <span class="ident">Type::SHORT</span> <span class="op">|</span> <span class="ident">Type::SSHORT</span> =&gt; <span class="number">2</span>,
-            <span class="ident">Type::LONG</span> <span class="op">|</span> <span class="ident">Type::SLONG</span> <span class="op">|</span> <span class="ident">Type::FLOAT</span> <span class="op">|</span> <span class="ident">Type::IFD</span> =&gt; <span class="number">4</span>,
-            <span class="ident">Type::LONG8</span>
-            <span class="op">|</span> <span class="ident">Type::SLONG8</span>
-            <span class="op">|</span> <span class="ident">Type::DOUBLE</span>
-            <span class="op">|</span> <span class="ident">Type::RATIONAL</span>
-            <span class="op">|</span> <span class="ident">Type::SRATIONAL</span>
-            <span class="op">|</span> <span class="ident">Type::IFD8</span> =&gt; <span class="number">8</span>,
-            <span class="ident">Type::__NonExhaustive</span> =&gt; <span class="macro">unreachable!</span>(),
+        <span class="kw">let </span>tag_size = <span class="kw">match </span><span class="self">self</span>.type_ {
+            Type::BYTE | Type::SBYTE | Type::ASCII | Type::UNDEFINED =&gt; <span class="number">1</span>,
+            Type::SHORT | Type::SSHORT =&gt; <span class="number">2</span>,
+            Type::LONG | Type::SLONG | Type::FLOAT | Type::IFD =&gt; <span class="number">4</span>,
+            Type::LONG8
+            | Type::SLONG8
+            | Type::DOUBLE
+            | Type::RATIONAL
+            | Type::SRATIONAL
+            | Type::IFD8 =&gt; <span class="number">8</span>,
+            Type::__NonExhaustive =&gt; <span class="macro">unreachable!</span>(),
         };
 
-        <span class="kw">let</span> <span class="ident">value_bytes</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">count</span>.<span class="ident">checked_mul</span>(<span class="ident">tag_size</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">n</span>) =&gt; <span class="ident">n</span>,
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::LimitsExceeded</span>);
+        <span class="kw">let </span>value_bytes = <span class="kw">match </span><span class="self">self</span>.count.checked_mul(tag_size) {
+            <span class="prelude-val">Some</span>(n) =&gt; n,
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::LimitsExceeded);
             }
         };
 
-        <span class="comment">// Case 2: there is one value.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">count</span> <span class="op">==</span> <span class="number">1</span> {
-            <span class="comment">// 2a: the value is 5-8 bytes and we&#39;re in BigTiff mode.</span>
-            <span class="kw">if</span> <span class="ident">bigtiff</span> <span class="op">&amp;&amp;</span> <span class="ident">value_bytes</span> <span class="op">&gt;</span> <span class="number">4</span> <span class="op">&amp;&amp;</span> <span class="ident">value_bytes</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">8</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">type_</span> {
-                    <span class="ident">Type::LONG8</span> =&gt; <span class="ident">UnsignedBig</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u64</span>()<span class="question-mark">?</span>),
-                    <span class="ident">Type::SLONG8</span> =&gt; <span class="ident">SignedBig</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_i64</span>()<span class="question-mark">?</span>),
-                    <span class="ident">Type::DOUBLE</span> =&gt; <span class="ident">Double</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_f64</span>()<span class="question-mark">?</span>),
-                    <span class="ident">Type::RATIONAL</span> =&gt; {
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                        <span class="ident">Rational</span>(<span class="ident">r</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>, <span class="ident">r</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>)
+        <span class="comment">// Case 2: there is one value.
+        </span><span class="kw">if </span><span class="self">self</span>.count == <span class="number">1 </span>{
+            <span class="comment">// 2a: the value is 5-8 bytes and we&#39;re in BigTiff mode.
+            </span><span class="kw">if </span>bigtiff &amp;&amp; value_bytes &gt; <span class="number">4 </span>&amp;&amp; value_bytes &lt;= <span class="number">8 </span>{
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.type_ {
+                    Type::LONG8 =&gt; UnsignedBig(<span class="self">self</span>.r(bo).read_u64()<span class="question-mark">?</span>),
+                    Type::SLONG8 =&gt; SignedBig(<span class="self">self</span>.r(bo).read_i64()<span class="question-mark">?</span>),
+                    Type::DOUBLE =&gt; Double(<span class="self">self</span>.r(bo).read_f64()<span class="question-mark">?</span>),
+                    Type::RATIONAL =&gt; {
+                        <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                        Rational(r.read_u32()<span class="question-mark">?</span>, r.read_u32()<span class="question-mark">?</span>)
                     }
-                    <span class="ident">Type::SRATIONAL</span> =&gt; {
-                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                        <span class="ident">SRational</span>(<span class="ident">r</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>, <span class="ident">r</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>)
+                    Type::SRATIONAL =&gt; {
+                        <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                        SRational(r.read_i32()<span class="question-mark">?</span>, r.read_i32()<span class="question-mark">?</span>)
                     }
-                    <span class="ident">Type::IFD8</span> =&gt; <span class="ident">IfdBig</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u64</span>()<span class="question-mark">?</span>),
-                    <span class="ident">Type::BYTE</span>
-                    <span class="op">|</span> <span class="ident">Type::SBYTE</span>
-                    <span class="op">|</span> <span class="ident">Type::ASCII</span>
-                    <span class="op">|</span> <span class="ident">Type::UNDEFINED</span>
-                    <span class="op">|</span> <span class="ident">Type::SHORT</span>
-                    <span class="op">|</span> <span class="ident">Type::SSHORT</span>
-                    <span class="op">|</span> <span class="ident">Type::LONG</span>
-                    <span class="op">|</span> <span class="ident">Type::SLONG</span>
-                    <span class="op">|</span> <span class="ident">Type::FLOAT</span>
-                    <span class="op">|</span> <span class="ident">Type::IFD</span> =&gt; <span class="macro">unreachable!</span>(),
-                    <span class="ident">Type::__NonExhaustive</span> =&gt; <span class="macro">unreachable!</span>(),
+                    Type::IFD8 =&gt; IfdBig(<span class="self">self</span>.r(bo).read_u64()<span class="question-mark">?</span>),
+                    Type::BYTE
+                    | Type::SBYTE
+                    | Type::ASCII
+                    | Type::UNDEFINED
+                    | Type::SHORT
+                    | Type::SSHORT
+                    | Type::LONG
+                    | Type::SLONG
+                    | Type::FLOAT
+                    | Type::IFD =&gt; <span class="macro">unreachable!</span>(),
+                    Type::__NonExhaustive =&gt; <span class="macro">unreachable!</span>(),
                 });
             }
 
-            <span class="comment">// 2b: the value is at most 4 bytes or doesn&#39;t fit in the offset field.</span>
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">type_</span> {
-                <span class="ident">Type::BYTE</span> =&gt; <span class="ident">Unsigned</span>(<span class="ident">u32::from</span>(<span class="self">self</span>.<span class="ident">offset</span>[<span class="number">0</span>])),
-                <span class="ident">Type::SBYTE</span> =&gt; <span class="ident">Signed</span>(<span class="ident">i32::from</span>(<span class="self">self</span>.<span class="ident">offset</span>[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">i8</span>)),
-                <span class="ident">Type::UNDEFINED</span> =&gt; <span class="ident">Byte</span>(<span class="self">self</span>.<span class="ident">offset</span>[<span class="number">0</span>]),
-                <span class="ident">Type::SHORT</span> =&gt; <span class="ident">Unsigned</span>(<span class="ident">u32::from</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u16</span>()<span class="question-mark">?</span>)),
-                <span class="ident">Type::SSHORT</span> =&gt; <span class="ident">Signed</span>(<span class="ident">i32::from</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_i16</span>()<span class="question-mark">?</span>)),
-                <span class="ident">Type::LONG</span> =&gt; <span class="ident">Unsigned</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>),
-                <span class="ident">Type::SLONG</span> =&gt; <span class="ident">Signed</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_i32</span>()<span class="question-mark">?</span>),
-                <span class="ident">Type::FLOAT</span> =&gt; <span class="ident">Float</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_f32</span>()<span class="question-mark">?</span>),
-                <span class="ident">Type::ASCII</span> =&gt; {
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">offset</span>[<span class="number">0</span>] <span class="op">==</span> <span class="number">0</span> {
-                        <span class="ident">Ascii</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>())
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(<span class="ident">TiffFormatError::InvalidTag</span>));
+            <span class="comment">// 2b: the value is at most 4 bytes or doesn&#39;t fit in the offset field.
+            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.type_ {
+                Type::BYTE =&gt; Unsigned(u32::from(<span class="self">self</span>.offset[<span class="number">0</span>])),
+                Type::SBYTE =&gt; Signed(i32::from(<span class="self">self</span>.offset[<span class="number">0</span>] <span class="kw">as </span>i8)),
+                Type::UNDEFINED =&gt; Byte(<span class="self">self</span>.offset[<span class="number">0</span>]),
+                Type::SHORT =&gt; Unsigned(u32::from(<span class="self">self</span>.r(bo).read_u16()<span class="question-mark">?</span>)),
+                Type::SSHORT =&gt; Signed(i32::from(<span class="self">self</span>.r(bo).read_i16()<span class="question-mark">?</span>)),
+                Type::LONG =&gt; Unsigned(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>),
+                Type::SLONG =&gt; Signed(<span class="self">self</span>.r(bo).read_i32()<span class="question-mark">?</span>),
+                Type::FLOAT =&gt; Float(<span class="self">self</span>.r(bo).read_f32()<span class="question-mark">?</span>),
+                Type::ASCII =&gt; {
+                    <span class="kw">if </span><span class="self">self</span>.offset[<span class="number">0</span>] == <span class="number">0 </span>{
+                        Ascii(<span class="string">&quot;&quot;</span>.to_string())
+                    } <span class="kw">else </span>{
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(TiffFormatError::InvalidTag));
                     }
                 }
-                <span class="ident">Type::LONG8</span> =&gt; {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
-                    <span class="ident">UnsignedBig</span>(<span class="ident">reader</span>.<span class="ident">read_u64</span>()<span class="question-mark">?</span>)
+                Type::LONG8 =&gt; {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+                    UnsignedBig(reader.read_u64()<span class="question-mark">?</span>)
                 }
-                <span class="ident">Type::SLONG8</span> =&gt; {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
-                    <span class="ident">SignedBig</span>(<span class="ident">reader</span>.<span class="ident">read_i64</span>()<span class="question-mark">?</span>)
+                Type::SLONG8 =&gt; {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+                    SignedBig(reader.read_i64()<span class="question-mark">?</span>)
                 }
-                <span class="ident">Type::DOUBLE</span> =&gt; {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
-                    <span class="ident">Double</span>(<span class="ident">reader</span>.<span class="ident">read_f64</span>()<span class="question-mark">?</span>)
+                Type::DOUBLE =&gt; {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+                    Double(reader.read_f64()<span class="question-mark">?</span>)
                 }
-                <span class="ident">Type::RATIONAL</span> =&gt; {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
-                    <span class="ident">Rational</span>(<span class="ident">reader</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>, <span class="ident">reader</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>)
+                Type::RATIONAL =&gt; {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+                    Rational(reader.read_u32()<span class="question-mark">?</span>, reader.read_u32()<span class="question-mark">?</span>)
                 }
-                <span class="ident">Type::SRATIONAL</span> =&gt; {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
-                    <span class="ident">SRational</span>(<span class="ident">reader</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>, <span class="ident">reader</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>)
+                Type::SRATIONAL =&gt; {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+                    SRational(reader.read_i32()<span class="question-mark">?</span>, reader.read_i32()<span class="question-mark">?</span>)
                 }
-                <span class="ident">Type::IFD</span> =&gt; <span class="ident">Ifd</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>),
-                <span class="ident">Type::IFD8</span> =&gt; {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
-                    <span class="ident">IfdBig</span>(<span class="ident">reader</span>.<span class="ident">read_u64</span>()<span class="question-mark">?</span>)
+                Type::IFD =&gt; Ifd(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>),
+                Type::IFD8 =&gt; {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?</span>;
+                    IfdBig(reader.read_u64()<span class="question-mark">?</span>)
                 }
-                <span class="ident">Type::__NonExhaustive</span> =&gt; <span class="macro">unreachable!</span>(),
+                Type::__NonExhaustive =&gt; <span class="macro">unreachable!</span>(),
             });
         }
 
-        <span class="comment">// Case 3: There is more than one value, but it fits in the offset field.</span>
-        <span class="kw">if</span> <span class="ident">value_bytes</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">4</span> <span class="op">|</span><span class="op">|</span> <span class="ident">bigtiff</span> <span class="op">&amp;&amp;</span> <span class="ident">value_bytes</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">8</span> {
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">type_</span> {
-                <span class="ident">Type::BYTE</span> =&gt; <span class="kw">return</span> <span class="ident">offset_to_bytes</span>(<span class="self">self</span>.<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="self">self</span>),
-                <span class="ident">Type::SBYTE</span> =&gt; <span class="kw">return</span> <span class="ident">offset_to_sbytes</span>(<span class="self">self</span>.<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="self">self</span>),
-                <span class="ident">Type::ASCII</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="self">self</span>.<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>];
-                    <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>)<span class="question-mark">?</span>;
-                    <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">is_ascii</span>() <span class="op">&amp;&amp;</span> <span class="ident">buf</span>.<span class="ident">ends_with</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>]) {
-                        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">str::from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">buf</span>)<span class="question-mark">?</span>;
-                        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">trim_matches</span>(<span class="ident">char::from</span>(<span class="number">0</span>));
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Ascii</span>(<span class="ident">v</span>.<span class="ident">into</span>()));
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(<span class="ident">TiffFormatError::InvalidTag</span>));
+        <span class="comment">// Case 3: There is more than one value, but it fits in the offset field.
+        </span><span class="kw">if </span>value_bytes &lt;= <span class="number">4 </span>|| bigtiff &amp;&amp; value_bytes &lt;= <span class="number">8 </span>{
+            <span class="kw">match </span><span class="self">self</span>.type_ {
+                Type::BYTE =&gt; <span class="kw">return </span>offset_to_bytes(<span class="self">self</span>.count <span class="kw">as </span>usize, <span class="self">self</span>),
+                Type::SBYTE =&gt; <span class="kw">return </span>offset_to_sbytes(<span class="self">self</span>.count <span class="kw">as </span>usize, <span class="self">self</span>),
+                Type::ASCII =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="self">self</span>.count <span class="kw">as </span>usize];
+                    <span class="self">self</span>.r(bo).read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
+                    <span class="kw">if </span>buf.is_ascii() &amp;&amp; buf.ends_with(<span class="kw-2">&amp;</span>[<span class="number">0</span>]) {
+                        <span class="kw">let </span>v = str::from_utf8(<span class="kw-2">&amp;</span>buf)<span class="question-mark">?</span>;
+                        <span class="kw">let </span>v = v.trim_matches(char::from(<span class="number">0</span>));
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(Ascii(v.into()));
+                    } <span class="kw">else </span>{
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(TiffFormatError::InvalidTag));
                     }
                 }
-                <span class="ident">Type::UNDEFINED</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(
-                        <span class="self">self</span>.<span class="ident">offset</span>[<span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>]
-                            .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">b</span><span class="op">|</span> <span class="ident">Byte</span>(<span class="ident">b</span>))
-                            .<span class="ident">collect</span>(),
+                Type::UNDEFINED =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(
+                        <span class="self">self</span>.offset[<span class="number">0</span>..<span class="self">self</span>.count <span class="kw">as </span>usize]
+                            .iter()
+                            .map(|<span class="kw-2">&amp;</span>b| Byte(b))
+                            .collect(),
                     ));
                 }
-                <span class="ident">Type::SHORT</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> {
-                        <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">Short</span>(<span class="ident">r</span>.<span class="ident">read_u16</span>()<span class="question-mark">?</span>));
+                Type::SHORT =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                    <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                    <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.count {
+                        v.push(Short(r.read_u16()<span class="question-mark">?</span>));
                     }
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>));
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(v));
                 }
-                <span class="ident">Type::SSHORT</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> {
-                        <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">Signed</span>(<span class="ident">i32::from</span>(<span class="ident">r</span>.<span class="ident">read_i16</span>()<span class="question-mark">?</span>)));
+                Type::SSHORT =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                    <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                    <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.count {
+                        v.push(Signed(i32::from(r.read_i16()<span class="question-mark">?</span>)));
                     }
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>));
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(v));
                 }
-                <span class="ident">Type::LONG</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> {
-                        <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">Unsigned</span>(<span class="ident">r</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>));
+                Type::LONG =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                    <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                    <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.count {
+                        v.push(Unsigned(r.read_u32()<span class="question-mark">?</span>));
                     }
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>));
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(v));
                 }
-                <span class="ident">Type::SLONG</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> {
-                        <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">Signed</span>(<span class="ident">r</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>));
+                Type::SLONG =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                    <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                    <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.count {
+                        v.push(Signed(r.read_i32()<span class="question-mark">?</span>));
                     }
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>));
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(v));
                 }
-                <span class="ident">Type::FLOAT</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> {
-                        <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">Float</span>(<span class="ident">r</span>.<span class="ident">read_f32</span>()<span class="question-mark">?</span>));
+                Type::FLOAT =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                    <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                    <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.count {
+                        v.push(Float(r.read_f32()<span class="question-mark">?</span>));
                     }
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>));
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(v));
                 }
-                <span class="ident">Type::IFD</span> =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">count</span> {
-                        <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">Ifd</span>(<span class="ident">r</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>));
+                Type::IFD =&gt; {
+                    <span class="kw">let </span><span class="kw-2">mut </span>r = <span class="self">self</span>.r(bo);
+                    <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::new();
+                    <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.count {
+                        v.push(Ifd(r.read_u32()<span class="question-mark">?</span>));
                     }
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>));
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(List(v));
                 }
-                <span class="ident">Type::LONG8</span>
-                <span class="op">|</span> <span class="ident">Type::SLONG8</span>
-                <span class="op">|</span> <span class="ident">Type::RATIONAL</span>
-                <span class="op">|</span> <span class="ident">Type::SRATIONAL</span>
-                <span class="op">|</span> <span class="ident">Type::DOUBLE</span>
-                <span class="op">|</span> <span class="ident">Type::IFD8</span> =&gt; {
+                Type::LONG8
+                | Type::SLONG8
+                | Type::RATIONAL
+                | Type::SRATIONAL
+                | Type::DOUBLE
+                | Type::IFD8 =&gt; {
                     <span class="macro">unreachable!</span>()
                 }
-                <span class="ident">Type::__NonExhaustive</span> =&gt; <span class="macro">unreachable!</span>(),
+                Type::__NonExhaustive =&gt; <span class="macro">unreachable!</span>(),
             }
         }
 
-        <span class="comment">// Case 4: there is more than one value, and it doesn&#39;t fit in the offset field.</span>
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">type_</span> {
-            <span class="comment">// TODO check if this could give wrong results</span>
-            <span class="comment">// at a different endianess of file/computer.</span>
-            <span class="ident">Type::BYTE</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">1</span>];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>)<span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">UnsignedBig</span>(<span class="ident">u64::from</span>(<span class="ident">buf</span>[<span class="number">0</span>])))
+        <span class="comment">// Case 4: there is more than one value, and it doesn&#39;t fit in the offset field.
+        </span><span class="kw">match </span><span class="self">self</span>.type_ {
+            <span class="comment">// TODO check if this could give wrong results
+            // at a different endianess of file/computer.
+            </span>Type::BYTE =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="kw">let </span><span class="kw-2">mut </span>buf = [<span class="number">0</span>; <span class="number">1</span>];
+                reader.read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(UnsignedBig(u64::from(buf[<span class="number">0</span>])))
             }),
-            <span class="ident">Type::SBYTE</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">SignedBig</span>(<span class="ident">i64::from</span>(<span class="ident">reader</span>.<span class="ident">read_i8</span>()<span class="question-mark">?</span> <span class="kw">as</span> <span class="ident">i8</span>)))
+            Type::SBYTE =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(SignedBig(i64::from(reader.read_i8()<span class="question-mark">? </span><span class="kw">as </span>i8)))
             }),
-            <span class="ident">Type::SHORT</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">UnsignedBig</span>(<span class="ident">u64::from</span>(<span class="ident">reader</span>.<span class="ident">read_u16</span>()<span class="question-mark">?</span>)))
+            Type::SHORT =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(UnsignedBig(u64::from(reader.read_u16()<span class="question-mark">?</span>)))
             }),
-            <span class="ident">Type::SSHORT</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">SignedBig</span>(<span class="ident">i64::from</span>(<span class="ident">reader</span>.<span class="ident">read_i16</span>()<span class="question-mark">?</span>)))
+            Type::SSHORT =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(SignedBig(i64::from(reader.read_i16()<span class="question-mark">?</span>)))
             }),
-            <span class="ident">Type::LONG</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Unsigned</span>(<span class="ident">reader</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>))
+            Type::LONG =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(Unsigned(reader.read_u32()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::SLONG</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Signed</span>(<span class="ident">reader</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>))
+            Type::SLONG =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(Signed(reader.read_i32()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::FLOAT</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Float</span>(<span class="ident">reader</span>.<span class="ident">read_f32</span>()<span class="question-mark">?</span>))
+            Type::FLOAT =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(Float(reader.read_f32()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::DOUBLE</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Double</span>(<span class="ident">reader</span>.<span class="ident">read_f64</span>()<span class="question-mark">?</span>))
+            Type::DOUBLE =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(Double(reader.read_f64()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::RATIONAL</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">Rational</span>(<span class="ident">reader</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>, <span class="ident">reader</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>))
+            Type::RATIONAL =&gt; {
+                <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                    <span class="prelude-val">Ok</span>(Rational(reader.read_u32()<span class="question-mark">?</span>, reader.read_u32()<span class="question-mark">?</span>))
                 })
             }
-            <span class="ident">Type::SRATIONAL</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">SRational</span>(<span class="ident">reader</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>, <span class="ident">reader</span>.<span class="ident">read_i32</span>()<span class="question-mark">?</span>))
+            Type::SRATIONAL =&gt; {
+                <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                    <span class="prelude-val">Ok</span>(SRational(reader.read_i32()<span class="question-mark">?</span>, reader.read_i32()<span class="question-mark">?</span>))
                 })
             }
-            <span class="ident">Type::LONG8</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">UnsignedBig</span>(<span class="ident">reader</span>.<span class="ident">read_u64</span>()<span class="question-mark">?</span>))
+            Type::LONG8 =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(UnsignedBig(reader.read_u64()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::SLONG8</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">SignedBig</span>(<span class="ident">reader</span>.<span class="ident">read_i64</span>()<span class="question-mark">?</span>))
+            Type::SLONG8 =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(SignedBig(reader.read_i64()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::IFD</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Ifd</span>(<span class="ident">reader</span>.<span class="ident">read_u32</span>()<span class="question-mark">?</span>))
+            Type::IFD =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(Ifd(reader.read_u32()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::IFD8</span> =&gt; <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">IfdBig</span>(<span class="ident">reader</span>.<span class="ident">read_u64</span>()<span class="question-mark">?</span>))
+            Type::IFD8 =&gt; <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                <span class="prelude-val">Ok</span>(IfdBig(reader.read_u64()<span class="question-mark">?</span>))
             }),
-            <span class="ident">Type::UNDEFINED</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">decode_offset</span>(<span class="self">self</span>.<span class="ident">count</span>, <span class="ident">bo</span>, <span class="ident">bigtiff</span>, <span class="ident">limits</span>, <span class="ident">reader</span>, <span class="op">|</span><span class="ident">reader</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">1</span>];
-                    <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>)<span class="question-mark">?</span>;
-                    <span class="prelude-val">Ok</span>(<span class="ident">Byte</span>(<span class="ident">buf</span>[<span class="number">0</span>]))
+            Type::UNDEFINED =&gt; {
+                <span class="self">self</span>.decode_offset(<span class="self">self</span>.count, bo, bigtiff, limits, reader, |reader| {
+                    <span class="kw">let </span><span class="kw-2">mut </span>buf = [<span class="number">0</span>; <span class="number">1</span>];
+                    reader.read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(Byte(buf[<span class="number">0</span>]))
                 })
             }
-            <span class="ident">Type::ASCII</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">usize::try_from</span>(<span class="self">self</span>.<span class="ident">count</span>)<span class="question-mark">?</span>;
-                <span class="kw">if</span> <span class="ident">n</span> <span class="op">&gt;</span> <span class="ident">limits</span>.<span class="ident">decoding_buffer_size</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::LimitsExceeded</span>);
+            Type::ASCII =&gt; {
+                <span class="kw">let </span>n = usize::try_from(<span class="self">self</span>.count)<span class="question-mark">?</span>;
+                <span class="kw">if </span>n &gt; limits.decoding_buffer_size {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::LimitsExceeded);
                 }
 
-                <span class="kw">if</span> <span class="ident">bigtiff</span> {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u64</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>
-                } <span class="kw">else</span> {
-                    <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>())<span class="question-mark">?</span>
-                }
+                <span class="kw">if </span>bigtiff {
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u64()<span class="question-mark">?</span>)<span class="question-mark">?
+                </span>} <span class="kw">else </span>{
+                    reader.goto_offset(<span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into())<span class="question-mark">?
+                </span>}
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">out</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">n</span>];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">out</span>)<span class="question-mark">?</span>;
-                <span class="comment">// Strings may be null-terminated, so we trim anything downstream of the null byte</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">first</span>) <span class="op">=</span> <span class="ident">out</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span> <span class="op">==</span> <span class="number">0</span>) {
-                    <span class="ident">out</span>.<span class="ident">truncate</span>(<span class="ident">first</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>out = <span class="macro">vec!</span>[<span class="number">0</span>; n];
+                reader.read_exact(<span class="kw-2">&amp;mut </span>out)<span class="question-mark">?</span>;
+                <span class="comment">// Strings may be null-terminated, so we trim anything downstream of the null byte
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(first) = out.iter().position(|<span class="kw-2">&amp;</span>b| b == <span class="number">0</span>) {
+                    out.truncate(first);
                 }
-                <span class="prelude-val">Ok</span>(<span class="ident">Ascii</span>(<span class="ident">String::from_utf8</span>(<span class="ident">out</span>)<span class="question-mark">?</span>))
+                <span class="prelude-val">Ok</span>(Ascii(String::from_utf8(out)<span class="question-mark">?</span>))
             }
-            <span class="ident">Type::__NonExhaustive</span> =&gt; <span class="macro">unreachable!</span>(),
+            Type::__NonExhaustive =&gt; <span class="macro">unreachable!</span>(),
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">decode_offset</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span>(
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>decode_offset&lt;R, F&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">value_count</span>: <span class="ident">u64</span>,
-        <span class="ident">bo</span>: <span class="ident">ByteOrder</span>,
-        <span class="ident">bigtiff</span>: <span class="ident">bool</span>,
-        <span class="ident">limits</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="kw">super</span>::Limits</span>,
-        <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-        <span class="ident">decode_fn</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>,
+        value_count: u64,
+        bo: ByteOrder,
+        bigtiff: bool,
+        limits: <span class="kw-2">&amp;</span><span class="kw">super</span>::Limits,
+        reader: <span class="kw-2">&amp;mut </span>SmartReader&lt;R&gt;,
+        decode_fn: F,
+    ) -&gt; TiffResult&lt;Value&gt;
+    <span class="kw">where
+        </span>R: Read + Seek,
+        F: Fn(<span class="kw-2">&amp;mut </span>SmartReader&lt;R&gt;) -&gt; TiffResult&lt;Value&gt;,
     {
-        <span class="kw">let</span> <span class="ident">value_count</span> <span class="op">=</span> <span class="ident">usize::try_from</span>(<span class="ident">value_count</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">value_count</span> <span class="op">&gt;</span> <span class="ident">limits</span>.<span class="ident">decoding_buffer_size</span> <span class="op">/</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::LimitsExceeded</span>);
+        <span class="kw">let </span>value_count = usize::try_from(value_count)<span class="question-mark">?</span>;
+        <span class="kw">if </span>value_count &gt; limits.decoding_buffer_size / mem::size_of::&lt;Value&gt;() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::LimitsExceeded);
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">value_count</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::with_capacity(value_count);
 
-        <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">bigtiff</span> {
-            <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u64</span>()<span class="question-mark">?</span>
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">r</span>(<span class="ident">bo</span>).<span class="ident">read_u32</span>()<span class="question-mark">?</span>.<span class="ident">into</span>()
+        <span class="kw">let </span>offset = <span class="kw">if </span>bigtiff {
+            <span class="self">self</span>.r(bo).read_u64()<span class="question-mark">?
+        </span>} <span class="kw">else </span>{
+            <span class="self">self</span>.r(bo).read_u32()<span class="question-mark">?</span>.into()
         };
-        <span class="ident">reader</span>.<span class="ident">goto_offset</span>(<span class="ident">offset</span>)<span class="question-mark">?</span>;
+        reader.goto_offset(offset)<span class="question-mark">?</span>;
 
-        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">value_count</span> {
-            <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">decode_fn</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>)
+        <span class="kw">for _ in </span><span class="number">0</span>..value_count {
+            v.push(decode_fn(reader)<span class="question-mark">?</span>)
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">List</span>(<span class="ident">v</span>))
+        <span class="prelude-val">Ok</span>(List(v))
     }
 }
 
-<span class="doccomment">/// Extracts a list of BYTE tags stored in an offset</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">offset_to_bytes</span>(<span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">entry</span>: <span class="kw-2">&amp;</span><span class="ident">Entry</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
-    <span class="prelude-val">Ok</span>(<span class="ident">List</span>(
-        <span class="ident">entry</span>.<span class="ident">offset</span>[<span class="number">0</span>..<span class="ident">n</span>]
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Unsigned</span>(<span class="ident">u32::from</span>(<span class="ident">e</span>)))
-            .<span class="ident">collect</span>(),
+<span class="doccomment">/// Extracts a list of BYTE tags stored in an offset
+</span><span class="attribute">#[inline]
+</span><span class="kw">fn </span>offset_to_bytes(n: usize, entry: <span class="kw-2">&amp;</span>Entry) -&gt; TiffResult&lt;Value&gt; {
+    <span class="prelude-val">Ok</span>(List(
+        entry.offset[<span class="number">0</span>..n]
+            .iter()
+            .map(|<span class="kw-2">&amp;</span>e| Unsigned(u32::from(e)))
+            .collect(),
     ))
 }
 
-<span class="doccomment">/// Extracts a list of SBYTE tags stored in an offset</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">offset_to_sbytes</span>(<span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">entry</span>: <span class="kw-2">&amp;</span><span class="ident">Entry</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> {
-    <span class="prelude-val">Ok</span>(<span class="ident">List</span>(
-        <span class="ident">entry</span>.<span class="ident">offset</span>[<span class="number">0</span>..<span class="ident">n</span>]
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Signed</span>(<span class="ident">i32::from</span>(<span class="ident">e</span> <span class="kw">as</span> <span class="ident">i8</span>)))
-            .<span class="ident">collect</span>(),
+<span class="doccomment">/// Extracts a list of SBYTE tags stored in an offset
+</span><span class="attribute">#[inline]
+</span><span class="kw">fn </span>offset_to_sbytes(n: usize, entry: <span class="kw-2">&amp;</span>Entry) -&gt; TiffResult&lt;Value&gt; {
+    <span class="prelude-val">Ok</span>(List(
+        entry.offset[<span class="number">0</span>..n]
+            .iter()
+            .map(|<span class="kw-2">&amp;</span>e| Signed(i32::from(e <span class="kw">as </span>i8)))
+            .collect(),
     ))
 }
 
-<span class="doccomment">/// Type representing an Image File Directory</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Directory</span> <span class="op">=</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Tag</span>, <span class="ident">Entry</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Type representing an Image File Directory
+</span><span class="kw">pub type </span>Directory = HashMap&lt;Tag, Entry&gt;;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

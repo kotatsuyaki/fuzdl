@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/hdr/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/hdr/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -437,439 +431,438 @@
 <span id="431">431</span>
 <span id="432">432</span>
 <span id="433">433</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::codecs::hdr</span>::{<span class="ident">rgbe8</span>, <span class="ident">Rgbe8Pixel</span>, <span class="ident">SIGNATURE</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color::Rgb</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::ImageResult</span>;
-<span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="prelude-ty">Result</span>, <span class="ident">Write</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::codecs::hdr::{rgbe8, Rgbe8Pixel, SIGNATURE};
+<span class="kw">use </span><span class="kw">crate</span>::color::Rgb;
+<span class="kw">use </span><span class="kw">crate</span>::error::ImageResult;
+<span class="kw">use </span>std::cmp::Ordering;
+<span class="kw">use </span>std::io::{<span class="prelude-ty">Result</span>, Write};
 
-<span class="doccomment">/// Radiance HDR encoder</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HdrEncoder</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> {
-    <span class="ident">w</span>: <span class="ident">W</span>,
+<span class="doccomment">/// Radiance HDR encoder
+</span><span class="kw">pub struct </span>HdrEncoder&lt;W: Write&gt; {
+    w: W,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">HdrEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Creates encoder</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">w</span>: <span class="ident">W</span>) -&gt; <span class="ident">HdrEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="ident">HdrEncoder</span> { <span class="ident">w</span> }
+<span class="kw">impl</span>&lt;W: Write&gt; HdrEncoder&lt;W&gt; {
+    <span class="doccomment">/// Creates encoder
+    </span><span class="kw">pub fn </span>new(w: W) -&gt; HdrEncoder&lt;W&gt; {
+        HdrEncoder { w }
     }
 
-    <span class="doccomment">/// Encodes the image ```data```</span>
-    <span class="doccomment">/// that has dimensions ```width``` and ```height```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">Rgb</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>], <span class="ident">width</span>: <span class="ident">usize</span>, <span class="ident">height</span>: <span class="ident">usize</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">assert!</span>(<span class="ident">data</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">width</span> <span class="op">*</span> <span class="ident">height</span>);
-        <span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">w</span>;
-        <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">SIGNATURE</span>)<span class="question-mark">?</span>;
-        <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="string">b&quot;# Rust HDR encoder\n&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="string">b&quot;FORMAT=32-bit_rle_rgbe\n\n&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="macro">format!</span>(<span class="string">&quot;-Y {} +X {}\n&quot;</span>, <span class="ident">height</span>, <span class="ident">width</span>).<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
+    <span class="doccomment">/// Encodes the image ```data```
+    /// that has dimensions ```width``` and ```height```
+    </span><span class="kw">pub fn </span>encode(<span class="kw-2">mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[Rgb&lt;f32&gt;], width: usize, height: usize) -&gt; ImageResult&lt;()&gt; {
+        <span class="macro">assert!</span>(data.len() &gt;= width * height);
+        <span class="kw">let </span>w = <span class="kw-2">&amp;mut </span><span class="self">self</span>.w;
+        w.write_all(SIGNATURE)<span class="question-mark">?</span>;
+        w.write_all(<span class="string">b&quot;\n&quot;</span>)<span class="question-mark">?</span>;
+        w.write_all(<span class="string">b&quot;# Rust HDR encoder\n&quot;</span>)<span class="question-mark">?</span>;
+        w.write_all(<span class="string">b&quot;FORMAT=32-bit_rle_rgbe\n\n&quot;</span>)<span class="question-mark">?</span>;
+        w.write_all(<span class="macro">format!</span>(<span class="string">&quot;-Y {} +X {}\n&quot;</span>, height, width).as_bytes())<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">width</span> <span class="op">&lt;</span> <span class="number">8</span> <span class="op">|</span><span class="op">|</span> <span class="ident">width</span> <span class="op">&gt;</span> <span class="number">32_768</span> {
-            <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">pix</span> <span class="kw">in</span> <span class="ident">data</span> {
-                <span class="ident">write_rgbe8</span>(<span class="ident">w</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>))<span class="question-mark">?</span>;
+        <span class="kw">if </span>width &lt; <span class="number">8 </span>|| width &gt; <span class="number">32_768 </span>{
+            <span class="kw">for </span><span class="kw-2">&amp;</span>pix <span class="kw">in </span>data {
+                write_rgbe8(w, to_rgbe8(pix))<span class="question-mark">?</span>;
             }
-        } <span class="kw">else</span> {
-            <span class="comment">// new RLE marker contains scanline width</span>
-            <span class="kw">let</span> <span class="ident">marker</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="number">2</span>, <span class="number">2</span>, (<span class="ident">width</span> <span class="op">/</span> <span class="number">256</span>) <span class="kw">as</span> <span class="ident">u8</span>, (<span class="ident">width</span> <span class="op">%</span> <span class="number">256</span>) <span class="kw">as</span> <span class="ident">u8</span>);
-            <span class="comment">// buffers for encoded pixels</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bufr</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">width</span>];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bufg</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">width</span>];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bufb</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">width</span>];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bufe</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">width</span>];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rle_buf</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">width</span>];
-            <span class="kw">for</span> <span class="ident">scanline</span> <span class="kw">in</span> <span class="ident">data</span>.<span class="ident">chunks</span>(<span class="ident">width</span>) {
-                <span class="kw">for</span> ((((<span class="ident">r</span>, <span class="ident">g</span>), <span class="ident">b</span>), <span class="ident">e</span>), <span class="kw-2">&amp;</span><span class="ident">pix</span>) <span class="kw">in</span> <span class="ident">bufr</span>
-                    .<span class="ident">iter_mut</span>()
-                    .<span class="ident">zip</span>(<span class="ident">bufg</span>.<span class="ident">iter_mut</span>())
-                    .<span class="ident">zip</span>(<span class="ident">bufb</span>.<span class="ident">iter_mut</span>())
-                    .<span class="ident">zip</span>(<span class="ident">bufe</span>.<span class="ident">iter_mut</span>())
-                    .<span class="ident">zip</span>(<span class="ident">scanline</span>.<span class="ident">iter</span>())
+        } <span class="kw">else </span>{
+            <span class="comment">// new RLE marker contains scanline width
+            </span><span class="kw">let </span>marker = rgbe8(<span class="number">2</span>, <span class="number">2</span>, (width / <span class="number">256</span>) <span class="kw">as </span>u8, (width % <span class="number">256</span>) <span class="kw">as </span>u8);
+            <span class="comment">// buffers for encoded pixels
+            </span><span class="kw">let </span><span class="kw-2">mut </span>bufr = <span class="macro">vec!</span>[<span class="number">0</span>; width];
+            <span class="kw">let </span><span class="kw-2">mut </span>bufg = <span class="macro">vec!</span>[<span class="number">0</span>; width];
+            <span class="kw">let </span><span class="kw-2">mut </span>bufb = <span class="macro">vec!</span>[<span class="number">0</span>; width];
+            <span class="kw">let </span><span class="kw-2">mut </span>bufe = <span class="macro">vec!</span>[<span class="number">0</span>; width];
+            <span class="kw">let </span><span class="kw-2">mut </span>rle_buf = <span class="macro">vec!</span>[<span class="number">0</span>; width];
+            <span class="kw">for </span>scanline <span class="kw">in </span>data.chunks(width) {
+                <span class="kw">for </span>((((r, g), b), e), <span class="kw-2">&amp;</span>pix) <span class="kw">in </span>bufr
+                    .iter_mut()
+                    .zip(bufg.iter_mut())
+                    .zip(bufb.iter_mut())
+                    .zip(bufe.iter_mut())
+                    .zip(scanline.iter())
                 {
-                    <span class="kw">let</span> <span class="ident">cp</span> <span class="op">=</span> <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>);
-                    <span class="kw-2">*</span><span class="ident">r</span> <span class="op">=</span> <span class="ident">cp</span>.<span class="ident">c</span>[<span class="number">0</span>];
-                    <span class="kw-2">*</span><span class="ident">g</span> <span class="op">=</span> <span class="ident">cp</span>.<span class="ident">c</span>[<span class="number">1</span>];
-                    <span class="kw-2">*</span><span class="ident">b</span> <span class="op">=</span> <span class="ident">cp</span>.<span class="ident">c</span>[<span class="number">2</span>];
-                    <span class="kw-2">*</span><span class="ident">e</span> <span class="op">=</span> <span class="ident">cp</span>.<span class="ident">e</span>;
+                    <span class="kw">let </span>cp = to_rgbe8(pix);
+                    <span class="kw-2">*</span>r = cp.c[<span class="number">0</span>];
+                    <span class="kw-2">*</span>g = cp.c[<span class="number">1</span>];
+                    <span class="kw-2">*</span>b = cp.c[<span class="number">2</span>];
+                    <span class="kw-2">*</span>e = cp.e;
                 }
-                <span class="ident">write_rgbe8</span>(<span class="ident">w</span>, <span class="ident">marker</span>)<span class="question-mark">?</span>; <span class="comment">// New RLE encoding marker</span>
-                <span class="ident">rle_buf</span>.<span class="ident">clear</span>();
-                <span class="ident">rle_compress</span>(<span class="kw-2">&amp;</span><span class="ident">bufr</span>[..], <span class="kw-2">&amp;mut</span> <span class="ident">rle_buf</span>);
-                <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">rle_buf</span>[..])<span class="question-mark">?</span>;
-                <span class="ident">rle_buf</span>.<span class="ident">clear</span>();
-                <span class="ident">rle_compress</span>(<span class="kw-2">&amp;</span><span class="ident">bufg</span>[..], <span class="kw-2">&amp;mut</span> <span class="ident">rle_buf</span>);
-                <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">rle_buf</span>[..])<span class="question-mark">?</span>;
-                <span class="ident">rle_buf</span>.<span class="ident">clear</span>();
-                <span class="ident">rle_compress</span>(<span class="kw-2">&amp;</span><span class="ident">bufb</span>[..], <span class="kw-2">&amp;mut</span> <span class="ident">rle_buf</span>);
-                <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">rle_buf</span>[..])<span class="question-mark">?</span>;
-                <span class="ident">rle_buf</span>.<span class="ident">clear</span>();
-                <span class="ident">rle_compress</span>(<span class="kw-2">&amp;</span><span class="ident">bufe</span>[..], <span class="kw-2">&amp;mut</span> <span class="ident">rle_buf</span>);
-                <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">rle_buf</span>[..])<span class="question-mark">?</span>;
+                write_rgbe8(w, marker)<span class="question-mark">?</span>; <span class="comment">// New RLE encoding marker
+                </span>rle_buf.clear();
+                rle_compress(<span class="kw-2">&amp;</span>bufr[..], <span class="kw-2">&amp;mut </span>rle_buf);
+                w.write_all(<span class="kw-2">&amp;</span>rle_buf[..])<span class="question-mark">?</span>;
+                rle_buf.clear();
+                rle_compress(<span class="kw-2">&amp;</span>bufg[..], <span class="kw-2">&amp;mut </span>rle_buf);
+                w.write_all(<span class="kw-2">&amp;</span>rle_buf[..])<span class="question-mark">?</span>;
+                rle_buf.clear();
+                rle_compress(<span class="kw-2">&amp;</span>bufb[..], <span class="kw-2">&amp;mut </span>rle_buf);
+                w.write_all(<span class="kw-2">&amp;</span>rle_buf[..])<span class="question-mark">?</span>;
+                rle_buf.clear();
+                rle_compress(<span class="kw-2">&amp;</span>bufe[..], <span class="kw-2">&amp;mut </span>rle_buf);
+                w.write_all(<span class="kw-2">&amp;</span>rle_buf[..])<span class="question-mark">?</span>;
             }
         }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">enum</span> <span class="ident">RunOrNot</span> {
-    <span class="ident">Run</span>(<span class="ident">u8</span>, <span class="ident">usize</span>),
-    <span class="ident">Norun</span>(<span class="ident">usize</span>, <span class="ident">usize</span>),
+<span class="attribute">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">enum </span>RunOrNot {
+    Run(u8, usize),
+    Norun(usize, usize),
 }
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::RunOrNot</span>::{<span class="ident">Norun</span>, <span class="ident">Run</span>};
+<span class="kw">use </span><span class="self">self</span>::RunOrNot::{Norun, Run};
 
-<span class="kw">const</span> <span class="ident">RUN_MAX_LEN</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">127</span>;
-<span class="kw">const</span> <span class="ident">NORUN_MAX_LEN</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">128</span>;
+<span class="kw">const </span>RUN_MAX_LEN: usize = <span class="number">127</span>;
+<span class="kw">const </span>NORUN_MAX_LEN: usize = <span class="number">128</span>;
 
-<span class="kw">struct</span> <span class="ident">RunIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
-    <span class="ident">curidx</span>: <span class="ident">usize</span>,
+<span class="kw">struct </span>RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
+    curidx: usize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">RunIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">RunIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">RunIterator</span> { <span class="ident">data</span>, <span class="ident">curidx</span>: <span class="number">0</span> }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+        RunIterator { data, curidx: <span class="number">0 </span>}
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">RunIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">RunOrNot</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Item = RunOrNot;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">curidx</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">len</span>() {
-            <span class="prelude-val">None</span>
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">cv</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>[<span class="self">self</span>.<span class="ident">curidx</span>];
-            <span class="kw">let</span> <span class="ident">crun</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>[<span class="self">self</span>.<span class="ident">curidx</span>..]
-                .<span class="ident">iter</span>()
-                .<span class="ident">take_while</span>(<span class="op">|</span><span class="op">&amp;&amp;</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span> <span class="op">==</span> <span class="ident">cv</span>)
-                .<span class="ident">take</span>(<span class="ident">RUN_MAX_LEN</span>)
-                .<span class="ident">count</span>();
-            <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">crun</span> <span class="op">&gt;</span> <span class="number">2</span> {
-                <span class="ident">Run</span>(<span class="ident">cv</span>, <span class="ident">crun</span>)
-            } <span class="kw">else</span> {
-                <span class="ident">Norun</span>(<span class="self">self</span>.<span class="ident">curidx</span>, <span class="ident">crun</span>)
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">if </span><span class="self">self</span>.curidx == <span class="self">self</span>.data.len() {
+            <span class="prelude-val">None
+        </span>} <span class="kw">else </span>{
+            <span class="kw">let </span>cv = <span class="self">self</span>.data[<span class="self">self</span>.curidx];
+            <span class="kw">let </span>crun = <span class="self">self</span>.data[<span class="self">self</span>.curidx..]
+                .iter()
+                .take_while(|&amp;&amp;v| v == cv)
+                .take(RUN_MAX_LEN)
+                .count();
+            <span class="kw">let </span>ret = <span class="kw">if </span>crun &gt; <span class="number">2 </span>{
+                Run(cv, crun)
+            } <span class="kw">else </span>{
+                Norun(<span class="self">self</span>.curidx, crun)
             };
-            <span class="self">self</span>.<span class="ident">curidx</span> <span class="op">+</span><span class="op">=</span> <span class="ident">crun</span>;
-            <span class="prelude-val">Some</span>(<span class="ident">ret</span>)
+            <span class="self">self</span>.curidx += crun;
+            <span class="prelude-val">Some</span>(ret)
         }
     }
 }
 
-<span class="kw">struct</span> <span class="ident">NorunCombineIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">runiter</span>: <span class="ident">RunIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">prev</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RunOrNot</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    runiter: RunIterator&lt;<span class="lifetime">&#39;a</span>&gt;,
+    prev: <span class="prelude-ty">Option</span>&lt;RunOrNot&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">NorunCombineIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">NorunCombineIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">NorunCombineIterator</span> {
-            <span class="ident">runiter</span>: <span class="ident">RunIterator::new</span>(<span class="ident">data</span>),
-            <span class="ident">prev</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+        NorunCombineIterator {
+            runiter: RunIterator::new(data),
+            prev: <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class="comment">// Combines sequential noruns produced by RunIterator</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">NorunCombineIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">RunOrNot</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">loop</span> {
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">prev</span>.<span class="ident">take</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len</span>)) =&gt; {
-                    <span class="comment">// Just return stored run</span>
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len</span>));
+<span class="comment">// Combines sequential noruns produced by RunIterator
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Item = RunOrNot;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="kw">loop </span>{
+            <span class="kw">match </span><span class="self">self</span>.prev.take() {
+                <span class="prelude-val">Some</span>(Run(c, len)) =&gt; {
+                    <span class="comment">// Just return stored run
+                    </span><span class="kw">return </span><span class="prelude-val">Some</span>(Run(c, len));
                 }
-                <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span>)) =&gt; {
-                    <span class="comment">// Let&#39;s see if we need to continue norun</span>
-                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">runiter</span>.<span class="ident">next</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="kw">_</span>, <span class="ident">len1</span>)) =&gt; {
-                            <span class="comment">// norun continues</span>
-                            <span class="kw">let</span> <span class="ident">clen</span> <span class="op">=</span> <span class="ident">len</span> <span class="op">+</span> <span class="ident">len1</span>; <span class="comment">// combined length</span>
-                            <span class="kw">match</span> <span class="ident">clen</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">NORUN_MAX_LEN</span>) {
-                                <span class="ident">Ordering::Equal</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">clen</span>)),
-                                <span class="ident">Ordering::Greater</span> =&gt; {
-                                    <span class="comment">// combined norun exceeds maximum length. store extra part of norun</span>
-                                    <span class="self">self</span>.<span class="ident">prev</span> <span class="op">=</span>
-                                        <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span> <span class="op">+</span> <span class="ident">NORUN_MAX_LEN</span>, <span class="ident">clen</span> <span class="op">-</span> <span class="ident">NORUN_MAX_LEN</span>));
-                                    <span class="comment">// then return maximal norun</span>
-                                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">NORUN_MAX_LEN</span>));
+                <span class="prelude-val">Some</span>(Norun(idx, len)) =&gt; {
+                    <span class="comment">// Let&#39;s see if we need to continue norun
+                    </span><span class="kw">match </span><span class="self">self</span>.runiter.next() {
+                        <span class="prelude-val">Some</span>(Norun(<span class="kw">_</span>, len1)) =&gt; {
+                            <span class="comment">// norun continues
+                            </span><span class="kw">let </span>clen = len + len1; <span class="comment">// combined length
+                            </span><span class="kw">match </span>clen.cmp(<span class="kw-2">&amp;</span>NORUN_MAX_LEN) {
+                                Ordering::Equal =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>(Norun(idx, clen)),
+                                Ordering::Greater =&gt; {
+                                    <span class="comment">// combined norun exceeds maximum length. store extra part of norun
+                                    </span><span class="self">self</span>.prev =
+                                        <span class="prelude-val">Some</span>(Norun(idx + NORUN_MAX_LEN, clen - NORUN_MAX_LEN));
+                                    <span class="comment">// then return maximal norun
+                                    </span><span class="kw">return </span><span class="prelude-val">Some</span>(Norun(idx, NORUN_MAX_LEN));
                                 }
-                                <span class="ident">Ordering::Less</span> =&gt; {
-                                    <span class="comment">// len + len1 &lt; NORUN_MAX_LEN</span>
-                                    <span class="self">self</span>.<span class="ident">prev</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span> <span class="op">+</span> <span class="ident">len1</span>));
-                                    <span class="comment">// combine and continue loop</span>
-                                }
+                                Ordering::Less =&gt; {
+                                    <span class="comment">// len + len1 &lt; NORUN_MAX_LEN
+                                    </span><span class="self">self</span>.prev = <span class="prelude-val">Some</span>(Norun(idx, len + len1));
+                                    <span class="comment">// combine and continue loop
+                                </span>}
                             }
                         }
-                        <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len1</span>)) =&gt; {
-                            <span class="comment">// Run encountered. Store it</span>
-                            <span class="self">self</span>.<span class="ident">prev</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len1</span>));
-                            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span>)); <span class="comment">// and return combined norun</span>
+                        <span class="prelude-val">Some</span>(Run(c, len1)) =&gt; {
+                            <span class="comment">// Run encountered. Store it
+                            </span><span class="self">self</span>.prev = <span class="prelude-val">Some</span>(Run(c, len1));
+                            <span class="kw">return </span><span class="prelude-val">Some</span>(Norun(idx, len)); <span class="comment">// and return combined norun
+                        </span>}
+                        <span class="prelude-val">None </span>=&gt; {
+                            <span class="comment">// End of sequence
+                            </span><span class="kw">return </span><span class="prelude-val">Some</span>(Norun(idx, len)); <span class="comment">// return combined norun
+                        </span>}
+                    }
+                } <span class="comment">// End match self.prev.take() == Some(NoRun())
+                </span><span class="prelude-val">None </span>=&gt; {
+                    <span class="comment">// No norun to combine
+                    </span><span class="kw">match </span><span class="self">self</span>.runiter.next() {
+                        <span class="prelude-val">Some</span>(Norun(idx, len)) =&gt; {
+                            <span class="self">self</span>.prev = <span class="prelude-val">Some</span>(Norun(idx, len));
+                            <span class="comment">// store for combine and continue the loop
+                        </span>}
+                        <span class="prelude-val">Some</span>(Run(c, len)) =&gt; {
+                            <span class="comment">// Some run. Just return it
+                            </span><span class="kw">return </span><span class="prelude-val">Some</span>(Run(c, len));
                         }
-                        <span class="prelude-val">None</span> =&gt; {
-                            <span class="comment">// End of sequence</span>
-                            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span>)); <span class="comment">// return combined norun</span>
+                        <span class="prelude-val">None </span>=&gt; {
+                            <span class="comment">// That&#39;s all, folks
+                            </span><span class="kw">return </span><span class="prelude-val">None</span>;
                         }
                     }
-                } <span class="comment">// End match self.prev.take() == Some(NoRun())</span>
-                <span class="prelude-val">None</span> =&gt; {
-                    <span class="comment">// No norun to combine</span>
-                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">runiter</span>.<span class="ident">next</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span>)) =&gt; {
-                            <span class="self">self</span>.<span class="ident">prev</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span>));
-                            <span class="comment">// store for combine and continue the loop</span>
-                        }
-                        <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len</span>)) =&gt; {
-                            <span class="comment">// Some run. Just return it</span>
-                            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len</span>));
-                        }
-                        <span class="prelude-val">None</span> =&gt; {
-                            <span class="comment">// That&#39;s all, folks</span>
-                            <span class="kw">return</span> <span class="prelude-val">None</span>;
-                        }
-                    }
-                } <span class="comment">// End match self.prev.take() == None</span>
-            } <span class="comment">// End match</span>
-        } <span class="comment">// End loop</span>
-    }
+                } <span class="comment">// End match self.prev.take() == None
+            </span>} <span class="comment">// End match
+        </span>} <span class="comment">// End loop
+    </span>}
 }
 
-<span class="comment">// Appends RLE compressed ```data``` to ```rle```</span>
-<span class="kw">fn</span> <span class="ident">rle_compress</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">rle</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-    <span class="ident">rle</span>.<span class="ident">clear</span>();
-    <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">is_empty</span>() {
-        <span class="ident">rle</span>.<span class="ident">push</span>(<span class="number">0</span>); <span class="comment">// Technically correct. It means read next 0 bytes.</span>
-        <span class="kw">return</span>;
+<span class="comment">// Appends RLE compressed ```data``` to ```rle```
+</span><span class="kw">fn </span>rle_compress(data: <span class="kw-2">&amp;</span>[u8], rle: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) {
+    rle.clear();
+    <span class="kw">if </span>data.is_empty() {
+        rle.push(<span class="number">0</span>); <span class="comment">// Technically correct. It means read next 0 bytes.
+        </span><span class="kw">return</span>;
     }
-    <span class="comment">// Task: split data into chunks of repeating (max 127) and non-repeating bytes (max 128)</span>
-    <span class="comment">// Prepend non-repeating chunk with its length</span>
-    <span class="comment">// Replace repeating byte with (run length + 128) and the byte</span>
-    <span class="kw">for</span> <span class="ident">rnr</span> <span class="kw">in</span> <span class="ident">NorunCombineIterator::new</span>(<span class="ident">data</span>) {
-        <span class="kw">match</span> <span class="ident">rnr</span> {
-            <span class="ident">Run</span>(<span class="ident">c</span>, <span class="ident">len</span>) =&gt; {
-                <span class="macro">assert!</span>(<span class="ident">len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">127</span>);
-                <span class="ident">rle</span>.<span class="ident">push</span>(<span class="number">128u8</span> <span class="op">+</span> <span class="ident">len</span> <span class="kw">as</span> <span class="ident">u8</span>);
-                <span class="ident">rle</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+    <span class="comment">// Task: split data into chunks of repeating (max 127) and non-repeating bytes (max 128)
+    // Prepend non-repeating chunk with its length
+    // Replace repeating byte with (run length + 128) and the byte
+    </span><span class="kw">for </span>rnr <span class="kw">in </span>NorunCombineIterator::new(data) {
+        <span class="kw">match </span>rnr {
+            Run(c, len) =&gt; {
+                <span class="macro">assert!</span>(len &lt;= <span class="number">127</span>);
+                rle.push(<span class="number">128u8 </span>+ len <span class="kw">as </span>u8);
+                rle.push(c);
             }
-            <span class="ident">Norun</span>(<span class="ident">idx</span>, <span class="ident">len</span>) =&gt; {
-                <span class="macro">assert!</span>(<span class="ident">len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">128</span>);
-                <span class="ident">rle</span>.<span class="ident">push</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">u8</span>);
-                <span class="ident">rle</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[<span class="ident">idx</span>..<span class="ident">idx</span> <span class="op">+</span> <span class="ident">len</span>]);
+            Norun(idx, len) =&gt; {
+                <span class="macro">assert!</span>(len &lt;= <span class="number">128</span>);
+                rle.push(len <span class="kw">as </span>u8);
+                rle.extend_from_slice(<span class="kw-2">&amp;</span>data[idx..idx + len]);
             }
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">write_rgbe8</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">w</span>: <span class="kw-2">&amp;mut</span> <span class="ident">W</span>, <span class="ident">v</span>: <span class="ident">Rgbe8Pixel</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="ident">w</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">v</span>.<span class="ident">c</span>[<span class="number">0</span>], <span class="ident">v</span>.<span class="ident">c</span>[<span class="number">1</span>], <span class="ident">v</span>.<span class="ident">c</span>[<span class="number">2</span>], <span class="ident">v</span>.<span class="ident">e</span>])
+<span class="kw">fn </span>write_rgbe8&lt;W: Write&gt;(w: <span class="kw-2">&amp;mut </span>W, v: Rgbe8Pixel) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    w.write_all(<span class="kw-2">&amp;</span>[v.c[<span class="number">0</span>], v.c[<span class="number">1</span>], v.c[<span class="number">2</span>], v.e])
 }
 
-<span class="doccomment">/// Converts ```Rgb&lt;f32&gt;``` into ```Rgbe8Pixel```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>: <span class="ident">Rgb</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) -&gt; <span class="ident">Rgbe8Pixel</span> {
-    <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">pix</span>.<span class="number">0</span>;
-    <span class="kw">let</span> <span class="ident">mx</span> <span class="op">=</span> <span class="ident">f32::max</span>(<span class="ident">pix</span>[<span class="number">0</span>], <span class="ident">f32::max</span>(<span class="ident">pix</span>[<span class="number">1</span>], <span class="ident">pix</span>[<span class="number">2</span>]));
-    <span class="kw">if</span> <span class="ident">mx</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0.0</span> {
-        <span class="ident">Rgbe8Pixel</span> { <span class="ident">c</span>: [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], <span class="ident">e</span>: <span class="number">0</span> }
-    } <span class="kw">else</span> {
-        <span class="comment">// let (frac, exp) = mx.frexp(); // unstable yet</span>
-        <span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="ident">mx</span>.<span class="ident">log2</span>().<span class="ident">floor</span>() <span class="kw">as</span> <span class="ident">i32</span> <span class="op">+</span> <span class="number">1</span>;
-        <span class="kw">let</span> <span class="ident">mul</span> <span class="op">=</span> <span class="ident">f32::powi</span>(<span class="number">2.0</span>, <span class="ident">exp</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">conv</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">3</span>];
-        <span class="kw">for</span> (<span class="ident">cv</span>, <span class="kw-2">&amp;</span><span class="ident">sv</span>) <span class="kw">in</span> <span class="ident">conv</span>.<span class="ident">iter_mut</span>().<span class="ident">zip</span>(<span class="ident">pix</span>.<span class="ident">iter</span>()) {
-            <span class="kw-2">*</span><span class="ident">cv</span> <span class="op">=</span> <span class="ident">f32::trunc</span>(<span class="ident">sv</span> <span class="op">/</span> <span class="ident">mul</span> <span class="op">*</span> <span class="number">256.0</span>) <span class="kw">as</span> <span class="ident">u8</span>;
+<span class="doccomment">/// Converts ```Rgb&lt;f32&gt;``` into ```Rgbe8Pixel```
+</span><span class="kw">pub fn </span>to_rgbe8(pix: Rgb&lt;f32&gt;) -&gt; Rgbe8Pixel {
+    <span class="kw">let </span>pix = pix.<span class="number">0</span>;
+    <span class="kw">let </span>mx = f32::max(pix[<span class="number">0</span>], f32::max(pix[<span class="number">1</span>], pix[<span class="number">2</span>]));
+    <span class="kw">if </span>mx &lt;= <span class="number">0.0 </span>{
+        Rgbe8Pixel { c: [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>], e: <span class="number">0 </span>}
+    } <span class="kw">else </span>{
+        <span class="comment">// let (frac, exp) = mx.frexp(); // unstable yet
+        </span><span class="kw">let </span>exp = mx.log2().floor() <span class="kw">as </span>i32 + <span class="number">1</span>;
+        <span class="kw">let </span>mul = f32::powi(<span class="number">2.0</span>, exp);
+        <span class="kw">let </span><span class="kw-2">mut </span>conv = [<span class="number">0u8</span>; <span class="number">3</span>];
+        <span class="kw">for </span>(cv, <span class="kw-2">&amp;</span>sv) <span class="kw">in </span>conv.iter_mut().zip(pix.iter()) {
+            <span class="kw-2">*</span>cv = f32::trunc(sv / mul * <span class="number">256.0</span>) <span class="kw">as </span>u8;
         }
-        <span class="ident">Rgbe8Pixel</span> {
-            <span class="ident">c</span>: <span class="ident">conv</span>,
-            <span class="ident">e</span>: (<span class="ident">exp</span> <span class="op">+</span> <span class="number">128</span>) <span class="kw">as</span> <span class="ident">u8</span>,
+        Rgbe8Pixel {
+            c: conv,
+            e: (exp + <span class="number">128</span>) <span class="kw">as </span>u8,
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="kw">fn</span> <span class="ident">to_rgbe8_test</span>() {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::codecs::hdr::rgbe8</span>;
-    <span class="kw">let</span> <span class="ident">test_cases</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">rgbe8</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>), <span class="ident">rgbe8</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">128</span>, <span class="number">128</span>)];
-    <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">pix</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">test_cases</span> {
-        <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>to_rgbe8_test() {
+    <span class="kw">use </span><span class="kw">crate</span>::codecs::hdr::rgbe8;
+    <span class="kw">let </span>test_cases = <span class="macro">vec!</span>[rgbe8(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>), rgbe8(<span class="number">1</span>, <span class="number">1</span>, <span class="number">128</span>, <span class="number">128</span>)];
+    <span class="kw">for </span><span class="kw-2">&amp;</span>pix <span class="kw">in </span><span class="kw-2">&amp;</span>test_cases {
+        <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
     }
-    <span class="kw">for</span> <span class="ident">mc</span> <span class="kw">in</span> <span class="number">128</span>..<span class="number">255</span> {
-        <span class="comment">// TODO: use inclusive range when stable</span>
-        <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="ident">mc</span>, <span class="ident">mc</span>, <span class="ident">mc</span>, <span class="number">100</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
-        <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="ident">mc</span>, <span class="number">0</span>, <span class="ident">mc</span>, <span class="number">130</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
-        <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="ident">mc</span>, <span class="number">140</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
-        <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="number">1</span>, <span class="number">0</span>, <span class="ident">mc</span>, <span class="number">150</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
-        <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="number">1</span>, <span class="ident">mc</span>, <span class="number">10</span>, <span class="number">128</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
-        <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">255</span> {
-            <span class="comment">// Radiance HDR seems to be pre IEEE 754.</span>
-            <span class="comment">// exponent can be -128 (represented as 0u8), so some colors cannot be represented in normalized f32</span>
-            <span class="comment">// Let&#39;s exclude exponent value of -128 (0u8) from testing</span>
-            <span class="kw">let</span> <span class="ident">pix</span> <span class="op">=</span> <span class="ident">rgbe8</span>(<span class="number">1</span>, <span class="ident">mc</span>, <span class="ident">c</span>, <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="number">0</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="ident">c</span> });
-            <span class="macro">assert_eq!</span>(<span class="ident">pix</span>, <span class="ident">to_rgbe8</span>(<span class="ident">pix</span>.<span class="ident">to_hdr</span>()));
+    <span class="kw">for </span>mc <span class="kw">in </span><span class="number">128</span>..<span class="number">255 </span>{
+        <span class="comment">// TODO: use inclusive range when stable
+        </span><span class="kw">let </span>pix = rgbe8(mc, mc, mc, <span class="number">100</span>);
+        <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
+        <span class="kw">let </span>pix = rgbe8(mc, <span class="number">0</span>, mc, <span class="number">130</span>);
+        <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
+        <span class="kw">let </span>pix = rgbe8(<span class="number">0</span>, <span class="number">0</span>, mc, <span class="number">140</span>);
+        <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
+        <span class="kw">let </span>pix = rgbe8(<span class="number">1</span>, <span class="number">0</span>, mc, <span class="number">150</span>);
+        <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
+        <span class="kw">let </span>pix = rgbe8(<span class="number">1</span>, mc, <span class="number">10</span>, <span class="number">128</span>);
+        <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
+        <span class="kw">for </span>c <span class="kw">in </span><span class="number">0</span>..<span class="number">255 </span>{
+            <span class="comment">// Radiance HDR seems to be pre IEEE 754.
+            // exponent can be -128 (represented as 0u8), so some colors cannot be represented in normalized f32
+            // Let&#39;s exclude exponent value of -128 (0u8) from testing
+            </span><span class="kw">let </span>pix = rgbe8(<span class="number">1</span>, mc, c, <span class="kw">if </span>c == <span class="number">0 </span>{ <span class="number">1 </span>} <span class="kw">else </span>{ c });
+            <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
         }
     }
-    <span class="kw">fn</span> <span class="ident">relative_dist</span>(<span class="ident">a</span>: <span class="ident">Rgb</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="ident">Rgb</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span>) -&gt; <span class="ident">f32</span> {
-        <span class="comment">// maximal difference divided by maximal value</span>
-        <span class="kw">let</span> <span class="ident">max_diff</span> <span class="op">=</span>
-            <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">iter</span>()
-                .<span class="ident">zip</span>(<span class="ident">b</span>.<span class="number">0</span>.<span class="ident">iter</span>())
-                .<span class="ident">fold</span>(<span class="number">0.0</span>, <span class="op">|</span><span class="ident">diff</span>, (<span class="kw-2">&amp;</span><span class="ident">a</span>, <span class="kw-2">&amp;</span><span class="ident">b</span>)<span class="op">|</span> <span class="ident">f32::max</span>(<span class="ident">diff</span>, (<span class="ident">a</span> <span class="op">-</span> <span class="ident">b</span>).<span class="ident">abs</span>()));
-        <span class="kw">let</span> <span class="ident">max_val</span> <span class="op">=</span>
-            <span class="ident">a</span>.<span class="number">0</span>.<span class="ident">iter</span>()
-                .<span class="ident">chain</span>(<span class="ident">b</span>.<span class="number">0</span>.<span class="ident">iter</span>())
-                .<span class="ident">fold</span>(<span class="number">0.0</span>, <span class="op">|</span><span class="ident">maxv</span>, <span class="kw-2">&amp;</span><span class="ident">a</span><span class="op">|</span> <span class="ident">f32::max</span>(<span class="ident">maxv</span>, <span class="ident">a</span>));
-        <span class="kw">if</span> <span class="ident">max_val</span> <span class="op">==</span> <span class="number">0.0</span> {
-            <span class="number">0.0</span>
-        } <span class="kw">else</span> {
-            <span class="ident">max_diff</span> <span class="op">/</span> <span class="ident">max_val</span>
+    <span class="kw">fn </span>relative_dist(a: Rgb&lt;f32&gt;, b: Rgb&lt;f32&gt;) -&gt; f32 {
+        <span class="comment">// maximal difference divided by maximal value
+        </span><span class="kw">let </span>max_diff =
+            a.<span class="number">0</span>.iter()
+                .zip(b.<span class="number">0</span>.iter())
+                .fold(<span class="number">0.0</span>, |diff, (<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b)| f32::max(diff, (a - b).abs()));
+        <span class="kw">let </span>max_val =
+            a.<span class="number">0</span>.iter()
+                .chain(b.<span class="number">0</span>.iter())
+                .fold(<span class="number">0.0</span>, |maxv, <span class="kw-2">&amp;</span>a| f32::max(maxv, a));
+        <span class="kw">if </span>max_val == <span class="number">0.0 </span>{
+            <span class="number">0.0
+        </span>} <span class="kw">else </span>{
+            max_diff / max_val
         }
     }
-    <span class="kw">let</span> <span class="ident">test_values</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="kw">let </span>test_values = <span class="macro">vec!</span>[
         <span class="number">0.000_001</span>, <span class="number">0.000_02</span>, <span class="number">0.000_3</span>, <span class="number">0.004</span>, <span class="number">0.05</span>, <span class="number">0.6</span>, <span class="number">7.0</span>, <span class="number">80.0</span>, <span class="number">900.0</span>, <span class="number">1_000.0</span>, <span class="number">20_000.0</span>,
         <span class="number">300_000.0</span>,
     ];
-    <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">r</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">test_values</span> {
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">g</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">test_values</span> {
-            <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">b</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">test_values</span> {
-                <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Rgb</span>([<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>]);
-                <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">to_rgbe8</span>(<span class="ident">c1</span>).<span class="ident">to_hdr</span>();
-                <span class="kw">let</span> <span class="ident">rel_dist</span> <span class="op">=</span> <span class="ident">relative_dist</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
-                <span class="comment">// Maximal value is normalized to the range 128..256, thus we have 1/128 precision</span>
-                <span class="macro">assert!</span>(
-                    <span class="ident">rel_dist</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">1.0</span> <span class="op">/</span> <span class="number">128.0</span>,
+    <span class="kw">for </span><span class="kw-2">&amp;</span>r <span class="kw">in </span><span class="kw-2">&amp;</span>test_values {
+        <span class="kw">for </span><span class="kw-2">&amp;</span>g <span class="kw">in </span><span class="kw-2">&amp;</span>test_values {
+            <span class="kw">for </span><span class="kw-2">&amp;</span>b <span class="kw">in </span><span class="kw-2">&amp;</span>test_values {
+                <span class="kw">let </span>c1 = Rgb([r, g, b]);
+                <span class="kw">let </span>c2 = to_rgbe8(c1).to_hdr();
+                <span class="kw">let </span>rel_dist = relative_dist(c1, c2);
+                <span class="comment">// Maximal value is normalized to the range 128..256, thus we have 1/128 precision
+                </span><span class="macro">assert!</span>(
+                    rel_dist &lt;= <span class="number">1.0 </span>/ <span class="number">128.0</span>,
                     <span class="string">&quot;Relative distance ({}) exceeds 1/128 for {:?} and {:?}&quot;</span>,
-                    <span class="ident">rel_dist</span>,
-                    <span class="ident">c1</span>,
-                    <span class="ident">c2</span>
+                    rel_dist,
+                    c1,
+                    c2
                 );
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="kw">fn</span> <span class="ident">runiterator_test</span>() {
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">5</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">1</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">1</span>, <span class="number">1</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">0u8</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">2</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">0u8</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">3</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">1</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">2u8</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">2u8</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">2</span>; <span class="number">128</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">2u8</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">127</span>, <span class="number">1</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">2</span>; <span class="number">129</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">2u8</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">127</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> [<span class="number">2</span>; <span class="number">130</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_iter</span> <span class="op">=</span> <span class="ident">RunIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">2u8</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">2u8</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">run_iter</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>runiterator_test() {
+    <span class="kw">let </span>data = [];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">5</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">1</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">1</span>, <span class="number">1</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">0u8</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">2</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">0u8</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">3</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">1</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">2u8</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">2u8</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">2</span>; <span class="number">128</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">2u8</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">127</span>, <span class="number">1</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">2</span>; <span class="number">129</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">2u8</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">127</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>data = [<span class="number">2</span>; <span class="number">130</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>run_iter = RunIterator::new(<span class="kw-2">&amp;</span>data[..]);
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">2u8</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">Some</span>(Run(<span class="number">2u8</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(run_iter.next(), <span class="prelude-val">None</span>);
 }
 
-<span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="kw">fn</span> <span class="ident">noruncombine_test</span>() {
-    <span class="kw">fn</span> <span class="ident">a</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="kw-2">mut</span> <span class="ident">other</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">v</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">other</span>);
-        <span class="ident">v</span>
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>noruncombine_test() {
+    <span class="kw">fn </span>a&lt;T&gt;(<span class="kw-2">mut </span>v: Vec&lt;T&gt;, <span class="kw-2">mut </span>other: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+        v.append(<span class="kw-2">&amp;mut </span>other);
+        v
     }
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = <span class="macro">vec!</span>[];
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">1</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">1</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = <span class="macro">vec!</span>[<span class="number">1</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">1</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">2</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">2</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">3</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">3</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">3</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">3</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">40</span>; <span class="number">400</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">40</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">40</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">40</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">40</span>, <span class="number">19</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = <span class="macro">vec!</span>[<span class="number">40</span>; <span class="number">400</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">40</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">40</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">40</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">40</span>, <span class="number">19</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">a</span>(<span class="ident">a</span>(<span class="macro">vec!</span>[<span class="number">5</span>; <span class="number">3</span>], <span class="macro">vec!</span>[<span class="number">6</span>; <span class="number">129</span>]), <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">255</span>]);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">5</span>, <span class="number">3</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">6</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">130</span>, <span class="number">7</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = a(a(<span class="macro">vec!</span>[<span class="number">5</span>; <span class="number">3</span>], <span class="macro">vec!</span>[<span class="number">6</span>; <span class="number">129</span>]), <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">255</span>]);
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">5</span>, <span class="number">3</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">6</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">130</span>, <span class="number">7</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">a</span>(<span class="ident">a</span>(<span class="macro">vec!</span>[<span class="number">5</span>; <span class="number">2</span>], <span class="macro">vec!</span>[<span class="number">6</span>; <span class="number">129</span>]), <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">255</span>]);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">2</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Run</span>(<span class="number">6</span>, <span class="number">127</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">129</span>, <span class="number">7</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v = a(a(<span class="macro">vec!</span>[<span class="number">5</span>; <span class="number">2</span>], <span class="macro">vec!</span>[<span class="number">6</span>; <span class="number">129</span>]), <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">255</span>]);
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">2</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Run(<span class="number">6</span>, <span class="number">127</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">129</span>, <span class="number">7</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 
-    <span class="kw">let</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">::std::iter::repeat</span>(())
-        .<span class="ident">flat_map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="number">0</span>..<span class="number">2</span>))
-        .<span class="ident">take</span>(<span class="number">257</span>)
-        .<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rsi</span> <span class="op">=</span> <span class="ident">NorunCombineIterator::new</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">0</span>, <span class="number">128</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">128</span>, <span class="number">128</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Norun</span>(<span class="number">256</span>, <span class="number">1</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">rsi</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="kw">let </span>v: Vec&lt;<span class="kw">_</span>&gt; = ::std::iter::repeat(())
+        .flat_map(|<span class="kw">_</span>| (<span class="number">0</span>..<span class="number">2</span>))
+        .take(<span class="number">257</span>)
+        .collect();
+    <span class="kw">let </span><span class="kw-2">mut </span>rsi = NorunCombineIterator::new(<span class="kw-2">&amp;</span>v[..]);
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">0</span>, <span class="number">128</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">128</span>, <span class="number">128</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">Some</span>(Norun(<span class="number">256</span>, <span class="number">1</span>)));
+    <span class="macro">assert_eq!</span>(rsi.next(), <span class="prelude-val">None</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

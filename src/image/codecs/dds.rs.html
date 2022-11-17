@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/dds.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dds.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/dds.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dds.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -379,368 +373,368 @@
 <span id="373">373</span>
 <span id="374">374</span>
 <span id="375">375</span>
-</pre><pre class="rust"><code><span class="doccomment">//!  Decoding of DDS images</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!  DDS (DirectDraw Surface) is a container format for storing DXT (S3TC) compressed images.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!  # Related Links</span>
-<span class="doccomment">//!  * &lt;https://docs.microsoft.com/en-us/windows/win32/direct3ddds/dx-graphics-dds-pguide&gt; - Description of the DDS format.</span>
+</pre><pre class="rust"><code><span class="doccomment">//!  Decoding of DDS images
+//!
+//!  DDS (DirectDraw Surface) is a container format for storing DXT (S3TC) compressed images.
+//!
+//!  # Related Links
+//!  * &lt;https://docs.microsoft.com/en-us/windows/win32/direct3ddds/dx-graphics-dds-pguide&gt; - Description of the DDS format.
 
-<span class="kw">use</span> <span class="ident">std::io::Read</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error</span>, <span class="ident">fmt</span>};
+</span><span class="kw">use </span>std::io::Read;
+<span class="kw">use </span>std::{error, fmt};
 
-<span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">LittleEndian</span>, <span class="ident">ReadBytesExt</span>};
+<span class="kw">use </span>byteorder::{LittleEndian, ReadBytesExt};
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::codecs::dxt</span>::{<span class="ident">DxtDecoder</span>, <span class="ident">DxtReader</span>, <span class="ident">DxtVariant</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color::ColorType</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{
-    <span class="ident">DecodingError</span>, <span class="ident">ImageError</span>, <span class="ident">ImageFormatHint</span>, <span class="ident">ImageResult</span>, <span class="ident">UnsupportedError</span>, <span class="ident">UnsupportedErrorKind</span>,
+<span class="attribute">#[allow(deprecated)]
+</span><span class="kw">use </span><span class="kw">crate</span>::codecs::dxt::{DxtDecoder, DxtReader, DxtVariant};
+<span class="kw">use </span><span class="kw">crate</span>::color::ColorType;
+<span class="kw">use </span><span class="kw">crate</span>::error::{
+    DecodingError, ImageError, ImageFormatHint, ImageResult, UnsupportedError, UnsupportedErrorKind,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::{<span class="ident">ImageDecoder</span>, <span class="ident">ImageFormat</span>};
+<span class="kw">use </span><span class="kw">crate</span>::image::{ImageDecoder, ImageFormat};
 
-<span class="doccomment">/// Errors that can occur during decoding and parsing a DDS image</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">enum</span> <span class="ident">DecoderError</span> {
-    <span class="doccomment">/// Wrong DDS channel width</span>
-    <span class="ident">PixelFormatSizeInvalid</span>(<span class="ident">u32</span>),
-    <span class="doccomment">/// Wrong DDS header size</span>
-    <span class="ident">HeaderSizeInvalid</span>(<span class="ident">u32</span>),
-    <span class="doccomment">/// Wrong DDS header flags</span>
-    <span class="ident">HeaderFlagsInvalid</span>(<span class="ident">u32</span>),
+<span class="doccomment">/// Errors that can occur during decoding and parsing a DDS image
+</span><span class="attribute">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+</span><span class="kw">enum </span>DecoderError {
+    <span class="doccomment">/// Wrong DDS channel width
+    </span>PixelFormatSizeInvalid(u32),
+    <span class="doccomment">/// Wrong DDS header size
+    </span>HeaderSizeInvalid(u32),
+    <span class="doccomment">/// Wrong DDS header flags
+    </span>HeaderFlagsInvalid(u32),
 
-    <span class="doccomment">/// Invalid DXGI format in DX10 header</span>
-    <span class="ident">DxgiFormatInvalid</span>(<span class="ident">u32</span>),
-    <span class="doccomment">/// Invalid resource dimension</span>
-    <span class="ident">ResourceDimensionInvalid</span>(<span class="ident">u32</span>),
-    <span class="doccomment">/// Invalid flags in DX10 header</span>
-    <span class="ident">Dx10FlagsInvalid</span>(<span class="ident">u32</span>),
-    <span class="doccomment">/// Invalid array size in DX10 header</span>
-    <span class="ident">Dx10ArraySizeInvalid</span>(<span class="ident">u32</span>),
+    <span class="doccomment">/// Invalid DXGI format in DX10 header
+    </span>DxgiFormatInvalid(u32),
+    <span class="doccomment">/// Invalid resource dimension
+    </span>ResourceDimensionInvalid(u32),
+    <span class="doccomment">/// Invalid flags in DX10 header
+    </span>Dx10FlagsInvalid(u32),
+    <span class="doccomment">/// Invalid array size in DX10 header
+    </span>Dx10ArraySizeInvalid(u32),
 
-    <span class="doccomment">/// DDS &quot;DDS &quot; signature invalid or missing</span>
-    <span class="ident">DdsSignatureInvalid</span>,
+    <span class="doccomment">/// DDS &quot;DDS &quot; signature invalid or missing
+    </span>DdsSignatureInvalid,
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">DecoderError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">DecoderError::PixelFormatSizeInvalid</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS PixelFormat size: {}&quot;</span>, <span class="ident">s</span>))
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            DecoderError::PixelFormatSizeInvalid(s) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS PixelFormat size: {}&quot;</span>, s))
             }
-            <span class="ident">DecoderError::HeaderSizeInvalid</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS header size: {}&quot;</span>, <span class="ident">s</span>))
+            DecoderError::HeaderSizeInvalid(s) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS header size: {}&quot;</span>, s))
             }
-            <span class="ident">DecoderError::HeaderFlagsInvalid</span>(<span class="ident">fs</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS header flags: {:#010X}&quot;</span>, <span class="ident">fs</span>))
+            DecoderError::HeaderFlagsInvalid(fs) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS header flags: {:#010X}&quot;</span>, fs))
             }
-            <span class="ident">DecoderError::DxgiFormatInvalid</span>(<span class="ident">df</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DXGI format: {}&quot;</span>, <span class="ident">df</span>))
+            DecoderError::DxgiFormatInvalid(df) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DXGI format: {}&quot;</span>, df))
             }
-            <span class="ident">DecoderError::ResourceDimensionInvalid</span>(<span class="ident">d</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS resource dimension: {}&quot;</span>, <span class="ident">d</span>))
+            DecoderError::ResourceDimensionInvalid(d) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS resource dimension: {}&quot;</span>, d))
             }
-            <span class="ident">DecoderError::Dx10FlagsInvalid</span>(<span class="ident">fs</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DX10 header flags: {:#010X}&quot;</span>, <span class="ident">fs</span>))
+            DecoderError::Dx10FlagsInvalid(fs) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DX10 header flags: {:#010X}&quot;</span>, fs))
             }
-            <span class="ident">DecoderError::Dx10ArraySizeInvalid</span>(<span class="ident">s</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DX10 array size: {}&quot;</span>, <span class="ident">s</span>))
+            DecoderError::Dx10ArraySizeInvalid(s) =&gt; {
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DX10 array size: {}&quot;</span>, s))
             }
-            <span class="ident">DecoderError::DdsSignatureInvalid</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;DDS signature not found&quot;</span>),
+            DecoderError::DdsSignatureInvalid =&gt; f.write_str(<span class="string">&quot;DDS signature not found&quot;</span>),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DecoderError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ImageError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">DecoderError</span>) -&gt; <span class="ident">ImageError</span> {
-        <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(<span class="ident">ImageFormat::Dds</span>.<span class="ident">into</span>(), <span class="ident">e</span>))
+<span class="kw">impl </span>From&lt;DecoderError&gt; <span class="kw">for </span>ImageError {
+    <span class="kw">fn </span>from(e: DecoderError) -&gt; ImageError {
+        ImageError::Decoding(DecodingError::new(ImageFormat::Dds.into(), e))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">error::Error</span> <span class="kw">for</span> <span class="ident">DecoderError</span> {}
+<span class="kw">impl </span>error::Error <span class="kw">for </span>DecoderError {}
 
-<span class="doccomment">/// Header used by DDS image files</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Header</span> {
-    <span class="ident">_flags</span>: <span class="ident">u32</span>,
-    <span class="ident">height</span>: <span class="ident">u32</span>,
-    <span class="ident">width</span>: <span class="ident">u32</span>,
-    <span class="ident">_pitch_or_linear_size</span>: <span class="ident">u32</span>,
-    <span class="ident">_depth</span>: <span class="ident">u32</span>,
-    <span class="ident">_mipmap_count</span>: <span class="ident">u32</span>,
-    <span class="ident">pixel_format</span>: <span class="ident">PixelFormat</span>,
-    <span class="ident">_caps</span>: <span class="ident">u32</span>,
-    <span class="ident">_caps2</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// Header used by DDS image files
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>Header {
+    _flags: u32,
+    height: u32,
+    width: u32,
+    _pitch_or_linear_size: u32,
+    _depth: u32,
+    _mipmap_count: u32,
+    pixel_format: PixelFormat,
+    _caps: u32,
+    _caps2: u32,
 }
 
-<span class="doccomment">/// Extended DX10 header used by some DDS image files</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">DX10Header</span> {
-    <span class="ident">dxgi_format</span>: <span class="ident">u32</span>,
-    <span class="ident">resource_dimension</span>: <span class="ident">u32</span>,
-    <span class="ident">misc_flag</span>: <span class="ident">u32</span>,
-    <span class="ident">array_size</span>: <span class="ident">u32</span>,
-    <span class="ident">misc_flags_2</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// Extended DX10 header used by some DDS image files
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>DX10Header {
+    dxgi_format: u32,
+    resource_dimension: u32,
+    misc_flag: u32,
+    array_size: u32,
+    misc_flags_2: u32,
 }
 
-<span class="doccomment">/// DDS pixel format</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">PixelFormat</span> {
-    <span class="ident">flags</span>: <span class="ident">u32</span>,
-    <span class="ident">fourcc</span>: [<span class="ident">u8</span>; <span class="number">4</span>],
-    <span class="ident">_rgb_bit_count</span>: <span class="ident">u32</span>,
-    <span class="ident">_r_bit_mask</span>: <span class="ident">u32</span>,
-    <span class="ident">_g_bit_mask</span>: <span class="ident">u32</span>,
-    <span class="ident">_b_bit_mask</span>: <span class="ident">u32</span>,
-    <span class="ident">_a_bit_mask</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// DDS pixel format
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>PixelFormat {
+    flags: u32,
+    fourcc: [u8; <span class="number">4</span>],
+    _rgb_bit_count: u32,
+    _r_bit_mask: u32,
+    _g_bit_mask: u32,
+    _b_bit_mask: u32,
+    _a_bit_mask: u32,
 }
 
-<span class="kw">impl</span> <span class="ident">PixelFormat</span> {
-    <span class="kw">fn</span> <span class="ident">from_reader</span>(<span class="ident">r</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Read</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">size</span> <span class="op">!</span><span class="op">=</span> <span class="number">32</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::PixelFormatSizeInvalid</span>(<span class="ident">size</span>).<span class="ident">into</span>());
+<span class="kw">impl </span>PixelFormat {
+    <span class="kw">fn </span>from_reader(r: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Read) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>size = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">if </span>size != <span class="number">32 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::PixelFormatSizeInvalid(size).into());
         }
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">flags</span>: <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-            <span class="ident">fourcc</span>: {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
-                <span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">v</span>)<span class="question-mark">?</span>;
-                <span class="ident">v</span>
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            flags: r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>,
+            fourcc: {
+                <span class="kw">let </span><span class="kw-2">mut </span>v = [<span class="number">0</span>; <span class="number">4</span>];
+                r.read_exact(<span class="kw-2">&amp;mut </span>v)<span class="question-mark">?</span>;
+                v
             },
-            <span class="ident">_rgb_bit_count</span>: <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-            <span class="ident">_r_bit_mask</span>: <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-            <span class="ident">_g_bit_mask</span>: <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-            <span class="ident">_b_bit_mask</span>: <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
-            <span class="ident">_a_bit_mask</span>: <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+            _rgb_bit_count: r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>,
+            _r_bit_mask: r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>,
+            _g_bit_mask: r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>,
+            _b_bit_mask: r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>,
+            _a_bit_mask: r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>,
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Header</span> {
-    <span class="kw">fn</span> <span class="ident">from_reader</span>(<span class="ident">r</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Read</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">size</span> <span class="op">!</span><span class="op">=</span> <span class="number">124</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HeaderSizeInvalid</span>(<span class="ident">size</span>).<span class="ident">into</span>());
+<span class="kw">impl </span>Header {
+    <span class="kw">fn </span>from_reader(r: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Read) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>size = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">if </span>size != <span class="number">124 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HeaderSizeInvalid(size).into());
         }
 
-        <span class="kw">const</span> <span class="ident">REQUIRED_FLAGS</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0x1</span> <span class="op">|</span> <span class="number">0x2</span> <span class="op">|</span> <span class="number">0x4</span> <span class="op">|</span> <span class="number">0x1000</span>;
-        <span class="kw">const</span> <span class="ident">VALID_FLAGS</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0x1</span> <span class="op">|</span> <span class="number">0x2</span> <span class="op">|</span> <span class="number">0x4</span> <span class="op">|</span> <span class="number">0x8</span> <span class="op">|</span> <span class="number">0x1000</span> <span class="op">|</span> <span class="number">0x20000</span> <span class="op">|</span> <span class="number">0x80000</span> <span class="op">|</span> <span class="number">0x800000</span>;
-        <span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> (<span class="ident">REQUIRED_FLAGS</span> <span class="op">|</span> <span class="op">!</span><span class="ident">VALID_FLAGS</span>) <span class="op">!</span><span class="op">=</span> <span class="ident">REQUIRED_FLAGS</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HeaderFlagsInvalid</span>(<span class="ident">flags</span>).<span class="ident">into</span>());
+        <span class="kw">const </span>REQUIRED_FLAGS: u32 = <span class="number">0x1 </span>| <span class="number">0x2 </span>| <span class="number">0x4 </span>| <span class="number">0x1000</span>;
+        <span class="kw">const </span>VALID_FLAGS: u32 = <span class="number">0x1 </span>| <span class="number">0x2 </span>| <span class="number">0x4 </span>| <span class="number">0x8 </span>| <span class="number">0x1000 </span>| <span class="number">0x20000 </span>| <span class="number">0x80000 </span>| <span class="number">0x800000</span>;
+        <span class="kw">let </span>flags = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">if </span>flags &amp; (REQUIRED_FLAGS | !VALID_FLAGS) != REQUIRED_FLAGS {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HeaderFlagsInvalid(flags).into());
         }
 
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">pitch_or_linear_size</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">depth</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">mipmap_count</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="comment">// Skip `dwReserved1`</span>
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">skipped</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span> <span class="op">*</span> <span class="number">11</span>];
-            <span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">skipped</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>height = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>width = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>pitch_or_linear_size = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>depth = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>mipmap_count = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="comment">// Skip `dwReserved1`
+        </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>skipped = [<span class="number">0</span>; <span class="number">4 </span>* <span class="number">11</span>];
+            r.read_exact(<span class="kw-2">&amp;mut </span>skipped)<span class="question-mark">?</span>;
         }
-        <span class="kw">let</span> <span class="ident">pixel_format</span> <span class="op">=</span> <span class="ident">PixelFormat::from_reader</span>(<span class="ident">r</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">caps</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">caps2</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="comment">// Skip `dwCaps3`, `dwCaps4`, `dwReserved2` (unused)</span>
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">skipped</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span> <span class="op">+</span> <span class="number">4</span> <span class="op">+</span> <span class="number">4</span>];
-            <span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">skipped</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>pixel_format = PixelFormat::from_reader(r)<span class="question-mark">?</span>;
+        <span class="kw">let </span>caps = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>caps2 = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="comment">// Skip `dwCaps3`, `dwCaps4`, `dwReserved2` (unused)
+        </span>{
+            <span class="kw">let </span><span class="kw-2">mut </span>skipped = [<span class="number">0</span>; <span class="number">4 </span>+ <span class="number">4 </span>+ <span class="number">4</span>];
+            r.read_exact(<span class="kw-2">&amp;mut </span>skipped)<span class="question-mark">?</span>;
         }
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">_flags</span>: <span class="ident">flags</span>,
-            <span class="ident">height</span>,
-            <span class="ident">width</span>,
-            <span class="ident">_pitch_or_linear_size</span>: <span class="ident">pitch_or_linear_size</span>,
-            <span class="ident">_depth</span>: <span class="ident">depth</span>,
-            <span class="ident">_mipmap_count</span>: <span class="ident">mipmap_count</span>,
-            <span class="ident">pixel_format</span>,
-            <span class="ident">_caps</span>: <span class="ident">caps</span>,
-            <span class="ident">_caps2</span>: <span class="ident">caps2</span>,
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            _flags: flags,
+            height,
+            width,
+            _pitch_or_linear_size: pitch_or_linear_size,
+            _depth: depth,
+            _mipmap_count: mipmap_count,
+            pixel_format,
+            _caps: caps,
+            _caps2: caps2,
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">DX10Header</span> {
-    <span class="kw">fn</span> <span class="ident">from_reader</span>(<span class="ident">r</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Read</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dxgi_format</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">resource_dimension</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">misc_flag</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">array_size</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">misc_flags_2</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+<span class="kw">impl </span>DX10Header {
+    <span class="kw">fn </span>from_reader(r: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Read) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>dxgi_format = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>resource_dimension = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>misc_flag = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>array_size = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
+        <span class="kw">let </span>misc_flags_2 = r.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">dx10_header</span> <span class="op">=</span> <span class="self">Self</span> {
-            <span class="ident">dxgi_format</span>,
-            <span class="ident">resource_dimension</span>,
-            <span class="ident">misc_flag</span>,
-            <span class="ident">array_size</span>,
-            <span class="ident">misc_flags_2</span>,
+        <span class="kw">let </span>dx10_header = <span class="self">Self </span>{
+            dxgi_format,
+            resource_dimension,
+            misc_flag,
+            array_size,
+            misc_flags_2,
         };
-        <span class="ident">dx10_header</span>.<span class="ident">validate</span>()<span class="question-mark">?</span>;
+        dx10_header.validate()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">dx10_header</span>)
+        <span class="prelude-val">Ok</span>(dx10_header)
     }
 
-    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ImageError</span><span class="op">&gt;</span> {
-        <span class="comment">// Note: see https://docs.microsoft.com/en-us/windows/win32/direct3ddds/dds-header-dxt10 for info on valid values</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">dxgi_format</span> <span class="op">&gt;</span> <span class="number">132</span> {
-            <span class="comment">// Invalid format</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::DxgiFormatInvalid</span>(<span class="self">self</span>.<span class="ident">dxgi_format</span>).<span class="ident">into</span>());
+    <span class="kw">fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ImageError&gt; {
+        <span class="comment">// Note: see https://docs.microsoft.com/en-us/windows/win32/direct3ddds/dds-header-dxt10 for info on valid values
+        </span><span class="kw">if </span><span class="self">self</span>.dxgi_format &gt; <span class="number">132 </span>{
+            <span class="comment">// Invalid format
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::DxgiFormatInvalid(<span class="self">self</span>.dxgi_format).into());
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">resource_dimension</span> <span class="op">&lt;</span> <span class="number">2</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">resource_dimension</span> <span class="op">&gt;</span> <span class="number">4</span> {
-            <span class="comment">// Invalid dimension</span>
-            <span class="comment">// Only 1D (2), 2D (3) and 3D (4) resource dimensions are allowed</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::ResourceDimensionInvalid</span>(<span class="self">self</span>.<span class="ident">resource_dimension</span>).<span class="ident">into</span>());
+        <span class="kw">if </span><span class="self">self</span>.resource_dimension &lt; <span class="number">2 </span>|| <span class="self">self</span>.resource_dimension &gt; <span class="number">4 </span>{
+            <span class="comment">// Invalid dimension
+            // Only 1D (2), 2D (3) and 3D (4) resource dimensions are allowed
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::ResourceDimensionInvalid(<span class="self">self</span>.resource_dimension).into());
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">misc_flag</span> <span class="op">!</span><span class="op">=</span> <span class="number">0x0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">misc_flag</span> <span class="op">!</span><span class="op">=</span> <span class="number">0x4</span> {
-            <span class="comment">// Invalid flag</span>
-            <span class="comment">// Only no (0x0) and DDS_RESOURCE_MISC_TEXTURECUBE (0x4) flags are allowed</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::Dx10FlagsInvalid</span>(<span class="self">self</span>.<span class="ident">misc_flag</span>).<span class="ident">into</span>());
+        <span class="kw">if </span><span class="self">self</span>.misc_flag != <span class="number">0x0 </span>&amp;&amp; <span class="self">self</span>.misc_flag != <span class="number">0x4 </span>{
+            <span class="comment">// Invalid flag
+            // Only no (0x0) and DDS_RESOURCE_MISC_TEXTURECUBE (0x4) flags are allowed
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::Dx10FlagsInvalid(<span class="self">self</span>.misc_flag).into());
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">resource_dimension</span> <span class="op">==</span> <span class="number">4</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">array_size</span> <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
-            <span class="comment">// Invalid array size</span>
-            <span class="comment">// 3D textures (resource dimension == 4) must have an array size of 1</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::Dx10ArraySizeInvalid</span>(<span class="self">self</span>.<span class="ident">array_size</span>).<span class="ident">into</span>());
+        <span class="kw">if </span><span class="self">self</span>.resource_dimension == <span class="number">4 </span>&amp;&amp; <span class="self">self</span>.array_size != <span class="number">1 </span>{
+            <span class="comment">// Invalid array size
+            // 3D textures (resource dimension == 4) must have an array size of 1
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::Dx10ArraySizeInvalid(<span class="self">self</span>.array_size).into());
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">misc_flags_2</span> <span class="op">&gt;</span> <span class="number">0x4</span> {
-            <span class="comment">// Invalid alpha flags</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::Dx10FlagsInvalid</span>(<span class="self">self</span>.<span class="ident">misc_flags_2</span>).<span class="ident">into</span>());
+        <span class="kw">if </span><span class="self">self</span>.misc_flags_2 &gt; <span class="number">0x4 </span>{
+            <span class="comment">// Invalid alpha flags
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::Dx10FlagsInvalid(<span class="self">self</span>.misc_flags_2).into());
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// The representation of a DDS decoder</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DdsDecoder</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-    <span class="ident">inner</span>: <span class="ident">DxtDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+<span class="doccomment">/// The representation of a DDS decoder
+</span><span class="kw">pub struct </span>DdsDecoder&lt;R: Read&gt; {
+    <span class="attribute">#[allow(deprecated)]
+    </span>inner: DxtDecoder&lt;R&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">DdsDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new decoder that decodes from the stream `r`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">r</span>: <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">magic</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">4</span>];
-        <span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">magic</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">magic</span> <span class="op">!</span><span class="op">=</span> <span class="string">b&quot;DDS &quot;</span>[..] {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::DdsSignatureInvalid</span>.<span class="ident">into</span>());
+<span class="kw">impl</span>&lt;R: Read&gt; DdsDecoder&lt;R&gt; {
+    <span class="doccomment">/// Create a new decoder that decodes from the stream `r`
+    </span><span class="kw">pub fn </span>new(<span class="kw-2">mut </span>r: R) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>magic = [<span class="number">0</span>; <span class="number">4</span>];
+        r.read_exact(<span class="kw-2">&amp;mut </span>magic)<span class="question-mark">?</span>;
+        <span class="kw">if </span>magic != <span class="string">b&quot;DDS &quot;</span>[..] {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::DdsSignatureInvalid.into());
         }
 
-        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">Header::from_reader</span>(<span class="kw-2">&amp;mut</span> <span class="ident">r</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>header = Header::from_reader(<span class="kw-2">&amp;mut </span>r)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">header</span>.<span class="ident">pixel_format</span>.<span class="ident">flags</span> <span class="op">&amp;</span> <span class="number">0x4</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-            <span class="kw">let</span> <span class="ident">variant</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">pixel_format</span>.<span class="ident">fourcc</span> {
-                <span class="string">b&quot;DXT1&quot;</span> =&gt; <span class="ident">DxtVariant::DXT1</span>,
-                <span class="string">b&quot;DXT3&quot;</span> =&gt; <span class="ident">DxtVariant::DXT3</span>,
-                <span class="string">b&quot;DXT5&quot;</span> =&gt; <span class="ident">DxtVariant::DXT5</span>,
-                <span class="string">b&quot;DX10&quot;</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">dx10_header</span> <span class="op">=</span> <span class="ident">DX10Header::from_reader</span>(<span class="kw-2">&amp;mut</span> <span class="ident">r</span>)<span class="question-mark">?</span>;
-                    <span class="comment">// Format equivalents were taken from https://docs.microsoft.com/en-us/windows/win32/direct3d11/texture-block-compression-in-direct3d-11</span>
-                    <span class="comment">// The enum integer values were taken from https://docs.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format</span>
-                    <span class="comment">// DXT1 represents the different BC1 variants, DTX3 represents the different BC2 variants and DTX5 represents the different BC3 variants</span>
-                    <span class="kw">match</span> <span class="ident">dx10_header</span>.<span class="ident">dxgi_format</span> {
-                        <span class="number">70</span> <span class="op">|</span> <span class="number">71</span> <span class="op">|</span> <span class="number">72</span> =&gt; <span class="ident">DxtVariant::DXT1</span>, <span class="comment">// DXGI_FORMAT_BC1_TYPELESS, DXGI_FORMAT_BC1_UNORM or DXGI_FORMAT_BC1_UNORM_SRGB</span>
-                        <span class="number">73</span> <span class="op">|</span> <span class="number">74</span> <span class="op">|</span> <span class="number">75</span> =&gt; <span class="ident">DxtVariant::DXT3</span>, <span class="comment">// DXGI_FORMAT_BC2_TYPELESS, DXGI_FORMAT_BC2_UNORM or DXGI_FORMAT_BC2_UNORM_SRGB</span>
-                        <span class="number">76</span> <span class="op">|</span> <span class="number">77</span> <span class="op">|</span> <span class="number">78</span> =&gt; <span class="ident">DxtVariant::DXT5</span>, <span class="comment">// DXGI_FORMAT_BC3_TYPELESS, DXGI_FORMAT_BC3_UNORM or DXGI_FORMAT_BC3_UNORM_SRGB</span>
-                        <span class="kw">_</span> =&gt; {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                                <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                                    <span class="ident">ImageFormat::Dds</span>.<span class="ident">into</span>(),
-                                    <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="macro">format!</span>(
+        <span class="kw">if </span>header.pixel_format.flags &amp; <span class="number">0x4 </span>!= <span class="number">0 </span>{
+            <span class="attribute">#[allow(deprecated)]
+            </span><span class="kw">let </span>variant = <span class="kw">match </span><span class="kw-2">&amp;</span>header.pixel_format.fourcc {
+                <span class="string">b&quot;DXT1&quot; </span>=&gt; DxtVariant::DXT1,
+                <span class="string">b&quot;DXT3&quot; </span>=&gt; DxtVariant::DXT3,
+                <span class="string">b&quot;DXT5&quot; </span>=&gt; DxtVariant::DXT5,
+                <span class="string">b&quot;DX10&quot; </span>=&gt; {
+                    <span class="kw">let </span>dx10_header = DX10Header::from_reader(<span class="kw-2">&amp;mut </span>r)<span class="question-mark">?</span>;
+                    <span class="comment">// Format equivalents were taken from https://docs.microsoft.com/en-us/windows/win32/direct3d11/texture-block-compression-in-direct3d-11
+                    // The enum integer values were taken from https://docs.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format
+                    // DXT1 represents the different BC1 variants, DTX3 represents the different BC2 variants and DTX5 represents the different BC3 variants
+                    </span><span class="kw">match </span>dx10_header.dxgi_format {
+                        <span class="number">70 </span>| <span class="number">71 </span>| <span class="number">72 </span>=&gt; DxtVariant::DXT1, <span class="comment">// DXGI_FORMAT_BC1_TYPELESS, DXGI_FORMAT_BC1_UNORM or DXGI_FORMAT_BC1_UNORM_SRGB
+                        </span><span class="number">73 </span>| <span class="number">74 </span>| <span class="number">75 </span>=&gt; DxtVariant::DXT3, <span class="comment">// DXGI_FORMAT_BC2_TYPELESS, DXGI_FORMAT_BC2_UNORM or DXGI_FORMAT_BC2_UNORM_SRGB
+                        </span><span class="number">76 </span>| <span class="number">77 </span>| <span class="number">78 </span>=&gt; DxtVariant::DXT5, <span class="comment">// DXGI_FORMAT_BC3_TYPELESS, DXGI_FORMAT_BC3_UNORM or DXGI_FORMAT_BC3_UNORM_SRGB
+                        </span><span class="kw">_ </span>=&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                                UnsupportedError::from_format_and_kind(
+                                    ImageFormat::Dds.into(),
+                                    UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
                                         <span class="string">&quot;DDS DXGI Format {}&quot;</span>,
-                                        <span class="ident">dx10_header</span>.<span class="ident">dxgi_format</span>
+                                        dx10_header.dxgi_format
                                     )),
                                 ),
                             ))
                         }
                     }
                 }
-                <span class="ident">fourcc</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                        <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                            <span class="ident">ImageFormat::Dds</span>.<span class="ident">into</span>(),
-                            <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="macro">format!</span>(
+                fourcc =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                        UnsupportedError::from_format_and_kind(
+                            ImageFormat::Dds.into(),
+                            UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
                                 <span class="string">&quot;DDS FourCC {:?}&quot;</span>,
-                                <span class="ident">fourcc</span>
+                                fourcc
                             )),
                         ),
                     ))
                 }
             };
 
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-            <span class="kw">let</span> <span class="ident">bytes_per_pixel</span> <span class="op">=</span> <span class="ident">variant</span>.<span class="ident">color_type</span>().<span class="ident">bytes_per_pixel</span>();
+            <span class="attribute">#[allow(deprecated)]
+            </span><span class="kw">let </span>bytes_per_pixel = variant.color_type().bytes_per_pixel();
 
-            <span class="kw">if</span> <span class="ident"><span class="kw">crate</span>::utils::check_dimension_overflow</span>(<span class="ident">header</span>.<span class="ident">width</span>, <span class="ident">header</span>.<span class="ident">height</span>, <span class="ident">bytes_per_pixel</span>)
+            <span class="kw">if </span><span class="kw">crate</span>::utils::check_dimension_overflow(header.width, header.height, bytes_per_pixel)
             {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                    <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                        <span class="ident">ImageFormat::Dds</span>.<span class="ident">into</span>(),
-                        <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="macro">format!</span>(
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Dds.into(),
+                        UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
                             <span class="string">&quot;Image dimensions ({}x{}) are too large&quot;</span>,
-                            <span class="ident">header</span>.<span class="ident">width</span>, <span class="ident">header</span>.<span class="ident">height</span>
+                            header.width, header.height
                         )),
                     ),
                 ));
             }
 
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-            <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">DxtDecoder::new</span>(<span class="ident">r</span>, <span class="ident">header</span>.<span class="ident">width</span>, <span class="ident">header</span>.<span class="ident">height</span>, <span class="ident">variant</span>)<span class="question-mark">?</span>;
-            <span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">inner</span> })
-        } <span class="kw">else</span> {
-            <span class="comment">// For now, supports only DXT variants</span>
-            <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                    <span class="ident">ImageFormat::Dds</span>.<span class="ident">into</span>(),
-                    <span class="ident">UnsupportedErrorKind::Format</span>(<span class="ident">ImageFormatHint::Name</span>(<span class="string">&quot;DDS&quot;</span>.<span class="ident">to_string</span>())),
+            <span class="attribute">#[allow(deprecated)]
+            </span><span class="kw">let </span>inner = DxtDecoder::new(r, header.width, header.height, variant)<span class="question-mark">?</span>;
+            <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ inner })
+        } <span class="kw">else </span>{
+            <span class="comment">// For now, supports only DXT variants
+            </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                UnsupportedError::from_format_and_kind(
+                    ImageFormat::Dds.into(),
+                    UnsupportedErrorKind::Format(ImageFormatHint::Name(<span class="string">&quot;DDS&quot;</span>.to_string())),
                 ),
             ))
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">ImageDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DdsDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-    <span class="kw">type</span> <span class="ident">Reader</span> <span class="op">=</span> <span class="ident">DxtReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>DdsDecoder&lt;R&gt; {
+    <span class="attribute">#[allow(deprecated)]
+    </span><span class="kw">type </span>Reader = DxtReader&lt;R&gt;;
 
-    <span class="kw">fn</span> <span class="ident">dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">dimensions</span>()
+    <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
+        <span class="self">self</span>.inner.dimensions()
     }
 
-    <span class="kw">fn</span> <span class="ident">color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ColorType</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">color_type</span>()
+    <span class="kw">fn </span>color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ColorType {
+        <span class="self">self</span>.inner.color_type()
     }
 
-    <span class="kw">fn</span> <span class="ident">scanline_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">scanline_bytes</span>()
+    <span class="kw">fn </span>scanline_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.inner.scanline_bytes()
     }
 
-    <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">into_reader</span>()
+    <span class="kw">fn </span>into_reader(<span class="self">self</span>) -&gt; ImageResult&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="self">self</span>.inner.into_reader()
     }
 
-    <span class="kw">fn</span> <span class="ident">read_image</span>(<span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">read_image</span>(<span class="ident">buf</span>)
+    <span class="kw">fn </span>read_image(<span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.inner.read_image(buf)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">dimension_overflow</span>() {
-        <span class="comment">// A DXT1 header set to 0xFFFF_FFFC width and height (the highest u32%4 == 0)</span>
-        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>dimension_overflow() {
+        <span class="comment">// A DXT1 header set to 0xFFFF_FFFC width and height (the highest u32%4 == 0)
+        </span><span class="kw">let </span>header = <span class="macro">vec!</span>[
             <span class="number">0x44</span>, <span class="number">0x44</span>, <span class="number">0x53</span>, <span class="number">0x20</span>, <span class="number">0x7C</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x7</span>, <span class="number">0x10</span>, <span class="number">0x8</span>, <span class="number">0x0</span>, <span class="number">0xFC</span>, <span class="number">0xFF</span>, <span class="number">0xFF</span>,
             <span class="number">0xFF</span>, <span class="number">0xFC</span>, <span class="number">0xFF</span>, <span class="number">0xFF</span>, <span class="number">0xFF</span>, <span class="number">0x0</span>, <span class="number">0xC0</span>, <span class="number">0x12</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x1</span>, <span class="number">0x0</span>, <span class="number">0x0</span>,
             <span class="number">0x0</span>, <span class="number">0x49</span>, <span class="number">0x4D</span>, <span class="number">0x41</span>, <span class="number">0x47</span>, <span class="number">0x45</span>, <span class="number">0x4D</span>, <span class="number">0x41</span>, <span class="number">0x47</span>, <span class="number">0x49</span>, <span class="number">0x43</span>, <span class="number">0x4B</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>,
@@ -751,9 +745,8 @@
             <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>,
         ];
 
-        <span class="macro">assert!</span>(<span class="ident">DdsDecoder::new</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>[..]).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(DdsDecoder::new(<span class="kw-2">&amp;</span>header[..]).is_err());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

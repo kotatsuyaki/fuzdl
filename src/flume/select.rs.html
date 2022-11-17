@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/flume-0.10.14/src/select.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>select.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../flume/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/flume-0.10.14/src/select.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>select.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../flume/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -408,410 +402,409 @@
 <span id="402">402</span>
 <span id="403">403</span>
 <span id="404">404</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Types that permit waiting upon multiple blocking operations using the [`Selector`] interface.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Types that permit waiting upon multiple blocking operations using the [`Selector`] interface.
 
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">marker::PhantomData</span>};
+</span><span class="kw">use crate</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::{any::Any, marker::PhantomData};
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;eventual-fairness&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">nanorand::Rng</span>;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;eventual-fairness&quot;</span>)]
+</span><span class="kw">use </span>nanorand::Rng;
 
-<span class="comment">// A unique token corresponding to an event in a selector</span>
-<span class="kw">type</span> <span class="ident">Token</span> <span class="op">=</span> <span class="ident">usize</span>;
+<span class="comment">// A unique token corresponding to an event in a selector
+</span><span class="kw">type </span>Token = usize;
 
-<span class="kw">struct</span> <span class="ident">SelectSignal</span>(
-    <span class="ident">thread::Thread</span>,
-    <span class="ident">Token</span>,
-    <span class="ident">AtomicBool</span>,
-    <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Spinlock</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>SelectSignal(
+    thread::Thread,
+    Token,
+    AtomicBool,
+    Arc&lt;Spinlock&lt;VecDeque&lt;Token&gt;&gt;&gt;,
 );
 
-<span class="kw">impl</span> <span class="ident">Signal</span> <span class="kw">for</span> <span class="ident">SelectSignal</span> {
-    <span class="kw">fn</span> <span class="ident">fire</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">2</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering::SeqCst</span>);
-        <span class="self">self</span>.<span class="number">3</span>.<span class="ident">lock</span>().<span class="ident">push_back</span>(<span class="self">self</span>.<span class="number">1</span>);
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">unpark</span>();
-        <span class="bool-val">false</span>
-    }
+<span class="kw">impl </span>Signal <span class="kw">for </span>SelectSignal {
+    <span class="kw">fn </span>fire(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">2</span>.store(<span class="bool-val">true</span>, Ordering::SeqCst);
+        <span class="self">self</span>.<span class="number">3</span>.lock().push_back(<span class="self">self</span>.<span class="number">1</span>);
+        <span class="self">self</span>.<span class="number">0</span>.unpark();
+        <span class="bool-val">false
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>
-    }
-    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> () {
-        <span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*const</span> ()
+    <span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Any + <span class="lifetime">&#39;static</span>) {
+        <span class="self">self
+    </span>}
+    <span class="kw">fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>() {
+        <span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span><span class="kw-2">*const </span>()
     }
 }
 
-<span class="kw">trait</span> <span class="ident">Selection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">init</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">deinit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
+<span class="kw">trait </span>Selection&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>init(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt;;
+    <span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt;;
+    <span class="kw">fn </span>deinit(<span class="kw-2">&amp;mut </span><span class="self">self</span>);
 }
 
-<span class="doccomment">/// An error that may be emitted when attempting to wait for a value on a receiver.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SelectError</span> {
-    <span class="doccomment">/// A timeout occurred when waiting on a `Selector`.</span>
-    <span class="ident">Timeout</span>,
+<span class="doccomment">/// An error that may be emitted when attempting to wait for a value on a receiver.
+</span><span class="attribute">#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>SelectError {
+    <span class="doccomment">/// A timeout occurred when waiting on a `Selector`.
+    </span>Timeout,
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">SelectError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">SelectError::Timeout</span> =&gt; <span class="string">&quot;timeout occurred&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>SelectError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            SelectError::Timeout =&gt; <span class="string">&quot;timeout occurred&quot;</span>.fmt(f),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">std::error::Error</span> <span class="kw">for</span> <span class="ident">SelectError</span> {}
+<span class="kw">impl </span>std::error::Error <span class="kw">for </span>SelectError {}
 
-<span class="doccomment">/// A type used to wait upon multiple blocking operations at once.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A [`Selector`] implements [`select`](https://en.wikipedia.org/wiki/Select_(Unix))-like behaviour,</span>
-<span class="doccomment">/// allowing a thread to wait upon the result of more than one operation at once.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// let (tx0, rx0) = flume::unbounded();</span>
-<span class="doccomment">/// let (tx1, rx1) = flume::unbounded();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// std::thread::spawn(move || {</span>
-<span class="doccomment">///     tx0.send(true).unwrap();</span>
-<span class="doccomment">///     tx1.send(42).unwrap();</span>
-<span class="doccomment">/// });</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// flume::Selector::new()</span>
-<span class="doccomment">///     .recv(&amp;rx0, |b| println!(&quot;Received {:?}&quot;, b))</span>
-<span class="doccomment">///     .recv(&amp;rx1, |n| println!(&quot;Received {:?}&quot;, n))</span>
-<span class="doccomment">///     .wait();</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Selector</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">selections</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Selection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">next_poll</span>: <span class="ident">usize</span>,
-    <span class="ident">signalled</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Spinlock</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;eventual-fairness&quot;</span>)]</span>
-    <span class="ident">rng</span>: <span class="ident">nanorand::WyRand</span>,
-    <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">*const</span> ()<span class="op">&gt;</span>,
+<span class="doccomment">/// A type used to wait upon multiple blocking operations at once.
+///
+/// A [`Selector`] implements [`select`](https://en.wikipedia.org/wiki/Select_(Unix))-like behaviour,
+/// allowing a thread to wait upon the result of more than one operation at once.
+///
+/// # Examples
+/// ```
+/// let (tx0, rx0) = flume::unbounded();
+/// let (tx1, rx1) = flume::unbounded();
+///
+/// std::thread::spawn(move || {
+///     tx0.send(true).unwrap();
+///     tx1.send(42).unwrap();
+/// });
+///
+/// flume::Selector::new()
+///     .recv(&amp;rx0, |b| println!(&quot;Received {:?}&quot;, b))
+///     .recv(&amp;rx1, |n| println!(&quot;Received {:?}&quot;, n))
+///     .wait();
+/// ```
+</span><span class="kw">pub struct </span>Selector&lt;<span class="lifetime">&#39;a</span>, T: <span class="lifetime">&#39;a</span>&gt; {
+    selections: Vec&lt;Box&lt;<span class="kw">dyn </span>Selection&lt;<span class="lifetime">&#39;a</span>, T&gt; + <span class="lifetime">&#39;a</span>&gt;&gt;,
+    next_poll: usize,
+    signalled: Arc&lt;Spinlock&lt;VecDeque&lt;Token&gt;&gt;&gt;,
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;eventual-fairness&quot;</span>)]
+    </span>rng: nanorand::WyRand,
+    phantom: PhantomData&lt;<span class="kw-2">*const </span>()&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Selector</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="lifetime">&#39;a</span>&gt; Default <span class="kw">for </span>Selector&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Selector</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Selector&quot;</span>).<span class="ident">finish</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="lifetime">&#39;a</span>&gt; fmt::Debug <span class="kw">for </span>Selector&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        f.debug_struct(<span class="string">&quot;Selector&quot;</span>).finish()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Selector</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new selector.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selections</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">next_poll</span>: <span class="number">0</span>,
-            <span class="ident">signalled</span>: <span class="ident">Arc::default</span>(),
-            <span class="ident">phantom</span>: <span class="ident">PhantomData::default</span>(),
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;eventual-fairness&quot;</span>)]</span>
-            <span class="ident">rng</span>: <span class="ident">nanorand::WyRand::new</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Selector&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="doccomment">/// Create a new selector.
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selections: Vec::new(),
+            next_poll: <span class="number">0</span>,
+            signalled: Arc::default(),
+            phantom: PhantomData::default(),
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;eventual-fairness&quot;</span>)]
+            </span>rng: nanorand::WyRand::new(),
         }
     }
 
-    <span class="doccomment">/// Add a send operation to the selector that sends the provided value.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Once added, the selector can be used to run the provided handler function on completion of this operation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">T</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">sender</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>,
-        <span class="ident">msg</span>: <span class="ident">U</span>,
-        <span class="ident">mapper</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">struct</span> <span class="ident">SendSelection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span> {
-            <span class="ident">sender</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>,
-            <span class="ident">msg</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>,
-            <span class="ident">token</span>: <span class="ident">Token</span>,
-            <span class="ident">signalled</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Spinlock</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">hook</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">SelectSignal</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">mapper</span>: <span class="ident">F</span>,
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Add a send operation to the selector that sends the provided value.
+    ///
+    /// Once added, the selector can be used to run the provided handler function on completion of this operation.
+    </span><span class="kw">pub fn </span>send&lt;U, F: FnMut(<span class="prelude-ty">Result</span>&lt;(), SendError&lt;U&gt;&gt;) -&gt; T + <span class="lifetime">&#39;a</span>&gt;(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        sender: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Sender&lt;U&gt;,
+        msg: U,
+        mapper: F,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">struct </span>SendSelection&lt;<span class="lifetime">&#39;a</span>, T, F, U&gt; {
+            sender: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Sender&lt;U&gt;,
+            msg: <span class="prelude-ty">Option</span>&lt;U&gt;,
+            token: Token,
+            signalled: Arc&lt;Spinlock&lt;VecDeque&lt;Token&gt;&gt;&gt;,
+            hook: <span class="prelude-ty">Option</span>&lt;Arc&lt;Hook&lt;U, SelectSignal&gt;&gt;&gt;,
+            mapper: F,
+            phantom: PhantomData&lt;T&gt;,
         }
 
-        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Selection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SendSelection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span>
-        <span class="kw">where</span>
-            <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">T</span>,
+        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T, F, U&gt; Selection&lt;<span class="lifetime">&#39;a</span>, T&gt; <span class="kw">for </span>SendSelection&lt;<span class="lifetime">&#39;a</span>, T, F, U&gt;
+        <span class="kw">where
+            </span>F: FnMut(<span class="prelude-ty">Result</span>&lt;(), SendError&lt;U&gt;&gt;) -&gt; T,
         {
-            <span class="kw">fn</span> <span class="ident">init</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">token</span>;
-                <span class="kw">let</span> <span class="ident">signalled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">signalled</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>.<span class="ident">send</span>(
-                    <span class="self">self</span>.<span class="ident">msg</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>(),
+            <span class="kw">fn </span>init(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+                <span class="kw">let </span>token = <span class="self">self</span>.token;
+                <span class="kw">let </span>signalled = <span class="self">self</span>.signalled.clone();
+                <span class="kw">let </span>r = <span class="self">self</span>.sender.shared.send(
+                    <span class="self">self</span>.msg.take().unwrap(),
                     <span class="bool-val">true</span>,
-                    <span class="op">|</span><span class="ident">msg</span><span class="op">|</span> {
-                        <span class="ident">Hook::slot</span>(
-                            <span class="prelude-val">Some</span>(<span class="ident">msg</span>),
-                            <span class="ident">SelectSignal</span>(
-                                <span class="ident">thread::current</span>(),
-                                <span class="ident">token</span>,
-                                <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>),
-                                <span class="ident">signalled</span>,
+                    |msg| {
+                        Hook::slot(
+                            <span class="prelude-val">Some</span>(msg),
+                            SelectSignal(
+                                thread::current(),
+                                token,
+                                AtomicBool::new(<span class="bool-val">false</span>),
+                                signalled,
                             ),
                         )
                     },
-                    <span class="comment">// Always runs</span>
-                    <span class="op">|</span><span class="ident">h</span><span class="op">|</span> {
-                        <span class="self">self</span>.<span class="ident">hook</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">h</span>);
+                    <span class="comment">// Always runs
+                    </span>|h| {
+                        <span class="self">self</span>.hook = <span class="prelude-val">Some</span>(h);
                         <span class="prelude-val">Ok</span>(())
                     },
                 );
 
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">is_none</span>() {
-                    <span class="prelude-val">Some</span>((<span class="self">self</span>.<span class="ident">mapper</span>)(<span class="kw">match</span> <span class="ident">r</span> {
+                <span class="kw">if </span><span class="self">self</span>.hook.is_none() {
+                    <span class="prelude-val">Some</span>((<span class="self">self</span>.mapper)(<span class="kw">match </span>r {
                         <span class="prelude-val">Ok</span>(()) =&gt; <span class="prelude-val">Ok</span>(()),
-                        <span class="prelude-val">Err</span>(<span class="ident">TrySendTimeoutError::Disconnected</span>(<span class="ident">msg</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">SendError</span>(<span class="ident">msg</span>)),
-                        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                        <span class="prelude-val">Err</span>(TrySendTimeoutError::Disconnected(msg)) =&gt; <span class="prelude-val">Err</span>(SendError(msg)),
+                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                     }))
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             }
 
-            <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>() {
-                    <span class="comment">// Check the hook one last time</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">as_ref</span>()<span class="question-mark">?</span>.<span class="ident">try_take</span>() {
-                        <span class="prelude-val">Err</span>(<span class="ident">SendError</span>(<span class="ident">msg</span>))
-                    } <span class="kw">else</span> {
+            <span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+                <span class="kw">let </span>res = <span class="kw">if </span><span class="self">self</span>.sender.shared.is_disconnected() {
+                    <span class="comment">// Check the hook one last time
+                    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = <span class="self">self</span>.hook.as_ref()<span class="question-mark">?</span>.try_take() {
+                        <span class="prelude-val">Err</span>(SendError(msg))
+                    } <span class="kw">else </span>{
                         <span class="prelude-val">Ok</span>(())
                     }
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">is_empty</span>() {
-                    <span class="comment">// The message was sent</span>
-                    <span class="prelude-val">Ok</span>(())
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+                } <span class="kw">else if </span><span class="self">self</span>.hook.as_ref().unwrap().is_empty() {
+                    <span class="comment">// The message was sent
+                    </span><span class="prelude-val">Ok</span>(())
+                } <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">None</span>;
                 };
 
-                <span class="prelude-val">Some</span>((<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">mapper</span>)(<span class="ident">res</span>))
+                <span class="prelude-val">Some</span>((<span class="kw-2">&amp;mut </span><span class="self">self</span>.mapper)(res))
             }
 
-            <span class="kw">fn</span> <span class="ident">deinit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">hook</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">take</span>() {
-                    <span class="comment">// Remove hook</span>
-                    <span class="kw">let</span> <span class="ident">hook</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="kw">dyn</span> <span class="ident">Signal</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hook</span>;
-                    <span class="ident">wait_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>.<span class="ident">chan</span>)
-                        .<span class="ident">sending</span>
-                        .<span class="ident">as_mut</span>()
-                        .<span class="ident">unwrap</span>()
-                        .<span class="number">1</span>
-                        .<span class="ident">retain</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">hook</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>());
+            <span class="kw">fn </span>deinit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(hook) = <span class="self">self</span>.hook.take() {
+                    <span class="comment">// Remove hook
+                    </span><span class="kw">let </span>hook: Arc&lt;Hook&lt;U, <span class="kw">dyn </span>Signal&gt;&gt; = hook;
+                    wait_lock(<span class="kw-2">&amp;</span><span class="self">self</span>.sender.shared.chan)
+                        .sending
+                        .as_mut()
+                        .unwrap()
+                        .<span class="number">1
+                        </span>.retain(|s| s.signal().as_ptr() != hook.signal().as_ptr());
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">push</span>(<span class="ident">Box::new</span>(<span class="ident">SendSelection</span> {
-            <span class="ident">sender</span>,
-            <span class="ident">msg</span>: <span class="prelude-val">Some</span>(<span class="ident">msg</span>),
-            <span class="ident">token</span>,
-            <span class="ident">signalled</span>: <span class="self">self</span>.<span class="ident">signalled</span>.<span class="ident">clone</span>(),
-            <span class="ident">hook</span>: <span class="prelude-val">None</span>,
-            <span class="ident">mapper</span>,
-            <span class="ident">phantom</span>: <span class="ident">Default::default</span>(),
+        <span class="kw">let </span>token = <span class="self">self</span>.selections.len();
+        <span class="self">self</span>.selections.push(Box::new(SendSelection {
+            sender,
+            msg: <span class="prelude-val">Some</span>(msg),
+            token,
+            signalled: <span class="self">self</span>.signalled.clone(),
+            hook: <span class="prelude-val">None</span>,
+            mapper,
+            phantom: Default::default(),
         }));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Add a receive operation to the selector.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Once added, the selector can be used to run the provided handler function on completion of this operation.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recv</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">RecvError</span><span class="op">&gt;</span>) -&gt; <span class="ident">T</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">receiver</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>,
-        <span class="ident">mapper</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">struct</span> <span class="ident">RecvSelection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span> {
-            <span class="ident">receiver</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>,
-            <span class="ident">token</span>: <span class="ident">Token</span>,
-            <span class="ident">signalled</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Spinlock</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">hook</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">SelectSignal</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-            <span class="ident">mapper</span>: <span class="ident">F</span>,
-            <span class="ident">received</span>: <span class="ident">bool</span>,
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Add a receive operation to the selector.
+    ///
+    /// Once added, the selector can be used to run the provided handler function on completion of this operation.
+    </span><span class="kw">pub fn </span>recv&lt;U, F: FnMut(<span class="prelude-ty">Result</span>&lt;U, RecvError&gt;) -&gt; T + <span class="lifetime">&#39;a</span>&gt;(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        receiver: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Receiver&lt;U&gt;,
+        mapper: F,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">struct </span>RecvSelection&lt;<span class="lifetime">&#39;a</span>, T, F, U&gt; {
+            receiver: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Receiver&lt;U&gt;,
+            token: Token,
+            signalled: Arc&lt;Spinlock&lt;VecDeque&lt;Token&gt;&gt;&gt;,
+            hook: <span class="prelude-ty">Option</span>&lt;Arc&lt;Hook&lt;U, SelectSignal&gt;&gt;&gt;,
+            mapper: F,
+            received: bool,
+            phantom: PhantomData&lt;T&gt;,
         }
 
-        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Selection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RecvSelection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span>
-        <span class="kw">where</span>
-            <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">RecvError</span><span class="op">&gt;</span>) -&gt; <span class="ident">T</span>,
+        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T, F, U&gt; Selection&lt;<span class="lifetime">&#39;a</span>, T&gt; <span class="kw">for </span>RecvSelection&lt;<span class="lifetime">&#39;a</span>, T, F, U&gt;
+        <span class="kw">where
+            </span>F: FnMut(<span class="prelude-ty">Result</span>&lt;U, RecvError&gt;) -&gt; T,
         {
-            <span class="kw">fn</span> <span class="ident">init</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">token</span>;
-                <span class="kw">let</span> <span class="ident">signalled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">signalled</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">recv</span>(
+            <span class="kw">fn </span>init(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+                <span class="kw">let </span>token = <span class="self">self</span>.token;
+                <span class="kw">let </span>signalled = <span class="self">self</span>.signalled.clone();
+                <span class="kw">let </span>r = <span class="self">self</span>.receiver.shared.recv(
                     <span class="bool-val">true</span>,
-                    <span class="op">|</span><span class="op">|</span> {
-                        <span class="ident">Hook::trigger</span>(<span class="ident">SelectSignal</span>(
-                            <span class="ident">thread::current</span>(),
-                            <span class="ident">token</span>,
-                            <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>),
-                            <span class="ident">signalled</span>,
+                    || {
+                        Hook::trigger(SelectSignal(
+                            thread::current(),
+                            token,
+                            AtomicBool::new(<span class="bool-val">false</span>),
+                            signalled,
                         ))
                     },
-                    <span class="comment">// Always runs</span>
-                    <span class="op">|</span><span class="ident">h</span><span class="op">|</span> {
-                        <span class="self">self</span>.<span class="ident">hook</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">h</span>);
-                        <span class="prelude-val">Err</span>(<span class="ident">TryRecvTimeoutError::Timeout</span>)
+                    <span class="comment">// Always runs
+                    </span>|h| {
+                        <span class="self">self</span>.hook = <span class="prelude-val">Some</span>(h);
+                        <span class="prelude-val">Err</span>(TryRecvTimeoutError::Timeout)
                     },
                 );
 
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">is_none</span>() {
-                    <span class="prelude-val">Some</span>((<span class="self">self</span>.<span class="ident">mapper</span>)(<span class="kw">match</span> <span class="ident">r</span> {
-                        <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">msg</span>),
-                        <span class="prelude-val">Err</span>(<span class="ident">TryRecvTimeoutError::Disconnected</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">RecvError::Disconnected</span>),
-                        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                <span class="kw">if </span><span class="self">self</span>.hook.is_none() {
+                    <span class="prelude-val">Some</span>((<span class="self">self</span>.mapper)(<span class="kw">match </span>r {
+                        <span class="prelude-val">Ok</span>(msg) =&gt; <span class="prelude-val">Ok</span>(msg),
+                        <span class="prelude-val">Err</span>(TryRecvTimeoutError::Disconnected) =&gt; <span class="prelude-val">Err</span>(RecvError::Disconnected),
+                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                     }))
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">None</span>
-                }
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">None
+                </span>}
             }
 
-            <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">try_recv</span>() {
-                    <span class="self">self</span>.<span class="ident">received</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                    <span class="prelude-val">Ok</span>(<span class="ident">msg</span>)
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>() {
-                    <span class="prelude-val">Err</span>(<span class="ident">RecvError::Disconnected</span>)
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+            <span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+                <span class="kw">let </span>res = <span class="kw">if let </span><span class="prelude-val">Ok</span>(msg) = <span class="self">self</span>.receiver.try_recv() {
+                    <span class="self">self</span>.received = <span class="bool-val">true</span>;
+                    <span class="prelude-val">Ok</span>(msg)
+                } <span class="kw">else if </span><span class="self">self</span>.receiver.shared.is_disconnected() {
+                    <span class="prelude-val">Err</span>(RecvError::Disconnected)
+                } <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">None</span>;
                 };
 
-                <span class="prelude-val">Some</span>((<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">mapper</span>)(<span class="ident">res</span>))
+                <span class="prelude-val">Some</span>((<span class="kw-2">&amp;mut </span><span class="self">self</span>.mapper)(res))
             }
 
-            <span class="kw">fn</span> <span class="ident">deinit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">hook</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">take</span>() {
-                    <span class="comment">// Remove hook</span>
-                    <span class="kw">let</span> <span class="ident">hook</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="kw">dyn</span> <span class="ident">Signal</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hook</span>;
-                    <span class="ident">wait_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">chan</span>)
-                        .<span class="ident">waiting</span>
-                        .<span class="ident">retain</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">hook</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>());
-                    <span class="comment">// If we were woken, but never polled, wake up another</span>
-                    <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">received</span>
-                        <span class="op">&amp;&amp;</span> <span class="ident">hook</span>
-                            .<span class="ident">signal</span>()
-                            .<span class="ident">as_any</span>()
-                            .<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">SelectSignal</span><span class="op">&gt;</span>()
-                            .<span class="ident">unwrap</span>()
-                            .<span class="number">2</span>
-                            .<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>)
+            <span class="kw">fn </span>deinit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(hook) = <span class="self">self</span>.hook.take() {
+                    <span class="comment">// Remove hook
+                    </span><span class="kw">let </span>hook: Arc&lt;Hook&lt;U, <span class="kw">dyn </span>Signal&gt;&gt; = hook;
+                    wait_lock(<span class="kw-2">&amp;</span><span class="self">self</span>.receiver.shared.chan)
+                        .waiting
+                        .retain(|s| s.signal().as_ptr() != hook.signal().as_ptr());
+                    <span class="comment">// If we were woken, but never polled, wake up another
+                    </span><span class="kw">if </span>!<span class="self">self</span>.received
+                        &amp;&amp; hook
+                            .signal()
+                            .as_any()
+                            .downcast_ref::&lt;SelectSignal&gt;()
+                            .unwrap()
+                            .<span class="number">2
+                            </span>.load(Ordering::SeqCst)
                     {
-                        <span class="ident">wait_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">chan</span>).<span class="ident">try_wake_receiver_if_pending</span>();
+                        wait_lock(<span class="kw-2">&amp;</span><span class="self">self</span>.receiver.shared.chan).try_wake_receiver_if_pending();
                     }
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">push</span>(<span class="ident">Box::new</span>(<span class="ident">RecvSelection</span> {
-            <span class="ident">receiver</span>,
-            <span class="ident">token</span>,
-            <span class="ident">signalled</span>: <span class="self">self</span>.<span class="ident">signalled</span>.<span class="ident">clone</span>(),
-            <span class="ident">hook</span>: <span class="prelude-val">None</span>,
-            <span class="ident">mapper</span>,
-            <span class="ident">received</span>: <span class="bool-val">false</span>,
-            <span class="ident">phantom</span>: <span class="ident">Default::default</span>(),
+        <span class="kw">let </span>token = <span class="self">self</span>.selections.len();
+        <span class="self">self</span>.selections.push(Box::new(RecvSelection {
+            receiver,
+            token,
+            signalled: <span class="self">self</span>.signalled.clone(),
+            hook: <span class="prelude-val">None</span>,
+            mapper,
+            received: <span class="bool-val">false</span>,
+            phantom: Default::default(),
         }));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">wait_inner</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">deadline</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;eventual-fairness&quot;</span>)]</span>
-        {
-            <span class="self">self</span>.<span class="ident">next_poll</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rng</span>.<span class="ident">generate_range</span>(<span class="number">0</span>..<span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>());
+    <span class="kw">fn </span>wait_inner(<span class="kw-2">mut </span><span class="self">self</span>, deadline: <span class="prelude-ty">Option</span>&lt;Instant&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;eventual-fairness&quot;</span>)]
+        </span>{
+            <span class="self">self</span>.next_poll = <span class="self">self</span>.rng.generate_range(<span class="number">0</span>..<span class="self">self</span>.selections.len());
         }
 
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="lifetime">&#39;outer</span>: <span class="kw">loop</span> {
-            <span class="comment">// Init signals</span>
-            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">selections</span>[<span class="self">self</span>.<span class="ident">next_poll</span>].<span class="ident">init</span>() {
-                    <span class="kw">break</span> <span class="lifetime">&#39;outer</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>);
+        <span class="kw">let </span>res = <span class="lifetime">&#39;outer</span>: <span class="kw">loop </span>{
+            <span class="comment">// Init signals
+            </span><span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.selections.len() {
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = <span class="self">self</span>.selections[<span class="self">self</span>.next_poll].init() {
+                    <span class="kw">break </span><span class="lifetime">&#39;outer </span><span class="prelude-val">Some</span>(val);
                 }
-                <span class="self">self</span>.<span class="ident">next_poll</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">next_poll</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">%</span> <span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>();
+                <span class="self">self</span>.next_poll = (<span class="self">self</span>.next_poll + <span class="number">1</span>) % <span class="self">self</span>.selections.len();
             }
 
-            <span class="comment">// Speculatively poll</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">poll</span>() {
-                <span class="kw">break</span> <span class="lifetime">&#39;outer</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>);
+            <span class="comment">// Speculatively poll
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = <span class="self">self</span>.poll() {
+                <span class="kw">break </span><span class="lifetime">&#39;outer </span><span class="prelude-val">Some</span>(msg);
             }
 
-            <span class="kw">loop</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">deadline</span>) <span class="op">=</span> <span class="ident">deadline</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dur</span>) <span class="op">=</span> <span class="ident">deadline</span>.<span class="ident">checked_duration_since</span>(<span class="ident">Instant::now</span>()) {
-                        <span class="ident">thread::park_timeout</span>(<span class="ident">dur</span>);
+            <span class="kw">loop </span>{
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(deadline) = deadline {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(dur) = deadline.checked_duration_since(Instant::now()) {
+                        thread::park_timeout(dur);
                     }
-                } <span class="kw">else</span> {
-                    <span class="ident">thread::park</span>();
+                } <span class="kw">else </span>{
+                    thread::park();
                 }
 
-                <span class="kw">if</span> <span class="ident">deadline</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">Instant::now</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">d</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>) {
-                    <span class="kw">break</span> <span class="lifetime">&#39;outer</span> <span class="self">self</span>.<span class="ident">poll</span>();
+                <span class="kw">if </span>deadline.map(|d| Instant::now() &gt;= d).unwrap_or(<span class="bool-val">false</span>) {
+                    <span class="kw">break </span><span class="lifetime">&#39;outer </span><span class="self">self</span>.poll();
                 }
 
-                <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">signalled</span>.<span class="ident">lock</span>().<span class="ident">pop_front</span>() {
-                    <span class="ident">token</span>
-                } <span class="kw">else</span> {
-                    <span class="comment">// Spurious wakeup, park again</span>
-                    <span class="kw">continue</span>;
+                <span class="kw">let </span>token = <span class="kw">if let </span><span class="prelude-val">Some</span>(token) = <span class="self">self</span>.signalled.lock().pop_front() {
+                    token
+                } <span class="kw">else </span>{
+                    <span class="comment">// Spurious wakeup, park again
+                    </span><span class="kw">continue</span>;
                 };
 
-                <span class="comment">// Attempt to receive a message</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">selections</span>[<span class="ident">token</span>].<span class="ident">poll</span>() {
-                    <span class="kw">break</span> <span class="lifetime">&#39;outer</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>);
+                <span class="comment">// Attempt to receive a message
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(msg) = <span class="self">self</span>.selections[token].poll() {
+                    <span class="kw">break </span><span class="lifetime">&#39;outer </span><span class="prelude-val">Some</span>(msg);
                 }
             }
         };
 
-        <span class="comment">// Deinit signals</span>
-        <span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">selections</span> {
-            <span class="ident">s</span>.<span class="ident">deinit</span>();
+        <span class="comment">// Deinit signals
+        </span><span class="kw">for </span>s <span class="kw">in </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.selections {
+            s.deinit();
         }
 
-        <span class="ident">res</span>
+        res
     }
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">selections</span>[<span class="self">self</span>.<span class="ident">next_poll</span>].<span class="ident">poll</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">val</span>);
+    <span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+        <span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.selections.len() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(val) = <span class="self">self</span>.selections[<span class="self">self</span>.next_poll].poll() {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(val);
             }
-            <span class="self">self</span>.<span class="ident">next_poll</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">next_poll</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">%</span> <span class="self">self</span>.<span class="ident">selections</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.next_poll = (<span class="self">self</span>.next_poll + <span class="number">1</span>) % <span class="self">self</span>.selections.len();
         }
-        <span class="prelude-val">None</span>
+        <span class="prelude-val">None
+    </span>}
+
+    <span class="doccomment">/// Wait until one of the events associated with this [`Selector`] has completed. If the `eventual-fairness`
+    /// feature flag is enabled, this method is fair and will handle a random event of those that are ready.
+    </span><span class="kw">pub fn </span>wait(<span class="self">self</span>) -&gt; T {
+        <span class="self">self</span>.wait_inner(<span class="prelude-val">None</span>).unwrap()
     }
 
-    <span class="doccomment">/// Wait until one of the events associated with this [`Selector`] has completed. If the `eventual-fairness`</span>
-    <span class="doccomment">/// feature flag is enabled, this method is fair and will handle a random event of those that are ready.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait</span>(<span class="self">self</span>) -&gt; <span class="ident">T</span> {
-        <span class="self">self</span>.<span class="ident">wait_inner</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>()
+    <span class="doccomment">/// Wait until one of the events associated with this [`Selector`] has completed or the timeout has expired. If the
+    /// `eventual-fairness` feature flag is enabled, this method is fair and will handle a random event of those that
+    /// are ready.
+    </span><span class="kw">pub fn </span>wait_timeout(<span class="self">self</span>, dur: Duration) -&gt; <span class="prelude-ty">Result</span>&lt;T, SelectError&gt; {
+        <span class="self">self</span>.wait_inner(<span class="prelude-val">Some</span>(Instant::now() + dur))
+            .ok_or(SelectError::Timeout)
     }
 
-    <span class="doccomment">/// Wait until one of the events associated with this [`Selector`] has completed or the timeout has expired. If the</span>
-    <span class="doccomment">/// `eventual-fairness` feature flag is enabled, this method is fair and will handle a random event of those that</span>
-    <span class="doccomment">/// are ready.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_timeout</span>(<span class="self">self</span>, <span class="ident">dur</span>: <span class="ident">Duration</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">SelectError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">wait_inner</span>(<span class="prelude-val">Some</span>(<span class="ident">Instant::now</span>() <span class="op">+</span> <span class="ident">dur</span>))
-            .<span class="ident">ok_or</span>(<span class="ident">SelectError::Timeout</span>)
-    }
-
-    <span class="doccomment">/// Wait until one of the events associated with this [`Selector`] has completed or the deadline has been reached.</span>
-    <span class="doccomment">/// If the `eventual-fairness` feature flag is enabled, this method is fair and will handle a random event of those</span>
-    <span class="doccomment">/// that are ready.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_deadline</span>(<span class="self">self</span>, <span class="ident">deadline</span>: <span class="ident">Instant</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">SelectError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">wait_inner</span>(<span class="prelude-val">Some</span>(<span class="ident">deadline</span>)).<span class="ident">ok_or</span>(<span class="ident">SelectError::Timeout</span>)
+    <span class="doccomment">/// Wait until one of the events associated with this [`Selector`] has completed or the deadline has been reached.
+    /// If the `eventual-fairness` feature flag is enabled, this method is fair and will handle a random event of those
+    /// that are ready.
+    </span><span class="kw">pub fn </span>wait_deadline(<span class="self">self</span>, deadline: Instant) -&gt; <span class="prelude-ty">Result</span>&lt;T, SelectError&gt; {
+        <span class="self">self</span>.wait_inner(<span class="prelude-val">Some</span>(deadline)).ok_or(SelectError::Timeout)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="flume" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="flume" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

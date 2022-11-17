@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/tga/decoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/tga/decoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -506,177 +500,177 @@
 <span id="500">500</span>
 <span id="501">501</span>
 <span id="502">502</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::header</span>::{<span class="ident">Header</span>, <span class="ident">ImageType</span>, <span class="ident">ALPHA_BIT_MASK</span>, <span class="ident">SCREEN_ORIGIN_BIT_MASK</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">color</span>::{<span class="ident">ColorType</span>, <span class="ident">ExtendedColorType</span>},
-    <span class="ident">error</span>::{
-        <span class="ident">ImageError</span>, <span class="ident">ImageResult</span>, <span class="ident">LimitError</span>, <span class="ident">LimitErrorKind</span>, <span class="ident">UnsupportedError</span>, <span class="ident">UnsupportedErrorKind</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::header::{Header, ImageType, ALPHA_BIT_MASK, SCREEN_ORIGIN_BIT_MASK};
+<span class="kw">use crate</span>::{
+    color::{ColorType, ExtendedColorType},
+    error::{
+        ImageError, ImageResult, LimitError, LimitErrorKind, UnsupportedError, UnsupportedErrorKind,
     },
-    <span class="ident">image</span>::{<span class="ident">ImageDecoder</span>, <span class="ident">ImageFormat</span>, <span class="ident">ImageReadBuffer</span>},
+    image::{ImageDecoder, ImageFormat, ImageReadBuffer},
 };
-<span class="kw">use</span> <span class="ident">byteorder::ReadBytesExt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">convert::TryFrom</span>,
-    <span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>},
-    <span class="ident">mem</span>,
+<span class="kw">use </span>byteorder::ReadBytesExt;
+<span class="kw">use </span>std::{
+    convert::TryFrom,
+    io::{<span class="self">self</span>, Read, Seek},
+    mem,
 };
 
-<span class="kw">struct</span> <span class="ident">ColorMap</span> {
-    <span class="doccomment">/// sizes in bytes</span>
-    <span class="ident">start_offset</span>: <span class="ident">usize</span>,
-    <span class="ident">entry_size</span>: <span class="ident">usize</span>,
-    <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>ColorMap {
+    <span class="doccomment">/// sizes in bytes
+    </span>start_offset: usize,
+    entry_size: usize,
+    bytes: Vec&lt;u8&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ColorMap</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_reader</span>(
-        <span class="ident">r</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Read</span>,
-        <span class="ident">start_offset</span>: <span class="ident">u16</span>,
-        <span class="ident">num_entries</span>: <span class="ident">u16</span>,
-        <span class="ident">bits_per_entry</span>: <span class="ident">u8</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">ColorMap</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">bytes_per_entry</span> <span class="op">=</span> (<span class="ident">bits_per_entry</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="number">7</span>) <span class="op">/</span> <span class="number">8</span>;
+<span class="kw">impl </span>ColorMap {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>from_reader(
+        r: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Read,
+        start_offset: u16,
+        num_entries: u16,
+        bits_per_entry: u8,
+    ) -&gt; ImageResult&lt;ColorMap&gt; {
+        <span class="kw">let </span>bytes_per_entry = (bits_per_entry <span class="kw">as </span>usize + <span class="number">7</span>) / <span class="number">8</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">bytes_per_entry</span> <span class="op">*</span> <span class="ident">num_entries</span> <span class="kw">as</span> <span class="ident">usize</span>];
-        <span class="ident">r</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bytes</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>bytes = <span class="macro">vec!</span>[<span class="number">0</span>; bytes_per_entry * num_entries <span class="kw">as </span>usize];
+        r.read_exact(<span class="kw-2">&amp;mut </span>bytes)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">ColorMap</span> {
-            <span class="ident">entry_size</span>: <span class="ident">bytes_per_entry</span>,
-            <span class="ident">start_offset</span>: <span class="ident">start_offset</span> <span class="kw">as</span> <span class="ident">usize</span>,
-            <span class="ident">bytes</span>,
+        <span class="prelude-val">Ok</span>(ColorMap {
+            entry_size: bytes_per_entry,
+            start_offset: start_offset <span class="kw">as </span>usize,
+            bytes,
         })
     }
 
-    <span class="doccomment">/// Get one entry from the color map</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start_offset</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">entry_size</span> <span class="op">*</span> <span class="ident">index</span>;
-        <span class="self">self</span>.<span class="ident">bytes</span>.<span class="ident">get</span>(<span class="ident">entry</span>..<span class="ident">entry</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">entry_size</span>)
+    <span class="doccomment">/// Get one entry from the color map
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
+        <span class="kw">let </span>entry = <span class="self">self</span>.start_offset + <span class="self">self</span>.entry_size * index;
+        <span class="self">self</span>.bytes.get(entry..entry + <span class="self">self</span>.entry_size)
     }
 }
 
-<span class="doccomment">/// The representation of a TGA decoder</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TgaDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">r</span>: <span class="ident">R</span>,
+<span class="doccomment">/// The representation of a TGA decoder
+</span><span class="kw">pub struct </span>TgaDecoder&lt;R&gt; {
+    r: R,
 
-    <span class="ident">width</span>: <span class="ident">usize</span>,
-    <span class="ident">height</span>: <span class="ident">usize</span>,
-    <span class="ident">bytes_per_pixel</span>: <span class="ident">usize</span>,
-    <span class="ident">has_loaded_metadata</span>: <span class="ident">bool</span>,
+    width: usize,
+    height: usize,
+    bytes_per_pixel: usize,
+    has_loaded_metadata: bool,
 
-    <span class="ident">image_type</span>: <span class="ident">ImageType</span>,
-    <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-    <span class="ident">original_color_type</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExtendedColorType</span><span class="op">&gt;</span>,
+    image_type: ImageType,
+    color_type: ColorType,
+    original_color_type: <span class="prelude-ty">Option</span>&lt;ExtendedColorType&gt;,
 
-    <span class="ident">header</span>: <span class="ident">Header</span>,
-    <span class="ident">color_map</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ColorMap</span><span class="op">&gt;</span>,
+    header: Header,
+    color_map: <span class="prelude-ty">Option</span>&lt;ColorMap&gt;,
 
-    <span class="comment">// Used in read_scanline</span>
-    <span class="ident">line_read</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">line_remain_buff</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="comment">// Used in read_scanline
+    </span>line_read: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    line_remain_buff: Vec&lt;u8&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">TgaDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new decoder that decodes from the stream `r`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">r</span>: <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">TgaDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">TgaDecoder</span> {
-            <span class="ident">r</span>,
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; TgaDecoder&lt;R&gt; {
+    <span class="doccomment">/// Create a new decoder that decodes from the stream `r`
+    </span><span class="kw">pub fn </span>new(r: R) -&gt; ImageResult&lt;TgaDecoder&lt;R&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = TgaDecoder {
+            r,
 
-            <span class="ident">width</span>: <span class="number">0</span>,
-            <span class="ident">height</span>: <span class="number">0</span>,
-            <span class="ident">bytes_per_pixel</span>: <span class="number">0</span>,
-            <span class="ident">has_loaded_metadata</span>: <span class="bool-val">false</span>,
+            width: <span class="number">0</span>,
+            height: <span class="number">0</span>,
+            bytes_per_pixel: <span class="number">0</span>,
+            has_loaded_metadata: <span class="bool-val">false</span>,
 
-            <span class="ident">image_type</span>: <span class="ident">ImageType::Unknown</span>,
-            <span class="ident">color_type</span>: <span class="ident">ColorType::L8</span>,
-            <span class="ident">original_color_type</span>: <span class="prelude-val">None</span>,
+            image_type: ImageType::Unknown,
+            color_type: ColorType::L8,
+            original_color_type: <span class="prelude-val">None</span>,
 
-            <span class="ident">header</span>: <span class="ident">Header::default</span>(),
-            <span class="ident">color_map</span>: <span class="prelude-val">None</span>,
+            header: Header::default(),
+            color_map: <span class="prelude-val">None</span>,
 
-            <span class="ident">line_read</span>: <span class="prelude-val">None</span>,
-            <span class="ident">line_remain_buff</span>: <span class="ident">Vec::new</span>(),
+            line_read: <span class="prelude-val">None</span>,
+            line_remain_buff: Vec::new(),
         };
-        <span class="ident">decoder</span>.<span class="ident">read_metadata</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">decoder</span>)
+        decoder.read_metadata()<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(decoder)
     }
 
-    <span class="kw">fn</span> <span class="ident">read_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">Header::from_reader</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">r</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">image_type</span> <span class="op">=</span> <span class="ident">ImageType::new</span>(<span class="self">self</span>.<span class="ident">header</span>.<span class="ident">image_type</span>);
-        <span class="self">self</span>.<span class="ident">width</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">image_width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="self">self</span>.<span class="ident">height</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">image_height</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="self">self</span>.<span class="ident">bytes_per_pixel</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="number">7</span>) <span class="op">/</span> <span class="number">8</span>;
+    <span class="kw">fn </span>read_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.header = Header::from_reader(<span class="kw-2">&amp;mut </span><span class="self">self</span>.r)<span class="question-mark">?</span>;
+        <span class="self">self</span>.image_type = ImageType::new(<span class="self">self</span>.header.image_type);
+        <span class="self">self</span>.width = <span class="self">self</span>.header.image_width <span class="kw">as </span>usize;
+        <span class="self">self</span>.height = <span class="self">self</span>.header.image_height <span class="kw">as </span>usize;
+        <span class="self">self</span>.bytes_per_pixel = (<span class="self">self</span>.header.pixel_depth <span class="kw">as </span>usize + <span class="number">7</span>) / <span class="number">8</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">read_metadata</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">has_loaded_metadata</span> {
-            <span class="self">self</span>.<span class="ident">read_header</span>()<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">read_image_id</span>()<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">read_color_map</span>()<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">read_color_information</span>()<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">has_loaded_metadata</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">fn </span>read_metadata(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">if </span>!<span class="self">self</span>.has_loaded_metadata {
+            <span class="self">self</span>.read_header()<span class="question-mark">?</span>;
+            <span class="self">self</span>.read_image_id()<span class="question-mark">?</span>;
+            <span class="self">self</span>.read_color_map()<span class="question-mark">?</span>;
+            <span class="self">self</span>.read_color_information()<span class="question-mark">?</span>;
+            <span class="self">self</span>.has_loaded_metadata = <span class="bool-val">true</span>;
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Loads the color information for the decoder</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// To keep things simple, we won&#39;t handle bit depths that aren&#39;t divisible</span>
-    <span class="doccomment">/// by 8 and are larger than 32.</span>
-    <span class="kw">fn</span> <span class="ident">read_color_information</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span> <span class="op">%</span> <span class="number">8</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span> <span class="op">&gt;</span> <span class="number">32</span> {
-            <span class="comment">// Bit depth must be divisible by 8, and must be less than or equal</span>
-            <span class="comment">// to 32.</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                    <span class="ident">ImageFormat::Tga</span>.<span class="ident">into</span>(),
-                    <span class="ident">UnsupportedErrorKind::Color</span>(<span class="ident">ExtendedColorType::Unknown</span>(
-                        <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span>,
+    <span class="doccomment">/// Loads the color information for the decoder
+    ///
+    /// To keep things simple, we won&#39;t handle bit depths that aren&#39;t divisible
+    /// by 8 and are larger than 32.
+    </span><span class="kw">fn </span>read_color_information(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">if </span><span class="self">self</span>.header.pixel_depth % <span class="number">8 </span>!= <span class="number">0 </span>|| <span class="self">self</span>.header.pixel_depth &gt; <span class="number">32 </span>{
+            <span class="comment">// Bit depth must be divisible by 8, and must be less than or equal
+            // to 32.
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tga.into(),
+                    UnsupportedErrorKind::Color(ExtendedColorType::Unknown(
+                        <span class="self">self</span>.header.pixel_depth,
                     )),
                 ),
             ));
         }
 
-        <span class="kw">let</span> <span class="ident">num_alpha_bits</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">image_desc</span> <span class="op">&amp;</span> <span class="ident">ALPHA_BIT_MASK</span>;
+        <span class="kw">let </span>num_alpha_bits = <span class="self">self</span>.header.image_desc &amp; ALPHA_BIT_MASK;
 
-        <span class="kw">let</span> <span class="ident">other_channel_bits</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_type</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_entry_size</span>
-        } <span class="kw">else</span> {
-            <span class="kw">if</span> <span class="ident">num_alpha_bits</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                    <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                        <span class="ident">ImageFormat::Tga</span>.<span class="ident">into</span>(),
-                        <span class="ident">UnsupportedErrorKind::Color</span>(<span class="ident">ExtendedColorType::Unknown</span>(
-                            <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span>,
+        <span class="kw">let </span>other_channel_bits = <span class="kw">if </span><span class="self">self</span>.header.map_type != <span class="number">0 </span>{
+            <span class="self">self</span>.header.map_entry_size
+        } <span class="kw">else </span>{
+            <span class="kw">if </span>num_alpha_bits &gt; <span class="self">self</span>.header.pixel_depth {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Tga.into(),
+                        UnsupportedErrorKind::Color(ExtendedColorType::Unknown(
+                            <span class="self">self</span>.header.pixel_depth,
                         )),
                     ),
                 ));
             }
 
-            <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span> <span class="op">-</span> <span class="ident">num_alpha_bits</span>
+            <span class="self">self</span>.header.pixel_depth - num_alpha_bits
         };
-        <span class="kw">let</span> <span class="ident">color</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">image_type</span>.<span class="ident">is_color</span>();
+        <span class="kw">let </span>color = <span class="self">self</span>.image_type.is_color();
 
-        <span class="kw">match</span> (<span class="ident">num_alpha_bits</span>, <span class="ident">other_channel_bits</span>, <span class="ident">color</span>) {
-            <span class="comment">// really, the encoding is BGR and BGRA, this is fixed</span>
-            <span class="comment">// up with `TgaDecoder::reverse_encoding`.</span>
-            (<span class="number">0</span>, <span class="number">32</span>, <span class="bool-val">true</span>) =&gt; <span class="self">self</span>.<span class="ident">color_type</span> <span class="op">=</span> <span class="ident">ColorType::Rgba8</span>,
-            (<span class="number">8</span>, <span class="number">24</span>, <span class="bool-val">true</span>) =&gt; <span class="self">self</span>.<span class="ident">color_type</span> <span class="op">=</span> <span class="ident">ColorType::Rgba8</span>,
-            (<span class="number">0</span>, <span class="number">24</span>, <span class="bool-val">true</span>) =&gt; <span class="self">self</span>.<span class="ident">color_type</span> <span class="op">=</span> <span class="ident">ColorType::Rgb8</span>,
-            (<span class="number">8</span>, <span class="number">8</span>, <span class="bool-val">false</span>) =&gt; <span class="self">self</span>.<span class="ident">color_type</span> <span class="op">=</span> <span class="ident">ColorType::La8</span>,
-            (<span class="number">0</span>, <span class="number">8</span>, <span class="bool-val">false</span>) =&gt; <span class="self">self</span>.<span class="ident">color_type</span> <span class="op">=</span> <span class="ident">ColorType::L8</span>,
+        <span class="kw">match </span>(num_alpha_bits, other_channel_bits, color) {
+            <span class="comment">// really, the encoding is BGR and BGRA, this is fixed
+            // up with `TgaDecoder::reverse_encoding`.
+            </span>(<span class="number">0</span>, <span class="number">32</span>, <span class="bool-val">true</span>) =&gt; <span class="self">self</span>.color_type = ColorType::Rgba8,
+            (<span class="number">8</span>, <span class="number">24</span>, <span class="bool-val">true</span>) =&gt; <span class="self">self</span>.color_type = ColorType::Rgba8,
+            (<span class="number">0</span>, <span class="number">24</span>, <span class="bool-val">true</span>) =&gt; <span class="self">self</span>.color_type = ColorType::Rgb8,
+            (<span class="number">8</span>, <span class="number">8</span>, <span class="bool-val">false</span>) =&gt; <span class="self">self</span>.color_type = ColorType::La8,
+            (<span class="number">0</span>, <span class="number">8</span>, <span class="bool-val">false</span>) =&gt; <span class="self">self</span>.color_type = ColorType::L8,
             (<span class="number">8</span>, <span class="number">0</span>, <span class="bool-val">false</span>) =&gt; {
-                <span class="comment">// alpha-only image is treated as L8</span>
-                <span class="self">self</span>.<span class="ident">color_type</span> <span class="op">=</span> <span class="ident">ColorType::L8</span>;
-                <span class="self">self</span>.<span class="ident">original_color_type</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ExtendedColorType::A8</span>);
+                <span class="comment">// alpha-only image is treated as L8
+                </span><span class="self">self</span>.color_type = ColorType::L8;
+                <span class="self">self</span>.original_color_type = <span class="prelude-val">Some</span>(ExtendedColorType::A8);
             }
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                    <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                        <span class="ident">ImageFormat::Tga</span>.<span class="ident">into</span>(),
-                        <span class="ident">UnsupportedErrorKind::Color</span>(<span class="ident">ExtendedColorType::Unknown</span>(
-                            <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">pixel_depth</span>,
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Tga.into(),
+                        UnsupportedErrorKind::Color(ExtendedColorType::Unknown(
+                            <span class="self">self</span>.header.pixel_depth,
                         )),
                     ),
                 ))
@@ -685,329 +679,328 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Read the image id field</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// We&#39;re not interested in this field, so this function skips it if it</span>
-    <span class="doccomment">/// is present</span>
-    <span class="kw">fn</span> <span class="ident">read_image_id</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">r</span>
-            .<span class="ident">seek</span>(<span class="ident">io::SeekFrom::Current</span>(<span class="ident">i64::from</span>(<span class="self">self</span>.<span class="ident">header</span>.<span class="ident">id_length</span>)))<span class="question-mark">?</span>;
+    <span class="doccomment">/// Read the image id field
+    ///
+    /// We&#39;re not interested in this field, so this function skips it if it
+    /// is present
+    </span><span class="kw">fn </span>read_image_id(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.r
+            .seek(io::SeekFrom::Current(i64::from(<span class="self">self</span>.header.id_length)))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">read_color_map</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_type</span> <span class="op">==</span> <span class="number">1</span> {
-            <span class="comment">// FIXME: we could reverse the map entries, which avoids having to reverse all pixels</span>
-            <span class="comment">// in the final output individually.</span>
-            <span class="self">self</span>.<span class="ident">color_map</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ColorMap::from_reader</span>(
-                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">r</span>,
-                <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_origin</span>,
-                <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_length</span>,
-                <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_entry_size</span>,
+    <span class="kw">fn </span>read_color_map(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">if </span><span class="self">self</span>.header.map_type == <span class="number">1 </span>{
+            <span class="comment">// FIXME: we could reverse the map entries, which avoids having to reverse all pixels
+            // in the final output individually.
+            </span><span class="self">self</span>.color_map = <span class="prelude-val">Some</span>(ColorMap::from_reader(
+                <span class="kw-2">&amp;mut </span><span class="self">self</span>.r,
+                <span class="self">self</span>.header.map_origin,
+                <span class="self">self</span>.header.map_length,
+                <span class="self">self</span>.header.map_entry_size,
             )<span class="question-mark">?</span>);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Expands indices into its mapped color</span>
-    <span class="kw">fn</span> <span class="ident">expand_color_map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pixel_data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="attribute">#[<span class="ident">inline</span>]</span>
-        <span class="kw">fn</span> <span class="ident">bytes_to_index</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">usize</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="number">0usize</span>;
-            <span class="kw">for</span> <span class="ident">byte</span> <span class="kw">in</span> <span class="ident">bytes</span>.<span class="ident">iter</span>() {
-                <span class="ident">result</span> <span class="op">=</span> <span class="ident">result</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span> <span class="op">|</span> <span class="kw-2">*</span><span class="ident">byte</span> <span class="kw">as</span> <span class="ident">usize</span>;
+    <span class="doccomment">/// Expands indices into its mapped color
+    </span><span class="kw">fn </span>expand_color_map(<span class="kw-2">&amp;</span><span class="self">self</span>, pixel_data: <span class="kw-2">&amp;</span>[u8]) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>bytes_to_index(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; usize {
+            <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="number">0usize</span>;
+            <span class="kw">for </span>byte <span class="kw">in </span>bytes.iter() {
+                result = result &lt;&lt; <span class="number">8 </span>| <span class="kw-2">*</span>byte <span class="kw">as </span>usize;
             }
-            <span class="ident">result</span>
+            result
         }
 
-        <span class="kw">let</span> <span class="ident">bytes_per_entry</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">header</span>.<span class="ident">map_entry_size</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="number">7</span>) <span class="op">/</span> <span class="number">8</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="self">self</span>.<span class="ident">width</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">height</span> <span class="op">*</span> <span class="ident">bytes_per_entry</span>);
+        <span class="kw">let </span>bytes_per_entry = (<span class="self">self</span>.header.map_entry_size <span class="kw">as </span>usize + <span class="number">7</span>) / <span class="number">8</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>result = Vec::with_capacity(<span class="self">self</span>.width * <span class="self">self</span>.height * bytes_per_entry);
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::ErrorKind::Other</span>.<span class="ident">into</span>());
+        <span class="kw">if </span><span class="self">self</span>.bytes_per_pixel == <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(io::ErrorKind::Other.into());
         }
 
-        <span class="kw">let</span> <span class="ident">color_map</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">color_map</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">io::Error::from</span>(<span class="ident">io::ErrorKind::Other</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>color_map = <span class="self">self
+            </span>.color_map
+            .as_ref()
+            .ok_or_else(|| io::Error::from(io::ErrorKind::Other))<span class="question-mark">?</span>;
 
-        <span class="kw">for</span> <span class="ident">chunk</span> <span class="kw">in</span> <span class="ident">pixel_data</span>.<span class="ident">chunks</span>(<span class="self">self</span>.<span class="ident">bytes_per_pixel</span>) {
-            <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">bytes_to_index</span>(<span class="ident">chunk</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">color</span>) <span class="op">=</span> <span class="ident">color_map</span>.<span class="ident">get</span>(<span class="ident">index</span>) {
-                <span class="ident">result</span>.<span class="ident">extend_from_slice</span>(<span class="ident">color</span>);
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::ErrorKind::Other</span>.<span class="ident">into</span>());
-            }
-        }
-
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
-    }
-
-    <span class="doccomment">/// Reads a run length encoded data for given number of bytes</span>
-    <span class="kw">fn</span> <span class="ident">read_encoded_data</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">num_bytes</span>: <span class="ident">usize</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pixel_data</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">num_bytes</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">repeat_buf</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="self">self</span>.<span class="ident">bytes_per_pixel</span>);
-
-        <span class="kw">while</span> <span class="ident">pixel_data</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">num_bytes</span> {
-            <span class="kw">let</span> <span class="ident">run_packet</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">r</span>.<span class="ident">read_u8</span>()<span class="question-mark">?</span>;
-            <span class="comment">// If the highest bit in `run_packet` is set, then we repeat pixels</span>
-            <span class="comment">//</span>
-            <span class="comment">// Note: the TGA format adds 1 to both counts because having a count</span>
-            <span class="comment">// of 0 would be pointless.</span>
-            <span class="kw">if</span> (<span class="ident">run_packet</span> <span class="op">&amp;</span> <span class="number">0x80</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="comment">// high bit set, so we will repeat the data</span>
-                <span class="kw">let</span> <span class="ident">repeat_count</span> <span class="op">=</span> ((<span class="ident">run_packet</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0x80</span>) <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-                <span class="self">self</span>.<span class="ident">r</span>
-                    .<span class="ident">by_ref</span>()
-                    .<span class="ident">take</span>(<span class="self">self</span>.<span class="ident">bytes_per_pixel</span> <span class="kw">as</span> <span class="ident">u64</span>)
-                    .<span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="ident">repeat_buf</span>)<span class="question-mark">?</span>;
-
-                <span class="comment">// get the repeating pixels from the bytes of the pixel stored in `repeat_buf`</span>
-                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">repeat_buf</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">cycle</span>()
-                    .<span class="ident">take</span>(<span class="ident">repeat_count</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span>);
-                <span class="ident">pixel_data</span>.<span class="ident">extend</span>(<span class="ident">data</span>);
-                <span class="ident">repeat_buf</span>.<span class="ident">clear</span>();
-            } <span class="kw">else</span> {
-                <span class="comment">// not set, so `run_packet+1` is the number of non-encoded pixels</span>
-                <span class="kw">let</span> <span class="ident">num_raw_bytes</span> <span class="op">=</span> (<span class="ident">run_packet</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span>;
-                <span class="self">self</span>.<span class="ident">r</span>
-                    .<span class="ident">by_ref</span>()
-                    .<span class="ident">take</span>(<span class="ident">num_raw_bytes</span> <span class="kw">as</span> <span class="ident">u64</span>)
-                    .<span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="ident">pixel_data</span>)<span class="question-mark">?</span>;
+        <span class="kw">for </span>chunk <span class="kw">in </span>pixel_data.chunks(<span class="self">self</span>.bytes_per_pixel) {
+            <span class="kw">let </span>index = bytes_to_index(chunk);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(color) = color_map.get(index) {
+                result.extend_from_slice(color);
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(io::ErrorKind::Other.into());
             }
         }
 
-        <span class="kw">if</span> <span class="ident">pixel_data</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">num_bytes</span> {
-            <span class="comment">// FIXME: the last packet contained more data than we asked for!</span>
-            <span class="comment">// This is at least a warning. We truncate the data since some methods rely on the</span>
-            <span class="comment">// length to be accurate in the success case.</span>
-            <span class="ident">pixel_data</span>.<span class="ident">truncate</span>(<span class="ident">num_bytes</span>);
+        <span class="prelude-val">Ok</span>(result)
+    }
+
+    <span class="doccomment">/// Reads a run length encoded data for given number of bytes
+    </span><span class="kw">fn </span>read_encoded_data(<span class="kw-2">&amp;mut </span><span class="self">self</span>, num_bytes: usize) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>pixel_data = Vec::with_capacity(num_bytes);
+        <span class="kw">let </span><span class="kw-2">mut </span>repeat_buf = Vec::with_capacity(<span class="self">self</span>.bytes_per_pixel);
+
+        <span class="kw">while </span>pixel_data.len() &lt; num_bytes {
+            <span class="kw">let </span>run_packet = <span class="self">self</span>.r.read_u8()<span class="question-mark">?</span>;
+            <span class="comment">// If the highest bit in `run_packet` is set, then we repeat pixels
+            //
+            // Note: the TGA format adds 1 to both counts because having a count
+            // of 0 would be pointless.
+            </span><span class="kw">if </span>(run_packet &amp; <span class="number">0x80</span>) != <span class="number">0 </span>{
+                <span class="comment">// high bit set, so we will repeat the data
+                </span><span class="kw">let </span>repeat_count = ((run_packet &amp; !<span class="number">0x80</span>) + <span class="number">1</span>) <span class="kw">as </span>usize;
+                <span class="self">self</span>.r
+                    .by_ref()
+                    .take(<span class="self">self</span>.bytes_per_pixel <span class="kw">as </span>u64)
+                    .read_to_end(<span class="kw-2">&amp;mut </span>repeat_buf)<span class="question-mark">?</span>;
+
+                <span class="comment">// get the repeating pixels from the bytes of the pixel stored in `repeat_buf`
+                </span><span class="kw">let </span>data = repeat_buf
+                    .iter()
+                    .cycle()
+                    .take(repeat_count * <span class="self">self</span>.bytes_per_pixel);
+                pixel_data.extend(data);
+                repeat_buf.clear();
+            } <span class="kw">else </span>{
+                <span class="comment">// not set, so `run_packet+1` is the number of non-encoded pixels
+                </span><span class="kw">let </span>num_raw_bytes = (run_packet + <span class="number">1</span>) <span class="kw">as </span>usize * <span class="self">self</span>.bytes_per_pixel;
+                <span class="self">self</span>.r
+                    .by_ref()
+                    .take(num_raw_bytes <span class="kw">as </span>u64)
+                    .read_to_end(<span class="kw-2">&amp;mut </span>pixel_data)<span class="question-mark">?</span>;
+            }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">pixel_data</span>)
+        <span class="kw">if </span>pixel_data.len() &gt; num_bytes {
+            <span class="comment">// FIXME: the last packet contained more data than we asked for!
+            // This is at least a warning. We truncate the data since some methods rely on the
+            // length to be accurate in the success case.
+            </span>pixel_data.truncate(num_bytes);
+        }
+
+        <span class="prelude-val">Ok</span>(pixel_data)
     }
 
-    <span class="doccomment">/// Reads a run length encoded packet</span>
-    <span class="kw">fn</span> <span class="ident">read_all_encoded_data</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">num_bytes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">width</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">height</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span>;
+    <span class="doccomment">/// Reads a run length encoded packet
+    </span><span class="kw">fn </span>read_all_encoded_data(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;Vec&lt;u8&gt;&gt; {
+        <span class="kw">let </span>num_bytes = <span class="self">self</span>.width * <span class="self">self</span>.height * <span class="self">self</span>.bytes_per_pixel;
 
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">read_encoded_data</span>(<span class="ident">num_bytes</span>)<span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.read_encoded_data(num_bytes)<span class="question-mark">?</span>)
     }
 
-    <span class="doccomment">/// Reads a run length encoded line</span>
-    <span class="kw">fn</span> <span class="ident">read_encoded_line</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">line_num_bytes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">width</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span>;
-        <span class="kw">let</span> <span class="ident">remain_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_remain_buff</span>.<span class="ident">len</span>();
+    <span class="doccomment">/// Reads a run length encoded line
+    </span><span class="kw">fn </span>read_encoded_line(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+        <span class="kw">let </span>line_num_bytes = <span class="self">self</span>.width * <span class="self">self</span>.bytes_per_pixel;
+        <span class="kw">let </span>remain_len = <span class="self">self</span>.line_remain_buff.len();
 
-        <span class="kw">if</span> <span class="ident">remain_len</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">line_num_bytes</span> {
-            <span class="comment">// `Vec::split_to` if std had it</span>
-            <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> {
-                <span class="kw">let</span> <span class="ident">bytes_after</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_remain_buff</span>.<span class="ident">split_off</span>(<span class="ident">line_num_bytes</span>);
-                <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">line_remain_buff</span>, <span class="ident">bytes_after</span>)
+        <span class="kw">if </span>remain_len &gt;= line_num_bytes {
+            <span class="comment">// `Vec::split_to` if std had it
+            </span><span class="kw">let </span>bytes = {
+                <span class="kw">let </span>bytes_after = <span class="self">self</span>.line_remain_buff.split_off(line_num_bytes);
+                mem::replace(<span class="kw-2">&amp;mut </span><span class="self">self</span>.line_remain_buff, bytes_after)
             };
 
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>);
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(bytes);
         }
 
-        <span class="kw">let</span> <span class="ident">num_bytes</span> <span class="op">=</span> <span class="ident">line_num_bytes</span> <span class="op">-</span> <span class="ident">remain_len</span>;
+        <span class="kw">let </span>num_bytes = line_num_bytes - remain_len;
 
-        <span class="kw">let</span> <span class="ident">line_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">read_encoded_data</span>(<span class="ident">num_bytes</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>line_data = <span class="self">self</span>.read_encoded_data(num_bytes)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pixel_data</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">line_num_bytes</span>);
-        <span class="ident">pixel_data</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">line_remain_buff</span>);
-        <span class="ident">pixel_data</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">line_data</span>[..<span class="ident">num_bytes</span>]);
+        <span class="kw">let </span><span class="kw-2">mut </span>pixel_data = Vec::with_capacity(line_num_bytes);
+        pixel_data.append(<span class="kw-2">&amp;mut </span><span class="self">self</span>.line_remain_buff);
+        pixel_data.extend_from_slice(<span class="kw-2">&amp;</span>line_data[..num_bytes]);
 
-        <span class="comment">// put the remain data to line_remain_buff.</span>
-        <span class="comment">// expects `self.line_remain_buff` to be empty from</span>
-        <span class="comment">// the above `pixel_data.append` call</span>
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">line_remain_buff</span>.<span class="ident">is_empty</span>());
-        <span class="self">self</span>.<span class="ident">line_remain_buff</span>
-            .<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">line_data</span>[<span class="ident">num_bytes</span>..]);
+        <span class="comment">// put the remain data to line_remain_buff.
+        // expects `self.line_remain_buff` to be empty from
+        // the above `pixel_data.append` call
+        </span><span class="macro">debug_assert!</span>(<span class="self">self</span>.line_remain_buff.is_empty());
+        <span class="self">self</span>.line_remain_buff
+            .extend_from_slice(<span class="kw-2">&amp;</span>line_data[num_bytes..]);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">pixel_data</span>)
+        <span class="prelude-val">Ok</span>(pixel_data)
     }
 
-    <span class="doccomment">/// Reverse from BGR encoding to RGB encoding</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// TGA files are stored in the BGRA encoding. This function swaps</span>
-    <span class="doccomment">/// the blue and red bytes in the `pixels` array.</span>
-    <span class="kw">fn</span> <span class="ident">reverse_encoding_in_output</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">pixels</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) {
-        <span class="comment">// We only need to reverse the encoding of color images</span>
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">color_type</span> {
-            <span class="ident">ColorType::Rgb8</span> <span class="op">|</span> <span class="ident">ColorType::Rgba8</span> =&gt; {
-                <span class="kw">for</span> <span class="ident">chunk</span> <span class="kw">in</span> <span class="ident">pixels</span>.<span class="ident">chunks_mut</span>(<span class="self">self</span>.<span class="ident">color_type</span>.<span class="ident">bytes_per_pixel</span>().<span class="ident">into</span>()) {
-                    <span class="ident">chunk</span>.<span class="ident">swap</span>(<span class="number">0</span>, <span class="number">2</span>);
+    <span class="doccomment">/// Reverse from BGR encoding to RGB encoding
+    ///
+    /// TGA files are stored in the BGRA encoding. This function swaps
+    /// the blue and red bytes in the `pixels` array.
+    </span><span class="kw">fn </span>reverse_encoding_in_output(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pixels: <span class="kw-2">&amp;mut </span>[u8]) {
+        <span class="comment">// We only need to reverse the encoding of color images
+        </span><span class="kw">match </span><span class="self">self</span>.color_type {
+            ColorType::Rgb8 | ColorType::Rgba8 =&gt; {
+                <span class="kw">for </span>chunk <span class="kw">in </span>pixels.chunks_mut(<span class="self">self</span>.color_type.bytes_per_pixel().into()) {
+                    chunk.swap(<span class="number">0</span>, <span class="number">2</span>);
                 }
             }
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         }
     }
 
-    <span class="doccomment">/// Flip the image vertically depending on the screen origin bit</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The bit in position 5 of the image descriptor byte is the screen origin bit.</span>
-    <span class="doccomment">/// If it&#39;s 1, the origin is in the top left corner.</span>
-    <span class="doccomment">/// If it&#39;s 0, the origin is in the bottom left corner.</span>
-    <span class="doccomment">/// This function checks the bit, and if it&#39;s 0, flips the image vertically.</span>
-    <span class="kw">fn</span> <span class="ident">flip_vertically</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">pixels</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_flipped_vertically</span>() {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">height</span> <span class="op">==</span> <span class="number">0</span> {
+    <span class="doccomment">/// Flip the image vertically depending on the screen origin bit
+    ///
+    /// The bit in position 5 of the image descriptor byte is the screen origin bit.
+    /// If it&#39;s 1, the origin is in the top left corner.
+    /// If it&#39;s 0, the origin is in the bottom left corner.
+    /// This function checks the bit, and if it&#39;s 0, flips the image vertically.
+    </span><span class="kw">fn </span>flip_vertically(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pixels: <span class="kw-2">&amp;mut </span>[u8]) {
+        <span class="kw">if </span><span class="self">self</span>.is_flipped_vertically() {
+            <span class="kw">if </span><span class="self">self</span>.height == <span class="number">0 </span>{
                 <span class="kw">return</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">num_bytes</span> <span class="op">=</span> <span class="ident">pixels</span>.<span class="ident">len</span>();
+            <span class="kw">let </span>num_bytes = pixels.len();
 
-            <span class="kw">let</span> <span class="ident">width_bytes</span> <span class="op">=</span> <span class="ident">num_bytes</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">height</span>;
+            <span class="kw">let </span>width_bytes = num_bytes / <span class="self">self</span>.height;
 
-            <span class="comment">// Flip the image vertically.</span>
-            <span class="kw">for</span> <span class="ident">vertical_index</span> <span class="kw">in</span> <span class="number">0</span>..(<span class="self">self</span>.<span class="ident">height</span> <span class="op">/</span> <span class="number">2</span>) {
-                <span class="kw">let</span> <span class="ident">vertical_target</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">height</span> <span class="op">-</span> <span class="ident">vertical_index</span>) <span class="op">*</span> <span class="ident">width_bytes</span> <span class="op">-</span> <span class="ident">width_bytes</span>;
+            <span class="comment">// Flip the image vertically.
+            </span><span class="kw">for </span>vertical_index <span class="kw">in </span><span class="number">0</span>..(<span class="self">self</span>.height / <span class="number">2</span>) {
+                <span class="kw">let </span>vertical_target = (<span class="self">self</span>.height - vertical_index) * width_bytes - width_bytes;
 
-                <span class="kw">for</span> <span class="ident">horizontal_index</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width_bytes</span> {
-                    <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">vertical_index</span> <span class="op">*</span> <span class="ident">width_bytes</span> <span class="op">+</span> <span class="ident">horizontal_index</span>;
-                    <span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="ident">vertical_target</span> <span class="op">+</span> <span class="ident">horizontal_index</span>;
+                <span class="kw">for </span>horizontal_index <span class="kw">in </span><span class="number">0</span>..width_bytes {
+                    <span class="kw">let </span>source = vertical_index * width_bytes + horizontal_index;
+                    <span class="kw">let </span>target = vertical_target + horizontal_index;
 
-                    <span class="ident">pixels</span>.<span class="ident">swap</span>(<span class="ident">target</span>, <span class="ident">source</span>);
+                    pixels.swap(target, source);
                 }
             }
         }
     }
 
-    <span class="doccomment">/// Check whether the image is vertically flipped</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The bit in position 5 of the image descriptor byte is the screen origin bit.</span>
-    <span class="doccomment">/// If it&#39;s 1, the origin is in the top left corner.</span>
-    <span class="doccomment">/// If it&#39;s 0, the origin is in the bottom left corner.</span>
-    <span class="doccomment">/// This function checks the bit, and if it&#39;s 0, flips the image vertically.</span>
-    <span class="kw">fn</span> <span class="ident">is_flipped_vertically</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">screen_origin_bit</span> <span class="op">=</span> <span class="ident">SCREEN_ORIGIN_BIT_MASK</span> <span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">image_desc</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>;
-        <span class="op">!</span><span class="ident">screen_origin_bit</span>
+    <span class="doccomment">/// Check whether the image is vertically flipped
+    ///
+    /// The bit in position 5 of the image descriptor byte is the screen origin bit.
+    /// If it&#39;s 1, the origin is in the top left corner.
+    /// If it&#39;s 0, the origin is in the bottom left corner.
+    /// This function checks the bit, and if it&#39;s 0, flips the image vertically.
+    </span><span class="kw">fn </span>is_flipped_vertically(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">let </span>screen_origin_bit = SCREEN_ORIGIN_BIT_MASK &amp; <span class="self">self</span>.header.image_desc != <span class="number">0</span>;
+        !screen_origin_bit
     }
 
-    <span class="kw">fn</span> <span class="ident">read_scanline</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">line_read</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">line_read</span> {
-            <span class="kw">if</span> <span class="ident">line_read</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">height</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>);
+    <span class="kw">fn </span>read_scanline(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(line_read) = <span class="self">self</span>.line_read {
+            <span class="kw">if </span>line_read == <span class="self">self</span>.height {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="number">0</span>);
             }
         }
 
-        <span class="comment">// read the pixels from the data region</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pixel_data</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">image_type</span>.<span class="ident">is_encoded</span>() {
-            <span class="self">self</span>.<span class="ident">read_encoded_line</span>()<span class="question-mark">?</span>
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">num_raw_bytes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">width</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">num_raw_bytes</span>];
-            <span class="self">self</span>.<span class="ident">r</span>.<span class="ident">by_ref</span>().<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>)<span class="question-mark">?</span>;
-            <span class="ident">buf</span>
+        <span class="comment">// read the pixels from the data region
+        </span><span class="kw">let </span><span class="kw-2">mut </span>pixel_data = <span class="kw">if </span><span class="self">self</span>.image_type.is_encoded() {
+            <span class="self">self</span>.read_encoded_line()<span class="question-mark">?
+        </span>} <span class="kw">else </span>{
+            <span class="kw">let </span>num_raw_bytes = <span class="self">self</span>.width * <span class="self">self</span>.bytes_per_pixel;
+            <span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0</span>; num_raw_bytes];
+            <span class="self">self</span>.r.by_ref().read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
+            buf
         };
 
-        <span class="comment">// expand the indices using the color map if necessary</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">image_type</span>.<span class="ident">is_color_mapped</span>() {
-            <span class="ident">pixel_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">expand_color_map</span>(<span class="kw-2">&amp;</span><span class="ident">pixel_data</span>)<span class="question-mark">?</span>;
+        <span class="comment">// expand the indices using the color map if necessary
+        </span><span class="kw">if </span><span class="self">self</span>.image_type.is_color_mapped() {
+            pixel_data = <span class="self">self</span>.expand_color_map(<span class="kw-2">&amp;</span>pixel_data)<span class="question-mark">?</span>;
         }
-        <span class="self">self</span>.<span class="ident">reverse_encoding_in_output</span>(<span class="kw-2">&amp;mut</span> <span class="ident">pixel_data</span>);
+        <span class="self">self</span>.reverse_encoding_in_output(<span class="kw-2">&amp;mut </span>pixel_data);
 
-        <span class="comment">// copy to the output buffer</span>
-        <span class="ident">buf</span>[..<span class="ident">pixel_data</span>.<span class="ident">len</span>()].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">pixel_data</span>);
+        <span class="comment">// copy to the output buffer
+        </span>buf[..pixel_data.len()].copy_from_slice(<span class="kw-2">&amp;</span>pixel_data);
 
-        <span class="self">self</span>.<span class="ident">line_read</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">line_read</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>) <span class="op">+</span> <span class="number">1</span>);
+        <span class="self">self</span>.line_read = <span class="prelude-val">Some</span>(<span class="self">self</span>.line_read.unwrap_or(<span class="number">0</span>) + <span class="number">1</span>);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">pixel_data</span>.<span class="ident">len</span>())
+        <span class="prelude-val">Ok</span>(pixel_data.len())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ImageDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TgaDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Reader</span> <span class="op">=</span> <span class="ident">TGAReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>TgaDecoder&lt;R&gt; {
+    <span class="kw">type </span>Reader = TGAReader&lt;R&gt;;
 
-    <span class="kw">fn</span> <span class="ident">dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
-        (<span class="self">self</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="self">self</span>.<span class="ident">height</span> <span class="kw">as</span> <span class="ident">u32</span>)
+    <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
+        (<span class="self">self</span>.width <span class="kw">as </span>u32, <span class="self">self</span>.height <span class="kw">as </span>u32)
     }
 
-    <span class="kw">fn</span> <span class="ident">color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ColorType</span> {
-        <span class="self">self</span>.<span class="ident">color_type</span>
+    <span class="kw">fn </span>color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ColorType {
+        <span class="self">self</span>.color_type
     }
 
-    <span class="kw">fn</span> <span class="ident">original_color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ExtendedColorType</span> {
-        <span class="self">self</span>.<span class="ident">original_color_type</span>
-            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">color_type</span>().<span class="ident">into</span>())
+    <span class="kw">fn </span>original_color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ExtendedColorType {
+        <span class="self">self</span>.original_color_type
+            .unwrap_or_else(|| <span class="self">self</span>.color_type().into())
     }
 
-    <span class="kw">fn</span> <span class="ident">scanline_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="comment">// This cannot overflow because TGA has a maximum width of u16::MAX_VALUE and</span>
-        <span class="comment">// `bytes_per_pixel` is a u8.</span>
-        <span class="ident">u64::from</span>(<span class="self">self</span>.<span class="ident">color_type</span>.<span class="ident">bytes_per_pixel</span>()) <span class="op">*</span> <span class="self">self</span>.<span class="ident">width</span> <span class="kw">as</span> <span class="ident">u64</span>
+    <span class="kw">fn </span>scanline_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="comment">// This cannot overflow because TGA has a maximum width of u16::MAX_VALUE and
+        // `bytes_per_pixel` is a u8.
+        </span>u64::from(<span class="self">self</span>.color_type.bytes_per_pixel()) * <span class="self">self</span>.width <span class="kw">as </span>u64
     }
 
-    <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">TGAReader</span> {
-            <span class="ident">buffer</span>: <span class="ident">ImageReadBuffer::new</span>(<span class="self">self</span>.<span class="ident">scanline_bytes</span>(), <span class="self">self</span>.<span class="ident">total_bytes</span>()),
-            <span class="ident">decoder</span>: <span class="self">self</span>,
+    <span class="kw">fn </span>into_reader(<span class="self">self</span>) -&gt; ImageResult&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="prelude-val">Ok</span>(TGAReader {
+            buffer: ImageReadBuffer::new(<span class="self">self</span>.scanline_bytes(), <span class="self">self</span>.total_bytes()),
+            decoder: <span class="self">self</span>,
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">read_image</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">assert_eq!</span>(<span class="ident">u64::try_from</span>(<span class="ident">buf</span>.<span class="ident">len</span>()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">total_bytes</span>()));
+    <span class="kw">fn </span>read_image(<span class="kw-2">mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; ImageResult&lt;()&gt; {
+        <span class="macro">assert_eq!</span>(u64::try_from(buf.len()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.total_bytes()));
 
-        <span class="comment">// In indexed images, we might need more bytes than pixels to read them. That&#39;s nonsensical</span>
-        <span class="comment">// to encode but we&#39;ll not want to crash.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fallback_buf</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-        <span class="comment">// read the pixels from the data region</span>
-        <span class="kw">let</span> <span class="ident">rawbuf</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">image_type</span>.<span class="ident">is_encoded</span>() {
-            <span class="kw">let</span> <span class="ident">pixel_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">read_all_encoded_data</span>()<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">usize::from</span>(<span class="self">self</span>.<span class="ident">color_type</span>.<span class="ident">bytes_per_pixel</span>()) {
-                <span class="ident">buf</span>[..<span class="ident">pixel_data</span>.<span class="ident">len</span>()].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">pixel_data</span>);
-                <span class="kw-2">&amp;</span><span class="ident">buf</span>[..<span class="ident">pixel_data</span>.<span class="ident">len</span>()]
-            } <span class="kw">else</span> {
-                <span class="ident">fallback_buf</span> <span class="op">=</span> <span class="ident">pixel_data</span>;
-                <span class="kw-2">&amp;</span><span class="ident">fallback_buf</span>[..]
+        <span class="comment">// In indexed images, we might need more bytes than pixels to read them. That&#39;s nonsensical
+        // to encode but we&#39;ll not want to crash.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>fallback_buf = <span class="macro">vec!</span>[];
+        <span class="comment">// read the pixels from the data region
+        </span><span class="kw">let </span>rawbuf = <span class="kw">if </span><span class="self">self</span>.image_type.is_encoded() {
+            <span class="kw">let </span>pixel_data = <span class="self">self</span>.read_all_encoded_data()<span class="question-mark">?</span>;
+            <span class="kw">if </span><span class="self">self</span>.bytes_per_pixel &lt;= usize::from(<span class="self">self</span>.color_type.bytes_per_pixel()) {
+                buf[..pixel_data.len()].copy_from_slice(<span class="kw-2">&amp;</span>pixel_data);
+                <span class="kw-2">&amp;</span>buf[..pixel_data.len()]
+            } <span class="kw">else </span>{
+                fallback_buf = pixel_data;
+                <span class="kw-2">&amp;</span>fallback_buf[..]
             }
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">num_raw_bytes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">width</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">height</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span>;
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bytes_per_pixel</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">usize::from</span>(<span class="self">self</span>.<span class="ident">color_type</span>.<span class="ident">bytes_per_pixel</span>()) {
-                <span class="self">self</span>.<span class="ident">r</span>.<span class="ident">by_ref</span>().<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>[..<span class="ident">num_raw_bytes</span>])<span class="question-mark">?</span>;
-                <span class="kw-2">&amp;</span><span class="ident">buf</span>[..<span class="ident">num_raw_bytes</span>]
-            } <span class="kw">else</span> {
-                <span class="ident">fallback_buf</span>.<span class="ident">resize</span>(<span class="ident">num_raw_bytes</span>, <span class="number">0u8</span>);
-                <span class="self">self</span>.<span class="ident">r</span>
-                    .<span class="ident">by_ref</span>()
-                    .<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">fallback_buf</span>[..<span class="ident">num_raw_bytes</span>])<span class="question-mark">?</span>;
-                <span class="kw-2">&amp;</span><span class="ident">fallback_buf</span>[..<span class="ident">num_raw_bytes</span>]
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>num_raw_bytes = <span class="self">self</span>.width * <span class="self">self</span>.height * <span class="self">self</span>.bytes_per_pixel;
+            <span class="kw">if </span><span class="self">self</span>.bytes_per_pixel &lt;= usize::from(<span class="self">self</span>.color_type.bytes_per_pixel()) {
+                <span class="self">self</span>.r.by_ref().read_exact(<span class="kw-2">&amp;mut </span>buf[..num_raw_bytes])<span class="question-mark">?</span>;
+                <span class="kw-2">&amp;</span>buf[..num_raw_bytes]
+            } <span class="kw">else </span>{
+                fallback_buf.resize(num_raw_bytes, <span class="number">0u8</span>);
+                <span class="self">self</span>.r
+                    .by_ref()
+                    .read_exact(<span class="kw-2">&amp;mut </span>fallback_buf[..num_raw_bytes])<span class="question-mark">?</span>;
+                <span class="kw-2">&amp;</span>fallback_buf[..num_raw_bytes]
             }
         };
 
-        <span class="comment">// expand the indices using the color map if necessary</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">image_type</span>.<span class="ident">is_color_mapped</span>() {
-            <span class="kw">let</span> <span class="ident">pixel_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">expand_color_map</span>(<span class="ident">rawbuf</span>)<span class="question-mark">?</span>;
-            <span class="comment">// not enough data to fill the buffer, or would overflow the buffer</span>
-            <span class="kw">if</span> <span class="ident">pixel_data</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">buf</span>.<span class="ident">len</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Limits</span>(<span class="ident">LimitError::from_kind</span>(
-                    <span class="ident">LimitErrorKind::DimensionError</span>,
+        <span class="comment">// expand the indices using the color map if necessary
+        </span><span class="kw">if </span><span class="self">self</span>.image_type.is_color_mapped() {
+            <span class="kw">let </span>pixel_data = <span class="self">self</span>.expand_color_map(rawbuf)<span class="question-mark">?</span>;
+            <span class="comment">// not enough data to fill the buffer, or would overflow the buffer
+            </span><span class="kw">if </span>pixel_data.len() != buf.len() {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Limits(LimitError::from_kind(
+                    LimitErrorKind::DimensionError,
                 )));
             }
-            <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">pixel_data</span>);
+            buf.copy_from_slice(<span class="kw-2">&amp;</span>pixel_data);
         }
 
-        <span class="self">self</span>.<span class="ident">reverse_encoding_in_output</span>(<span class="ident">buf</span>);
+        <span class="self">self</span>.reverse_encoding_in_output(buf);
 
-        <span class="self">self</span>.<span class="ident">flip_vertically</span>(<span class="ident">buf</span>);
+        <span class="self">self</span>.flip_vertically(buf);
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TGAReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">buffer</span>: <span class="ident">ImageReadBuffer</span>,
-    <span class="ident">decoder</span>: <span class="ident">TgaDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>TGAReader&lt;R&gt; {
+    buffer: ImageReadBuffer,
+    decoder: TgaDecoder&lt;R&gt;,
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">TGAReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">decoder</span>;
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">read</span>(<span class="ident">buf</span>, <span class="op">|</span><span class="ident">buf</span><span class="op">|</span> <span class="ident">decoder</span>.<span class="ident">read_scanline</span>(<span class="ident">buf</span>))
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; Read <span class="kw">for </span>TGAReader&lt;R&gt; {
+    <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">let </span>decoder = <span class="kw-2">&amp;mut </span><span class="self">self</span>.decoder;
+        <span class="self">self</span>.buffer.read(buf, |buf| decoder.read_scanline(buf))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

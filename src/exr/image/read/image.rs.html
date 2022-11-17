@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/image/read/image.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>image.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../exr/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/image/read/image.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>image.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../exr/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -213,215 +207,214 @@
 <span id="207">207</span>
 <span id="208">208</span>
 <span id="209">209</span>
-</pre><pre class="rust"><code><span class="doccomment">//! The last wrapper of image readers, finally containing the [`from_file(path)`] method.</span>
-<span class="doccomment">//! This completes the builder and reads a complete image.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! The last wrapper of image readers, finally containing the [`from_file(path)`] method.
+//! This completes the builder and reads a complete image.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::meta::header</span>::{<span class="ident">Header</span>, <span class="ident">ImageAttributes</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="prelude-ty">Result</span>, <span class="ident">UnitResult</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block</span>::{<span class="ident">UncompressedBlock</span>, <span class="ident">BlockIndex</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block::chunk::TileCoordinates</span>;
-<span class="kw">use</span> <span class="ident">std::path::Path</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="ident">Read</span>, <span class="ident">BufReader</span>};
-<span class="kw">use</span> <span class="ident">std::io::Seek</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::meta::MetaData</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block::reader::ChunksReader</span>;
+</span><span class="kw">use </span><span class="kw">crate</span>::image::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::meta::header::{Header, ImageAttributes};
+<span class="kw">use </span><span class="kw">crate</span>::error::{<span class="prelude-ty">Result</span>, UnitResult};
+<span class="kw">use </span><span class="kw">crate</span>::block::{UncompressedBlock, BlockIndex};
+<span class="kw">use </span><span class="kw">crate</span>::block::chunk::TileCoordinates;
+<span class="kw">use </span>std::path::Path;
+<span class="kw">use </span>std::io::{Read, BufReader};
+<span class="kw">use </span>std::io::Seek;
+<span class="kw">use </span><span class="kw">crate</span>::meta::MetaData;
+<span class="kw">use </span><span class="kw">crate</span>::block::reader::ChunksReader;
 
-<span class="doccomment">/// Specify whether to read the image in parallel,</span>
-<span class="doccomment">/// whether to use pedantic error handling,</span>
-<span class="doccomment">/// and a callback for the reading progress.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ReadImage</span><span class="op">&lt;</span><span class="ident">OnProgress</span>, <span class="ident">ReadLayers</span><span class="op">&gt;</span> {
-    <span class="ident">on_progress</span>: <span class="ident">OnProgress</span>,
-    <span class="ident">read_layers</span>: <span class="ident">ReadLayers</span>,
-    <span class="ident">pedantic</span>: <span class="ident">bool</span>,
-    <span class="ident">parallel</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Specify whether to read the image in parallel,
+/// whether to use pedantic error handling,
+/// and a callback for the reading progress.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>ReadImage&lt;OnProgress, ReadLayers&gt; {
+    on_progress: OnProgress,
+    read_layers: ReadLayers,
+    pedantic: bool,
+    parallel: bool,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">ReadImage</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>)
+<span class="kw">impl</span>&lt;F, L&gt; ReadImage&lt;F, L&gt; <span class="kw">where </span>F: FnMut(f64)
 {
-    <span class="doccomment">/// Uses relaxed error handling and parallel decompression.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">read_layers</span>: <span class="ident">L</span>, <span class="ident">on_progress</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">on_progress</span>, <span class="ident">read_layers</span>,
-            <span class="ident">pedantic</span>: <span class="bool-val">false</span>, <span class="ident">parallel</span>: <span class="bool-val">true</span>,
+    <span class="doccomment">/// Uses relaxed error handling and parallel decompression.
+    </span><span class="kw">pub fn </span>new(read_layers: L, on_progress: F) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            on_progress, read_layers,
+            pedantic: <span class="bool-val">false</span>, parallel: <span class="bool-val">true</span>,
         }
     }
 
-    <span class="doccomment">/// Specify that any missing or unusual information should result in an error.</span>
-    <span class="doccomment">/// Otherwise, `exrs` will try to compute or ignore missing information.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If pedantic is true, then an error will be returned as soon as anything is missing in the file,</span>
-    <span class="doccomment">/// or two values in the image contradict each other. If pedantic is false,</span>
-    <span class="doccomment">/// then only fatal errors will be thrown. By default, reading an image is not pedantic,</span>
-    <span class="doccomment">/// which means that slightly invalid files might still be readable.</span>
-    <span class="doccomment">/// For example, if some attribute is missing but can be recomputed, this flag decides whether an error is thrown.</span>
-    <span class="doccomment">/// Or if the pedantic flag is true and there are still bytes left after the decompression algorithm finished,</span>
-    <span class="doccomment">/// an error is thrown, because this should not happen and something might be wrong with the file.</span>
-    <span class="doccomment">/// Or if your application is a target of attacks, or if you want to emulate the original C++ library,</span>
-    <span class="doccomment">/// you might want to switch to pedantic reading.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pedantic</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> { <span class="self">Self</span> { <span class="ident">pedantic</span>: <span class="bool-val">true</span>, ..<span class="self">self</span> } }
+    <span class="doccomment">/// Specify that any missing or unusual information should result in an error.
+    /// Otherwise, `exrs` will try to compute or ignore missing information.
+    ///
+    /// If pedantic is true, then an error will be returned as soon as anything is missing in the file,
+    /// or two values in the image contradict each other. If pedantic is false,
+    /// then only fatal errors will be thrown. By default, reading an image is not pedantic,
+    /// which means that slightly invalid files might still be readable.
+    /// For example, if some attribute is missing but can be recomputed, this flag decides whether an error is thrown.
+    /// Or if the pedantic flag is true and there are still bytes left after the decompression algorithm finished,
+    /// an error is thrown, because this should not happen and something might be wrong with the file.
+    /// Or if your application is a target of attacks, or if you want to emulate the original C++ library,
+    /// you might want to switch to pedantic reading.
+    </span><span class="kw">pub fn </span>pedantic(<span class="self">self</span>) -&gt; <span class="self">Self </span>{ <span class="self">Self </span>{ pedantic: <span class="bool-val">true</span>, ..<span class="self">self </span>} }
 
-    <span class="doccomment">/// Specify that multiple pixel blocks should never be decompressed using multiple threads at once.</span>
-    <span class="doccomment">/// This might be slower but uses less memory and less synchronization.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">non_parallel</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> { <span class="self">Self</span> { <span class="ident">parallel</span>: <span class="bool-val">false</span>, ..<span class="self">self</span> } }
+    <span class="doccomment">/// Specify that multiple pixel blocks should never be decompressed using multiple threads at once.
+    /// This might be slower but uses less memory and less synchronization.
+    </span><span class="kw">pub fn </span>non_parallel(<span class="self">self</span>) -&gt; <span class="self">Self </span>{ <span class="self">Self </span>{ parallel: <span class="bool-val">false</span>, ..<span class="self">self </span>} }
 
-    <span class="doccomment">/// Specify a function to be called regularly throughout the loading process.</span>
-    <span class="doccomment">/// Replaces all previously specified progress functions in this reader.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on_progress</span><span class="op">&lt;</span><span class="ident">OnProgress</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">on_progress</span>: <span class="ident">OnProgress</span>) -&gt; <span class="ident">ReadImage</span><span class="op">&lt;</span><span class="ident">OnProgress</span>, <span class="ident">L</span><span class="op">&gt;</span>
-        <span class="kw">where</span> <span class="ident">OnProgress</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>)
+    <span class="doccomment">/// Specify a function to be called regularly throughout the loading process.
+    /// Replaces all previously specified progress functions in this reader.
+    </span><span class="kw">pub fn </span>on_progress&lt;OnProgress&gt;(<span class="self">self</span>, on_progress: OnProgress) -&gt; ReadImage&lt;OnProgress, L&gt;
+        <span class="kw">where </span>OnProgress: FnMut(f64)
     {
-        <span class="ident">ReadImage</span> {
-            <span class="ident">on_progress</span>,
-            <span class="ident">read_layers</span>: <span class="self">self</span>.<span class="ident">read_layers</span>,
-            <span class="ident">pedantic</span>: <span class="self">self</span>.<span class="ident">pedantic</span>,
-            <span class="ident">parallel</span>: <span class="self">self</span>.<span class="ident">parallel</span>
+        ReadImage {
+            on_progress,
+            read_layers: <span class="self">self</span>.read_layers,
+            pedantic: <span class="self">self</span>.pedantic,
+            parallel: <span class="self">self</span>.parallel
         }
     }
 
 
-    <span class="doccomment">/// Read the exr image from a file.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_unbuffered`] instead, if you do not have a file.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_file</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">path</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span><span class="op">&gt;</span>
-        <span class="kw">where</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">L</span>: <span class="ident">ReadLayers</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Layers</span> <span class="op">=</span> <span class="ident">Layers</span><span class="op">&gt;</span>
+    <span class="doccomment">/// Read the exr image from a file.
+    /// Use [`ReadImage::read_from_unbuffered`] instead, if you do not have a file.
+    </span><span class="attribute">#[inline]
+    #[must_use]
+    </span><span class="kw">pub fn </span>from_file&lt;Layers&gt;(<span class="self">self</span>, path: <span class="kw">impl </span>AsRef&lt;Path&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Image&lt;Layers&gt;&gt;
+        <span class="kw">where for</span>&lt;<span class="lifetime">&#39;s</span>&gt; L: ReadLayers&lt;<span class="lifetime">&#39;s</span>, Layers = Layers&gt;
     {
-        <span class="self">self</span>.<span class="ident">from_unbuffered</span>(<span class="ident">std::fs::File::open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>)
+        <span class="self">self</span>.from_unbuffered(std::fs::File::open(path)<span class="question-mark">?</span>)
     }
 
-    <span class="doccomment">/// Buffer the reader and then read the exr image from it.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_buffered`] instead, if your reader is an in-memory reader.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_file`] instead, if you have a file path.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_unbuffered</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">unbuffered</span>: <span class="kw">impl</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span><span class="op">&gt;</span>
-        <span class="kw">where</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">L</span>: <span class="ident">ReadLayers</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Layers</span> <span class="op">=</span> <span class="ident">Layers</span><span class="op">&gt;</span>
+    <span class="doccomment">/// Buffer the reader and then read the exr image from it.
+    /// Use [`ReadImage::read_from_buffered`] instead, if your reader is an in-memory reader.
+    /// Use [`ReadImage::read_from_file`] instead, if you have a file path.
+    </span><span class="attribute">#[inline]
+    #[must_use]
+    </span><span class="kw">pub fn </span>from_unbuffered&lt;Layers&gt;(<span class="self">self</span>, unbuffered: <span class="kw">impl </span>Read + Seek) -&gt; <span class="prelude-ty">Result</span>&lt;Image&lt;Layers&gt;&gt;
+        <span class="kw">where for</span>&lt;<span class="lifetime">&#39;s</span>&gt; L: ReadLayers&lt;<span class="lifetime">&#39;s</span>, Layers = Layers&gt;
     {
-        <span class="self">self</span>.<span class="ident">from_buffered</span>(<span class="ident">BufReader::new</span>(<span class="ident">unbuffered</span>))
+        <span class="self">self</span>.from_buffered(BufReader::new(unbuffered))
     }
 
-    <span class="doccomment">/// Read the exr image from a buffered reader.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_file`] instead, if you have a file path.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_unbuffered`] instead, if this is not an in-memory reader.</span>
-    <span class="comment">// TODO Use Parallel&lt;&gt; Wrapper to only require sendable byte source where parallel decompression is required</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_buffered</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">buffered</span>: <span class="kw">impl</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span><span class="op">&gt;</span>
-        <span class="kw">where</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">L</span>: <span class="ident">ReadLayers</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Layers</span> <span class="op">=</span> <span class="ident">Layers</span><span class="op">&gt;</span>
+    <span class="doccomment">/// Read the exr image from a buffered reader.
+    /// Use [`ReadImage::read_from_file`] instead, if you have a file path.
+    /// Use [`ReadImage::read_from_unbuffered`] instead, if this is not an in-memory reader.
+    </span><span class="comment">// TODO Use Parallel&lt;&gt; Wrapper to only require sendable byte source where parallel decompression is required
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub fn </span>from_buffered&lt;Layers&gt;(<span class="self">self</span>, buffered: <span class="kw">impl </span>Read + Seek) -&gt; <span class="prelude-ty">Result</span>&lt;Image&lt;Layers&gt;&gt;
+        <span class="kw">where for</span>&lt;<span class="lifetime">&#39;s</span>&gt; L: ReadLayers&lt;<span class="lifetime">&#39;s</span>, Layers = Layers&gt;
     {
-        <span class="kw">let</span> <span class="ident">chunks</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::block::read</span>(<span class="ident">buffered</span>, <span class="self">self</span>.<span class="ident">pedantic</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">from_chunks</span>(<span class="ident">chunks</span>)
+        <span class="kw">let </span>chunks = <span class="kw">crate</span>::block::read(buffered, <span class="self">self</span>.pedantic)<span class="question-mark">?</span>;
+        <span class="self">self</span>.from_chunks(chunks)
     }
 
-    <span class="doccomment">/// Read the exr image from an initialized chunks reader</span>
-    <span class="doccomment">/// that has already extracted the meta data from the file.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_file`] instead, if you have a file path.</span>
-    <span class="doccomment">/// Use [`ReadImage::read_from_buffered`] instead, if this is an in-memory reader.</span>
-    <span class="comment">// TODO Use Parallel&lt;&gt; Wrapper to only require sendable byte source where parallel decompression is required</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_chunks</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">chunks_reader</span>: <span class="ident"><span class="kw">crate</span>::block::reader::Reader</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&lt;</span><span class="ident">Layers</span><span class="op">&gt;</span><span class="op">&gt;</span>
-        <span class="kw">where</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">L</span>: <span class="ident">ReadLayers</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">Layers</span> <span class="op">=</span> <span class="ident">Layers</span><span class="op">&gt;</span>
+    <span class="doccomment">/// Read the exr image from an initialized chunks reader
+    /// that has already extracted the meta data from the file.
+    /// Use [`ReadImage::read_from_file`] instead, if you have a file path.
+    /// Use [`ReadImage::read_from_buffered`] instead, if this is an in-memory reader.
+    </span><span class="comment">// TODO Use Parallel&lt;&gt; Wrapper to only require sendable byte source where parallel decompression is required
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub fn </span>from_chunks&lt;Layers&gt;(<span class="kw-2">mut </span><span class="self">self</span>, chunks_reader: <span class="kw">crate</span>::block::reader::Reader&lt;<span class="kw">impl </span>Read + Seek&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Image&lt;Layers&gt;&gt;
+        <span class="kw">where for</span>&lt;<span class="lifetime">&#39;s</span>&gt; L: ReadLayers&lt;<span class="lifetime">&#39;s</span>, Layers = Layers&gt;
     {
-        <span class="kw">let</span> <span class="self">Self</span> { <span class="ident">pedantic</span>, <span class="ident">parallel</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">on_progress</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">read_layers</span> } <span class="op">=</span> <span class="self">self</span>;
+        <span class="kw">let </span><span class="self">Self </span>{ pedantic, parallel, <span class="kw-2">ref mut </span>on_progress, <span class="kw-2">ref mut </span>read_layers } = <span class="self">self</span>;
 
-        <span class="kw">let</span> <span class="ident">layers_reader</span> <span class="op">=</span> <span class="ident">read_layers</span>.<span class="ident">create_layers_reader</span>(<span class="ident">chunks_reader</span>.<span class="ident">headers</span>())<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">image_collector</span> <span class="op">=</span> <span class="ident">ImageWithAttributesReader::new</span>(<span class="ident">chunks_reader</span>.<span class="ident">headers</span>(), <span class="ident">layers_reader</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>layers_reader = read_layers.create_layers_reader(chunks_reader.headers())<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>image_collector = ImageWithAttributesReader::new(chunks_reader.headers(), layers_reader)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">block_reader</span> <span class="op">=</span> <span class="ident">chunks_reader</span>
-            .<span class="ident">filter_chunks</span>(<span class="ident">pedantic</span>, <span class="op">|</span><span class="ident">meta</span>, <span class="ident">tile</span>, <span class="ident">block</span><span class="op">|</span> {
-                <span class="ident">image_collector</span>.<span class="ident">filter_block</span>(<span class="ident">meta</span>, <span class="ident">tile</span>, <span class="ident">block</span>)
-            })<span class="question-mark">?</span>
-            .<span class="ident">on_progress</span>(<span class="ident">on_progress</span>);
+        <span class="kw">let </span>block_reader = chunks_reader
+            .filter_chunks(pedantic, |meta, tile, block| {
+                image_collector.filter_block(meta, tile, block)
+            })<span class="question-mark">?
+            </span>.on_progress(on_progress);
 
-        <span class="comment">// TODO propagate send requirement further upwards</span>
-        <span class="kw">if</span> <span class="ident">parallel</span> {
-            <span class="ident">block_reader</span>.<span class="ident">decompress_parallel</span>(<span class="ident">pedantic</span>, <span class="op">|</span><span class="ident">meta_data</span>, <span class="ident">block</span><span class="op">|</span>{
-                <span class="ident">image_collector</span>.<span class="ident">read_block</span>(<span class="kw-2">&amp;</span><span class="ident">meta_data</span>.<span class="ident">headers</span>, <span class="ident">block</span>)
+        <span class="comment">// TODO propagate send requirement further upwards
+        </span><span class="kw">if </span>parallel {
+            block_reader.decompress_parallel(pedantic, |meta_data, block|{
+                image_collector.read_block(<span class="kw-2">&amp;</span>meta_data.headers, block)
             })<span class="question-mark">?</span>;
         }
-        <span class="kw">else</span> {
-            <span class="ident">block_reader</span>.<span class="ident">decompress_sequential</span>(<span class="ident">pedantic</span>, <span class="op">|</span><span class="ident">meta_data</span>, <span class="ident">block</span><span class="op">|</span>{
-                <span class="ident">image_collector</span>.<span class="ident">read_block</span>(<span class="kw-2">&amp;</span><span class="ident">meta_data</span>.<span class="ident">headers</span>, <span class="ident">block</span>)
+        <span class="kw">else </span>{
+            block_reader.decompress_sequential(pedantic, |meta_data, block|{
+                image_collector.read_block(<span class="kw-2">&amp;</span>meta_data.headers, block)
             })<span class="question-mark">?</span>;
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">image_collector</span>.<span class="ident">into_image</span>())
+        <span class="prelude-val">Ok</span>(image_collector.into_image())
     }
 }
 
-<span class="doccomment">/// Processes blocks from a file and collects them into a complete `Image`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ImageWithAttributesReader</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> {
-    <span class="ident">image_attributes</span>: <span class="ident">ImageAttributes</span>,
-    <span class="ident">layers_reader</span>: <span class="ident">L</span>,
+<span class="doccomment">/// Processes blocks from a file and collects them into a complete `Image`.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>ImageWithAttributesReader&lt;L&gt; {
+    image_attributes: ImageAttributes,
+    layers_reader: L,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="ident">ImageWithAttributesReader</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">L</span>: <span class="ident">LayersReader</span> {
+<span class="kw">impl</span>&lt;L&gt; ImageWithAttributesReader&lt;L&gt; <span class="kw">where </span>L: LayersReader {
 
-    <span class="doccomment">/// A new image reader with image attributes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">headers</span>: <span class="kw-2">&amp;</span>[<span class="ident">Header</span>], <span class="ident">layers_reader</span>: <span class="ident">L</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="doccomment">/// A new image reader with image attributes.
+    </span><span class="kw">pub fn </span>new(headers: <span class="kw-2">&amp;</span>[Header], layers_reader: L) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt;
     {
-        <span class="prelude-val">Ok</span>(<span class="ident">ImageWithAttributesReader</span> {
-            <span class="ident">image_attributes</span>: <span class="ident">headers</span>.<span class="ident">first</span>().<span class="ident">as_ref</span>().<span class="ident">expect</span>(<span class="string">&quot;invalid headers&quot;</span>).<span class="ident">shared_attributes</span>.<span class="ident">clone</span>(),
-            <span class="ident">layers_reader</span>,
+        <span class="prelude-val">Ok</span>(ImageWithAttributesReader {
+            image_attributes: headers.first().as_ref().expect(<span class="string">&quot;invalid headers&quot;</span>).shared_attributes.clone(),
+            layers_reader,
         })
     }
 
-    <span class="doccomment">/// Specify whether a single block of pixels should be loaded from the file</span>
-    <span class="kw">fn</span> <span class="ident">filter_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">tile</span>: <span class="ident">TileCoordinates</span>, <span class="ident">block</span>: <span class="ident">BlockIndex</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">layers_reader</span>.<span class="ident">filter_block</span>(<span class="ident">meta</span>, <span class="ident">tile</span>, <span class="ident">block</span>)
+    <span class="doccomment">/// Specify whether a single block of pixels should be loaded from the file
+    </span><span class="kw">fn </span>filter_block(<span class="kw-2">&amp;</span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span>MetaData, tile: TileCoordinates, block: BlockIndex) -&gt; bool {
+        <span class="self">self</span>.layers_reader.filter_block(meta, tile, block)
     }
 
-    <span class="doccomment">/// Load a single pixel block, which has not been filtered, into the reader, accumulating the image</span>
-    <span class="kw">fn</span> <span class="ident">read_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">headers</span>: <span class="kw-2">&amp;</span>[<span class="ident">Header</span>], <span class="ident">block</span>: <span class="ident">UncompressedBlock</span>) -&gt; <span class="ident">UnitResult</span> {
-        <span class="self">self</span>.<span class="ident">layers_reader</span>.<span class="ident">read_block</span>(<span class="ident">headers</span>, <span class="ident">block</span>)
+    <span class="doccomment">/// Load a single pixel block, which has not been filtered, into the reader, accumulating the image
+    </span><span class="kw">fn </span>read_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>, headers: <span class="kw-2">&amp;</span>[Header], block: UncompressedBlock) -&gt; UnitResult {
+        <span class="self">self</span>.layers_reader.read_block(headers, block)
     }
 
-    <span class="doccomment">/// Deliver the complete accumulated image</span>
-    <span class="kw">fn</span> <span class="ident">into_image</span>(<span class="self">self</span>) -&gt; <span class="ident">Image</span><span class="op">&lt;</span><span class="ident">L::Layers</span><span class="op">&gt;</span> {
-        <span class="ident">Image</span> {
-            <span class="ident">attributes</span>: <span class="self">self</span>.<span class="ident">image_attributes</span>,
-            <span class="ident">layer_data</span>: <span class="self">self</span>.<span class="ident">layers_reader</span>.<span class="ident">into_layers</span>()
+    <span class="doccomment">/// Deliver the complete accumulated image
+    </span><span class="kw">fn </span>into_image(<span class="self">self</span>) -&gt; Image&lt;L::Layers&gt; {
+        Image {
+            attributes: <span class="self">self</span>.image_attributes,
+            layer_data: <span class="self">self</span>.layers_reader.into_layers()
         }
     }
 }
 
 
-<span class="doccomment">/// A template that creates a `LayerReader` for each layer in the file.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ReadLayers</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
+<span class="doccomment">/// A template that creates a `LayerReader` for each layer in the file.
+</span><span class="kw">pub trait </span>ReadLayers&lt;<span class="lifetime">&#39;s</span>&gt; {
 
-    <span class="doccomment">/// The type of the resulting Layers</span>
-    <span class="kw">type</span> <span class="ident">Layers</span>;
+    <span class="doccomment">/// The type of the resulting Layers
+    </span><span class="kw">type </span>Layers;
 
-    <span class="doccomment">/// The type of the temporary layer reader</span>
-    <span class="kw">type</span> <span class="ident">Reader</span>: <span class="ident">LayersReader</span><span class="op">&lt;</span><span class="ident">Layers</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Layers</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// The type of the temporary layer reader
+    </span><span class="kw">type </span>Reader: LayersReader&lt;Layers = <span class="self">Self</span>::Layers&gt;;
 
-    <span class="doccomment">/// Create a single reader for a single layer</span>
-    <span class="kw">fn</span> <span class="ident">create_layers_reader</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">self</span>, <span class="ident">headers</span>: <span class="kw-2">&amp;</span>[<span class="ident">Header</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Create a single reader for a single layer
+    </span><span class="kw">fn </span>create_layers_reader(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s </span><span class="self">self</span>, headers: <span class="kw-2">&amp;</span>[Header]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Reader&gt;;
 
-    <span class="doccomment">/// Specify that all attributes should be read from an image.</span>
-    <span class="doccomment">/// Use `from_file(path)` on the return value of this method to actually decode an image.</span>
-    <span class="kw">fn</span> <span class="ident">all_attributes</span>(<span class="self">self</span>) -&gt; <span class="ident">ReadImage</span><span class="op">&lt;</span><span class="kw">fn</span>(<span class="ident">f64</span>), <span class="self">Self</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span> {
-        <span class="ident">ReadImage::new</span>(<span class="self">self</span>, <span class="ident">ignore_progress</span>)
+    <span class="doccomment">/// Specify that all attributes should be read from an image.
+    /// Use `from_file(path)` on the return value of this method to actually decode an image.
+    </span><span class="kw">fn </span>all_attributes(<span class="self">self</span>) -&gt; ReadImage&lt;<span class="kw">fn</span>(f64), <span class="self">Self</span>&gt; <span class="kw">where </span><span class="self">Self</span>: Sized {
+        ReadImage::new(<span class="self">self</span>, ignore_progress)
     }
 }
 
-<span class="doccomment">/// Processes pixel blocks from a file and accumulates them into a single image layer.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">LayersReader</span> {
+<span class="doccomment">/// Processes pixel blocks from a file and accumulates them into a single image layer.
+</span><span class="kw">pub trait </span>LayersReader {
 
-    <span class="doccomment">/// The type of resulting layers</span>
-    <span class="kw">type</span> <span class="ident">Layers</span>;
+    <span class="doccomment">/// The type of resulting layers
+    </span><span class="kw">type </span>Layers;
 
-    <span class="doccomment">/// Specify whether a single block of pixels should be loaded from the file</span>
-    <span class="kw">fn</span> <span class="ident">filter_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">tile</span>: <span class="ident">TileCoordinates</span>, <span class="ident">block</span>: <span class="ident">BlockIndex</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Specify whether a single block of pixels should be loaded from the file
+    </span><span class="kw">fn </span>filter_block(<span class="kw-2">&amp;</span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span>MetaData, tile: TileCoordinates, block: BlockIndex) -&gt; bool;
 
-    <span class="doccomment">/// Load a single pixel block, which has not been filtered, into the reader, accumulating the layer</span>
-    <span class="kw">fn</span> <span class="ident">read_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">headers</span>: <span class="kw-2">&amp;</span>[<span class="ident">Header</span>], <span class="ident">block</span>: <span class="ident">UncompressedBlock</span>) -&gt; <span class="ident">UnitResult</span>;
+    <span class="doccomment">/// Load a single pixel block, which has not been filtered, into the reader, accumulating the layer
+    </span><span class="kw">fn </span>read_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>, headers: <span class="kw-2">&amp;</span>[Header], block: UncompressedBlock) -&gt; UnitResult;
 
-    <span class="doccomment">/// Deliver the final accumulated layers for the image</span>
-    <span class="kw">fn</span> <span class="ident">into_layers</span>(<span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Layers</span>;
+    <span class="doccomment">/// Deliver the final accumulated layers for the image
+    </span><span class="kw">fn </span>into_layers(<span class="self">self</span>) -&gt; <span class="self">Self</span>::Layers;
 }
 
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

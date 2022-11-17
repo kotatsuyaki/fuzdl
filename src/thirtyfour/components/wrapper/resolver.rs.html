@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/thirtyfour-0.31.0/src/components/wrapper/resolver.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>resolver.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../thirtyfour/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/thirtyfour-0.31.0/src/components/wrapper/resolver.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>resolver.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../thirtyfour/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -484,486 +478,485 @@
 <span id="478">478</span>
 <span id="479">479</span>
 <span id="480">480</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::components::Component</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::WebDriverResult</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::extensions::query::ElementQueryOptions</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude::ElementQueryable</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">By</span>, <span class="ident">ElementQueryFn</span>, <span class="ident">WebElement</span>};
-<span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
-<span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Formatter</span>};
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::components::Component;
+<span class="kw">use </span><span class="kw">crate</span>::error::WebDriverResult;
+<span class="kw">use </span><span class="kw">crate</span>::extensions::query::ElementQueryOptions;
+<span class="kw">use </span><span class="kw">crate</span>::prelude::ElementQueryable;
+<span class="kw">use crate</span>::{By, ElementQueryFn, WebElement};
+<span class="kw">use </span>parking_lot::Mutex;
+<span class="kw">use </span>std::fmt::{Debug, Formatter};
+<span class="kw">use </span>std::sync::Arc;
 
-<span class="doccomment">/// Type alias for `ElementResolver&lt;WebElement&gt;`, for convenience.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ElementResolverSingle</span> <span class="op">=</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>;
-<span class="doccomment">/// Type alias for `ElementResolver&lt;Vec&lt;WebElement&gt;&gt;` for convenience.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ElementResolverMulti</span> <span class="op">=</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Type alias for `ElementResolver&lt;WebElement&gt;`, for convenience.
+</span><span class="kw">pub type </span>ElementResolverSingle = ElementResolver&lt;WebElement&gt;;
+<span class="doccomment">/// Type alias for `ElementResolver&lt;Vec&lt;WebElement&gt;&gt;` for convenience.
+</span><span class="kw">pub type </span>ElementResolverMulti = ElementResolver&lt;Vec&lt;WebElement&gt;&gt;;
 
-<span class="doccomment">/// `resolve!(x)` expands to `x.resolve().await?`</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">resolve</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">expr</span>) =&gt; {
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>.<span class="ident">resolve</span>().<span class="kw">await</span><span class="question-mark">?</span>
-    };
+<span class="doccomment">/// `resolve!(x)` expands to `x.resolve().await?`
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>resolve {
+    (<span class="macro-nonterminal">$a</span>:expr) =&gt; {
+        <span class="macro-nonterminal">$a</span>.resolve().<span class="kw">await</span><span class="question-mark">?
+    </span>};
 }
 
-<span class="doccomment">/// `resolve_present!(x)` expands to `x.resolve_present().await?`</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">resolve_present</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">expr</span>) =&gt; {
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>.<span class="ident">resolve_present</span>().<span class="kw">await</span><span class="question-mark">?</span>
-    };
+<span class="doccomment">/// `resolve_present!(x)` expands to `x.resolve_present().await?`
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>resolve_present {
+    (<span class="macro-nonterminal">$a</span>:expr) =&gt; {
+        <span class="macro-nonterminal">$a</span>.resolve_present().<span class="kw">await</span><span class="question-mark">?
+    </span>};
 }
 
-<span class="doccomment">/// Element resolver that can resolve a particular element or list of elements on demand.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Once resolved, the result will be cached for later retrieval until manually invalidated.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> {
-    <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-    <span class="ident">query_fn</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">element</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Element resolver that can resolve a particular element or list of elements on demand.
+///
+/// Once resolved, the result will be cached for later retrieval until manually invalidated.
+</span><span class="kw">pub struct </span>ElementResolver&lt;T: Clone&gt; {
+    base_element: WebElement,
+    query_fn: Arc&lt;ElementQueryFn&lt;T&gt;&gt;,
+    element: Arc&lt;Mutex&lt;<span class="prelude-ty">Option</span>&lt;T&gt;&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">element</span>.<span class="ident">lock</span>();
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;ElementResolver&quot;</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;base_element&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">base_element</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;element&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">element</span>)
-            .<span class="ident">finish</span>()
+<span class="kw">impl</span>&lt;T: Debug + Clone&gt; Debug <span class="kw">for </span>ElementResolver&lt;T&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+        <span class="kw">let </span>element = <span class="self">self</span>.element.lock();
+        f.debug_struct(<span class="string">&quot;ElementResolver&quot;</span>)
+            .field(<span class="string">&quot;base_element&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.base_element)
+            .field(<span class="string">&quot;element&quot;</span>, <span class="kw-2">&amp;</span>element)
+            .finish()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">base_element</span>: <span class="self">self</span>.<span class="ident">base_element</span>.<span class="ident">clone</span>(),
-            <span class="ident">query_fn</span>: <span class="self">self</span>.<span class="ident">query_fn</span>.<span class="ident">clone</span>(),
-            <span class="ident">element</span>: <span class="self">self</span>.<span class="ident">element</span>.<span class="ident">clone</span>(),
+<span class="kw">impl</span>&lt;T: Clone&gt; Clone <span class="kw">for </span>ElementResolver&lt;T&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            base_element: <span class="self">self</span>.base_element.clone(),
+            query_fn: <span class="self">self</span>.query_fn.clone(),
+            element: <span class="self">self</span>.element.clone(),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">peek</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">element</span>.<span class="ident">lock</span>().<span class="ident">clone</span>()
+<span class="kw">impl</span>&lt;T: Clone&gt; ElementResolver&lt;T&gt; {
+    <span class="kw">fn </span>peek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+        <span class="self">self</span>.element.lock().clone()
     }
 
-    <span class="kw">fn</span> <span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new</span>: <span class="ident">T</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">element</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">element</span>.<span class="ident">lock</span>();
-        <span class="ident">element</span>.<span class="ident">replace</span>(<span class="ident">new</span>);
+    <span class="kw">fn </span>replace(<span class="kw-2">&amp;</span><span class="self">self</span>, new: T) {
+        <span class="kw">let </span><span class="kw-2">mut </span>element = <span class="self">self</span>.element.lock();
+        element.replace(new);
     }
 
-    <span class="doccomment">/// Return the cached element(s) if any, otherwise run the query and return the result.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resolve</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Return the cached element(s) if any, otherwise run the query and return the result.
+    </span><span class="kw">pub async fn </span>resolve(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;T&gt; {
         {
-            <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">element</span>.<span class="ident">lock</span>();
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">elem</span>) <span class="op">=</span> <span class="ident">element</span>.<span class="ident">as_ref</span>() {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">elem</span>.<span class="ident">clone</span>());
+            <span class="kw">let </span>element = <span class="self">self</span>.element.lock();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(elem) = element.as_ref() {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(elem.clone());
             }
         }
 
-        <span class="kw">let</span> <span class="ident">elem_fut</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">query_fn</span>)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">base_element</span>);
-        <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem_fut</span>.<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">replace</span>(<span class="ident">elem</span>.<span class="ident">clone</span>());
-        <span class="prelude-val">Ok</span>(<span class="ident">elem</span>)
+        <span class="kw">let </span>elem_fut = (<span class="self">self</span>.query_fn)(<span class="kw-2">&amp;</span><span class="self">self</span>.base_element);
+        <span class="kw">let </span>elem = elem_fut.<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.replace(elem.clone());
+        <span class="prelude-val">Ok</span>(elem)
     }
 
-    <span class="doccomment">/// Invalidate any cached element(s).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalidate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">element</span>.<span class="ident">lock</span>().<span class="ident">take</span>();
+    <span class="doccomment">/// Invalidate any cached element(s).
+    </span><span class="kw">pub fn </span>invalidate(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.element.lock().take();
     }
 
-    <span class="doccomment">/// Run the query, ignoring any cached element(s).</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resolve_force</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">invalidate</span>();
-        <span class="self">self</span>.<span class="ident">resolve</span>().<span class="kw">await</span>.<span class="ident">ok</span>()
+    <span class="doccomment">/// Run the query, ignoring any cached element(s).
+    </span><span class="kw">pub async fn </span>resolve_force(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+        <span class="self">self</span>.invalidate();
+        <span class="self">self</span>.resolve().<span class="kw">await</span>.ok()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create new element resolver that must return a single element.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_single</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">single</span>().<span class="kw">await</span> })
+<span class="kw">impl </span>ElementResolver&lt;WebElement&gt; {
+    <span class="doccomment">/// Create new element resolver that must return a single element.
+    </span><span class="kw">pub fn </span>new_single(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;WebElement&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).single().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that must return a single element, with extra options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_single_opts</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>, <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">single</span>().<span class="kw">await</span> })
+    <span class="doccomment">/// Create new element resolver that must return a single element, with extra options.
+    </span><span class="kw">pub fn </span>new_single_opts(base_element: WebElement, by: By, options: ElementQueryOptions) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;WebElement&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).options(options).single().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns the first element.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_first</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">first</span>().<span class="kw">await</span> })
+    <span class="doccomment">/// Create new element resolver that returns the first element.
+    </span><span class="kw">pub fn </span>new_first(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;WebElement&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).first().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns the first element, with extra options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_first_opts</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>, <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">first</span>().<span class="kw">await</span> })
+    <span class="doccomment">/// Create new element resolver that returns the first element, with extra options.
+    </span><span class="kw">pub fn </span>new_first_opts(base_element: WebElement, by: By, options: ElementQueryOptions) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;WebElement&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).options(options).first().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver using custom resolver function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_custom</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">custom_resolver_fn</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">base_element</span>,
-            <span class="ident">query_fn</span>: <span class="ident">Arc::new</span>(<span class="ident">custom_resolver_fn</span>),
-            <span class="ident">element</span>: <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>)),
+    <span class="doccomment">/// Create new element resolver using custom resolver function.
+    </span><span class="kw">pub fn </span>new_custom(
+        base_element: WebElement,
+        custom_resolver_fn: ElementQueryFn&lt;WebElement&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            base_element,
+            query_fn: Arc::new(custom_resolver_fn),
+            element: Arc::new(Mutex::new(<span class="prelude-val">None</span>)),
         }
     }
 
-    <span class="doccomment">/// Validate that the cached element is present, and if so, return it.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">peek</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">elem</span>) =&gt; <span class="kw">match</span> <span class="ident">elem</span>.<span class="ident">is_present</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-                <span class="bool-val">true</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">elem</span>)),
-                <span class="bool-val">false</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">invalidate</span>();
+    <span class="doccomment">/// Validate that the cached element is present, and if so, return it.
+    </span><span class="kw">pub async fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;<span class="prelude-ty">Option</span>&lt;WebElement&gt;&gt; {
+        <span class="kw">match </span><span class="self">self</span>.peek() {
+            <span class="prelude-val">Some</span>(elem) =&gt; <span class="kw">match </span>elem.is_present().<span class="kw">await</span><span class="question-mark">? </span>{
+                <span class="bool-val">true </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(elem)),
+                <span class="bool-val">false </span>=&gt; {
+                    <span class="self">self</span>.invalidate();
                     <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
                 }
             },
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
         }
     }
 
-    <span class="doccomment">/// Validate the element and repeat the query if it is not present, returning the result.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the element is already present, the cached element will be returned without</span>
-    <span class="doccomment">/// performing an additional query.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resolve_present</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">validate</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">elem</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">elem</span>),
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">elem_fut</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">query_fn</span>)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">base_element</span>);
-                <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem_fut</span>.<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">replace</span>(<span class="ident">elem</span>.<span class="ident">clone</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">elem</span>)
+    <span class="doccomment">/// Validate the element and repeat the query if it is not present, returning the result.
+    ///
+    /// If the element is already present, the cached element will be returned without
+    /// performing an additional query.
+    </span><span class="kw">pub async fn </span>resolve_present(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;WebElement&gt; {
+        <span class="kw">match </span><span class="self">self</span>.validate().<span class="kw">await</span><span class="question-mark">? </span>{
+            <span class="prelude-val">Some</span>(elem) =&gt; <span class="prelude-val">Ok</span>(elem),
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span>elem_fut = (<span class="self">self</span>.query_fn)(<span class="kw-2">&amp;</span><span class="self">self</span>.base_element);
+                <span class="kw">let </span>elem = elem_fut.<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="self">self</span>.replace(elem.clone());
+                <span class="prelude-val">Ok</span>(elem)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create new element resolver that returns all elements, if any.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no elements were found, this will resolve to an empty Vec.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_allow_empty</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">all</span>().<span class="kw">await</span> })
+<span class="kw">impl </span>ElementResolver&lt;Vec&lt;WebElement&gt;&gt; {
+    <span class="doccomment">/// Create new element resolver that returns all elements, if any.
+    ///
+    /// If no elements were found, this will resolve to an empty Vec.
+    </span><span class="kw">pub fn </span>new_allow_empty(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;WebElement&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).all().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns all elements (if any), with extra options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_allow_empty_opts</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">by</span>: <span class="ident">By</span>,
-        <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">all</span>().<span class="kw">await</span> })
+    <span class="doccomment">/// Create new element resolver that returns all elements (if any), with extra options.
+    </span><span class="kw">pub fn </span>new_allow_empty_opts(
+        base_element: WebElement,
+        by: By,
+        options: ElementQueryOptions,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;WebElement&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).options(options).all().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns at least one element.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no elements were found, a NoSuchElement error will be returned by the resolver&#39;s</span>
-    <span class="doccomment">/// `resolve()` method.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_not_empty</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">all_required</span>().<span class="kw">await</span> })
+    <span class="doccomment">/// Create new element resolver that returns at least one element.
+    ///
+    /// If no elements were found, a NoSuchElement error will be returned by the resolver&#39;s
+    /// `resolve()` method.
+    </span><span class="kw">pub fn </span>new_not_empty(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;WebElement&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).all_required().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns at least one element, with extra options.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no elements were found, a NoSuchElement error will be returned by the resolver&#39;s</span>
-    <span class="doccomment">/// `resolve()` method.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_not_empty_opts</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">by</span>: <span class="ident">By</span>,
-        <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> { <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">all_required</span>().<span class="kw">await</span> })
+    <span class="doccomment">/// Create new element resolver that returns at least one element, with extra options.
+    ///
+    /// If no elements were found, a NoSuchElement error will be returned by the resolver&#39;s
+    /// `resolve()` method.
+    </span><span class="kw">pub fn </span>new_not_empty_opts(
+        base_element: WebElement,
+        by: By,
+        options: ElementQueryOptions,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;WebElement&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{ elem.query(by).options(options).all_required().<span class="kw">await </span>})
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new multi element resolver using a custom resolver function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_custom</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">custom_resolver_fn</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">base_element</span>,
-            <span class="ident">query_fn</span>: <span class="ident">Arc::new</span>(<span class="ident">custom_resolver_fn</span>),
-            <span class="ident">element</span>: <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>)),
+    <span class="doccomment">/// Create new multi element resolver using a custom resolver function.
+    </span><span class="kw">pub fn </span>new_custom(
+        base_element: WebElement,
+        custom_resolver_fn: ElementQueryFn&lt;Vec&lt;WebElement&gt;&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            base_element,
+            query_fn: Arc::new(custom_resolver_fn),
+            element: Arc::new(Mutex::new(<span class="prelude-val">None</span>)),
         }
     }
 
-    <span class="doccomment">/// Validate that all cached elements are present, if any.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">peek</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">elems</span>) =&gt; {
-                <span class="kw">for</span> <span class="ident">elem</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">elems</span> {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">elem</span>.<span class="ident">is_present</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-                        <span class="self">self</span>.<span class="ident">invalidate</span>();
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+    <span class="doccomment">/// Validate that all cached elements are present, if any.
+    </span><span class="kw">pub async fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;WebElement&gt;&gt;&gt; {
+        <span class="kw">match </span><span class="self">self</span>.peek() {
+            <span class="prelude-val">Some</span>(elems) =&gt; {
+                <span class="kw">for </span>elem <span class="kw">in </span><span class="kw-2">&amp;</span>elems {
+                    <span class="kw">if </span>!elem.is_present().<span class="kw">await</span><span class="question-mark">? </span>{
+                        <span class="self">self</span>.invalidate();
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
                     }
                 }
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">elems</span>))
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(elems))
             }
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
         }
     }
 
-    <span class="doccomment">/// Validate all elements and repeat the query if any are not present, returning the results.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If all elements are already present, the cached elements will be returned without</span>
-    <span class="doccomment">/// performing an additional query.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resolve_present</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">WebElement</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">validate</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">elem</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">elem</span>),
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">elem_fut</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">query_fn</span>)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">base_element</span>);
-                <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem_fut</span>.<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">replace</span>(<span class="ident">elem</span>.<span class="ident">clone</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">elem</span>)
+    <span class="doccomment">/// Validate all elements and repeat the query if any are not present, returning the results.
+    ///
+    /// If all elements are already present, the cached elements will be returned without
+    /// performing an additional query.
+    </span><span class="kw">pub async fn </span>resolve_present(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;WebElement&gt;&gt; {
+        <span class="kw">match </span><span class="self">self</span>.validate().<span class="kw">await</span><span class="question-mark">? </span>{
+            <span class="prelude-val">Some</span>(elem) =&gt; <span class="prelude-val">Ok</span>(elem),
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span>elem_fut = (<span class="self">self</span>.query_fn)(<span class="kw-2">&amp;</span><span class="self">self</span>.base_element);
+                <span class="kw">let </span>elem = elem_fut.<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="self">self</span>.replace(elem.clone());
+                <span class="prelude-val">Ok</span>(elem)
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Component</span> <span class="op">+</span> <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create new element resolver that must return a single component.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_single</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">single</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elem</span>.<span class="ident">into</span>())
+<span class="kw">impl</span>&lt;T: Component + Clone&gt; ElementResolver&lt;T&gt; {
+    <span class="doccomment">/// Create new element resolver that must return a single component.
+    </span><span class="kw">pub fn </span>new_single(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;T&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elem = elem.query(by).single().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elem.into())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that must return a single component, with extra options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_single_opts</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>, <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">single</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elem</span>.<span class="ident">into</span>())
+    <span class="doccomment">/// Create new element resolver that must return a single component, with extra options.
+    </span><span class="kw">pub fn </span>new_single_opts(base_element: WebElement, by: By, options: ElementQueryOptions) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;T&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elem = elem.query(by).options(options).single().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elem.into())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns the first component.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_first</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">first</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elem</span>.<span class="ident">into</span>())
+    <span class="doccomment">/// Create new element resolver that returns the first component.
+    </span><span class="kw">pub fn </span>new_first(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;T&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elem = elem.query(by).first().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elem.into())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns the first component, with extra options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_first_opts</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>, <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">first</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elem</span>.<span class="ident">into</span>())
+    <span class="doccomment">/// Create new element resolver that returns the first component, with extra options.
+    </span><span class="kw">pub fn </span>new_first_opts(base_element: WebElement, by: By, options: ElementQueryOptions) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;T&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elem = elem.query(by).options(options).first().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elem.into())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new component resolver using custom resolver function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_custom</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">custom_resolver_fn</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">base_element</span>,
-            <span class="ident">query_fn</span>: <span class="ident">Arc::new</span>(<span class="ident">custom_resolver_fn</span>),
-            <span class="ident">element</span>: <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>)),
+    <span class="doccomment">/// Create new component resolver using custom resolver function.
+    </span><span class="kw">pub fn </span>new_custom(base_element: WebElement, custom_resolver_fn: ElementQueryFn&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            base_element,
+            query_fn: Arc::new(custom_resolver_fn),
+            element: Arc::new(Mutex::new(<span class="prelude-val">None</span>)),
         }
     }
 
-    <span class="doccomment">/// Validate that the cached component is present, and if so, return it.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">peek</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">component</span>) =&gt; <span class="kw">match</span> <span class="ident">component</span>.<span class="ident">base_element</span>().<span class="ident">is_present</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-                <span class="bool-val">true</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">component</span>)),
-                <span class="bool-val">false</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">invalidate</span>();
+    <span class="doccomment">/// Validate that the cached component is present, and if so, return it.
+    </span><span class="kw">pub async fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;<span class="prelude-ty">Option</span>&lt;T&gt;&gt; {
+        <span class="kw">match </span><span class="self">self</span>.peek() {
+            <span class="prelude-val">Some</span>(component) =&gt; <span class="kw">match </span>component.base_element().is_present().<span class="kw">await</span><span class="question-mark">? </span>{
+                <span class="bool-val">true </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(component)),
+                <span class="bool-val">false </span>=&gt; {
+                    <span class="self">self</span>.invalidate();
                     <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
                 }
             },
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
         }
     }
 
-    <span class="doccomment">/// Validate the component and repeat the query if it is not present, returning the result.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the component is already present, the cached component will be returned without</span>
-    <span class="doccomment">/// performing an additional query.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resolve_present</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">validate</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">component</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">component</span>),
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">comp_fut</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">query_fn</span>)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">base_element</span>);
-                <span class="kw">let</span> <span class="ident">comp</span> <span class="op">=</span> <span class="ident">comp_fut</span>.<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">replace</span>(<span class="ident">comp</span>.<span class="ident">clone</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">comp</span>)
+    <span class="doccomment">/// Validate the component and repeat the query if it is not present, returning the result.
+    ///
+    /// If the component is already present, the cached component will be returned without
+    /// performing an additional query.
+    </span><span class="kw">pub async fn </span>resolve_present(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;T&gt; {
+        <span class="kw">match </span><span class="self">self</span>.validate().<span class="kw">await</span><span class="question-mark">? </span>{
+            <span class="prelude-val">Some</span>(component) =&gt; <span class="prelude-val">Ok</span>(component),
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span>comp_fut = (<span class="self">self</span>.query_fn)(<span class="kw-2">&amp;</span><span class="self">self</span>.base_element);
+                <span class="kw">let </span>comp = comp_fut.<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="self">self</span>.replace(comp.clone());
+                <span class="prelude-val">Ok</span>(comp)
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Component</span> <span class="op">+</span> <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">ElementResolver</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create new element resolver that returns all components, if any.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no components were found, this will resolve to an empty Vec.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_allow_empty</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elems</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">all</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elems</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">T::from</span>).<span class="ident">collect</span>())
+<span class="kw">impl</span>&lt;T: Component + Clone&gt; ElementResolver&lt;Vec&lt;T&gt;&gt; {
+    <span class="doccomment">/// Create new element resolver that returns all components, if any.
+    ///
+    /// If no components were found, this will resolve to an empty Vec.
+    </span><span class="kw">pub fn </span>new_allow_empty(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;T&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elems = elem.query(by).all().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elems.into_iter().map(T::from).collect())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns all components (if any), with extra options.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_allow_empty_opts</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">by</span>: <span class="ident">By</span>,
-        <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elems</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">all</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elems</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">T::from</span>).<span class="ident">collect</span>())
+    <span class="doccomment">/// Create new element resolver that returns all components (if any), with extra options.
+    </span><span class="kw">pub fn </span>new_allow_empty_opts(
+        base_element: WebElement,
+        by: By,
+        options: ElementQueryOptions,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;T&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elems = elem.query(by).options(options).all().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elems.into_iter().map(T::from).collect())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns at least one component.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no components were found, a NoSuchElement error will be returned by the resolver&#39;s</span>
-    <span class="doccomment">/// `resolve()` method.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_not_empty</span>(<span class="ident">base_element</span>: <span class="ident">WebElement</span>, <span class="ident">by</span>: <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elems</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">all_required</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elems</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">T::from</span>).<span class="ident">collect</span>())
+    <span class="doccomment">/// Create new element resolver that returns at least one component.
+    ///
+    /// If no components were found, a NoSuchElement error will be returned by the resolver&#39;s
+    /// `resolve()` method.
+    </span><span class="kw">pub fn </span>new_not_empty(base_element: WebElement, by: By) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;T&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elems = elem.query(by).all_required().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elems.into_iter().map(T::from).collect())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new element resolver that returns at least one component, with extra options.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no components were found, a NoSuchElement error will be returned by the resolver&#39;s</span>
-    <span class="doccomment">/// `resolve()` method.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_not_empty_opts</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">by</span>: <span class="ident">By</span>,
-        <span class="ident">options</span>: <span class="ident">ElementQueryOptions</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">resolver</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">elem</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">by</span> <span class="op">=</span> <span class="ident">by</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">options</span>.<span class="ident">clone</span>();
-            <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                <span class="kw">let</span> <span class="ident">elems</span> <span class="op">=</span> <span class="ident">elem</span>.<span class="ident">query</span>(<span class="ident">by</span>).<span class="ident">options</span>(<span class="ident">options</span>).<span class="ident">all_required</span>().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">elems</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">T::from</span>).<span class="ident">collect</span>())
+    <span class="doccomment">/// Create new element resolver that returns at least one component, with extra options.
+    ///
+    /// If no components were found, a NoSuchElement error will be returned by the resolver&#39;s
+    /// `resolve()` method.
+    </span><span class="kw">pub fn </span>new_not_empty_opts(
+        base_element: WebElement,
+        by: By,
+        options: ElementQueryOptions,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>resolver: ElementQueryFn&lt;Vec&lt;T&gt;&gt; = Box::new(<span class="kw">move </span>|elem| {
+            <span class="kw">let </span>by = by.clone();
+            <span class="kw">let </span>options = options.clone();
+            Box::pin(<span class="kw">async move </span>{
+                <span class="kw">let </span>elems = elem.query(by).options(options).all_required().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(elems.into_iter().map(T::from).collect())
             })
         });
-        <span class="ident"><span class="self">Self</span>::new_custom</span>(<span class="ident">base_element</span>, <span class="ident">resolver</span>)
+        <span class="self">Self</span>::new_custom(base_element, resolver)
     }
 
-    <span class="doccomment">/// Create new multi component resolver using a custom resolver function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_custom</span>(
-        <span class="ident">base_element</span>: <span class="ident">WebElement</span>,
-        <span class="ident">custom_resolver_fn</span>: <span class="ident">ElementQueryFn</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">base_element</span>,
-            <span class="ident">query_fn</span>: <span class="ident">Arc::new</span>(<span class="ident">custom_resolver_fn</span>),
-            <span class="ident">element</span>: <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>)),
+    <span class="doccomment">/// Create new multi component resolver using a custom resolver function.
+    </span><span class="kw">pub fn </span>new_custom(
+        base_element: WebElement,
+        custom_resolver_fn: ElementQueryFn&lt;Vec&lt;T&gt;&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            base_element,
+            query_fn: Arc::new(custom_resolver_fn),
+            element: Arc::new(Mutex::new(<span class="prelude-val">None</span>)),
         }
     }
 
-    <span class="doccomment">/// Validate that all cached components are present, if any.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">peek</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">comps</span>) =&gt; {
-                <span class="kw">for</span> <span class="ident">comp</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">comps</span> {
-                    <span class="kw">if</span> <span class="op">!</span><span class="ident">comp</span>.<span class="ident">base_element</span>().<span class="ident">is_present</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-                        <span class="self">self</span>.<span class="ident">invalidate</span>();
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+    <span class="doccomment">/// Validate that all cached components are present, if any.
+    </span><span class="kw">pub async fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;T&gt;&gt;&gt; {
+        <span class="kw">match </span><span class="self">self</span>.peek() {
+            <span class="prelude-val">Some</span>(comps) =&gt; {
+                <span class="kw">for </span>comp <span class="kw">in </span><span class="kw-2">&amp;</span>comps {
+                    <span class="kw">if </span>!comp.base_element().is_present().<span class="kw">await</span><span class="question-mark">? </span>{
+                        <span class="self">self</span>.invalidate();
+                        <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
                     }
                 }
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">comps</span>))
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(comps))
             }
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
         }
     }
 
-    <span class="doccomment">/// Validate all components and repeat the query if any are not present, returning the results.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If all components are already present, the cached components will be returned without</span>
-    <span class="doccomment">/// performing an additional query.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resolve_present</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">WebDriverResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">validate</span>().<span class="kw">await</span><span class="question-mark">?</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">comp</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">comp</span>),
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">comp_fut</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">query_fn</span>)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">base_element</span>);
-                <span class="kw">let</span> <span class="ident">comp</span> <span class="op">=</span> <span class="ident">comp_fut</span>.<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="self">self</span>.<span class="ident">replace</span>(<span class="ident">comp</span>.<span class="ident">clone</span>());
-                <span class="prelude-val">Ok</span>(<span class="ident">comp</span>)
+    <span class="doccomment">/// Validate all components and repeat the query if any are not present, returning the results.
+    ///
+    /// If all components are already present, the cached components will be returned without
+    /// performing an additional query.
+    </span><span class="kw">pub async fn </span>resolve_present(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;T&gt;&gt; {
+        <span class="kw">match </span><span class="self">self</span>.validate().<span class="kw">await</span><span class="question-mark">? </span>{
+            <span class="prelude-val">Some</span>(comp) =&gt; <span class="prelude-val">Ok</span>(comp),
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span>comp_fut = (<span class="self">self</span>.query_fn)(<span class="kw-2">&amp;</span><span class="self">self</span>.base_element);
+                <span class="kw">let </span>comp = comp_fut.<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="self">self</span>.replace(comp.clone());
+                <span class="prelude-val">Ok</span>(comp)
             }
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="thirtyfour" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="thirtyfour" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

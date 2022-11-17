@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/bitstream.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>bitstream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/bitstream.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>bitstream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -233,139 +227,139 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
-</pre><pre class="rust"><code><span class="comment">// This was originally based on code from: https://github.com/nwin/lzw</span>
-<span class="comment">// Copyright (c) 2015 nwin</span>
-<span class="comment">// which is under both Apache 2.0 and MIT</span>
+</pre><pre class="rust"><code><span class="comment">// This was originally based on code from: https://github.com/nwin/lzw
+// Copyright (c) 2015 nwin
+// which is under both Apache 2.0 and MIT
 
-<span class="doccomment">//! This module provides a bit writer</span>
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Write</span>};
+</span><span class="doccomment">//! This module provides a bit writer
+</span><span class="kw">use </span>std::io::{<span class="self">self</span>, Write};
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">mod</span> <span class="ident">arch_dep</span> {
-    <span class="doccomment">/// The data type of the accumulator.</span>
-    <span class="doccomment">/// a 64-bit value allows us to store more before</span>
-    <span class="doccomment">/// each push to the vector, but is sub-optimal</span>
-    <span class="doccomment">/// on 32-bit platforms.</span>
-    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AccType</span> <span class="op">=</span> <span class="ident">u64</span>;
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FLUSH_AT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">48</span>;
-    <span class="doccomment">/// Push pending bits to vector.</span>
-    <span class="doccomment">/// Using a macro here since an inline function.</span>
-    <span class="doccomment">/// didn&#39;t optimise properly.</span>
-    <span class="doccomment">/// TODO June 2019: See if it&#39;s still needed.</span>
-    <span class="macro">macro_rules!</span> <span class="ident">push</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>:<span class="ident">ident</span>) =&gt; {
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">w</span>.<span class="ident">extend_from_slice</span>(
+<span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+#[macro_use]
+</span><span class="kw">mod </span>arch_dep {
+    <span class="doccomment">/// The data type of the accumulator.
+    /// a 64-bit value allows us to store more before
+    /// each push to the vector, but is sub-optimal
+    /// on 32-bit platforms.
+    </span><span class="kw">pub type </span>AccType = u64;
+    <span class="kw">pub const </span>FLUSH_AT: u8 = <span class="number">48</span>;
+    <span class="doccomment">/// Push pending bits to vector.
+    /// Using a macro here since an inline function.
+    /// didn&#39;t optimise properly.
+    /// TODO June 2019: See if it&#39;s still needed.
+    </span><span class="macro">macro_rules! </span>push {
+        (<span class="macro-nonterminal">$s</span>:ident) =&gt; {
+            <span class="macro-nonterminal">$s</span>.w.extend_from_slice(
                 <span class="kw-2">&amp;</span>[
-                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="kw">as</span> <span class="ident">u8</span>,
-                    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span>,
-                    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">16</span>) <span class="kw">as</span> <span class="ident">u8</span>,
-                    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">24</span>) <span class="kw">as</span> <span class="ident">u8</span>,
-                    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">32</span>) <span class="kw">as</span> <span class="ident">u8</span>,
-                    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">40</span>) <span class="kw">as</span> <span class="ident">u8</span>,
+                    <span class="macro-nonterminal">$s</span>.acc <span class="kw">as </span>u8,
+                    (<span class="macro-nonterminal">$s</span>.acc &gt;&gt; <span class="number">8</span>) <span class="kw">as </span>u8,
+                    (<span class="macro-nonterminal">$s</span>.acc &gt;&gt; <span class="number">16</span>) <span class="kw">as </span>u8,
+                    (<span class="macro-nonterminal">$s</span>.acc &gt;&gt; <span class="number">24</span>) <span class="kw">as </span>u8,
+                    (<span class="macro-nonterminal">$s</span>.acc &gt;&gt; <span class="number">32</span>) <span class="kw">as </span>u8,
+                    (<span class="macro-nonterminal">$s</span>.acc &gt;&gt; <span class="number">40</span>) <span class="kw">as </span>u8,
                 ][..],
             )
         };
     }
 }
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>))]</span>
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">mod</span> <span class="ident">arch_dep</span> {
-    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AccType</span> <span class="op">=</span> <span class="ident">u32</span>;
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FLUSH_AT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">16</span>;
-    <span class="macro">macro_rules!</span> <span class="ident">push</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>:<span class="ident">ident</span>) =&gt; {
-            <span class="comment">// Unlike the 64-bit case, using copy_from_slice seemed to worsen performance here.</span>
-            <span class="comment">// TODO: Needs benching on a 32-bit system to see what works best.</span>
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">w</span>.<span class="ident">push</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="kw">as</span> <span class="ident">u8</span>);
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">w</span>.<span class="ident">push</span>((<span class="macro-nonterminal">$</span><span class="macro-nonterminal">s</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u8</span>);
+<span class="attribute">#[cfg(not(target_pointer_width = <span class="string">&quot;64&quot;</span>))]
+#[macro_use]
+</span><span class="kw">mod </span>arch_dep {
+    <span class="kw">pub type </span>AccType = u32;
+    <span class="kw">pub const </span>FLUSH_AT: u8 = <span class="number">16</span>;
+    <span class="macro">macro_rules! </span>push {
+        (<span class="macro-nonterminal">$s</span>:ident) =&gt; {
+            <span class="comment">// Unlike the 64-bit case, using copy_from_slice seemed to worsen performance here.
+            // TODO: Needs benching on a 32-bit system to see what works best.
+            </span><span class="macro-nonterminal">$s</span>.w.push(<span class="macro-nonterminal">$s</span>.acc <span class="kw">as </span>u8);
+            <span class="macro-nonterminal">$s</span>.w.push((<span class="macro-nonterminal">$s</span>.acc &gt;&gt; <span class="number">8</span>) <span class="kw">as </span>u8);
         };
     }
 }
 
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::arch_dep</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="self">self</span>::arch_dep::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Writes bits to a byte stream, LSB first.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LsbWriter</span> {
-    <span class="comment">// Public for now so it can be replaced after initialization.</span>
-    <span class="kw">pub</span> <span class="ident">w</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="ident">bits</span>: <span class="ident">u8</span>,
-    <span class="ident">acc</span>: <span class="ident">AccType</span>,
+<span class="doccomment">/// Writes bits to a byte stream, LSB first.
+</span><span class="kw">pub struct </span>LsbWriter {
+    <span class="comment">// Public for now so it can be replaced after initialization.
+    </span><span class="kw">pub </span>w: Vec&lt;u8&gt;,
+    bits: u8,
+    acc: AccType,
 }
 
-<span class="kw">impl</span> <span class="ident">LsbWriter</span> {
-    <span class="doccomment">/// Creates a new bit reader</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">writer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">LsbWriter</span> {
-        <span class="ident">LsbWriter</span> {
-            <span class="ident">w</span>: <span class="ident">writer</span>,
-            <span class="ident">bits</span>: <span class="number">0</span>,
-            <span class="ident">acc</span>: <span class="number">0</span>,
+<span class="kw">impl </span>LsbWriter {
+    <span class="doccomment">/// Creates a new bit reader
+    </span><span class="kw">pub const fn </span>new(writer: Vec&lt;u8&gt;) -&gt; LsbWriter {
+        LsbWriter {
+            w: writer,
+            bits: <span class="number">0</span>,
+            acc: <span class="number">0</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">pending_bits</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
-        <span class="self">self</span>.<span class="ident">bits</span>
+    <span class="kw">pub const fn </span>pending_bits(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+        <span class="self">self</span>.bits
     }
 
-    <span class="doccomment">/// Buffer n number of bits, and write them to the vec if there are enough pending bits.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_bits</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">v</span>: <span class="ident">u16</span>, <span class="ident">n</span>: <span class="ident">u8</span>) {
-        <span class="comment">// NOTE: This outputs garbage data if n is 0, but v is not 0</span>
-        <span class="self">self</span>.<span class="ident">acc</span> <span class="op">|</span><span class="op">=</span> (<span class="ident">AccType::from</span>(<span class="ident">v</span>)) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">bits</span>;
-        <span class="self">self</span>.<span class="ident">bits</span> <span class="op">+</span><span class="op">=</span> <span class="ident">n</span>;
-        <span class="comment">// Waiting until we have FLUSH_AT bits and pushing them all in one batch.</span>
-        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">bits</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">FLUSH_AT</span> {
+    <span class="doccomment">/// Buffer n number of bits, and write them to the vec if there are enough pending bits.
+    </span><span class="kw">pub fn </span>write_bits(<span class="kw-2">&amp;mut </span><span class="self">self</span>, v: u16, n: u8) {
+        <span class="comment">// NOTE: This outputs garbage data if n is 0, but v is not 0
+        </span><span class="self">self</span>.acc |= (AccType::from(v)) &lt;&lt; <span class="self">self</span>.bits;
+        <span class="self">self</span>.bits += n;
+        <span class="comment">// Waiting until we have FLUSH_AT bits and pushing them all in one batch.
+        </span><span class="kw">while </span><span class="self">self</span>.bits &gt;= FLUSH_AT {
             <span class="macro">push!</span>(<span class="self">self</span>);
-            <span class="self">self</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span><span class="op">=</span> <span class="ident">FLUSH_AT</span>;
-            <span class="self">self</span>.<span class="ident">bits</span> <span class="op">-</span><span class="op">=</span> <span class="ident">FLUSH_AT</span>;
+            <span class="self">self</span>.acc &gt;&gt;= FLUSH_AT;
+            <span class="self">self</span>.bits -= FLUSH_AT;
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">write_bits_finish</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">v</span>: <span class="ident">u16</span>, <span class="ident">n</span>: <span class="ident">u8</span>) {
-        <span class="comment">// NOTE: This outputs garbage data if n is 0, but v is not 0</span>
-        <span class="self">self</span>.<span class="ident">acc</span> <span class="op">|</span><span class="op">=</span> (<span class="ident">AccType::from</span>(<span class="ident">v</span>)) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">bits</span>;
-        <span class="self">self</span>.<span class="ident">bits</span> <span class="op">+</span><span class="op">=</span> <span class="ident">n</span> <span class="op">%</span> <span class="number">8</span>;
-        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">bits</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">8</span> {
-            <span class="self">self</span>.<span class="ident">w</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">acc</span> <span class="kw">as</span> <span class="ident">u8</span>);
-            <span class="self">self</span>.<span class="ident">acc</span> <span class="op">&gt;</span><span class="op">&gt;</span><span class="op">=</span> <span class="number">8</span>;
-            <span class="self">self</span>.<span class="ident">bits</span> <span class="op">-</span><span class="op">=</span> <span class="number">8</span>;
+    <span class="kw">fn </span>write_bits_finish(<span class="kw-2">&amp;mut </span><span class="self">self</span>, v: u16, n: u8) {
+        <span class="comment">// NOTE: This outputs garbage data if n is 0, but v is not 0
+        </span><span class="self">self</span>.acc |= (AccType::from(v)) &lt;&lt; <span class="self">self</span>.bits;
+        <span class="self">self</span>.bits += n % <span class="number">8</span>;
+        <span class="kw">while </span><span class="self">self</span>.bits &gt;= <span class="number">8 </span>{
+            <span class="self">self</span>.w.push(<span class="self">self</span>.acc <span class="kw">as </span>u8);
+            <span class="self">self</span>.acc &gt;&gt;= <span class="number">8</span>;
+            <span class="self">self</span>.bits -= <span class="number">8</span>;
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush_raw</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">missing</span> <span class="op">=</span> <span class="ident">FLUSH_AT</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">bits</span>;
-        <span class="comment">// Have to test for self.bits &gt; 0 here,</span>
-        <span class="comment">// otherwise flush would output an extra byte when flush was called at a byte boundary</span>
-        <span class="kw">if</span> <span class="ident">missing</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">bits</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">write_bits_finish</span>(<span class="number">0</span>, <span class="ident">missing</span>);
+    <span class="kw">pub fn </span>flush_raw(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>missing = FLUSH_AT - <span class="self">self</span>.bits;
+        <span class="comment">// Have to test for self.bits &gt; 0 here,
+        // otherwise flush would output an extra byte when flush was called at a byte boundary
+        </span><span class="kw">if </span>missing &gt; <span class="number">0 </span>&amp;&amp; <span class="self">self</span>.bits &gt; <span class="number">0 </span>{
+            <span class="self">self</span>.write_bits_finish(<span class="number">0</span>, missing);
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Write</span> <span class="kw">for</span> <span class="ident">LsbWriter</span> {
-    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">acc</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">w</span>.<span class="ident">extend_from_slice</span>(<span class="ident">buf</span>)
-        } <span class="kw">else</span> {
-            <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">byte</span> <span class="kw">in</span> <span class="ident">buf</span>.<span class="ident">iter</span>() {
-                <span class="self">self</span>.<span class="ident">write_bits</span>(<span class="ident">u16::from</span>(<span class="ident">byte</span>), <span class="number">8</span>)
+<span class="kw">impl </span>Write <span class="kw">for </span>LsbWriter {
+    <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;</span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">if </span><span class="self">self</span>.acc == <span class="number">0 </span>{
+            <span class="self">self</span>.w.extend_from_slice(buf)
+        } <span class="kw">else </span>{
+            <span class="kw">for </span><span class="kw-2">&amp;</span>byte <span class="kw">in </span>buf.iter() {
+                <span class="self">self</span>.write_bits(u16::from(byte), <span class="number">8</span>)
             }
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
+        <span class="prelude-val">Ok</span>(buf.len())
     }
 
-    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">flush_raw</span>();
+    <span class="kw">fn </span>flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; io::Result&lt;()&gt; {
+        <span class="self">self</span>.flush_raw();
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::LsbWriter</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">super</span>::LsbWriter;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">write_bits</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> [
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>write_bits() {
+        <span class="kw">let </span>input = [
             (<span class="number">3</span>, <span class="number">3</span>),
             (<span class="number">10</span>, <span class="number">8</span>),
             (<span class="number">88</span>, <span class="number">7</span>),
@@ -400,26 +394,26 @@
             (<span class="number">193</span>, <span class="number">8</span>),
             (<span class="number">174</span>, <span class="number">8</span>),
         ];
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> [
+        <span class="kw">let </span>expected = [
             <span class="number">83</span>, <span class="number">192</span>, <span class="number">2</span>, <span class="number">220</span>, <span class="number">253</span>, <span class="number">66</span>, <span class="number">21</span>, <span class="number">220</span>, <span class="number">93</span>, <span class="number">253</span>, <span class="number">92</span>, <span class="number">131</span>, <span class="number">28</span>, <span class="number">125</span>, <span class="number">20</span>, <span class="number">2</span>, <span class="number">66</span>, <span class="number">157</span>, <span class="number">124</span>, <span class="number">60</span>,
             <span class="number">157</span>, <span class="number">21</span>, <span class="number">128</span>, <span class="number">216</span>, <span class="number">213</span>, <span class="number">47</span>, <span class="number">216</span>, <span class="number">21</span>,
         ];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">LsbWriter::new</span>(<span class="ident">Vec::new</span>());
-        <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">input</span>.<span class="ident">iter</span>() {
-            <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">v</span>.<span class="number">0</span>, <span class="ident">v</span>.<span class="number">1</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = LsbWriter::new(Vec::new());
+        <span class="kw">for </span>v <span class="kw">in </span>input.iter() {
+            writer.write_bits(v.<span class="number">0</span>, v.<span class="number">1</span>);
         }
-        <span class="ident">writer</span>.<span class="ident">flush_raw</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">writer</span>.<span class="ident">w</span>, <span class="ident">expected</span>);
+        writer.flush_raw();
+        <span class="macro">assert_eq!</span>(writer.w, expected);
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">test</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>))]</span>
-<span class="kw">mod</span> <span class="ident">bench</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::LsbWriter</span>;
-    <span class="kw">use</span> <span class="ident">test_std::Bencher</span>;
-    <span class="attribute">#[<span class="ident">bench</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bit_writer</span>(<span class="ident">b</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Bencher</span>) {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> [
+<span class="attribute">#[cfg(all(test, feature = <span class="string">&quot;benchmarks&quot;</span>))]
+</span><span class="kw">mod </span>bench {
+    <span class="kw">use </span><span class="kw">super</span>::LsbWriter;
+    <span class="kw">use </span>test_std::Bencher;
+    <span class="attribute">#[bench]
+    </span><span class="kw">fn </span>bit_writer(b: <span class="kw-2">&amp;mut </span>Bencher) {
+        <span class="kw">let </span>input = [
             (<span class="number">3</span>, <span class="number">3</span>),
             (<span class="number">10</span>, <span class="number">8</span>),
             (<span class="number">88</span>, <span class="number">7</span>),
@@ -454,14 +448,13 @@
             (<span class="number">193</span>, <span class="number">8</span>),
             (<span class="number">174</span>, <span class="number">8</span>),
         ];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">LsbWriter::new</span>(<span class="ident">Vec::with_capacity</span>(<span class="number">100</span>));
-        <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">input</span>.<span class="ident">iter</span>() {
-                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">v</span>.<span class="number">0</span>, <span class="ident">v</span>.<span class="number">1</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = LsbWriter::new(Vec::with_capacity(<span class="number">100</span>));
+        b.iter(|| {
+            <span class="kw">for </span>v <span class="kw">in </span>input.iter() {
+                <span class="kw">let _ </span>= writer.write_bits(v.<span class="number">0</span>, v.<span class="number">1</span>);
             }
         });
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

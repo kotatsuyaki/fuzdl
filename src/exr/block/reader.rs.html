@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/block/reader.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../exr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/exr-1.5.0/src/block/reader.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../exr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../exr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -529,458 +523,458 @@
 <span id="523">523</span>
 <span id="524">524</span>
 <span id="525">525</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Composable structures to handle reading an image.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Composable structures to handle reading an image.
 
 
-<span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="ident">Read</span>, <span class="ident">Seek</span>};
+</span><span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::io::{Read, Seek};
 
-<span class="kw">use</span> <span class="ident">smallvec::alloc::sync::Arc</span>;
+<span class="kw">use </span>smallvec::alloc::sync::Arc;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block</span>::{<span class="ident">BlockIndex</span>, <span class="ident">UncompressedBlock</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::block::chunk</span>::{<span class="ident">Chunk</span>, <span class="ident">TileCoordinates</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::compression::Compression</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>, <span class="ident">u64_to_usize</span>, <span class="ident">UnitResult</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::io</span>::{<span class="ident">PeekRead</span>, <span class="ident">Tracking</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::meta</span>::{<span class="ident">MetaData</span>, <span class="ident">OffsetTables</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::meta::header::Header</span>;
+<span class="kw">use </span><span class="kw">crate</span>::block::{BlockIndex, UncompressedBlock};
+<span class="kw">use </span><span class="kw">crate</span>::block::chunk::{Chunk, TileCoordinates};
+<span class="kw">use </span><span class="kw">crate</span>::compression::Compression;
+<span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>, u64_to_usize, UnitResult};
+<span class="kw">use </span><span class="kw">crate</span>::io::{PeekRead, Tracking};
+<span class="kw">use </span><span class="kw">crate</span>::meta::{MetaData, OffsetTables};
+<span class="kw">use </span><span class="kw">crate</span>::meta::header::Header;
 
-<span class="doccomment">/// Decode the meta data from a byte source, keeping the source ready for further reading.</span>
-<span class="doccomment">/// Continue decoding the remaining bytes by calling `filtered_chunks` or `all_chunks`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Reader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">meta_data</span>: <span class="ident">MetaData</span>,
-    <span class="ident">remaining_reader</span>: <span class="ident">PeekRead</span><span class="op">&lt;</span><span class="ident">Tracking</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="comment">// TODO does R need to be Seek or is Tracking enough?</span>
-}
+<span class="doccomment">/// Decode the meta data from a byte source, keeping the source ready for further reading.
+/// Continue decoding the remaining bytes by calling `filtered_chunks` or `all_chunks`.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Reader&lt;R&gt; {
+    meta_data: MetaData,
+    remaining_reader: PeekRead&lt;Tracking&lt;R&gt;&gt;, <span class="comment">// TODO does R need to be Seek or is Tracking enough?
+</span>}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">Reader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; Reader&lt;R&gt; {
 
-    <span class="doccomment">/// Start the reading process.</span>
-    <span class="doccomment">/// Immediately decodes the meta data into an internal field.</span>
-    <span class="doccomment">/// Access it via`meta_data()`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_from_buffered</span>(<span class="ident">read</span>: <span class="ident">R</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remaining_reader</span> <span class="op">=</span> <span class="ident">PeekRead::new</span>(<span class="ident">Tracking::new</span>(<span class="ident">read</span>));
-        <span class="kw">let</span> <span class="ident">meta_data</span> <span class="op">=</span> <span class="ident">MetaData::read_validated_from_buffered_peekable</span>(<span class="kw-2">&amp;mut</span> <span class="ident">remaining_reader</span>, <span class="ident">pedantic</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">meta_data</span>, <span class="ident">remaining_reader</span> })
+    <span class="doccomment">/// Start the reading process.
+    /// Immediately decodes the meta data into an internal field.
+    /// Access it via`meta_data()`.
+    </span><span class="kw">pub fn </span>read_from_buffered(read: R, pedantic: bool) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>remaining_reader = PeekRead::new(Tracking::new(read));
+        <span class="kw">let </span>meta_data = MetaData::read_validated_from_buffered_peekable(<span class="kw-2">&amp;mut </span>remaining_reader, pedantic)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ meta_data, remaining_reader })
     }
 
-    <span class="comment">// must not be mutable, as reading the file later on relies on the meta data</span>
-    <span class="doccomment">/// The decoded exr meta data from the file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span> { <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span> }
+    <span class="comment">// must not be mutable, as reading the file later on relies on the meta data
+    </span><span class="doccomment">/// The decoded exr meta data from the file.
+    </span><span class="kw">pub fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData { <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data }
 
-    <span class="doccomment">/// The decoded exr meta data from the file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">Header</span>] { <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span> }
+    <span class="doccomment">/// The decoded exr meta data from the file.
+    </span><span class="kw">pub fn </span>headers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[Header] { <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data.headers }
 
-    <span class="doccomment">/// Obtain the meta data ownership.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_meta_data</span>(<span class="self">self</span>) -&gt; <span class="ident">MetaData</span> { <span class="self">self</span>.<span class="ident">meta_data</span> }
+    <span class="doccomment">/// Obtain the meta data ownership.
+    </span><span class="kw">pub fn </span>into_meta_data(<span class="self">self</span>) -&gt; MetaData { <span class="self">self</span>.meta_data }
 
-    <span class="doccomment">/// Prepare to read all the chunks from the file.</span>
-    <span class="doccomment">/// Does not decode the chunks now, but returns a decoder.</span>
-    <span class="doccomment">/// Reading all chunks reduces seeking the file, but some chunks might be read without being used.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">all_chunks</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AllChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">total_chunk_count</span> <span class="op">=</span> {
-            <span class="kw">if</span> <span class="ident">pedantic</span> {
-                <span class="kw">let</span> <span class="ident">offset_tables</span> <span class="op">=</span> <span class="ident">MetaData::read_offset_tables</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">remaining_reader</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>)<span class="question-mark">?</span>;
-                <span class="ident">validate_offset_tables</span>(<span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>.<span class="ident">as_slice</span>(), <span class="kw-2">&amp;</span><span class="ident">offset_tables</span>, <span class="self">self</span>.<span class="ident">remaining_reader</span>.<span class="ident">byte_position</span>())<span class="question-mark">?</span>;
-                <span class="ident">offset_tables</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">table</span><span class="op">|</span> <span class="ident">table</span>.<span class="ident">len</span>()).<span class="ident">sum</span>()
+    <span class="doccomment">/// Prepare to read all the chunks from the file.
+    /// Does not decode the chunks now, but returns a decoder.
+    /// Reading all chunks reduces seeking the file, but some chunks might be read without being used.
+    </span><span class="kw">pub fn </span>all_chunks(<span class="kw-2">mut </span><span class="self">self</span>, pedantic: bool) -&gt; <span class="prelude-ty">Result</span>&lt;AllChunksReader&lt;R&gt;&gt; {
+        <span class="kw">let </span>total_chunk_count = {
+            <span class="kw">if </span>pedantic {
+                <span class="kw">let </span>offset_tables = MetaData::read_offset_tables(<span class="kw-2">&amp;mut </span><span class="self">self</span>.remaining_reader, <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data.headers)<span class="question-mark">?</span>;
+                validate_offset_tables(<span class="self">self</span>.meta_data.headers.as_slice(), <span class="kw-2">&amp;</span>offset_tables, <span class="self">self</span>.remaining_reader.byte_position())<span class="question-mark">?</span>;
+                offset_tables.iter().map(|table| table.len()).sum()
             }
-            <span class="kw">else</span> {
-                <span class="ident">usize::try_from</span>(<span class="ident">MetaData::skip_offset_tables</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">remaining_reader</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>)<span class="question-mark">?</span>)
-                    .<span class="ident">expect</span>(<span class="string">&quot;too large chunk count for this machine&quot;</span>)
+            <span class="kw">else </span>{
+                usize::try_from(MetaData::skip_offset_tables(<span class="kw-2">&amp;mut </span><span class="self">self</span>.remaining_reader, <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data.headers)<span class="question-mark">?</span>)
+                    .expect(<span class="string">&quot;too large chunk count for this machine&quot;</span>)
             }
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">AllChunksReader</span> {
-            <span class="ident">meta_data</span>: <span class="self">self</span>.<span class="ident">meta_data</span>,
-            <span class="ident">remaining_chunks</span>: <span class="number">0</span> .. <span class="ident">total_chunk_count</span>,
-            <span class="ident">remaining_bytes</span>: <span class="self">self</span>.<span class="ident">remaining_reader</span>,
-            <span class="ident">pedantic</span>
+        <span class="prelude-val">Ok</span>(AllChunksReader {
+            meta_data: <span class="self">self</span>.meta_data,
+            remaining_chunks: <span class="number">0 </span>.. total_chunk_count,
+            remaining_bytes: <span class="self">self</span>.remaining_reader,
+            pedantic
         })
     }
 
-    <span class="doccomment">/// Prepare to read some the chunks from the file.</span>
-    <span class="doccomment">/// Does not decode the chunks now, but returns a decoder.</span>
-    <span class="doccomment">/// Reading only some chunks may seeking the file, potentially skipping many bytes.</span>
-    <span class="comment">// TODO tile indices add no new information to block index??</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">filter_chunks</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">filter</span>: <span class="kw">impl</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">TileCoordinates</span>, <span class="ident">BlockIndex</span>) -&gt; <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">FilteredChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">offset_tables</span> <span class="op">=</span> <span class="ident">MetaData::read_offset_tables</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">remaining_reader</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Prepare to read some the chunks from the file.
+    /// Does not decode the chunks now, but returns a decoder.
+    /// Reading only some chunks may seeking the file, potentially skipping many bytes.
+    </span><span class="comment">// TODO tile indices add no new information to block index??
+    </span><span class="kw">pub fn </span>filter_chunks(<span class="kw-2">mut </span><span class="self">self</span>, pedantic: bool, <span class="kw-2">mut </span>filter: <span class="kw">impl </span>FnMut(<span class="kw-2">&amp;</span>MetaData, TileCoordinates, BlockIndex) -&gt; bool) -&gt; <span class="prelude-ty">Result</span>&lt;FilteredChunksReader&lt;R&gt;&gt; {
+        <span class="kw">let </span>offset_tables = MetaData::read_offset_tables(<span class="kw-2">&amp;mut </span><span class="self">self</span>.remaining_reader, <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data.headers)<span class="question-mark">?</span>;
 
-        <span class="comment">// TODO regardless of pedantic, if invalid, read all chunks instead, and filter after reading each chunk?</span>
-        <span class="kw">if</span> <span class="ident">pedantic</span> {
-            <span class="ident">validate_offset_tables</span>(
-                <span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>.<span class="ident">as_slice</span>(), <span class="kw-2">&amp;</span><span class="ident">offset_tables</span>,
-                <span class="self">self</span>.<span class="ident">remaining_reader</span>.<span class="ident">byte_position</span>()
+        <span class="comment">// TODO regardless of pedantic, if invalid, read all chunks instead, and filter after reading each chunk?
+        </span><span class="kw">if </span>pedantic {
+            validate_offset_tables(
+                <span class="self">self</span>.meta_data.headers.as_slice(), <span class="kw-2">&amp;</span>offset_tables,
+                <span class="self">self</span>.remaining_reader.byte_position()
             )<span class="question-mark">?</span>;
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">filtered_offsets</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(
-            (<span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">32</span>).<span class="ident">min</span>(<span class="number">2</span><span class="kw-2">*</span><span class="number">2048</span>)
+        <span class="kw">let </span><span class="kw-2">mut </span>filtered_offsets = Vec::with_capacity(
+            (<span class="self">self</span>.meta_data.headers.len() * <span class="number">32</span>).min(<span class="number">2</span><span class="kw-2">*</span><span class="number">2048</span>)
         );
 
-        <span class="comment">// TODO detect whether the filter actually would skip chunks, and aviod sorting etc when not filtering is applied</span>
+        <span class="comment">// TODO detect whether the filter actually would skip chunks, and aviod sorting etc when not filtering is applied
 
-        <span class="kw">for</span> (<span class="ident">header_index</span>, <span class="ident">header</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">meta_data</span>.<span class="ident">headers</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() { <span class="comment">// offset tables are stored same order as headers</span>
-            <span class="kw">for</span> (<span class="ident">block_index</span>, <span class="ident">tile</span>) <span class="kw">in</span> <span class="ident">header</span>.<span class="ident">blocks_increasing_y_order</span>().<span class="ident">enumerate</span>() { <span class="comment">// in increasing_y order</span>
-                <span class="kw">let</span> <span class="ident">data_indices</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">get_absolute_block_pixel_coordinates</span>(<span class="ident">tile</span>.<span class="ident">location</span>)<span class="question-mark">?</span>;
+        </span><span class="kw">for </span>(header_index, header) <span class="kw">in </span><span class="self">self</span>.meta_data.headers.iter().enumerate() { <span class="comment">// offset tables are stored same order as headers
+            </span><span class="kw">for </span>(block_index, tile) <span class="kw">in </span>header.blocks_increasing_y_order().enumerate() { <span class="comment">// in increasing_y order
+                </span><span class="kw">let </span>data_indices = header.get_absolute_block_pixel_coordinates(tile.location)<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">BlockIndex</span> {
-                    <span class="ident">layer</span>: <span class="ident">header_index</span>,
-                    <span class="ident">level</span>: <span class="ident">tile</span>.<span class="ident">location</span>.<span class="ident">level_index</span>,
-                    <span class="ident">pixel_position</span>: <span class="ident">data_indices</span>.<span class="ident">position</span>.<span class="ident">to_usize</span>(<span class="string">&quot;data indices start&quot;</span>)<span class="question-mark">?</span>,
-                    <span class="ident">pixel_size</span>: <span class="ident">data_indices</span>.<span class="ident">size</span>,
+                <span class="kw">let </span>block = BlockIndex {
+                    layer: header_index,
+                    level: tile.location.level_index,
+                    pixel_position: data_indices.position.to_usize(<span class="string">&quot;data indices start&quot;</span>)<span class="question-mark">?</span>,
+                    pixel_size: data_indices.size,
                 };
 
-                <span class="kw">if</span> <span class="ident">filter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>, <span class="ident">tile</span>.<span class="ident">location</span>, <span class="ident">block</span>) {
-                    <span class="ident">filtered_offsets</span>.<span class="ident">push</span>(<span class="ident">offset_tables</span>[<span class="ident">header_index</span>][<span class="ident">block_index</span>]) <span class="comment">// safe indexing from `enumerate()`</span>
-                }
+                <span class="kw">if </span>filter(<span class="kw-2">&amp;</span><span class="self">self</span>.meta_data, tile.location, block) {
+                    filtered_offsets.push(offset_tables[header_index][block_index]) <span class="comment">// safe indexing from `enumerate()`
+                </span>}
             };
         }
 
-        <span class="ident">filtered_offsets</span>.<span class="ident">sort_unstable</span>(); <span class="comment">// enables reading continuously if possible (already sorted where line order increasing)</span>
+        filtered_offsets.sort_unstable(); <span class="comment">// enables reading continuously if possible (already sorted where line order increasing)
 
-        <span class="kw">if</span> <span class="ident">pedantic</span> {
-            <span class="comment">// table is sorted. if any two neighbours are equal, we have duplicates. this is invalid.</span>
-            <span class="kw">if</span> <span class="ident">filtered_offsets</span>.<span class="ident">windows</span>(<span class="number">2</span>).<span class="ident">any</span>(<span class="op">|</span><span class="ident">pair</span><span class="op">|</span> <span class="ident">pair</span>[<span class="number">0</span>] <span class="op">==</span> <span class="ident">pair</span>[<span class="number">1</span>]) {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;chunk offset table&quot;</span>))
+        </span><span class="kw">if </span>pedantic {
+            <span class="comment">// table is sorted. if any two neighbours are equal, we have duplicates. this is invalid.
+            </span><span class="kw">if </span>filtered_offsets.windows(<span class="number">2</span>).any(|pair| pair[<span class="number">0</span>] == pair[<span class="number">1</span>]) {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;chunk offset table&quot;</span>))
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">FilteredChunksReader</span> {
-            <span class="ident">meta_data</span>: <span class="self">self</span>.<span class="ident">meta_data</span>,
-            <span class="ident">expected_filtered_chunk_count</span>: <span class="ident">filtered_offsets</span>.<span class="ident">len</span>(),
-            <span class="ident">remaining_filtered_chunk_indices</span>: <span class="ident">filtered_offsets</span>.<span class="ident">into_iter</span>(),
-            <span class="ident">remaining_bytes</span>: <span class="self">self</span>.<span class="ident">remaining_reader</span>
+        <span class="prelude-val">Ok</span>(FilteredChunksReader {
+            meta_data: <span class="self">self</span>.meta_data,
+            expected_filtered_chunk_count: filtered_offsets.len(),
+            remaining_filtered_chunk_indices: filtered_offsets.into_iter(),
+            remaining_bytes: <span class="self">self</span>.remaining_reader
         })
     }
 }
 
 
-<span class="kw">fn</span> <span class="ident">validate_offset_tables</span>(<span class="ident">headers</span>: <span class="kw-2">&amp;</span>[<span class="ident">Header</span>], <span class="ident">offset_tables</span>: <span class="kw-2">&amp;</span><span class="ident">OffsetTables</span>, <span class="ident">chunks_start_byte</span>: <span class="ident">usize</span>) -&gt; <span class="ident">UnitResult</span> {
-    <span class="kw">let</span> <span class="ident">max_pixel_bytes</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">iter</span>() <span class="comment">// when compressed, chunks are smaller, but never larger than max</span>
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">header</span><span class="op">|</span> <span class="ident">header</span>.<span class="ident">max_pixel_file_bytes</span>())
-        .<span class="ident">sum</span>();
+<span class="kw">fn </span>validate_offset_tables(headers: <span class="kw-2">&amp;</span>[Header], offset_tables: <span class="kw-2">&amp;</span>OffsetTables, chunks_start_byte: usize) -&gt; UnitResult {
+    <span class="kw">let </span>max_pixel_bytes: usize = headers.iter() <span class="comment">// when compressed, chunks are smaller, but never larger than max
+        </span>.map(|header| header.max_pixel_file_bytes())
+        .sum();
 
-    <span class="comment">// check that each offset is within the bounds</span>
-    <span class="kw">let</span> <span class="ident">end_byte</span> <span class="op">=</span> <span class="ident">chunks_start_byte</span> <span class="op">+</span> <span class="ident">max_pixel_bytes</span>;
-    <span class="kw">let</span> <span class="ident">is_invalid</span> <span class="op">=</span> <span class="ident">offset_tables</span>.<span class="ident">iter</span>().<span class="ident">flatten</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">u64</span><span class="op">|</span> <span class="ident">u64_to_usize</span>(<span class="ident">u64</span>))
-        .<span class="ident">any</span>(<span class="op">|</span><span class="ident">chunk_start</span><span class="op">|</span> <span class="ident">chunk_start</span> <span class="op">&lt;</span> <span class="ident">chunks_start_byte</span> <span class="op">|</span><span class="op">|</span> <span class="ident">chunk_start</span> <span class="op">&gt;</span> <span class="ident">end_byte</span>);
+    <span class="comment">// check that each offset is within the bounds
+    </span><span class="kw">let </span>end_byte = chunks_start_byte + max_pixel_bytes;
+    <span class="kw">let </span>is_invalid = offset_tables.iter().flatten().map(|<span class="kw-2">&amp;</span>u64| u64_to_usize(u64))
+        .any(|chunk_start| chunk_start &lt; chunks_start_byte || chunk_start &gt; end_byte);
 
-    <span class="kw">if</span> <span class="ident">is_invalid</span> { <span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;offset table&quot;</span>)) }
-    <span class="kw">else</span> { <span class="prelude-val">Ok</span>(()) }
+    <span class="kw">if </span>is_invalid { <span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;offset table&quot;</span>)) }
+    <span class="kw">else </span>{ <span class="prelude-val">Ok</span>(()) }
 }
 
 
 
 
-<span class="doccomment">/// Decode the desired chunks and skip the unimportant chunks in the file.</span>
-<span class="doccomment">/// The decoded chunks can be decompressed by calling</span>
-<span class="doccomment">/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor` or `parallel_decompressor`.</span>
-<span class="doccomment">/// Call `on_progress` to have a callback with each block.</span>
-<span class="doccomment">/// Also contains the image meta data.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FilteredChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">meta_data</span>: <span class="ident">MetaData</span>,
-    <span class="ident">expected_filtered_chunk_count</span>: <span class="ident">usize</span>,
-    <span class="ident">remaining_filtered_chunk_indices</span>: <span class="ident">std::vec::IntoIter</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    <span class="ident">remaining_bytes</span>: <span class="ident">PeekRead</span><span class="op">&lt;</span><span class="ident">Tracking</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Decode the desired chunks and skip the unimportant chunks in the file.
+/// The decoded chunks can be decompressed by calling
+/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor` or `parallel_decompressor`.
+/// Call `on_progress` to have a callback with each block.
+/// Also contains the image meta data.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>FilteredChunksReader&lt;R&gt; {
+    meta_data: MetaData,
+    expected_filtered_chunk_count: usize,
+    remaining_filtered_chunk_indices: std::vec::IntoIter&lt;u64&gt;,
+    remaining_bytes: PeekRead&lt;Tracking&lt;R&gt;&gt;,
 }
 
-<span class="doccomment">/// Decode all chunks in the file without seeking.</span>
-<span class="doccomment">/// The decoded chunks can be decompressed by calling</span>
-<span class="doccomment">/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor` or `parallel_decompressor`.</span>
-<span class="doccomment">/// Call `on_progress` to have a callback with each block.</span>
-<span class="doccomment">/// Also contains the image meta data.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AllChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">meta_data</span>: <span class="ident">MetaData</span>,
-    <span class="ident">remaining_chunks</span>: <span class="ident">std::ops::Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">remaining_bytes</span>: <span class="ident">PeekRead</span><span class="op">&lt;</span><span class="ident">Tracking</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">pedantic</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Decode all chunks in the file without seeking.
+/// The decoded chunks can be decompressed by calling
+/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor` or `parallel_decompressor`.
+/// Call `on_progress` to have a callback with each block.
+/// Also contains the image meta data.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>AllChunksReader&lt;R&gt; {
+    meta_data: MetaData,
+    remaining_chunks: std::ops::Range&lt;usize&gt;,
+    remaining_bytes: PeekRead&lt;Tracking&lt;R&gt;&gt;,
+    pedantic: bool,
 }
 
-<span class="doccomment">/// Decode chunks in the file without seeking.</span>
-<span class="doccomment">/// Calls the supplied closure for each chunk.</span>
-<span class="doccomment">/// The decoded chunks can be decompressed by calling</span>
-<span class="doccomment">/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor`.</span>
-<span class="doccomment">/// Also contains the image meta data.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OnProgressChunksReader</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> {
-    <span class="ident">chunks_reader</span>: <span class="ident">R</span>,
-    <span class="ident">decoded_chunks</span>: <span class="ident">usize</span>,
-    <span class="ident">callback</span>: <span class="ident">F</span>,
+<span class="doccomment">/// Decode chunks in the file without seeking.
+/// Calls the supplied closure for each chunk.
+/// The decoded chunks can be decompressed by calling
+/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor`.
+/// Also contains the image meta data.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>OnProgressChunksReader&lt;R, F&gt; {
+    chunks_reader: R,
+    decoded_chunks: usize,
+    callback: F,
 }
 
-<span class="doccomment">/// Decode chunks in the file.</span>
-<span class="doccomment">/// The decoded chunks can be decompressed by calling</span>
-<span class="doccomment">/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor`.</span>
-<span class="doccomment">/// Call `on_progress` to have a callback with each block.</span>
-<span class="doccomment">/// Also contains the image meta data.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ChunksReader</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chunk</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ExactSizeIterator</span> {
+<span class="doccomment">/// Decode chunks in the file.
+/// The decoded chunks can be decompressed by calling
+/// `decompress_parallel`, `decompress_sequential`, or `sequential_decompressor`.
+/// Call `on_progress` to have a callback with each block.
+/// Also contains the image meta data.
+</span><span class="kw">pub trait </span>ChunksReader: Sized + Iterator&lt;Item=<span class="prelude-ty">Result</span>&lt;Chunk&gt;&gt; + ExactSizeIterator {
 
-    <span class="doccomment">/// The decoded exr meta data from the file.</span>
-    <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span>;
+    <span class="doccomment">/// The decoded exr meta data from the file.
+    </span><span class="kw">fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData;
 
-    <span class="doccomment">/// The decoded exr headers from the file.</span>
-    <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">Header</span>] { <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>().<span class="ident">headers</span> }
+    <span class="doccomment">/// The decoded exr headers from the file.
+    </span><span class="kw">fn </span>headers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[Header] { <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data().headers }
 
-    <span class="doccomment">/// The number of chunks that this reader will return in total.</span>
-    <span class="doccomment">/// Can be less than the total number of chunks in the file, if some chunks are skipped.</span>
-    <span class="kw">fn</span> <span class="ident">expected_chunk_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+    <span class="doccomment">/// The number of chunks that this reader will return in total.
+    /// Can be less than the total number of chunks in the file, if some chunks are skipped.
+    </span><span class="kw">fn </span>expected_chunk_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-    <span class="doccomment">/// Read the next compressed chunk from the file.</span>
-    <span class="doccomment">/// Equivalent to `.next()`, as this also is an iterator.</span>
-    <span class="doccomment">/// Returns `None` if all chunks have been read.</span>
-    <span class="kw">fn</span> <span class="ident">read_next_chunk</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chunk</span><span class="op">&gt;</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">next</span>() }
+    <span class="doccomment">/// Read the next compressed chunk from the file.
+    /// Equivalent to `.next()`, as this also is an iterator.
+    /// Returns `None` if all chunks have been read.
+    </span><span class="kw">fn </span>read_next_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;Chunk&gt;&gt; { <span class="self">self</span>.next() }
 
-    <span class="doccomment">/// Create a new reader that calls the provided progress</span>
-    <span class="doccomment">/// callback for each chunk that is read from the file.</span>
-    <span class="doccomment">/// If the file can be successfully decoded,</span>
-    <span class="doccomment">/// the progress will always at least once include 0.0 at the start and 1.0 at the end.</span>
-    <span class="kw">fn</span> <span class="ident">on_progress</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">on_progress</span>: <span class="ident">F</span>) -&gt; <span class="ident">OnProgressChunksReader</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>) {
-        <span class="ident">OnProgressChunksReader</span> { <span class="ident">chunks_reader</span>: <span class="self">self</span>, <span class="ident">callback</span>: <span class="ident">on_progress</span>, <span class="ident">decoded_chunks</span>: <span class="number">0</span> }
+    <span class="doccomment">/// Create a new reader that calls the provided progress
+    /// callback for each chunk that is read from the file.
+    /// If the file can be successfully decoded,
+    /// the progress will always at least once include 0.0 at the start and 1.0 at the end.
+    </span><span class="kw">fn </span>on_progress&lt;F&gt;(<span class="self">self</span>, on_progress: F) -&gt; OnProgressChunksReader&lt;<span class="self">Self</span>, F&gt; <span class="kw">where </span>F: FnMut(f64) {
+        OnProgressChunksReader { chunks_reader: <span class="self">self</span>, callback: on_progress, decoded_chunks: <span class="number">0 </span>}
     }
 
-    <span class="doccomment">/// Decompress all blocks in the file, using multiple cpu cores, and call the supplied closure for each block.</span>
-    <span class="doccomment">/// The order of the blocks is not deterministic.</span>
-    <span class="doccomment">/// You can also use `parallel_decompressor` to obtain an iterator instead.</span>
-    <span class="comment">// FIXME try async + futures instead of rayon! Maybe even allows for external async decoding? (-&gt; impl Stream&lt;UncompressedBlock&gt;)</span>
-    <span class="kw">fn</span> <span class="ident">decompress_parallel</span>(
-        <span class="self">self</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>,
-        <span class="kw-2">mut</span> <span class="ident">insert_block</span>: <span class="kw">impl</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">UncompressedBlock</span>) -&gt; <span class="ident">UnitResult</span>
-    ) -&gt; <span class="ident">UnitResult</span>
+    <span class="doccomment">/// Decompress all blocks in the file, using multiple cpu cores, and call the supplied closure for each block.
+    /// The order of the blocks is not deterministic.
+    /// You can also use `parallel_decompressor` to obtain an iterator instead.
+    </span><span class="comment">// FIXME try async + futures instead of rayon! Maybe even allows for external async decoding? (-&gt; impl Stream&lt;UncompressedBlock&gt;)
+    </span><span class="kw">fn </span>decompress_parallel(
+        <span class="self">self</span>, pedantic: bool,
+        <span class="kw-2">mut </span>insert_block: <span class="kw">impl </span>FnMut(<span class="kw-2">&amp;</span>MetaData, UncompressedBlock) -&gt; UnitResult
+    ) -&gt; UnitResult
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decompressor</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">parallel_decompressor</span>(<span class="ident">pedantic</span>) {
-            <span class="prelude-val">Err</span>(<span class="ident">old_self</span>) =&gt; <span class="kw">return</span> <span class="ident">old_self</span>.<span class="ident">decompress_sequential</span>(<span class="ident">pedantic</span>, <span class="ident">insert_block</span>),
-            <span class="prelude-val">Ok</span>(<span class="ident">decompressor</span>) =&gt; <span class="ident">decompressor</span>,
+        <span class="kw">let </span><span class="kw-2">mut </span>decompressor = <span class="kw">match </span><span class="self">self</span>.parallel_decompressor(pedantic) {
+            <span class="prelude-val">Err</span>(old_self) =&gt; <span class="kw">return </span>old_self.decompress_sequential(pedantic, insert_block),
+            <span class="prelude-val">Ok</span>(decompressor) =&gt; decompressor,
         };
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">block</span>) <span class="op">=</span> <span class="ident">decompressor</span>.<span class="ident">next</span>() {
-            <span class="ident">insert_block</span>(<span class="ident">decompressor</span>.<span class="ident">meta_data</span>(), <span class="ident">block</span><span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(block) = decompressor.next() {
+            insert_block(decompressor.meta_data(), block<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         }
 
-        <span class="macro">debug_assert_eq!</span>(<span class="ident">decompressor</span>.<span class="ident">len</span>(), <span class="number">0</span>, <span class="string">&quot;compressed blocks left after decompressing all blocks&quot;</span>);
+        <span class="macro">debug_assert_eq!</span>(decompressor.len(), <span class="number">0</span>, <span class="string">&quot;compressed blocks left after decompressing all blocks&quot;</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Return an iterator that decompresses the chunks with multiple threads.</span>
-    <span class="doccomment">/// The order of the blocks is not deterministic.</span>
-    <span class="doccomment">/// Use `ParallelBlockDecompressor::new` if you want to use your own thread pool.</span>
-    <span class="doccomment">/// By default, this uses as many threads as there are CPUs.</span>
-    <span class="doccomment">/// Returns the `self` if there is no need for parallel decompression.</span>
-    <span class="kw">fn</span> <span class="ident">parallel_decompressor</span>(<span class="self">self</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>) -&gt; <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">ParallelBlockDecompressor</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">threadpool::Builder::new</span>()
-            .<span class="ident">thread_name</span>(<span class="string">&quot;OpenEXR Block Decompressor&quot;</span>.<span class="ident">to_string</span>())
-            <span class="comment">// todo no more threads than remaining block count (self.len())</span>
-            .<span class="ident">build</span>();
+    <span class="doccomment">/// Return an iterator that decompresses the chunks with multiple threads.
+    /// The order of the blocks is not deterministic.
+    /// Use `ParallelBlockDecompressor::new` if you want to use your own thread pool.
+    /// By default, this uses as many threads as there are CPUs.
+    /// Returns the `self` if there is no need for parallel decompression.
+    </span><span class="kw">fn </span>parallel_decompressor(<span class="self">self</span>, pedantic: bool) -&gt; std::result::Result&lt;ParallelBlockDecompressor&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>&gt; {
+        <span class="kw">let </span>pool = threadpool::Builder::new()
+            .thread_name(<span class="string">&quot;OpenEXR Block Decompressor&quot;</span>.to_string())
+            <span class="comment">// todo no more threads than remaining block count (self.len())
+            </span>.build();
 
-        <span class="ident">ParallelBlockDecompressor::new</span>(<span class="self">self</span>, <span class="ident">pedantic</span>, <span class="ident">pool</span>)
+        ParallelBlockDecompressor::new(<span class="self">self</span>, pedantic, pool)
     }
 
-    <span class="doccomment">/// Return an iterator that decompresses the chunks in this thread.</span>
-    <span class="doccomment">/// You can alternatively use `sequential_decompressor` if you prefer an external iterator.</span>
-    <span class="kw">fn</span> <span class="ident">decompress_sequential</span>(
-        <span class="self">self</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>,
-        <span class="kw-2">mut</span> <span class="ident">insert_block</span>: <span class="kw">impl</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">MetaData</span>, <span class="ident">UncompressedBlock</span>) -&gt; <span class="ident">UnitResult</span>
-    ) -&gt; <span class="ident">UnitResult</span>
+    <span class="doccomment">/// Return an iterator that decompresses the chunks in this thread.
+    /// You can alternatively use `sequential_decompressor` if you prefer an external iterator.
+    </span><span class="kw">fn </span>decompress_sequential(
+        <span class="self">self</span>, pedantic: bool,
+        <span class="kw-2">mut </span>insert_block: <span class="kw">impl </span>FnMut(<span class="kw-2">&amp;</span>MetaData, UncompressedBlock) -&gt; UnitResult
+    ) -&gt; UnitResult
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decompressor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sequential_decompressor</span>(<span class="ident">pedantic</span>);
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">block</span>) <span class="op">=</span> <span class="ident">decompressor</span>.<span class="ident">next</span>() {
-            <span class="ident">insert_block</span>(<span class="ident">decompressor</span>.<span class="ident">meta_data</span>(), <span class="ident">block</span><span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>decompressor = <span class="self">self</span>.sequential_decompressor(pedantic);
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(block) = decompressor.next() {
+            insert_block(decompressor.meta_data(), block<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         }
 
-        <span class="macro">debug_assert_eq!</span>(<span class="ident">decompressor</span>.<span class="ident">len</span>(), <span class="number">0</span>, <span class="string">&quot;compressed blocks left after decompressing all blocks&quot;</span>);
+        <span class="macro">debug_assert_eq!</span>(decompressor.len(), <span class="number">0</span>, <span class="string">&quot;compressed blocks left after decompressing all blocks&quot;</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Prepare reading the chunks sequentially, only a single thread, but with less memory overhead.</span>
-    <span class="kw">fn</span> <span class="ident">sequential_decompressor</span>(<span class="self">self</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>) -&gt; <span class="ident">SequentialBlockDecompressor</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">SequentialBlockDecompressor</span> { <span class="ident">remaining_chunks_reader</span>: <span class="self">self</span>, <span class="ident">pedantic</span> }
+    <span class="doccomment">/// Prepare reading the chunks sequentially, only a single thread, but with less memory overhead.
+    </span><span class="kw">fn </span>sequential_decompressor(<span class="self">self</span>, pedantic: bool) -&gt; SequentialBlockDecompressor&lt;<span class="self">Self</span>&gt; {
+        SequentialBlockDecompressor { remaining_chunks_reader: <span class="self">self</span>, pedantic }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">ChunksReader</span> <span class="kw">for</span> <span class="ident">OnProgressChunksReader</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">ChunksReader</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>) {
-    <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span> { <span class="self">self</span>.<span class="ident">chunks_reader</span>.<span class="ident">meta_data</span>() }
-    <span class="kw">fn</span> <span class="ident">expected_chunk_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> { <span class="self">self</span>.<span class="ident">chunks_reader</span>.<span class="ident">expected_chunk_count</span>() }
+<span class="kw">impl</span>&lt;R, F&gt; ChunksReader <span class="kw">for </span>OnProgressChunksReader&lt;R, F&gt; <span class="kw">where </span>R: ChunksReader, F: FnMut(f64) {
+    <span class="kw">fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData { <span class="self">self</span>.chunks_reader.meta_data() }
+    <span class="kw">fn </span>expected_chunk_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize { <span class="self">self</span>.chunks_reader.expected_chunk_count() }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">OnProgressChunksReader</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">ChunksReader</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>) {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">OnProgressChunksReader</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">ChunksReader</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">f64</span>) {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chunk</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;R, F&gt; ExactSizeIterator <span class="kw">for </span>OnProgressChunksReader&lt;R, F&gt; <span class="kw">where </span>R: ChunksReader, F: FnMut(f64) {}
+<span class="kw">impl</span>&lt;R, F&gt; Iterator <span class="kw">for </span>OnProgressChunksReader&lt;R, F&gt; <span class="kw">where </span>R: ChunksReader, F: FnMut(f64) {
+    <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;Chunk&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">chunks_reader</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span>{
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.chunks_reader.next().map(|item|{
             {
-                <span class="kw">let</span> <span class="ident">total_chunks</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">expected_chunk_count</span>() <span class="kw">as</span> <span class="ident">f64</span>;
-                <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">callback</span>;
-                <span class="ident">callback</span>(<span class="self">self</span>.<span class="ident">decoded_chunks</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">total_chunks</span>);
+                <span class="kw">let </span>total_chunks = <span class="self">self</span>.expected_chunk_count() <span class="kw">as </span>f64;
+                <span class="kw">let </span>callback = <span class="kw-2">&amp;mut </span><span class="self">self</span>.callback;
+                callback(<span class="self">self</span>.decoded_chunks <span class="kw">as </span>f64 / total_chunks);
             }
 
-            <span class="self">self</span>.<span class="ident">decoded_chunks</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">item</span>
+            <span class="self">self</span>.decoded_chunks += <span class="number">1</span>;
+            item
         })
-            .<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span>{
+            .or_else(||{
                 <span class="macro">debug_assert_eq!</span>(
-                    <span class="self">self</span>.<span class="ident">decoded_chunks</span>, <span class="self">self</span>.<span class="ident">expected_chunk_count</span>(),
-                    <span class="string">&quot;chunks reader finished but not all chunks are decompressed&quot;</span>
-                );
+                    <span class="self">self</span>.decoded_chunks, <span class="self">self</span>.expected_chunk_count(),
+                    <span class="string">&quot;chunks reader finished but not all chunks are decompressed&quot;
+                </span>);
 
-                <span class="kw">let</span> <span class="ident">callback</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">callback</span>;
-                <span class="ident">callback</span>(<span class="number">1.0</span>);
-                <span class="prelude-val">None</span>
-            })
+                <span class="kw">let </span>callback = <span class="kw-2">&amp;mut </span><span class="self">self</span>.callback;
+                callback(<span class="number">1.0</span>);
+                <span class="prelude-val">None
+            </span>})
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">chunks_reader</span>.<span class="ident">size_hint</span>()
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="self">self</span>.chunks_reader.size_hint()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ChunksReader</span> <span class="kw">for</span> <span class="ident">AllChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span> { <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span> }
-    <span class="kw">fn</span> <span class="ident">expected_chunk_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> { <span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">end</span> }
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; ChunksReader <span class="kw">for </span>AllChunksReader&lt;R&gt; {
+    <span class="kw">fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData { <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data }
+    <span class="kw">fn </span>expected_chunk_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize { <span class="self">self</span>.remaining_chunks.end }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">AllChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">AllChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chunk</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; ExactSizeIterator <span class="kw">for </span>AllChunksReader&lt;R&gt; {}
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; Iterator <span class="kw">for </span>AllChunksReader&lt;R&gt; {
+    <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;Chunk&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="comment">// read as many chunks as the file should contain (inferred from meta data)</span>
-        <span class="kw">let</span> <span class="ident">next_chunk</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">next</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Chunk::read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">remaining_bytes</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>));
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="comment">// read as many chunks as the file should contain (inferred from meta data)
+        </span><span class="kw">let </span>next_chunk = <span class="self">self</span>.remaining_chunks.next()
+            .map(|<span class="kw">_</span>| Chunk::read(<span class="kw-2">&amp;mut </span><span class="self">self</span>.remaining_bytes, <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data));
 
-        <span class="comment">// if no chunks are left, but some bytes remain, return error</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pedantic</span> <span class="op">&amp;&amp;</span> <span class="ident">next_chunk</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">remaining_bytes</span>.<span class="ident">peek_u8</span>().<span class="ident">is_ok</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">Error::invalid</span>(<span class="string">&quot;end of file expected&quot;</span>)));
+        <span class="comment">// if no chunks are left, but some bytes remain, return error
+        </span><span class="kw">if </span><span class="self">self</span>.pedantic &amp;&amp; next_chunk.is_none() &amp;&amp; <span class="self">self</span>.remaining_bytes.peek_u8().is_ok() {
+            <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;end of file expected&quot;</span>)));
         }
 
-        <span class="ident">next_chunk</span>
+        next_chunk
     }
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        (<span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">len</span>(), <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">len</span>()))
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        (<span class="self">self</span>.remaining_chunks.len(), <span class="prelude-val">Some</span>(<span class="self">self</span>.remaining_chunks.len()))
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ChunksReader</span> <span class="kw">for</span> <span class="ident">FilteredChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span> { <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span> }
-    <span class="kw">fn</span> <span class="ident">expected_chunk_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> { <span class="self">self</span>.<span class="ident">expected_filtered_chunk_count</span> }
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; ChunksReader <span class="kw">for </span>FilteredChunksReader&lt;R&gt; {
+    <span class="kw">fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData { <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data }
+    <span class="kw">fn </span>expected_chunk_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize { <span class="self">self</span>.expected_filtered_chunk_count }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">FilteredChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">FilteredChunksReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chunk</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; ExactSizeIterator <span class="kw">for </span>FilteredChunksReader&lt;R&gt; {}
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; Iterator <span class="kw">for </span>FilteredChunksReader&lt;R&gt; {
+    <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;Chunk&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="comment">// read as many chunks as we have desired chunk offsets</span>
-        <span class="self">self</span>.<span class="ident">remaining_filtered_chunk_indices</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">next_chunk_location</span><span class="op">|</span>{
-            <span class="self">self</span>.<span class="ident">remaining_bytes</span>.<span class="ident">skip_to</span>( <span class="comment">// no-op for seek at current position, uses skip_bytes for small amounts</span>
-                                          <span class="ident">usize::try_from</span>(<span class="ident">next_chunk_location</span>)
-                                              .<span class="ident">expect</span>(<span class="string">&quot;too large chunk position for this machine&quot;</span>)
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="comment">// read as many chunks as we have desired chunk offsets
+        </span><span class="self">self</span>.remaining_filtered_chunk_indices.next().map(|next_chunk_location|{
+            <span class="self">self</span>.remaining_bytes.skip_to( <span class="comment">// no-op for seek at current position, uses skip_bytes for small amounts
+                                          </span>usize::try_from(next_chunk_location)
+                                              .expect(<span class="string">&quot;too large chunk position for this machine&quot;</span>)
             )<span class="question-mark">?</span>;
 
-            <span class="kw">let</span> <span class="ident">meta_data</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta_data</span>;
-            <span class="ident">Chunk::read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">remaining_bytes</span>, <span class="ident">meta_data</span>)
+            <span class="kw">let </span>meta_data = <span class="kw-2">&amp;</span><span class="self">self</span>.meta_data;
+            Chunk::read(<span class="kw-2">&amp;mut </span><span class="self">self</span>.remaining_bytes, meta_data)
         })
 
-        <span class="comment">// TODO remember last chunk index and then seek to index+size and check whether bytes are left?</span>
-    }
+        <span class="comment">// TODO remember last chunk index and then seek to index+size and check whether bytes are left?
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        (<span class="self">self</span>.<span class="ident">remaining_filtered_chunk_indices</span>.<span class="ident">len</span>(), <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">remaining_filtered_chunk_indices</span>.<span class="ident">len</span>()))
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        (<span class="self">self</span>.remaining_filtered_chunk_indices.len(), <span class="prelude-val">Some</span>(<span class="self">self</span>.remaining_filtered_chunk_indices.len()))
     }
 }
 
-<span class="doccomment">/// Read all chunks from the file, decompressing each chunk immediately.</span>
-<span class="doccomment">/// Implements iterator.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SequentialBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> {
-    <span class="ident">remaining_chunks_reader</span>: <span class="ident">R</span>,
-    <span class="ident">pedantic</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Read all chunks from the file, decompressing each chunk immediately.
+/// Implements iterator.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>SequentialBlockDecompressor&lt;R: ChunksReader&gt; {
+    remaining_chunks_reader: R,
+    pedantic: bool,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> <span class="ident">SequentialBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;R: ChunksReader&gt; SequentialBlockDecompressor&lt;R&gt; {
 
-    <span class="doccomment">/// The extracted meta data from the image file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span> { <span class="self">self</span>.<span class="ident">remaining_chunks_reader</span>.<span class="ident">meta_data</span>() }
+    <span class="doccomment">/// The extracted meta data from the image file.
+    </span><span class="kw">pub fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData { <span class="self">self</span>.remaining_chunks_reader.meta_data() }
 
-    <span class="doccomment">/// Read and then decompress a single block of pixels from the byte source.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decompress_next_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UncompressedBlock</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">remaining_chunks_reader</span>.<span class="ident">read_next_chunk</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">compressed_chunk</span><span class="op">|</span>{
-            <span class="ident">UncompressedBlock::decompress_chunk</span>(<span class="ident">compressed_chunk</span><span class="question-mark">?</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">remaining_chunks_reader</span>.<span class="ident">meta_data</span>(), <span class="self">self</span>.<span class="ident">pedantic</span>)
+    <span class="doccomment">/// Read and then decompress a single block of pixels from the byte source.
+    </span><span class="kw">pub fn </span>decompress_next_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;UncompressedBlock&gt;&gt; {
+        <span class="self">self</span>.remaining_chunks_reader.read_next_chunk().map(|compressed_chunk|{
+            UncompressedBlock::decompress_chunk(compressed_chunk<span class="question-mark">?</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.remaining_chunks_reader.meta_data(), <span class="self">self</span>.pedantic)
         })
     }
 }
 
-<span class="doccomment">/// Decompress the chunks in a file in parallel.</span>
-<span class="doccomment">/// The first call to `next` will fill the thread pool with jobs,</span>
-<span class="doccomment">/// starting to decompress the next few blocks.</span>
-<span class="doccomment">/// These jobs will finish, even if you stop reading more blocks.</span>
-<span class="doccomment">/// Implements iterator.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParallelBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> {
-    <span class="ident">remaining_chunks</span>: <span class="ident">R</span>,
-    <span class="ident">sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UncompressedBlock</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">receiver</span>: <span class="ident">flume::Receiver</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UncompressedBlock</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">currently_decompressing_count</span>: <span class="ident">usize</span>,
-    <span class="ident">max_threads</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Decompress the chunks in a file in parallel.
+/// The first call to `next` will fill the thread pool with jobs,
+/// starting to decompress the next few blocks.
+/// These jobs will finish, even if you stop reading more blocks.
+/// Implements iterator.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ParallelBlockDecompressor&lt;R: ChunksReader&gt; {
+    remaining_chunks: R,
+    sender: flume::Sender&lt;<span class="prelude-ty">Result</span>&lt;UncompressedBlock&gt;&gt;,
+    receiver: flume::Receiver&lt;<span class="prelude-ty">Result</span>&lt;UncompressedBlock&gt;&gt;,
+    currently_decompressing_count: usize,
+    max_threads: usize,
 
-    <span class="ident">shared_meta_data_ref</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">MetaData</span><span class="op">&gt;</span>,
-    <span class="ident">pedantic</span>: <span class="ident">bool</span>,
+    shared_meta_data_ref: Arc&lt;MetaData&gt;,
+    pedantic: bool,
 
-    <span class="ident">pool</span>: <span class="ident">threadpool::ThreadPool</span>,
+    pool: threadpool::ThreadPool,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> <span class="ident">ParallelBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;R: ChunksReader&gt; ParallelBlockDecompressor&lt;R&gt; {
 
-    <span class="doccomment">/// Create a new decompressor. Does not immediately spawn any tasks.</span>
-    <span class="doccomment">/// Decompression starts after the first call to `next`.</span>
-    <span class="doccomment">/// Returns the chunks if parallel decompression should not be used.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">chunks</span>: <span class="ident">R</span>, <span class="ident">pedantic</span>: <span class="ident">bool</span>, <span class="ident">pool</span>: <span class="ident">threadpool::ThreadPool</span>) -&gt; <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">R</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">chunks</span>.<span class="ident">meta_data</span>().<span class="ident">headers</span>.<span class="ident">iter</span>()
-            .<span class="ident">all</span>(<span class="op">|</span><span class="ident">head</span><span class="op">|</span><span class="ident">head</span>.<span class="ident">compression</span> <span class="op">==</span> <span class="ident">Compression::Uncompressed</span>)
+    <span class="doccomment">/// Create a new decompressor. Does not immediately spawn any tasks.
+    /// Decompression starts after the first call to `next`.
+    /// Returns the chunks if parallel decompression should not be used.
+    </span><span class="kw">pub fn </span>new(chunks: R, pedantic: bool, pool: threadpool::ThreadPool) -&gt; std::result::Result&lt;<span class="self">Self</span>, R&gt; {
+        <span class="kw">if </span>chunks.meta_data().headers.iter()
+            .all(|head|head.compression == Compression::Uncompressed)
         {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">chunks</span>);
+            <span class="kw">return </span><span class="prelude-val">Err</span>(chunks);
         }
 
-        <span class="kw">let</span> <span class="ident">max_threads</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">max_count</span>().<span class="ident">max</span>(<span class="number">1</span>).<span class="ident">min</span>(<span class="ident">chunks</span>.<span class="ident">len</span>()) <span class="op">+</span> <span class="number">2</span>; <span class="comment">// ca one block for each thread at all times</span>
+        <span class="kw">let </span>max_threads = pool.max_count().max(<span class="number">1</span>).min(chunks.len()) + <span class="number">2</span>; <span class="comment">// ca one block for each thread at all times
 
-        <span class="kw">let</span> (<span class="ident">send</span>, <span class="ident">recv</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>(); <span class="comment">// TODO bounded channel simplifies logic?</span>
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">shared_meta_data_ref</span>: <span class="ident">Arc::new</span>(<span class="ident">chunks</span>.<span class="ident">meta_data</span>().<span class="ident">clone</span>()),
-            <span class="ident">currently_decompressing_count</span>: <span class="number">0</span>,
-            <span class="ident">remaining_chunks</span>: <span class="ident">chunks</span>,
-            <span class="ident">sender</span>: <span class="ident">send</span>,
-            <span class="ident">receiver</span>: <span class="ident">recv</span>,
-            <span class="ident">pedantic</span>,
-            <span class="ident">max_threads</span>,
+        </span><span class="kw">let </span>(send, recv) = flume::unbounded(); <span class="comment">// TODO bounded channel simplifies logic?
+        </span><span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            shared_meta_data_ref: Arc::new(chunks.meta_data().clone()),
+            currently_decompressing_count: <span class="number">0</span>,
+            remaining_chunks: chunks,
+            sender: send,
+            receiver: recv,
+            pedantic,
+            max_threads,
 
-            <span class="ident">pool</span>,
+            pool,
         })
     }
 
-    <span class="doccomment">/// Fill the pool with decompression jobs. Returns the first job that finishes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decompress_next_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UncompressedBlock</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="comment">// if self.remaining_chunk_count == 0 { return None; }</span>
+    <span class="doccomment">/// Fill the pool with decompression jobs. Returns the first job that finishes.
+    </span><span class="kw">pub fn </span>decompress_next_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;UncompressedBlock&gt;&gt; {
+        <span class="comment">// if self.remaining_chunk_count == 0 { return None; }
 
-        <span class="macro">assert_eq!</span>( <span class="comment">// propagate panics (in release mode unlikely, but possible of course)</span>
-                    <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">panic_count</span>(), <span class="number">0</span>,
+        </span><span class="macro">assert_eq!</span>( <span class="comment">// propagate panics (in release mode unlikely, but possible of course)
+                    </span><span class="self">self</span>.pool.panic_count(), <span class="number">0</span>,
                     <span class="string">&quot;OpenEXR decompressor thread panicked \
             (maybe a debug assertion failed) - \
-            Use non-parallel decompression to see panic messages.&quot;</span>
-        );
+            Use non-parallel decompression to see panic messages.&quot;
+        </span>);
 
-        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">currently_decompressing_count</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">max_threads</span> {
-            <span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">next</span>();
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">block</span>) <span class="op">=</span> <span class="ident">block</span> {
-                <span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">block</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">block</span>) =&gt; <span class="ident">block</span>,
-                    <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">error</span>))
+        <span class="kw">while </span><span class="self">self</span>.currently_decompressing_count &lt; <span class="self">self</span>.max_threads {
+            <span class="kw">let </span>block = <span class="self">self</span>.remaining_chunks.next();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(block) = block {
+                <span class="kw">let </span>block = <span class="kw">match </span>block {
+                    <span class="prelude-val">Ok</span>(block) =&gt; block,
+                    <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(error))
                 };
 
-                <span class="comment">// TODO if no compression, return directly</span>
-                <span class="comment">/*if self.meta_data().headers.get(block.layer_index)
+                <span class="comment">// TODO if no compression, return directly
+                /*if self.meta_data().headers.get(block.layer_index)
                     .ok_or_else(|| Error::invalid(&quot;header index in block&quot;))?
                     .compression == Compression::Uncompressed
                 {
@@ -989,64 +983,64 @@
                         if next.is_some() { self.remaining_chunk_count -= 1; }
                         return UncompressedBlock::decompress(next, headers); // no actual compression, as data is uncompressed
                     }
-                }*/</span>
+                }*/
 
 
-                <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">meta</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shared_meta_data_ref</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">pedantic</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pedantic</span>;
+                </span><span class="kw">let </span>sender = <span class="self">self</span>.sender.clone();
+                <span class="kw">let </span>meta = <span class="self">self</span>.shared_meta_data_ref.clone();
+                <span class="kw">let </span>pedantic = <span class="self">self</span>.pedantic;
 
-                <span class="self">self</span>.<span class="ident">currently_decompressing_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.currently_decompressing_count += <span class="number">1</span>;
 
-                <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">execute</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">decompressed_or_err</span> <span class="op">=</span> <span class="ident">UncompressedBlock::decompress_chunk</span>(
-                        <span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">meta</span>, <span class="ident">pedantic</span>
+                <span class="self">self</span>.pool.execute(<span class="kw">move </span>|| {
+                    <span class="kw">let </span>decompressed_or_err = UncompressedBlock::decompress_chunk(
+                        block, <span class="kw-2">&amp;</span>meta, pedantic
                     );
 
-                    <span class="comment">// by now, decompressing could have failed in another thread.</span>
-                    <span class="comment">// the error is then already handled, so we simply</span>
-                    <span class="comment">// don&#39;t send the decompressed block and do nothing</span>
-                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">decompressed_or_err</span>);
+                    <span class="comment">// by now, decompressing could have failed in another thread.
+                    // the error is then already handled, so we simply
+                    // don&#39;t send the decompressed block and do nothing
+                    </span><span class="kw">let _ </span>= sender.send(decompressed_or_err);
                 });
             }
-            <span class="kw">else</span> {
-                <span class="comment">// there are no chunks left to decompress</span>
-                <span class="kw">break</span>;
+            <span class="kw">else </span>{
+                <span class="comment">// there are no chunks left to decompress
+                </span><span class="kw">break</span>;
             }
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">currently_decompressing_count</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;all decompressing senders hung up but more messages were expected&quot;</span>);
+        <span class="kw">if </span><span class="self">self</span>.currently_decompressing_count &gt; <span class="number">0 </span>{
+            <span class="kw">let </span>next = <span class="self">self</span>.receiver.recv()
+                .expect(<span class="string">&quot;all decompressing senders hung up but more messages were expected&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">currently_decompressing_count</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="prelude-val">Some</span>(<span class="ident">next</span>)
+            <span class="self">self</span>.currently_decompressing_count -= <span class="number">1</span>;
+            <span class="prelude-val">Some</span>(next)
         }
-        <span class="kw">else</span> {
-            <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">try_recv</span>().<span class="ident">is_err</span>(), <span class="string">&quot;uncompressed chunks left in channel after decompressing all chunks&quot;</span>); <span class="comment">// TODO not reliable</span>
-            <span class="macro">debug_assert_eq!</span>(<span class="self">self</span>.<span class="ident">len</span>(), <span class="number">0</span>, <span class="string">&quot;compressed chunks left after decompressing all chunks&quot;</span>);
-            <span class="prelude-val">None</span>
-        }
+        <span class="kw">else </span>{
+            <span class="macro">debug_assert!</span>(<span class="self">self</span>.receiver.try_recv().is_err(), <span class="string">&quot;uncompressed chunks left in channel after decompressing all chunks&quot;</span>); <span class="comment">// TODO not reliable
+            </span><span class="macro">debug_assert_eq!</span>(<span class="self">self</span>.len(), <span class="number">0</span>, <span class="string">&quot;compressed chunks left after decompressing all chunks&quot;</span>);
+            <span class="prelude-val">None
+        </span>}
     }
 
-    <span class="doccomment">/// The extracted meta data of the image file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">meta_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">MetaData</span> { <span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">meta_data</span>() }
+    <span class="doccomment">/// The extracted meta data of the image file.
+    </span><span class="kw">pub fn </span>meta_data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>MetaData { <span class="self">self</span>.remaining_chunks.meta_data() }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">SequentialBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SequentialBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UncompressedBlock</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">decompress_next_block</span>() }
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) { <span class="self">self</span>.<span class="ident">remaining_chunks_reader</span>.<span class="ident">size_hint</span>() }
+<span class="kw">impl</span>&lt;R: ChunksReader&gt; ExactSizeIterator <span class="kw">for </span>SequentialBlockDecompressor&lt;R&gt; {}
+<span class="kw">impl</span>&lt;R: ChunksReader&gt; Iterator <span class="kw">for </span>SequentialBlockDecompressor&lt;R&gt; {
+    <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;UncompressedBlock&gt;;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; { <span class="self">self</span>.decompress_next_block() }
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) { <span class="self">self</span>.remaining_chunks_reader.size_hint() }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">ParallelBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">ChunksReader</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ParallelBlockDecompressor</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">UncompressedBlock</span><span class="op">&gt;</span>;
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">decompress_next_block</span>() }
-    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">remaining_chunks</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">currently_decompressing_count</span>;
-        (<span class="ident">remaining</span>, <span class="prelude-val">Some</span>(<span class="ident">remaining</span>))
+<span class="kw">impl</span>&lt;R: ChunksReader&gt; ExactSizeIterator <span class="kw">for </span>ParallelBlockDecompressor&lt;R&gt; {}
+<span class="kw">impl</span>&lt;R: ChunksReader&gt; Iterator <span class="kw">for </span>ParallelBlockDecompressor&lt;R&gt; {
+    <span class="kw">type </span>Item = <span class="prelude-ty">Result</span>&lt;UncompressedBlock&gt;;
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; { <span class="self">self</span>.decompress_next_block() }
+    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+        <span class="kw">let </span>remaining = <span class="self">self</span>.remaining_chunks.len() + <span class="self">self</span>.currently_decompressing_count;
+        (remaining, <span class="prelude-val">Some</span>(remaining))
     }
 }
 
@@ -1055,5 +1049,4 @@
 
 
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="exr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

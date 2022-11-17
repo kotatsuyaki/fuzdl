@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/flume-0.10.14/src/async.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>async.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../flume/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/flume-0.10.14/src/async.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>async.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../flume/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../flume/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -540,542 +534,541 @@
 <span id="534">534</span>
 <span id="535">535</span>
 <span id="536">536</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Futures and other types that allow asynchronous interaction with channels.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Futures and other types that allow asynchronous interaction with channels.
 
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">future::Future</span>,
-    <span class="ident">pin::Pin</span>,
-    <span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>, <span class="ident">Waker</span>},
-    <span class="ident">any::Any</span>,
-    <span class="ident">ops::Deref</span>,
+</span><span class="kw">use </span>std::{
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll, Waker},
+    any::Any,
+    ops::Deref,
 };
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">futures_core</span>::{<span class="ident">stream</span>::{<span class="ident">Stream</span>, <span class="ident">FusedStream</span>}, <span class="ident">future::FusedFuture</span>};
-<span class="kw">use</span> <span class="ident">futures_sink::Sink</span>;
-<span class="kw">use</span> <span class="ident">pin_project</span>::{<span class="ident">pin_project</span>, <span class="ident">pinned_drop</span>};
+<span class="kw">use crate</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>futures_core::{stream::{Stream, FusedStream}, future::FusedFuture};
+<span class="kw">use </span>futures_sink::Sink;
+<span class="kw">use </span>pin_project::{pin_project, pinned_drop};
 
-<span class="kw">struct</span> <span class="ident">AsyncSignal</span> {
-    <span class="ident">waker</span>: <span class="ident">Spinlock</span><span class="op">&lt;</span><span class="ident">Waker</span><span class="op">&gt;</span>,
-    <span class="ident">woken</span>: <span class="ident">AtomicBool</span>,
-    <span class="ident">stream</span>: <span class="ident">bool</span>,
+<span class="kw">struct </span>AsyncSignal {
+    waker: Spinlock&lt;Waker&gt;,
+    woken: AtomicBool,
+    stream: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">AsyncSignal</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">stream</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">AsyncSignal</span> {
-            <span class="ident">waker</span>: <span class="ident">Spinlock::new</span>(<span class="ident">cx</span>.<span class="ident">waker</span>().<span class="ident">clone</span>()),
-            <span class="ident">woken</span>: <span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>),
-            <span class="ident">stream</span>,
+<span class="kw">impl </span>AsyncSignal {
+    <span class="kw">fn </span>new(cx: <span class="kw-2">&amp;</span>Context, stream: bool) -&gt; <span class="self">Self </span>{
+        AsyncSignal {
+            waker: Spinlock::new(cx.waker().clone()),
+            woken: AtomicBool::new(<span class="bool-val">false</span>),
+            stream,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Signal</span> <span class="kw">for</span> <span class="ident">AsyncSignal</span> {
-    <span class="kw">fn</span> <span class="ident">fire</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">woken</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering::SeqCst</span>);
-        <span class="self">self</span>.<span class="ident">waker</span>.<span class="ident">lock</span>().<span class="ident">wake_by_ref</span>();
-        <span class="self">self</span>.<span class="ident">stream</span>
+<span class="kw">impl </span>Signal <span class="kw">for </span>AsyncSignal {
+    <span class="kw">fn </span>fire(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.woken.store(<span class="bool-val">true</span>, Ordering::SeqCst);
+        <span class="self">self</span>.waker.lock().wake_by_ref();
+        <span class="self">self</span>.stream
     }
 
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>) { <span class="self">self</span> }
-    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const</span> () { <span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*const</span> () }
+    <span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Any + <span class="lifetime">&#39;static</span>) { <span class="self">self </span>}
+    <span class="kw">fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>() { <span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span><span class="kw-2">*const </span>() }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">AsyncSignal</span><span class="op">&gt;</span> {
-    <span class="comment">// Update the hook to point to the given Waker.</span>
-    <span class="comment">// Returns whether the hook has been previously awakened</span>
-    <span class="kw">fn</span> <span class="ident">update_waker</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cx_waker</span>: <span class="kw-2">&amp;</span><span class="ident">Waker</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">waker</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">waker</span>.<span class="ident">lock</span>();
-        <span class="kw">let</span> <span class="ident">woken</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">woken</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>);
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">waker</span>.<span class="ident">will_wake</span>(<span class="ident">cx_waker</span>) {
-            <span class="kw-2">*</span><span class="ident">waker</span> <span class="op">=</span> <span class="ident">cx_waker</span>.<span class="ident">clone</span>();
+<span class="kw">impl</span>&lt;T&gt; Hook&lt;T, AsyncSignal&gt; {
+    <span class="comment">// Update the hook to point to the given Waker.
+    // Returns whether the hook has been previously awakened
+    </span><span class="kw">fn </span>update_waker(<span class="kw-2">&amp;</span><span class="self">self</span>, cx_waker: <span class="kw-2">&amp;</span>Waker) -&gt; bool {
+        <span class="kw">let </span><span class="kw-2">mut </span>waker = <span class="self">self</span>.<span class="number">1</span>.waker.lock();
+        <span class="kw">let </span>woken = <span class="self">self</span>.<span class="number">1</span>.woken.load(Ordering::SeqCst);
+        <span class="kw">if </span>!waker.will_wake(cx_waker) {
+            <span class="kw-2">*</span>waker = cx_waker.clone();
 
-            <span class="comment">// Avoid the edge case where the waker was woken just before the wakers were</span>
-            <span class="comment">// swapped.</span>
-            <span class="kw">if</span> <span class="ident">woken</span> {
-                <span class="ident">cx_waker</span>.<span class="ident">wake_by_ref</span>();
+            <span class="comment">// Avoid the edge case where the waker was woken just before the wakers were
+            // swapped.
+            </span><span class="kw">if </span>woken {
+                cx_waker.wake_by_ref();
             }
         }
-        <span class="ident">woken</span>
+        woken
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">OwnedOrRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">Owned</span>(<span class="ident">T</span>),
-    <span class="ident">Ref</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>),
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">enum </span>OwnedOrRef&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    Owned(T),
+    Ref(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>T),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">OwnedOrRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">T</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Deref <span class="kw">for </span>OwnedOrRef&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">type </span>Target = T;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">T</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">OwnedOrRef::Owned</span>(<span class="ident">arc</span>) =&gt; <span class="kw-2">&amp;</span><span class="ident">arc</span>,
-            <span class="ident">OwnedOrRef::Ref</span>(<span class="ident">r</span>) =&gt; <span class="ident">r</span>,
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
+        <span class="kw">match </span><span class="self">self </span>{
+            OwnedOrRef::Owned(arc) =&gt; <span class="kw-2">&amp;</span>arc,
+            OwnedOrRef::Ref(r) =&gt; r,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Asynchronously send a value into the channel, returning an error if all receivers have been</span>
-    <span class="doccomment">/// dropped. If the channel is bounded and is full, the returned future will yield to the async</span>
-    <span class="doccomment">/// runtime.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In the current implementation, the returned future will not yield to the async runtime if the</span>
-    <span class="doccomment">/// channel is unbounded. This may change in later versions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_async</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">item</span>: <span class="ident">T</span>) -&gt; <span class="ident">SendFut</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">SendFut</span> {
-            <span class="ident">sender</span>: <span class="ident">OwnedOrRef::Ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>),
-            <span class="ident">hook</span>: <span class="prelude-val">Some</span>(<span class="ident">SendState::NotYetSent</span>(<span class="ident">item</span>)),
+<span class="kw">impl</span>&lt;T&gt; Sender&lt;T&gt; {
+    <span class="doccomment">/// Asynchronously send a value into the channel, returning an error if all receivers have been
+    /// dropped. If the channel is bounded and is full, the returned future will yield to the async
+    /// runtime.
+    ///
+    /// In the current implementation, the returned future will not yield to the async runtime if the
+    /// channel is unbounded. This may change in later versions.
+    </span><span class="kw">pub fn </span>send_async(<span class="kw-2">&amp;</span><span class="self">self</span>, item: T) -&gt; SendFut&lt;T&gt; {
+        SendFut {
+            sender: OwnedOrRef::Ref(<span class="kw-2">&amp;</span><span class="self">self</span>),
+            hook: <span class="prelude-val">Some</span>(SendState::NotYetSent(item)),
         }
     }
 
-    <span class="doccomment">/// Convert this sender into a future that asynchronously sends a single message into the channel,</span>
-    <span class="doccomment">/// returning an error if all receivers have been dropped. If the channel is bounded and is full,</span>
-    <span class="doccomment">/// this future will yield to the async runtime.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In the current implementation, the returned future will not yield to the async runtime if the</span>
-    <span class="doccomment">/// channel is unbounded. This may change in later versions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_send_async</span>(<span class="self">self</span>, <span class="ident">item</span>: <span class="ident">T</span>) -&gt; <span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">SendFut</span> {
-            <span class="ident">sender</span>: <span class="ident">OwnedOrRef::Owned</span>(<span class="self">self</span>),
-            <span class="ident">hook</span>: <span class="prelude-val">Some</span>(<span class="ident">SendState::NotYetSent</span>(<span class="ident">item</span>)),
+    <span class="doccomment">/// Convert this sender into a future that asynchronously sends a single message into the channel,
+    /// returning an error if all receivers have been dropped. If the channel is bounded and is full,
+    /// this future will yield to the async runtime.
+    ///
+    /// In the current implementation, the returned future will not yield to the async runtime if the
+    /// channel is unbounded. This may change in later versions.
+    </span><span class="kw">pub fn </span>into_send_async(<span class="self">self</span>, item: T) -&gt; SendFut&lt;<span class="lifetime">&#39;static</span>, T&gt; {
+        SendFut {
+            sender: OwnedOrRef::Owned(<span class="self">self</span>),
+            hook: <span class="prelude-val">Some</span>(SendState::NotYetSent(item)),
         }
     }
 
-    <span class="doccomment">/// Create an asynchronous sink that uses this sender to asynchronously send messages into the</span>
-    <span class="doccomment">/// channel. The sender will continue to be usable after the sink has been dropped.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In the current implementation, the returned sink will not yield to the async runtime if the</span>
-    <span class="doccomment">/// channel is unbounded. This may change in later versions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sink</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">SendSink</span>(<span class="ident">SendFut</span> {
-            <span class="ident">sender</span>: <span class="ident">OwnedOrRef::Ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>),
-            <span class="ident">hook</span>: <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Create an asynchronous sink that uses this sender to asynchronously send messages into the
+    /// channel. The sender will continue to be usable after the sink has been dropped.
+    ///
+    /// In the current implementation, the returned sink will not yield to the async runtime if the
+    /// channel is unbounded. This may change in later versions.
+    </span><span class="kw">pub fn </span>sink(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SendSink&lt;<span class="lifetime">&#39;_</span>, T&gt; {
+        SendSink(SendFut {
+            sender: OwnedOrRef::Ref(<span class="kw-2">&amp;</span><span class="self">self</span>),
+            hook: <span class="prelude-val">None</span>,
         })
     }
 
-    <span class="doccomment">/// Convert this sender into a sink that allows asynchronously sending messages into the channel.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// In the current implementation, the returned sink will not yield to the async runtime if the</span>
-    <span class="doccomment">/// channel is unbounded. This may change in later versions.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_sink</span>(<span class="self">self</span>) -&gt; <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">SendSink</span>(<span class="ident">SendFut</span> {
-            <span class="ident">sender</span>: <span class="ident">OwnedOrRef::Owned</span>(<span class="self">self</span>),
-            <span class="ident">hook</span>: <span class="prelude-val">None</span>,
+    <span class="doccomment">/// Convert this sender into a sink that allows asynchronously sending messages into the channel.
+    ///
+    /// In the current implementation, the returned sink will not yield to the async runtime if the
+    /// channel is unbounded. This may change in later versions.
+    </span><span class="kw">pub fn </span>into_sink(<span class="self">self</span>) -&gt; SendSink&lt;<span class="lifetime">&#39;static</span>, T&gt; {
+        SendSink(SendFut {
+            sender: OwnedOrRef::Owned(<span class="self">self</span>),
+            hook: <span class="prelude-val">None</span>,
         })
     }
 }
 
-<span class="kw">enum</span> <span class="ident">SendState</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">NotYetSent</span>(<span class="ident">T</span>),
-    <span class="ident">QueuedItem</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">AsyncSignal</span><span class="op">&gt;</span><span class="op">&gt;</span>),
+<span class="kw">enum </span>SendState&lt;T&gt; {
+    NotYetSent(T),
+    QueuedItem(Arc&lt;Hook&lt;T, AsyncSignal&gt;&gt;),
 }
 
-<span class="doccomment">/// A future that sends a value into a channel.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Can be created via [`Sender::send_async`] or [`Sender::into_send_async`].</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;futures/streams/sinks do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="attribute">#[<span class="ident">pin_project</span>(<span class="ident">PinnedDrop</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">sender</span>: <span class="ident">OwnedOrRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="comment">// Only none after dropping</span>
-    <span class="ident">hook</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SendState</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A future that sends a value into a channel.
+///
+/// Can be created via [`Sender::send_async`] or [`Sender::into_send_async`].
+</span><span class="attribute">#[must_use = <span class="string">&quot;futures/streams/sinks do nothing unless you `.await` or poll them&quot;</span>]
+#[pin_project(PinnedDrop)]
+</span><span class="kw">pub struct </span>SendFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    sender: OwnedOrRef&lt;<span class="lifetime">&#39;a</span>, Sender&lt;T&gt;&gt;,
+    <span class="comment">// Only none after dropping
+    </span>hook: <span class="prelude-ty">Option</span>&lt;SendState&lt;T&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Reset the hook, clearing it and removing it from the waiting sender&#39;s queue. This is called</span>
-    <span class="doccomment">/// on drop and just before `start_send` in the `Sink` implementation.</span>
-    <span class="kw">fn</span> <span class="ident">reset_hook</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">SendState::QueuedItem</span>(<span class="ident">hook</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">take</span>() {
-            <span class="kw">let</span> <span class="ident">hook</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">dyn</span> <span class="ident">Signal</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hook</span>;
-            <span class="ident">wait_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>.<span class="ident">chan</span>).<span class="ident">sending</span>
-                .<span class="ident">as_mut</span>()
-                .<span class="ident">unwrap</span>().<span class="number">1</span>
-                .<span class="ident">retain</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">hook</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>());
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; SendFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="doccomment">/// Reset the hook, clearing it and removing it from the waiting sender&#39;s queue. This is called
+    /// on drop and just before `start_send` in the `Sink` implementation.
+    </span><span class="kw">fn </span>reset_hook(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(SendState::QueuedItem(hook)) = <span class="self">self</span>.hook.take() {
+            <span class="kw">let </span>hook: Arc&lt;Hook&lt;T, <span class="kw">dyn </span>Signal&gt;&gt; = hook;
+            wait_lock(<span class="kw-2">&amp;</span><span class="self">self</span>.sender.shared.chan).sending
+                .as_mut()
+                .unwrap().<span class="number">1
+                </span>.retain(|s| s.signal().as_ptr() != hook.signal().as_ptr());
         }
     }
 
-    <span class="doccomment">/// See [`Sender::is_disconnected`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_disconnected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">is_disconnected</span>()
+    <span class="doccomment">/// See [`Sender::is_disconnected`].
+    </span><span class="kw">pub fn </span>is_disconnected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.sender.is_disconnected()
     }
 
-    <span class="doccomment">/// See [`Sender::is_empty`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">is_empty</span>()
+    <span class="doccomment">/// See [`Sender::is_empty`].
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.sender.is_empty()
     }
 
-    <span class="doccomment">/// See [`Sender::is_full`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">is_full</span>()
+    <span class="doccomment">/// See [`Sender::is_full`].
+    </span><span class="kw">pub fn </span>is_full(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.sender.is_full()
     }
 
-    <span class="doccomment">/// See [`Sender::len`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">len</span>()
+    <span class="doccomment">/// See [`Sender::len`].
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.sender.len()
     }
 
-    <span class="doccomment">/// See [`Sender::capacity`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">capacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">capacity</span>()
-    }
-}
-
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::needless_lifetimes</span>)]</span> <span class="comment">// False positive, see https://github.com/rust-lang/rust-clippy/issues/5787</span>
-<span class="attribute">#[<span class="ident">pinned_drop</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">PinnedDrop</span> <span class="kw">for</span> <span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">reset_hook</span>()
+    <span class="doccomment">/// See [`Sender::capacity`].
+    </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="self">self</span>.sender.capacity()
     }
 }
 
-<span class="comment">// impl&lt;&#39;a, T&gt; Drop for SendFut&lt;&#39;a, T&gt; {</span>
-<span class="comment">//     fn drop(&amp;mut self) {</span>
-<span class="comment">//         self.reset_hook()</span>
-<span class="comment">//     }</span>
-<span class="comment">// }</span>
+<span class="attribute">#[allow(clippy::needless_lifetimes)] </span><span class="comment">// False positive, see https://github.com/rust-lang/rust-clippy/issues/5787
+</span><span class="attribute">#[pinned_drop]
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; PinnedDrop <span class="kw">for </span>SendFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>drop(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;) {
+        <span class="self">self</span>.reset_hook()
+    }
+}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="comment">// impl&lt;&#39;a, T&gt; Drop for SendFut&lt;&#39;a, T&gt; {
+//     fn drop(&amp;mut self) {
+//         self.reset_hook()
+//     }
+// }
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">SendState::QueuedItem</span>(<span class="ident">hook</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">as_ref</span>() {
-            <span class="kw">if</span> <span class="ident">hook</span>.<span class="ident">is_empty</span>() {
-                <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(()))
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>() {
-                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>() {
-                    <span class="ident">SendState::NotYetSent</span>(<span class="ident">item</span>) =&gt; <span class="ident">Poll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">SendError</span>(<span class="ident">item</span>))),
-                    <span class="ident">SendState::QueuedItem</span>(<span class="ident">hook</span>) =&gt; <span class="kw">match</span> <span class="ident">hook</span>.<span class="ident">try_take</span>() {
-                        <span class="prelude-val">Some</span>(<span class="ident">item</span>) =&gt; <span class="ident">Poll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">SendError</span>(<span class="ident">item</span>))),
-                        <span class="prelude-val">None</span> =&gt; <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(())),
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Future <span class="kw">for </span>SendFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;(), SendError&lt;T&gt;&gt;;
+
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(SendState::QueuedItem(hook)) = <span class="self">self</span>.hook.as_ref() {
+            <span class="kw">if </span>hook.is_empty() {
+                Poll::Ready(<span class="prelude-val">Ok</span>(()))
+            } <span class="kw">else if </span><span class="self">self</span>.sender.shared.is_disconnected() {
+                <span class="kw">match </span><span class="self">self</span>.hook.take().unwrap() {
+                    SendState::NotYetSent(item) =&gt; Poll::Ready(<span class="prelude-val">Err</span>(SendError(item))),
+                    SendState::QueuedItem(hook) =&gt; <span class="kw">match </span>hook.try_take() {
+                        <span class="prelude-val">Some</span>(item) =&gt; Poll::Ready(<span class="prelude-val">Err</span>(SendError(item))),
+                        <span class="prelude-val">None </span>=&gt; Poll::Ready(<span class="prelude-val">Ok</span>(())),
                     },
                 }
-            } <span class="kw">else</span> {
-                <span class="ident">hook</span>.<span class="ident">update_waker</span>(<span class="ident">cx</span>.<span class="ident">waker</span>());
-                <span class="ident">Poll::Pending</span>
+            } <span class="kw">else </span>{
+                hook.update_waker(cx.waker());
+                Poll::Pending
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">SendState::NotYetSent</span>(<span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mut_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">project</span>();
-            <span class="kw">let</span> (<span class="ident">shared</span>, <span class="ident">this_hook</span>) <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">mut_self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>, <span class="kw-2">&amp;mut</span> <span class="ident">mut_self</span>.<span class="ident">hook</span>);
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(SendState::NotYetSent(<span class="kw">_</span>)) = <span class="self">self</span>.hook {
+            <span class="kw">let </span><span class="kw-2">mut </span>mut_self = <span class="self">self</span>.project();
+            <span class="kw">let </span>(shared, this_hook) = (<span class="kw-2">&amp;</span>mut_self.sender.shared, <span class="kw-2">&amp;mut </span>mut_self.hook);
 
-            <span class="ident">shared</span>.<span class="ident">send</span>(
-                <span class="comment">// item</span>
-                <span class="kw">match</span> <span class="ident">this_hook</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>() {
-                    <span class="ident">SendState::NotYetSent</span>(<span class="ident">item</span>) =&gt; <span class="ident">item</span>,
-                    <span class="ident">SendState::QueuedItem</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(())),
+            shared.send(
+                <span class="comment">// item
+                </span><span class="kw">match </span>this_hook.take().unwrap() {
+                    SendState::NotYetSent(item) =&gt; item,
+                    SendState::QueuedItem(<span class="kw">_</span>) =&gt; <span class="kw">return </span>Poll::Ready(<span class="prelude-val">Ok</span>(())),
                 },
-                <span class="comment">// should_block</span>
-                <span class="bool-val">true</span>,
-                <span class="comment">// make_signal</span>
-                <span class="op">|</span><span class="ident">msg</span><span class="op">|</span> <span class="ident">Hook::slot</span>(<span class="prelude-val">Some</span>(<span class="ident">msg</span>), <span class="ident">AsyncSignal::new</span>(<span class="ident">cx</span>, <span class="bool-val">false</span>)),
-                <span class="comment">// do_block</span>
-                <span class="op">|</span><span class="ident">hook</span><span class="op">|</span> {
-                    <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">this_hook</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">SendState::QueuedItem</span>(<span class="ident">hook</span>));
-                    <span class="ident">Poll::Pending</span>
+                <span class="comment">// should_block
+                </span><span class="bool-val">true</span>,
+                <span class="comment">// make_signal
+                </span>|msg| Hook::slot(<span class="prelude-val">Some</span>(msg), AsyncSignal::new(cx, <span class="bool-val">false</span>)),
+                <span class="comment">// do_block
+                </span>|hook| {
+                    <span class="kw-2">**</span>this_hook = <span class="prelude-val">Some</span>(SendState::QueuedItem(hook));
+                    Poll::Pending
                 },
             )
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">err</span> {
-                    <span class="ident">TrySendTimeoutError::Disconnected</span>(<span class="ident">msg</span>) =&gt; <span class="ident">SendError</span>(<span class="ident">msg</span>),
-                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                .map(|r| r.map_err(|err| <span class="kw">match </span>err {
+                    TrySendTimeoutError::Disconnected(msg) =&gt; SendError(msg),
+                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 }))
-        } <span class="kw">else</span> { <span class="comment">// Nothing to do</span>
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(()))
+        } <span class="kw">else </span>{ <span class="comment">// Nothing to do
+            </span>Poll::Ready(<span class="prelude-val">Ok</span>(()))
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">FusedFuture</span> <span class="kw">for</span> <span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">is_terminated</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; FusedFuture <span class="kw">for </span>SendFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>is_terminated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.sender.shared.is_disconnected()
     }
 }
 
-<span class="doccomment">/// A sink that allows sending values into a channel.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Can be created via [`Sender::sink`] or [`Sender::into_sink`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">SendFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>);
+<span class="doccomment">/// A sink that allows sending values into a channel.
+///
+/// Can be created via [`Sender::sink`] or [`Sender::into_sink`].
+</span><span class="kw">pub struct </span>SendSink&lt;<span class="lifetime">&#39;a</span>, T&gt;(SendFut&lt;<span class="lifetime">&#39;a</span>, T&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Returns a clone of a sending half of the channel of this sink.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sender</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">sender</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; SendSink&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="doccomment">/// Returns a clone of a sending half of the channel of this sink.
+    </span><span class="kw">pub fn </span>sender(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Sender&lt;T&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.sender
     }
 
-    <span class="doccomment">/// See [`Sender::is_disconnected`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_disconnected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_disconnected</span>()
+    <span class="doccomment">/// See [`Sender::is_disconnected`].
+    </span><span class="kw">pub fn </span>is_disconnected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_disconnected()
     }
 
-    <span class="doccomment">/// See [`Sender::is_empty`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_empty</span>()
+    <span class="doccomment">/// See [`Sender::is_empty`].
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_empty()
     }
 
-    <span class="doccomment">/// See [`Sender::is_full`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_full</span>()
+    <span class="doccomment">/// See [`Sender::is_full`].
+    </span><span class="kw">pub fn </span>is_full(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_full()
     }
 
-    <span class="doccomment">/// See [`Sender::len`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">len</span>()
+    <span class="doccomment">/// See [`Sender::len`].
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.<span class="number">0</span>.len()
     }
 
-    <span class="doccomment">/// See [`Sender::capacity`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">capacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">capacity</span>()
+    <span class="doccomment">/// See [`Sender::capacity`].
+    </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.capacity()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Sink</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Sink&lt;T&gt; <span class="kw">for </span>SendSink&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">type </span>Error = SendError&lt;T&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll_ready</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll_ready(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Poll&lt;<span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt;&gt; {
+        Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).poll(cx)
     }
 
-    <span class="kw">fn</span> <span class="ident">start_send</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">item</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">reset_hook</span>();
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">hook</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">SendState::NotYetSent</span>(<span class="ident">item</span>));
+    <span class="kw">fn </span>start_send(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, item: T) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.reset_hook();
+        <span class="self">self</span>.<span class="number">0</span>.hook = <span class="prelude-val">Some</span>(SendState::NotYetSent(item));
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">poll_flush</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>) <span class="comment">// TODO: A different strategy here?</span>
-    }
+    <span class="kw">fn </span>poll_flush(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Poll&lt;<span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt;&gt; {
+        Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).poll(cx) <span class="comment">// TODO: A different strategy here?
+    </span>}
 
-    <span class="kw">fn</span> <span class="ident">poll_close</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>) <span class="comment">// TODO: A different strategy here?</span>
-    }
+    <span class="kw">fn </span>poll_close(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Poll&lt;<span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt;&gt; {
+        Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).poll(cx) <span class="comment">// TODO: A different strategy here?
+    </span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SendSink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">SendSink</span>(<span class="ident">SendFut</span> {
-            <span class="ident">sender</span>: <span class="self">self</span>.<span class="number">0</span>.<span class="ident">sender</span>.<span class="ident">clone</span>(),
-            <span class="ident">hook</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Clone <span class="kw">for </span>SendSink&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SendSink&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+        SendSink(SendFut {
+            sender: <span class="self">self</span>.<span class="number">0</span>.sender.clone(),
+            hook: <span class="prelude-val">None</span>,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Asynchronously receive a value from the channel, returning an error if all senders have been</span>
-    <span class="doccomment">/// dropped. If the channel is empty, the returned future will yield to the async runtime.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recv_async</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">RecvFut::new</span>(<span class="ident">OwnedOrRef::Ref</span>(<span class="self">self</span>))
+<span class="kw">impl</span>&lt;T&gt; Receiver&lt;T&gt; {
+    <span class="doccomment">/// Asynchronously receive a value from the channel, returning an error if all senders have been
+    /// dropped. If the channel is empty, the returned future will yield to the async runtime.
+    </span><span class="kw">pub fn </span>recv_async(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RecvFut&lt;<span class="lifetime">&#39;_</span>, T&gt; {
+        RecvFut::new(OwnedOrRef::Ref(<span class="self">self</span>))
     }
 
-    <span class="doccomment">/// Convert this receiver into a future that asynchronously receives a single message from the</span>
-    <span class="doccomment">/// channel, returning an error if all senders have been dropped. If the channel is empty, this</span>
-    <span class="doccomment">/// future will yield to the async runtime.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_recv_async</span>(<span class="self">self</span>) -&gt; <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">RecvFut::new</span>(<span class="ident">OwnedOrRef::Owned</span>(<span class="self">self</span>))
+    <span class="doccomment">/// Convert this receiver into a future that asynchronously receives a single message from the
+    /// channel, returning an error if all senders have been dropped. If the channel is empty, this
+    /// future will yield to the async runtime.
+    </span><span class="kw">pub fn </span>into_recv_async(<span class="self">self</span>) -&gt; RecvFut&lt;<span class="lifetime">&#39;static</span>, T&gt; {
+        RecvFut::new(OwnedOrRef::Owned(<span class="self">self</span>))
     }
 
-    <span class="doccomment">/// Create an asynchronous stream that uses this receiver to asynchronously receive messages</span>
-    <span class="doccomment">/// from the channel. The receiver will continue to be usable after the stream has been dropped.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">RecvStream</span>(<span class="ident">RecvFut::new</span>(<span class="ident">OwnedOrRef::Ref</span>(<span class="self">self</span>)))
+    <span class="doccomment">/// Create an asynchronous stream that uses this receiver to asynchronously receive messages
+    /// from the channel. The receiver will continue to be usable after the stream has been dropped.
+    </span><span class="kw">pub fn </span>stream(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RecvStream&lt;<span class="lifetime">&#39;_</span>, T&gt; {
+        RecvStream(RecvFut::new(OwnedOrRef::Ref(<span class="self">self</span>)))
     }
 
-    <span class="doccomment">/// Convert this receiver into a stream that allows asynchronously receiving messages from the channel.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_stream</span>(<span class="self">self</span>) -&gt; <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">RecvStream</span>(<span class="ident">RecvFut::new</span>(<span class="ident">OwnedOrRef::Owned</span>(<span class="self">self</span>)))
+    <span class="doccomment">/// Convert this receiver into a stream that allows asynchronously receiving messages from the channel.
+    </span><span class="kw">pub fn </span>into_stream(<span class="self">self</span>) -&gt; RecvStream&lt;<span class="lifetime">&#39;static</span>, T&gt; {
+        RecvStream(RecvFut::new(OwnedOrRef::Owned(<span class="self">self</span>)))
     }
 }
 
-<span class="doccomment">/// A future which allows asynchronously receiving a message.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Can be created via [`Receiver::recv_async`] or [`Receiver::into_recv_async`].</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;futures/streams/sinks do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">receiver</span>: <span class="ident">OwnedOrRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">hook</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">AsyncSignal</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A future which allows asynchronously receiving a message.
+///
+/// Can be created via [`Receiver::recv_async`] or [`Receiver::into_recv_async`].
+</span><span class="attribute">#[must_use = <span class="string">&quot;futures/streams/sinks do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>RecvFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    receiver: OwnedOrRef&lt;<span class="lifetime">&#39;a</span>, Receiver&lt;T&gt;&gt;,
+    hook: <span class="prelude-ty">Option</span>&lt;Arc&lt;Hook&lt;T, AsyncSignal&gt;&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">receiver</span>: <span class="ident">OwnedOrRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">receiver</span>,
-            <span class="ident">hook</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; RecvFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>new(receiver: OwnedOrRef&lt;<span class="lifetime">&#39;a</span>, Receiver&lt;T&gt;&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            receiver,
+            hook: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Reset the hook, clearing it and removing it from the waiting receivers queue and waking</span>
-    <span class="doccomment">/// another receiver if this receiver has been woken, so as not to cause any missed wakeups.</span>
-    <span class="doccomment">/// This is called on drop and after a new item is received in `Stream::poll_next`.</span>
-    <span class="kw">fn</span> <span class="ident">reset_hook</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">hook</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">take</span>() {
-            <span class="kw">let</span> <span class="ident">hook</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Hook</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="kw">dyn</span> <span class="ident">Signal</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hook</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chan</span> <span class="op">=</span> <span class="ident">wait_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">chan</span>);
-            <span class="comment">// We&#39;d like to use `Arc::ptr_eq` here but it doesn&#39;t seem to work consistently with wide pointers?</span>
-            <span class="ident">chan</span>.<span class="ident">waiting</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">hook</span>.<span class="ident">signal</span>().<span class="ident">as_ptr</span>());
-            <span class="kw">if</span> <span class="ident">hook</span>.<span class="ident">signal</span>().<span class="ident">as_any</span>().<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">AsyncSignal</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>().<span class="ident">woken</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>) {
-                <span class="comment">// If this signal has been fired, but we&#39;re being dropped (and so not listening to it),</span>
-                <span class="comment">// pass the signal on to another receiver</span>
-                <span class="ident">chan</span>.<span class="ident">try_wake_receiver_if_pending</span>();
+    <span class="doccomment">/// Reset the hook, clearing it and removing it from the waiting receivers queue and waking
+    /// another receiver if this receiver has been woken, so as not to cause any missed wakeups.
+    /// This is called on drop and after a new item is received in `Stream::poll_next`.
+    </span><span class="kw">fn </span>reset_hook(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(hook) = <span class="self">self</span>.hook.take() {
+            <span class="kw">let </span>hook: Arc&lt;Hook&lt;T, <span class="kw">dyn </span>Signal&gt;&gt; = hook;
+            <span class="kw">let </span><span class="kw-2">mut </span>chan = wait_lock(<span class="kw-2">&amp;</span><span class="self">self</span>.receiver.shared.chan);
+            <span class="comment">// We&#39;d like to use `Arc::ptr_eq` here but it doesn&#39;t seem to work consistently with wide pointers?
+            </span>chan.waiting.retain(|s| s.signal().as_ptr() != hook.signal().as_ptr());
+            <span class="kw">if </span>hook.signal().as_any().downcast_ref::&lt;AsyncSignal&gt;().unwrap().woken.load(Ordering::SeqCst) {
+                <span class="comment">// If this signal has been fired, but we&#39;re being dropped (and so not listening to it),
+                // pass the signal on to another receiver
+                </span>chan.try_wake_receiver_if_pending();
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">poll_inner</span>(
-        <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>,
-        <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>,
-        <span class="ident">stream</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">RecvError</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">is_some</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">recv_sync</span>(<span class="prelude-val">None</span>) {
-                <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">msg</span>))
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>() {
-                <span class="ident">Poll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">RecvError::Disconnected</span>))
-            } <span class="kw">else</span> {
-                <span class="kw">let</span> <span class="ident">hook</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hook</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="ident">Arc::clone</span>).<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="ident">hook</span>.<span class="ident">update_waker</span>(<span class="ident">cx</span>.<span class="ident">waker</span>()) {
-                    <span class="comment">// If the previous hook was awakened, we need to insert it back to the</span>
-                    <span class="comment">// queue, otherwise, it remains valid.</span>
-                    <span class="ident">wait_lock</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">chan</span>).<span class="ident">waiting</span>.<span class="ident">push_back</span>(<span class="ident">hook</span>);
+    <span class="kw">fn </span>poll_inner(
+        <span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>Context,
+        stream: bool,
+    ) -&gt; Poll&lt;<span class="prelude-ty">Result</span>&lt;T, RecvError&gt;&gt; {
+        <span class="kw">if </span><span class="self">self</span>.hook.is_some() {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(msg) = <span class="self">self</span>.receiver.shared.recv_sync(<span class="prelude-val">None</span>) {
+                Poll::Ready(<span class="prelude-val">Ok</span>(msg))
+            } <span class="kw">else if </span><span class="self">self</span>.receiver.shared.is_disconnected() {
+                Poll::Ready(<span class="prelude-val">Err</span>(RecvError::Disconnected))
+            } <span class="kw">else </span>{
+                <span class="kw">let </span>hook = <span class="self">self</span>.hook.as_ref().map(Arc::clone).unwrap();
+                <span class="kw">if </span>hook.update_waker(cx.waker()) {
+                    <span class="comment">// If the previous hook was awakened, we need to insert it back to the
+                    // queue, otherwise, it remains valid.
+                    </span>wait_lock(<span class="kw-2">&amp;</span><span class="self">self</span>.receiver.shared.chan).waiting.push_back(hook);
                 }
-                <span class="comment">// To avoid a missed wakeup, re-check disconnect status here because the channel might have</span>
-                <span class="comment">// gotten shut down before we had a chance to push our hook</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>() {
-                    <span class="comment">// And now, to avoid a race condition between the first recv attempt and the disconnect check we</span>
-                    <span class="comment">// just performed, attempt to recv again just in case we missed something.</span>
-                    <span class="ident">Poll::Ready</span>(<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>
-                        .<span class="ident">recv_sync</span>(<span class="prelude-val">None</span>)
-                        .<span class="ident">map</span>(<span class="prelude-val">Ok</span>)
-                        .<span class="ident">unwrap_or</span>(<span class="prelude-val">Err</span>(<span class="ident">RecvError::Disconnected</span>)))
-                } <span class="kw">else</span> {
-                    <span class="ident">Poll::Pending</span>
+                <span class="comment">// To avoid a missed wakeup, re-check disconnect status here because the channel might have
+                // gotten shut down before we had a chance to push our hook
+                </span><span class="kw">if </span><span class="self">self</span>.receiver.shared.is_disconnected() {
+                    <span class="comment">// And now, to avoid a race condition between the first recv attempt and the disconnect check we
+                    // just performed, attempt to recv again just in case we missed something.
+                    </span>Poll::Ready(<span class="self">self</span>.receiver.shared
+                        .recv_sync(<span class="prelude-val">None</span>)
+                        .map(<span class="prelude-val">Ok</span>)
+                        .unwrap_or(<span class="prelude-val">Err</span>(RecvError::Disconnected)))
+                } <span class="kw">else </span>{
+                    Poll::Pending
                 }
             }
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">mut_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_mut</span>();
-            <span class="kw">let</span> (<span class="ident">shared</span>, <span class="ident">this_hook</span>) <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">mut_self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>, <span class="kw-2">&amp;mut</span> <span class="ident">mut_self</span>.<span class="ident">hook</span>);
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>mut_self = <span class="self">self</span>.get_mut();
+            <span class="kw">let </span>(shared, this_hook) = (<span class="kw-2">&amp;</span>mut_self.receiver.shared, <span class="kw-2">&amp;mut </span>mut_self.hook);
 
-            <span class="ident">shared</span>.<span class="ident">recv</span>(
-                <span class="comment">// should_block</span>
-                <span class="bool-val">true</span>,
-                <span class="comment">// make_signal</span>
-                <span class="op">|</span><span class="op">|</span> <span class="ident">Hook::trigger</span>(<span class="ident">AsyncSignal::new</span>(<span class="ident">cx</span>, <span class="ident">stream</span>)),
-                <span class="comment">// do_block</span>
-                <span class="op">|</span><span class="ident">hook</span><span class="op">|</span> {
-                    <span class="kw-2">*</span><span class="ident">this_hook</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">hook</span>);
-                    <span class="ident">Poll::Pending</span>
+            shared.recv(
+                <span class="comment">// should_block
+                </span><span class="bool-val">true</span>,
+                <span class="comment">// make_signal
+                </span>|| Hook::trigger(AsyncSignal::new(cx, stream)),
+                <span class="comment">// do_block
+                </span>|hook| {
+                    <span class="kw-2">*</span>this_hook = <span class="prelude-val">Some</span>(hook);
+                    Poll::Pending
                 },
             )
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">err</span> {
-                    <span class="ident">TryRecvTimeoutError::Disconnected</span> =&gt; <span class="ident">RecvError::Disconnected</span>,
-                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                .map(|r| r.map_err(|err| <span class="kw">match </span>err {
+                    TryRecvTimeoutError::Disconnected =&gt; RecvError::Disconnected,
+                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 }))
         }
     }
 
-    <span class="doccomment">/// See [`Receiver::is_disconnected`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_disconnected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">is_disconnected</span>()
+    <span class="doccomment">/// See [`Receiver::is_disconnected`].
+    </span><span class="kw">pub fn </span>is_disconnected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.receiver.is_disconnected()
     }
 
-    <span class="doccomment">/// See [`Receiver::is_empty`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">is_empty</span>()
+    <span class="doccomment">/// See [`Receiver::is_empty`].
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.receiver.is_empty()
     }
 
-    <span class="doccomment">/// See [`Receiver::is_full`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">is_full</span>()
+    <span class="doccomment">/// See [`Receiver::is_full`].
+    </span><span class="kw">pub fn </span>is_full(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.receiver.is_full()
     }
 
-    <span class="doccomment">/// See [`Receiver::len`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">len</span>()
+    <span class="doccomment">/// See [`Receiver::len`].
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.receiver.len()
     }
 
-    <span class="doccomment">/// See [`Receiver::capacity`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">capacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">capacity</span>()
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">reset_hook</span>();
+    <span class="doccomment">/// See [`Receiver::capacity`].
+    </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="self">self</span>.receiver.capacity()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">RecvError</span><span class="op">&gt;</span>;
-
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">poll_inner</span>(<span class="ident">cx</span>, <span class="bool-val">false</span>) <span class="comment">// stream = false</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Drop <span class="kw">for </span>RecvFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.reset_hook();
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">FusedFuture</span> <span class="kw">for</span> <span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">is_terminated</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">is_disconnected</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shared</span>.<span class="ident">is_empty</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Future <span class="kw">for </span>RecvFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;T, RecvError&gt;;
+
+    <span class="kw">fn </span>poll(<span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="self">self</span>.poll_inner(cx, <span class="bool-val">false</span>) <span class="comment">// stream = false
+    </span>}
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; FusedFuture <span class="kw">for </span>RecvFut&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>is_terminated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.receiver.shared.is_disconnected() &amp;&amp; <span class="self">self</span>.receiver.shared.is_empty()
     }
 }
 
-<span class="doccomment">/// A stream which allows asynchronously receiving messages.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Can be created via [`Receiver::stream`] or [`Receiver::into_stream`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">RecvFut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>);
+<span class="doccomment">/// A stream which allows asynchronously receiving messages.
+///
+/// Can be created via [`Receiver::stream`] or [`Receiver::into_stream`].
+</span><span class="kw">pub struct </span>RecvStream&lt;<span class="lifetime">&#39;a</span>, T&gt;(RecvFut&lt;<span class="lifetime">&#39;a</span>, T&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// See [`Receiver::is_disconnected`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_disconnected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_disconnected</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; RecvStream&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="doccomment">/// See [`Receiver::is_disconnected`].
+    </span><span class="kw">pub fn </span>is_disconnected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_disconnected()
     }
 
-    <span class="doccomment">/// See [`Receiver::is_empty`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_empty</span>()
+    <span class="doccomment">/// See [`Receiver::is_empty`].
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_empty()
     }
 
-    <span class="doccomment">/// See [`Receiver::is_full`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_full</span>()
+    <span class="doccomment">/// See [`Receiver::is_full`].
+    </span><span class="kw">pub fn </span>is_full(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_full()
     }
 
-    <span class="doccomment">/// See [`Receiver::len`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">len</span>()
+    <span class="doccomment">/// See [`Receiver::len`].
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.<span class="number">0</span>.len()
     }
 
-    <span class="doccomment">/// See [`Receiver::capacity`].</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">capacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">capacity</span>()
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="ident">RecvStream</span>(<span class="ident">RecvFut::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">receiver</span>.<span class="ident">clone</span>()))
+    <span class="doccomment">/// See [`Receiver::capacity`].
+    </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.capacity()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Clone <span class="kw">for </span>RecvStream&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RecvStream&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+        RecvStream(RecvFut::new(<span class="self">self</span>.<span class="number">0</span>.receiver.clone()))
+    }
+}
 
-    <span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll_inner</span>(<span class="ident">cx</span>, <span class="bool-val">true</span>) { <span class="comment">// stream = true</span>
-            <span class="ident">Poll::Pending</span> =&gt; <span class="ident">Poll::Pending</span>,
-            <span class="ident">Poll::Ready</span>(<span class="ident">item</span>) =&gt; {
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">reset_hook</span>();
-                <span class="ident">Poll::Ready</span>(<span class="ident">item</span>.<span class="ident">ok</span>())
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Stream <span class="kw">for </span>RecvStream&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">type </span>Item = T;
+
+    <span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="kw">match </span>Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).poll_inner(cx, <span class="bool-val">true</span>) { <span class="comment">// stream = true
+            </span>Poll::Pending =&gt; Poll::Pending,
+            Poll::Ready(item) =&gt; {
+                <span class="self">self</span>.<span class="number">0</span>.reset_hook();
+                Poll::Ready(item.ok())
             }
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">FusedStream</span> <span class="kw">for</span> <span class="ident">RecvStream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">is_terminated</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_terminated</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; FusedStream <span class="kw">for </span>RecvStream&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="kw">fn </span>is_terminated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.<span class="number">0</span>.is_terminated()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="flume" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="flume" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

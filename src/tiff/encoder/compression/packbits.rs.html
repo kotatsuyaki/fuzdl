@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/encoder/compression/packbits.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>packbits.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../tiff/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/encoder/compression/packbits.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>packbits.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../tiff/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -218,183 +212,183 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">encoder::compression</span>::<span class="kw-2">*</span>, <span class="ident">tags::CompressionMethod</span>};
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="ident">BufWriter</span>, <span class="ident">Error</span>, <span class="ident">ErrorKind</span>, <span class="ident">Write</span>};
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{encoder::compression::<span class="kw-2">*</span>, tags::CompressionMethod};
+<span class="kw">use </span>std::io::{BufWriter, Error, ErrorKind, Write};
 
-<span class="doccomment">/// Compressor that uses the Packbits[^note] algorithm to compress bytes.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [^note]: PackBits is often ineffective on continuous tone images,</span>
-<span class="doccomment">///          including many grayscale images. In such cases, it is better</span>
-<span class="doccomment">///          to leave the image uncompressed.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Packbits</span>;
+<span class="doccomment">/// Compressor that uses the Packbits[^note] algorithm to compress bytes.
+///
+/// [^note]: PackBits is often ineffective on continuous tone images,
+///          including many grayscale images. In such cases, it is better
+///          to leave the image uncompressed.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+</span><span class="kw">pub struct </span>Packbits;
 
-<span class="kw">impl</span> <span class="ident">Compression</span> <span class="kw">for</span> <span class="ident">Packbits</span> {
-    <span class="kw">const</span> <span class="ident">COMPRESSION_METHOD</span>: <span class="ident">CompressionMethod</span> <span class="op">=</span> <span class="ident">CompressionMethod::PackBits</span>;
+<span class="kw">impl </span>Compression <span class="kw">for </span>Packbits {
+    <span class="kw">const </span>COMPRESSION_METHOD: CompressionMethod = CompressionMethod::PackBits;
 
-    <span class="kw">fn</span> <span class="ident">get_algorithm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Compressor</span> {
-        <span class="ident">Compressor::Packbits</span>(<span class="kw-2">*</span><span class="self">self</span>)
+    <span class="kw">fn </span>get_algorithm(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Compressor {
+        Compressor::Packbits(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">CompressionAlgorithm</span> <span class="kw">for</span> <span class="ident">Packbits</span> {
-    <span class="kw">fn</span> <span class="ident">write_to</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">W</span>, <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">io::Error</span><span class="op">&gt;</span> {
-        <span class="comment">// Inspired by https://github.com/skirridsystems/packbits</span>
+<span class="kw">impl </span>CompressionAlgorithm <span class="kw">for </span>Packbits {
+    <span class="kw">fn </span>write_to&lt;W: Write&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, writer: <span class="kw-2">&amp;mut </span>W, bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;u64, io::Error&gt; {
+        <span class="comment">// Inspired by https://github.com/skirridsystems/packbits
 
-        <span class="kw">const</span> <span class="ident">MIN_REPT</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">3</span>; <span class="comment">// Minimum run to compress between differ blocks</span>
-        <span class="kw">const</span> <span class="ident">MAX_BYTES</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">128</span>; <span class="comment">// Maximum number of bytes that can be encoded in a header byte</span>
+        </span><span class="kw">const </span>MIN_REPT: u8 = <span class="number">3</span>; <span class="comment">// Minimum run to compress between differ blocks
+        </span><span class="kw">const </span>MAX_BYTES: u8 = <span class="number">128</span>; <span class="comment">// Maximum number of bytes that can be encoded in a header byte
 
-        <span class="comment">// Encoding for header byte based on number of bytes represented.</span>
-        <span class="kw">fn</span> <span class="ident">encode_diff</span>(<span class="ident">n</span>: <span class="ident">u8</span>) -&gt; <span class="ident">u8</span> {
-            <span class="ident">n</span> <span class="op">-</span> <span class="number">1</span>
-        }
-        <span class="kw">fn</span> <span class="ident">encode_rept</span>(<span class="ident">n</span>: <span class="ident">u8</span>) -&gt; <span class="ident">u8</span> {
-            <span class="kw">let</span> <span class="ident">var</span> <span class="op">=</span> <span class="number">256</span> <span class="op">-</span> (<span class="ident">n</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">u16</span>;
-            <span class="ident">var</span> <span class="kw">as</span> <span class="ident">u8</span>
-        }
-
-        <span class="kw">fn</span> <span class="ident">write_u8</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">W</span>, <span class="ident">byte</span>: <span class="ident">u8</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-            <span class="ident">writer</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span>[<span class="ident">byte</span>]).<span class="ident">map</span>(<span class="op">|</span><span class="ident">byte_count</span><span class="op">|</span> <span class="ident">byte_count</span> <span class="kw">as</span> <span class="ident">u64</span>)
+        // Encoding for header byte based on number of bytes represented.
+        </span><span class="kw">fn </span>encode_diff(n: u8) -&gt; u8 {
+            n - <span class="number">1
+        </span>}
+        <span class="kw">fn </span>encode_rept(n: u8) -&gt; u8 {
+            <span class="kw">let </span>var = <span class="number">256 </span>- (n - <span class="number">1</span>) <span class="kw">as </span>u16;
+            var <span class="kw">as </span>u8
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bufwriter</span> <span class="op">=</span> <span class="ident">BufWriter::new</span>(<span class="ident">writer</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes_written</span> <span class="op">=</span> <span class="number">0u64</span>; <span class="comment">// The number of bytes written into the writer</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>; <span class="comment">// The index of the first byte written into the writer</span>
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src_index</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>; <span class="comment">// Index of the current byte</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">src_count</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">len</span>(); <span class="comment">//The number of bytes remaining to be compressed</span>
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">in_run</span> <span class="op">=</span> <span class="bool-val">false</span>; <span class="comment">// Indication whether counting of similar bytes is performed</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">run_index</span> <span class="op">=</span> <span class="number">0u8</span>; <span class="comment">// Distance into pending bytes that a run starts</span>
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes_pending</span> <span class="op">=</span> <span class="number">0u8</span>; <span class="comment">// Bytes looked at but not yet output</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pending_index</span> <span class="op">=</span> <span class="number">0usize</span>; <span class="comment">// Index of the first pending byte</span>
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">curr_byte</span>: <span class="ident">u8</span>; <span class="comment">// Byte currently being considered</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_byte</span>: <span class="ident">u8</span>; <span class="comment">// Previous byte</span>
-
-        <span class="comment">// Need at least one byte to compress</span>
-        <span class="kw">if</span> <span class="ident">src_count</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::new</span>(<span class="ident">ErrorKind::WriteZero</span>, <span class="string">&quot;write zero&quot;</span>));
+        <span class="kw">fn </span>write_u8&lt;W: Write&gt;(writer: <span class="kw-2">&amp;mut </span>W, byte: u8) -&gt; <span class="prelude-ty">Result</span>&lt;u64, Error&gt; {
+            writer.write(<span class="kw-2">&amp;</span>[byte]).map(|byte_count| byte_count <span class="kw">as </span>u64)
         }
 
-        <span class="comment">// Prime compressor with first character.</span>
-        <span class="ident">last_byte</span> <span class="op">=</span> <span class="ident">bytes</span>[<span class="ident">src_index</span>];
-        <span class="ident">src_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        <span class="ident">bytes_pending</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>bufwriter = BufWriter::new(writer);
+        <span class="kw">let </span><span class="kw-2">mut </span>bytes_written = <span class="number">0u64</span>; <span class="comment">// The number of bytes written into the writer
+        </span><span class="kw">let </span><span class="kw-2">mut </span>offset: <span class="prelude-ty">Option</span>&lt;u64&gt; = <span class="prelude-val">None</span>; <span class="comment">// The index of the first byte written into the writer
 
-        <span class="kw">while</span> <span class="ident">src_count</span> <span class="op">-</span> <span class="number">1</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-            <span class="ident">src_count</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">curr_byte</span> <span class="op">=</span> <span class="ident">bytes</span>[<span class="ident">src_index</span>];
-            <span class="ident">src_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">bytes_pending</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>src_index: usize = <span class="number">0</span>; <span class="comment">// Index of the current byte
+        </span><span class="kw">let </span><span class="kw-2">mut </span>src_count = bytes.len(); <span class="comment">//The number of bytes remaining to be compressed
 
-            <span class="kw">if</span> <span class="ident">in_run</span> {
-                <span class="kw">if</span> (<span class="ident">curr_byte</span> <span class="op">!</span><span class="op">=</span> <span class="ident">last_byte</span>) <span class="op">|</span><span class="op">|</span> (<span class="ident">bytes_pending</span> <span class="op">&gt;</span> <span class="ident">MAX_BYTES</span>) {
-                    <span class="ident">offset</span>.<span class="ident">get_or_insert</span>(<span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">encode_rept</span>(<span class="ident">bytes_pending</span> <span class="op">-</span> <span class="number">1</span>))<span class="question-mark">?</span>);
-                    <span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">last_byte</span>)<span class="question-mark">?</span>;
-                    <span class="ident">bytes_written</span> <span class="op">+</span><span class="op">=</span> <span class="number">2</span>;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>in_run = <span class="bool-val">false</span>; <span class="comment">// Indication whether counting of similar bytes is performed
+        </span><span class="kw">let </span><span class="kw-2">mut </span>run_index = <span class="number">0u8</span>; <span class="comment">// Distance into pending bytes that a run starts
 
-                    <span class="ident">bytes_pending</span> <span class="op">=</span> <span class="number">1</span>;
-                    <span class="ident">pending_index</span> <span class="op">=</span> <span class="ident">src_index</span> <span class="op">-</span> <span class="number">1</span>;
-                    <span class="ident">run_index</span> <span class="op">=</span> <span class="number">0</span>;
-                    <span class="ident">in_run</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        </span><span class="kw">let </span><span class="kw-2">mut </span>bytes_pending = <span class="number">0u8</span>; <span class="comment">// Bytes looked at but not yet output
+        </span><span class="kw">let </span><span class="kw-2">mut </span>pending_index = <span class="number">0usize</span>; <span class="comment">// Index of the first pending byte
+
+        </span><span class="kw">let </span><span class="kw-2">mut </span>curr_byte: u8; <span class="comment">// Byte currently being considered
+        </span><span class="kw">let </span><span class="kw-2">mut </span>last_byte: u8; <span class="comment">// Previous byte
+
+        // Need at least one byte to compress
+        </span><span class="kw">if </span>src_count == <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(ErrorKind::WriteZero, <span class="string">&quot;write zero&quot;</span>));
+        }
+
+        <span class="comment">// Prime compressor with first character.
+        </span>last_byte = bytes[src_index];
+        src_index += <span class="number">1</span>;
+        bytes_pending += <span class="number">1</span>;
+
+        <span class="kw">while </span>src_count - <span class="number">1 </span>!= <span class="number">0 </span>{
+            src_count -= <span class="number">1</span>;
+            curr_byte = bytes[src_index];
+            src_index += <span class="number">1</span>;
+            bytes_pending += <span class="number">1</span>;
+
+            <span class="kw">if </span>in_run {
+                <span class="kw">if </span>(curr_byte != last_byte) || (bytes_pending &gt; MAX_BYTES) {
+                    offset.get_or_insert(write_u8(<span class="kw-2">&amp;mut </span>bufwriter, encode_rept(bytes_pending - <span class="number">1</span>))<span class="question-mark">?</span>);
+                    write_u8(<span class="kw-2">&amp;mut </span>bufwriter, last_byte)<span class="question-mark">?</span>;
+                    bytes_written += <span class="number">2</span>;
+
+                    bytes_pending = <span class="number">1</span>;
+                    pending_index = src_index - <span class="number">1</span>;
+                    run_index = <span class="number">0</span>;
+                    in_run = <span class="bool-val">false</span>;
                 }
-            } <span class="kw">else</span> {
-                <span class="kw">if</span> <span class="ident">bytes_pending</span> <span class="op">&gt;</span> <span class="ident">MAX_BYTES</span> {
-                    <span class="comment">// We have as much differing data as we can output in one chunk.</span>
-                    <span class="comment">// Output MAX_BYTES leaving one byte.</span>
-                    <span class="ident">offset</span>.<span class="ident">get_or_insert</span>(<span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">encode_diff</span>(<span class="ident">MAX_BYTES</span>))<span class="question-mark">?</span>);
-                    <span class="ident">bufwriter</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>[<span class="ident">pending_index</span>..<span class="ident">pending_index</span> <span class="op">+</span> <span class="ident">MAX_BYTES</span> <span class="kw">as</span> <span class="ident">usize</span>])<span class="question-mark">?</span>;
-                    <span class="ident">bytes_written</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span> <span class="op">+</span> <span class="ident">MAX_BYTES</span> <span class="kw">as</span> <span class="ident">u64</span>;
+            } <span class="kw">else </span>{
+                <span class="kw">if </span>bytes_pending &gt; MAX_BYTES {
+                    <span class="comment">// We have as much differing data as we can output in one chunk.
+                    // Output MAX_BYTES leaving one byte.
+                    </span>offset.get_or_insert(write_u8(<span class="kw-2">&amp;mut </span>bufwriter, encode_diff(MAX_BYTES))<span class="question-mark">?</span>);
+                    bufwriter.write(<span class="kw-2">&amp;</span>bytes[pending_index..pending_index + MAX_BYTES <span class="kw">as </span>usize])<span class="question-mark">?</span>;
+                    bytes_written += <span class="number">1 </span>+ MAX_BYTES <span class="kw">as </span>u64;
 
-                    <span class="ident">pending_index</span> <span class="op">+</span><span class="op">=</span> <span class="ident">MAX_BYTES</span> <span class="kw">as</span> <span class="ident">usize</span>;
-                    <span class="ident">bytes_pending</span> <span class="op">-</span><span class="op">=</span> <span class="ident">MAX_BYTES</span>;
-                    <span class="ident">run_index</span> <span class="op">=</span> <span class="ident">bytes_pending</span> <span class="op">-</span> <span class="number">1</span>; <span class="comment">// A run could start here</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">curr_byte</span> <span class="op">==</span> <span class="ident">last_byte</span> {
-                    <span class="kw">if</span> (<span class="ident">bytes_pending</span> <span class="op">-</span> <span class="ident">run_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">MIN_REPT</span>) <span class="op">|</span><span class="op">|</span> (<span class="ident">run_index</span> <span class="op">==</span> <span class="number">0</span>) {
-                        <span class="comment">// This is a worthwhile run</span>
-                        <span class="kw">if</span> <span class="ident">run_index</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                            <span class="comment">// Flush differing data out of input buffer</span>
-                            <span class="ident">offset</span>.<span class="ident">get_or_insert</span>(<span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">encode_diff</span>(<span class="ident">run_index</span>))<span class="question-mark">?</span>);
-                            <span class="ident">bufwriter</span>
-                                .<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>[<span class="ident">pending_index</span>..<span class="ident">pending_index</span> <span class="op">+</span> <span class="ident">run_index</span> <span class="kw">as</span> <span class="ident">usize</span>])<span class="question-mark">?</span>;
-                            <span class="ident">bytes_written</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span> <span class="op">+</span> <span class="ident">run_index</span> <span class="kw">as</span> <span class="ident">u64</span>;
+                    pending_index += MAX_BYTES <span class="kw">as </span>usize;
+                    bytes_pending -= MAX_BYTES;
+                    run_index = bytes_pending - <span class="number">1</span>; <span class="comment">// A run could start here
+                </span>} <span class="kw">else if </span>curr_byte == last_byte {
+                    <span class="kw">if </span>(bytes_pending - run_index &gt;= MIN_REPT) || (run_index == <span class="number">0</span>) {
+                        <span class="comment">// This is a worthwhile run
+                        </span><span class="kw">if </span>run_index != <span class="number">0 </span>{
+                            <span class="comment">// Flush differing data out of input buffer
+                            </span>offset.get_or_insert(write_u8(<span class="kw-2">&amp;mut </span>bufwriter, encode_diff(run_index))<span class="question-mark">?</span>);
+                            bufwriter
+                                .write(<span class="kw-2">&amp;</span>bytes[pending_index..pending_index + run_index <span class="kw">as </span>usize])<span class="question-mark">?</span>;
+                            bytes_written += <span class="number">1 </span>+ run_index <span class="kw">as </span>u64;
                         }
-                        <span class="ident">bytes_pending</span> <span class="op">-</span><span class="op">=</span> <span class="ident">run_index</span>; <span class="comment">// Length of run</span>
-                        <span class="ident">in_run</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        bytes_pending -= run_index; <span class="comment">// Length of run
+                        </span>in_run = <span class="bool-val">true</span>;
                     }
-                } <span class="kw">else</span> {
-                    <span class="ident">run_index</span> <span class="op">=</span> <span class="ident">bytes_pending</span> <span class="op">-</span> <span class="number">1</span>; <span class="comment">// A run could start here</span>
-                }
+                } <span class="kw">else </span>{
+                    run_index = bytes_pending - <span class="number">1</span>; <span class="comment">// A run could start here
+                </span>}
             }
-            <span class="ident">last_byte</span> <span class="op">=</span> <span class="ident">curr_byte</span>;
+            last_byte = curr_byte;
         }
 
-        <span class="comment">// Output the remainder</span>
-        <span class="kw">if</span> <span class="ident">in_run</span> {
-            <span class="ident">bytes_written</span> <span class="op">+</span><span class="op">=</span> <span class="number">2</span>;
-            <span class="ident">offset</span>.<span class="ident">get_or_insert</span>(<span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">encode_rept</span>(<span class="ident">bytes_pending</span>))<span class="question-mark">?</span>);
-            <span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">last_byte</span>)<span class="question-mark">?</span>;
-        } <span class="kw">else</span> {
-            <span class="ident">bytes_written</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span> <span class="op">+</span> <span class="ident">bytes_pending</span> <span class="kw">as</span> <span class="ident">u64</span>;
-            <span class="ident">offset</span>.<span class="ident">get_or_insert</span>(<span class="ident">write_u8</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bufwriter</span>, <span class="ident">encode_diff</span>(<span class="ident">bytes_pending</span>))<span class="question-mark">?</span>);
-            <span class="ident">bufwriter</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>[<span class="ident">pending_index</span>..<span class="ident">pending_index</span> <span class="op">+</span> <span class="ident">bytes_pending</span> <span class="kw">as</span> <span class="ident">usize</span>])<span class="question-mark">?</span>;
+        <span class="comment">// Output the remainder
+        </span><span class="kw">if </span>in_run {
+            bytes_written += <span class="number">2</span>;
+            offset.get_or_insert(write_u8(<span class="kw-2">&amp;mut </span>bufwriter, encode_rept(bytes_pending))<span class="question-mark">?</span>);
+            write_u8(<span class="kw-2">&amp;mut </span>bufwriter, last_byte)<span class="question-mark">?</span>;
+        } <span class="kw">else </span>{
+            bytes_written += <span class="number">1 </span>+ bytes_pending <span class="kw">as </span>u64;
+            offset.get_or_insert(write_u8(<span class="kw-2">&amp;mut </span>bufwriter, encode_diff(bytes_pending))<span class="question-mark">?</span>);
+            bufwriter.write(<span class="kw-2">&amp;</span>bytes[pending_index..pending_index + bytes_pending <span class="kw">as </span>usize])<span class="question-mark">?</span>;
         }
 
-        <span class="ident">bufwriter</span>.<span class="ident">flush</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">bytes_written</span>)
+        bufwriter.flush()<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(bytes_written)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::encoder::compression::tests::TEST_DATA</span>;
-    <span class="kw">use</span> <span class="ident">std::io::Cursor</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::encoder::compression::tests::TEST_DATA;
+    <span class="kw">use </span>std::io::Cursor;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_packbits_single_byte</span>() {
-        <span class="comment">// compress single byte</span>
-        <span class="kw">const</span> <span class="ident">UNCOMPRESSED_DATA</span>: [<span class="ident">u8</span>; <span class="number">1</span>] <span class="op">=</span> [<span class="number">0x3F</span>];
-        <span class="kw">const</span> <span class="ident">EXPECTED_COMPRESSED_DATA</span>: [<span class="ident">u8</span>; <span class="number">2</span>] <span class="op">=</span> [<span class="number">0x00</span>, <span class="number">0x3F</span>];
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_packbits_single_byte() {
+        <span class="comment">// compress single byte
+        </span><span class="kw">const </span>UNCOMPRESSED_DATA: [u8; <span class="number">1</span>] = [<span class="number">0x3F</span>];
+        <span class="kw">const </span>EXPECTED_COMPRESSED_DATA: [u8; <span class="number">2</span>] = [<span class="number">0x00</span>, <span class="number">0x3F</span>];
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">compressed_data</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="ident">::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">compressed_data</span>);
-        <span class="ident">Packbits::default</span>()
-            .<span class="ident">write_to</span>(<span class="kw-2">&amp;mut</span> <span class="ident">writer</span>, <span class="kw-2">&amp;</span><span class="ident">UNCOMPRESSED_DATA</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">compressed_data</span>, <span class="ident">EXPECTED_COMPRESSED_DATA</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>compressed_data = Vec::&lt;u8&gt;::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = Cursor::new(<span class="kw-2">&amp;mut </span>compressed_data);
+        Packbits::default()
+            .write_to(<span class="kw-2">&amp;mut </span>writer, <span class="kw-2">&amp;</span>UNCOMPRESSED_DATA)
+            .unwrap();
+        <span class="macro">assert_eq!</span>(compressed_data, EXPECTED_COMPRESSED_DATA);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_packbits_rept</span>() {
-        <span class="comment">// compress buffer with repetitive sequence</span>
-        <span class="kw">const</span> <span class="ident">UNCOMPRESSED_DATA</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span>
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_packbits_rept() {
+        <span class="comment">// compress buffer with repetitive sequence
+        </span><span class="kw">const </span>UNCOMPRESSED_DATA: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8] =
             <span class="string">b&quot;This strrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrring hangs.&quot;</span>;
-        <span class="kw">const</span> <span class="ident">EXPECTED_COMPRESSED_DATA</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;\x06This st\xD1r\x09ing hangs.&quot;</span>;
+        <span class="kw">const </span>EXPECTED_COMPRESSED_DATA: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8] = <span class="string">b&quot;\x06This st\xD1r\x09ing hangs.&quot;</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">compressed_data</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="ident">::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">compressed_data</span>);
-        <span class="ident">Packbits::default</span>()
-            .<span class="ident">write_to</span>(<span class="kw-2">&amp;mut</span> <span class="ident">writer</span>, <span class="ident">UNCOMPRESSED_DATA</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">compressed_data</span>, <span class="ident">EXPECTED_COMPRESSED_DATA</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>compressed_data = Vec::&lt;u8&gt;::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = Cursor::new(<span class="kw-2">&amp;mut </span>compressed_data);
+        Packbits::default()
+            .write_to(<span class="kw-2">&amp;mut </span>writer, UNCOMPRESSED_DATA)
+            .unwrap();
+        <span class="macro">assert_eq!</span>(compressed_data, EXPECTED_COMPRESSED_DATA);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_packbits_large_rept_nonrept</span>() {
-        <span class="comment">// compress buffer with large repetitive and non-repetitive sequence</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;This st&quot;</span>.<span class="ident">to_vec</span>();
-        <span class="kw">for</span> <span class="ident">_i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">158</span> {
-            <span class="ident">data</span>.<span class="ident">push</span>(<span class="string">b&#39;r&#39;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_packbits_large_rept_nonrept() {
+        <span class="comment">// compress buffer with large repetitive and non-repetitive sequence
+        </span><span class="kw">let </span><span class="kw-2">mut </span>data = <span class="string">b&quot;This st&quot;</span>.to_vec();
+        <span class="kw">for </span>_i <span class="kw">in </span><span class="number">0</span>..<span class="number">158 </span>{
+            data.push(<span class="string">b&#39;r&#39;</span>);
         }
-        <span class="ident">data</span>.<span class="ident">extend_from_slice</span>(<span class="string">b&quot;ing hangs.&quot;</span>);
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">158</span> {
-            <span class="ident">data</span>.<span class="ident">push</span>(<span class="ident">i</span>);
+        data.extend_from_slice(<span class="string">b&quot;ing hangs.&quot;</span>);
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">158 </span>{
+            data.push(i);
         }
 
-        <span class="kw">const</span> <span class="ident">EXPECTED_COMPRESSED_DATA</span>: [<span class="ident">u8</span>; <span class="number">182</span>] <span class="op">=</span> [
+        <span class="kw">const </span>EXPECTED_COMPRESSED_DATA: [u8; <span class="number">182</span>] = [
             <span class="number">0x06</span>, <span class="number">0x54</span>, <span class="number">0x68</span>, <span class="number">0x69</span>, <span class="number">0x73</span>, <span class="number">0x20</span>, <span class="number">0x73</span>, <span class="number">0x74</span>, <span class="number">0x81</span>, <span class="number">0x72</span>, <span class="number">0xE3</span>, <span class="number">0x72</span>, <span class="number">0x7F</span>, <span class="number">0x69</span>,
             <span class="number">0x6E</span>, <span class="number">0x67</span>, <span class="number">0x20</span>, <span class="number">0x68</span>, <span class="number">0x61</span>, <span class="number">0x6E</span>, <span class="number">0x67</span>, <span class="number">0x73</span>, <span class="number">0x2E</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>,
             <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0A</span>, <span class="number">0x0B</span>, <span class="number">0x0C</span>, <span class="number">0x0D</span>, <span class="number">0x0E</span>, <span class="number">0x0F</span>, <span class="number">0x10</span>, <span class="number">0x11</span>, <span class="number">0x12</span>,
@@ -410,28 +404,27 @@
             <span class="number">0x90</span>, <span class="number">0x91</span>, <span class="number">0x92</span>, <span class="number">0x93</span>, <span class="number">0x94</span>, <span class="number">0x95</span>, <span class="number">0x96</span>, <span class="number">0x97</span>, <span class="number">0x98</span>, <span class="number">0x99</span>, <span class="number">0x9A</span>, <span class="number">0x9B</span>, <span class="number">0x9C</span>, <span class="number">0x9D</span>,
         ];
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">compressed_data</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="ident">::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">compressed_data</span>);
-        <span class="ident">Packbits::default</span>()
-            .<span class="ident">write_to</span>(<span class="kw-2">&amp;mut</span> <span class="ident">writer</span>, <span class="ident">data</span>.<span class="ident">as_slice</span>())
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">compressed_data</span>, <span class="ident">EXPECTED_COMPRESSED_DATA</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>compressed_data = Vec::&lt;u8&gt;::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = Cursor::new(<span class="kw-2">&amp;mut </span>compressed_data);
+        Packbits::default()
+            .write_to(<span class="kw-2">&amp;mut </span>writer, data.as_slice())
+            .unwrap();
+        <span class="macro">assert_eq!</span>(compressed_data, EXPECTED_COMPRESSED_DATA);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_packbits</span>() {
-        <span class="comment">// compress teststring</span>
-        <span class="kw">const</span> <span class="ident">EXPECTED_COMPRESSED_DATA</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span>
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_packbits() {
+        <span class="comment">// compress teststring
+        </span><span class="kw">const </span>EXPECTED_COMPRESSED_DATA: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8] =
             <span class="string">b&quot;\x3CThis is a string for checking various compression algorithms.&quot;</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">compressed_data</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="ident">::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">compressed_data</span>);
-        <span class="ident">Packbits::default</span>()
-            .<span class="ident">write_to</span>(<span class="kw-2">&amp;mut</span> <span class="ident">writer</span>, <span class="ident">TEST_DATA</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">compressed_data</span>, <span class="ident">EXPECTED_COMPRESSED_DATA</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>compressed_data = Vec::&lt;u8&gt;::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>writer = Cursor::new(<span class="kw-2">&amp;mut </span>compressed_data);
+        Packbits::default()
+            .write_to(<span class="kw-2">&amp;mut </span>writer, TEST_DATA)
+            .unwrap();
+        <span class="macro">assert_eq!</span>(compressed_data, EXPECTED_COMPRESSED_DATA);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

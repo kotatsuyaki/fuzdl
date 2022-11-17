@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/jpeg-decoder-0.2.6/src/huffman.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../jpeg_decoder/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/jpeg-decoder-0.2.6/src/huffman.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../jpeg_decoder/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../jpeg_decoder/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -350,320 +344,320 @@
 <span id="344">344</span>
 <span id="345">345</span>
 <span id="346">346</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">alloc::borrow::ToOwned</span>;
-<span class="kw">use</span> <span class="ident">alloc::vec</span>;
-<span class="kw">use</span> <span class="ident">alloc::vec::Vec</span>;
-<span class="kw">use</span> <span class="ident">core::iter</span>;
-<span class="kw">use</span> <span class="ident">std::io::Read</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::read_u8</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::marker::Marker</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::ScanInfo</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>alloc::borrow::ToOwned;
+<span class="kw">use </span>alloc::vec;
+<span class="kw">use </span>alloc::vec::Vec;
+<span class="kw">use </span>core::iter;
+<span class="kw">use </span>std::io::Read;
+<span class="kw">use </span><span class="kw">crate</span>::read_u8;
+<span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span><span class="kw">crate</span>::marker::Marker;
+<span class="kw">use </span><span class="kw">crate</span>::parser::ScanInfo;
 
-<span class="kw">const</span> <span class="ident">LUT_BITS</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">8</span>;
+<span class="kw">const </span>LUT_BITS: u8 = <span class="number">8</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HuffmanDecoder</span> {
-    <span class="ident">bits</span>: <span class="ident">u64</span>,
-    <span class="ident">num_bits</span>: <span class="ident">u8</span>,
-    <span class="ident">marker</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Marker</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>HuffmanDecoder {
+    bits: u64,
+    num_bits: u8,
+    marker: <span class="prelude-ty">Option</span>&lt;Marker&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">HuffmanDecoder</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="ident">HuffmanDecoder</span> {
-        <span class="ident">HuffmanDecoder</span> {
-            <span class="ident">bits</span>: <span class="number">0</span>,
-            <span class="ident">num_bits</span>: <span class="number">0</span>,
-            <span class="ident">marker</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl </span>HuffmanDecoder {
+    <span class="kw">pub fn </span>new() -&gt; HuffmanDecoder {
+        HuffmanDecoder {
+            bits: <span class="number">0</span>,
+            num_bits: <span class="number">0</span>,
+            marker: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="comment">// Section F.2.2.3</span>
-    <span class="comment">// Figure F.16</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="ident">HuffmanTable</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">&lt;</span> <span class="number">16</span> {
-            <span class="self">self</span>.<span class="ident">read_bits</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="comment">// Section F.2.2.3
+    // Figure F.16
+    </span><span class="kw">pub fn </span>decode&lt;R: Read&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reader: <span class="kw-2">&amp;mut </span>R, table: <span class="kw-2">&amp;</span>HuffmanTable) -&gt; <span class="prelude-ty">Result</span>&lt;u8&gt; {
+        <span class="kw">if </span><span class="self">self</span>.num_bits &lt; <span class="number">16 </span>{
+            <span class="self">self</span>.read_bits(reader)<span class="question-mark">?</span>;
         }
 
-        <span class="kw">let</span> (<span class="ident">value</span>, <span class="ident">size</span>) <span class="op">=</span> <span class="ident">table</span>.<span class="ident">lut</span>[<span class="self">self</span>.<span class="ident">peek_bits</span>(<span class="ident">LUT_BITS</span>) <span class="kw">as</span> <span class="ident">usize</span>];
+        <span class="kw">let </span>(value, size) = table.lut[<span class="self">self</span>.peek_bits(LUT_BITS) <span class="kw">as </span>usize];
 
-        <span class="kw">if</span> <span class="ident">size</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">consume_bits</span>(<span class="ident">size</span>);
-            <span class="prelude-val">Ok</span>(<span class="ident">value</span>)
+        <span class="kw">if </span>size &gt; <span class="number">0 </span>{
+            <span class="self">self</span>.consume_bits(size);
+            <span class="prelude-val">Ok</span>(value)
         }
-        <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">bits</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">peek_bits</span>(<span class="number">16</span>);
+        <span class="kw">else </span>{
+            <span class="kw">let </span>bits = <span class="self">self</span>.peek_bits(<span class="number">16</span>);
 
-            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">LUT_BITS</span> .. <span class="number">16</span> {
-                <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> (<span class="ident">bits</span> <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="number">15</span> <span class="op">-</span> <span class="ident">i</span>)) <span class="kw">as</span> <span class="ident">i32</span>;
+            <span class="kw">for </span>i <span class="kw">in </span>LUT_BITS .. <span class="number">16 </span>{
+                <span class="kw">let </span>code = (bits &gt;&gt; (<span class="number">15 </span>- i)) <span class="kw">as </span>i32;
 
-                <span class="kw">if</span> <span class="ident">code</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">table</span>.<span class="ident">maxcode</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>] {
-                    <span class="self">self</span>.<span class="ident">consume_bits</span>(<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>);
+                <span class="kw">if </span>code &lt;= table.maxcode[i <span class="kw">as </span>usize] {
+                    <span class="self">self</span>.consume_bits(i + <span class="number">1</span>);
 
-                    <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> (<span class="ident">code</span> <span class="op">+</span> <span class="ident">table</span>.<span class="ident">delta</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>]) <span class="kw">as</span> <span class="ident">usize</span>;
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">table</span>.<span class="ident">values</span>[<span class="ident">index</span>]);
+                    <span class="kw">let </span>index = (code + table.delta[i <span class="kw">as </span>usize]) <span class="kw">as </span>usize;
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(table.values[index]);
                 }
             }
 
-            <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;failed to decode huffman code&quot;</span>.<span class="ident">to_owned</span>()))
+            <span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;failed to decode huffman code&quot;</span>.to_owned()))
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_fast_ac</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="ident">HuffmanTable</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">i16</span>, <span class="ident">u8</span>)<span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">ac_lut</span>) <span class="op">=</span> <span class="ident">table</span>.<span class="ident">ac_lut</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">&lt;</span> <span class="ident">LUT_BITS</span> {
-                <span class="self">self</span>.<span class="ident">read_bits</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="kw">pub fn </span>decode_fast_ac&lt;R: Read&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reader: <span class="kw-2">&amp;mut </span>R, table: <span class="kw-2">&amp;</span>HuffmanTable) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;(i16, u8)&gt;&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>ac_lut) = table.ac_lut {
+            <span class="kw">if </span><span class="self">self</span>.num_bits &lt; LUT_BITS {
+                <span class="self">self</span>.read_bits(reader)<span class="question-mark">?</span>;
             }
 
-            <span class="kw">let</span> (<span class="ident">value</span>, <span class="ident">run_size</span>) <span class="op">=</span> <span class="ident">ac_lut</span>[<span class="self">self</span>.<span class="ident">peek_bits</span>(<span class="ident">LUT_BITS</span>) <span class="kw">as</span> <span class="ident">usize</span>];
+            <span class="kw">let </span>(value, run_size) = ac_lut[<span class="self">self</span>.peek_bits(LUT_BITS) <span class="kw">as </span>usize];
 
-            <span class="kw">if</span> <span class="ident">run_size</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="kw">let</span> <span class="ident">run</span> <span class="op">=</span> <span class="ident">run_size</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>;
-                <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">run_size</span> <span class="op">&amp;</span> <span class="number">0x0f</span>;
+            <span class="kw">if </span>run_size != <span class="number">0 </span>{
+                <span class="kw">let </span>run = run_size &gt;&gt; <span class="number">4</span>;
+                <span class="kw">let </span>size = run_size &amp; <span class="number">0x0f</span>;
 
-                <span class="self">self</span>.<span class="ident">consume_bits</span>(<span class="ident">size</span>);
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>((<span class="ident">value</span>, <span class="ident">run</span>)));
+                <span class="self">self</span>.consume_bits(size);
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>((value, run)));
             }
         }
 
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_bits</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">count</span>: <span class="ident">u8</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">&lt;</span> <span class="ident">count</span> {
-            <span class="self">self</span>.<span class="ident">read_bits</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>get_bits&lt;R: Read&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reader: <span class="kw-2">&amp;mut </span>R, count: u8) -&gt; <span class="prelude-ty">Result</span>&lt;u16&gt; {
+        <span class="kw">if </span><span class="self">self</span>.num_bits &lt; count {
+            <span class="self">self</span>.read_bits(reader)<span class="question-mark">?</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">bits</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">peek_bits</span>(<span class="ident">count</span>);
-        <span class="self">self</span>.<span class="ident">consume_bits</span>(<span class="ident">count</span>);
+        <span class="kw">let </span>bits = <span class="self">self</span>.peek_bits(count);
+        <span class="self">self</span>.consume_bits(count);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">bits</span>)
+        <span class="prelude-val">Ok</span>(bits)
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">receive_extend</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">count</span>: <span class="ident">u8</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_bits</span>(<span class="ident">reader</span>, <span class="ident">count</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">extend</span>(<span class="ident">value</span>, <span class="ident">count</span>))
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>receive_extend&lt;R: Read&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reader: <span class="kw-2">&amp;mut </span>R, count: u8) -&gt; <span class="prelude-ty">Result</span>&lt;i16&gt; {
+        <span class="kw">let </span>value = <span class="self">self</span>.get_bits(reader, count)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(extend(value, count))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">bits</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.bits = <span class="number">0</span>;
+        <span class="self">self</span>.num_bits = <span class="number">0</span>;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_marker</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Marker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">read_bits</span>(<span class="ident">reader</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">marker</span>.<span class="ident">take</span>())
+    <span class="kw">pub fn </span>take_marker&lt;R: Read&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reader: <span class="kw-2">&amp;mut </span>R) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Marker&gt;&gt; {
+        <span class="self">self</span>.read_bits(reader).map(|<span class="kw">_</span>| <span class="self">self</span>.marker.take())
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">peek_bits</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">count</span>: <span class="ident">u8</span>) -&gt; <span class="ident">u16</span> {
-        <span class="macro">debug_assert!</span>(<span class="ident">count</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">16</span>);
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">count</span>);
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>peek_bits(<span class="kw-2">&amp;mut </span><span class="self">self</span>, count: u8) -&gt; u16 {
+        <span class="macro">debug_assert!</span>(count &lt;= <span class="number">16</span>);
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.num_bits &gt;= count);
 
-        ((<span class="self">self</span>.<span class="ident">bits</span> <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="number">64</span> <span class="op">-</span> <span class="ident">count</span>)) <span class="op">&amp;</span> ((<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">count</span>) <span class="op">-</span> <span class="number">1</span>)) <span class="kw">as</span> <span class="ident">u16</span>
+        ((<span class="self">self</span>.bits &gt;&gt; (<span class="number">64 </span>- count)) &amp; ((<span class="number">1 </span>&lt;&lt; count) - <span class="number">1</span>)) <span class="kw">as </span>u16
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">consume_bits</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">count</span>: <span class="ident">u8</span>) {
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">count</span>);
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>consume_bits(<span class="kw-2">&amp;mut </span><span class="self">self</span>, count: u8) {
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.num_bits &gt;= count);
 
-        <span class="self">self</span>.<span class="ident">bits</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="op">=</span> <span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">-</span><span class="op">=</span> <span class="ident">count</span>;
+        <span class="self">self</span>.bits &lt;&lt;= count <span class="kw">as </span>usize;
+        <span class="self">self</span>.num_bits -= count;
     }
 
-    <span class="kw">fn</span> <span class="ident">read_bits</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">56</span> {
-            <span class="comment">// Fill with zero bits if we have reached the end.</span>
-            <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">marker</span> {
+    <span class="kw">fn </span>read_bits&lt;R: Read&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reader: <span class="kw-2">&amp;mut </span>R) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">while </span><span class="self">self</span>.num_bits &lt;= <span class="number">56 </span>{
+            <span class="comment">// Fill with zero bits if we have reached the end.
+            </span><span class="kw">let </span>byte = <span class="kw">match </span><span class="self">self</span>.marker {
                 <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; <span class="number">0</span>,
-                <span class="prelude-val">None</span> =&gt; <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>,
+                <span class="prelude-val">None </span>=&gt; read_u8(reader)<span class="question-mark">?</span>,
             };
 
-            <span class="kw">if</span> <span class="ident">byte</span> <span class="op">==</span> <span class="number">0xFF</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+            <span class="kw">if </span>byte == <span class="number">0xFF </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>next_byte = read_u8(reader)<span class="question-mark">?</span>;
 
-                <span class="comment">// Check for byte stuffing.</span>
-                <span class="kw">if</span> <span class="ident">next_byte</span> <span class="op">!</span><span class="op">=</span> <span class="number">0x00</span> {
-                    <span class="comment">// We seem to have reached the end of entropy-coded data and encountered a</span>
-                    <span class="comment">// marker. Since we can&#39;t put data back into the reader, we have to continue</span>
-                    <span class="comment">// reading to identify the marker so we can pass it on.</span>
+                <span class="comment">// Check for byte stuffing.
+                </span><span class="kw">if </span>next_byte != <span class="number">0x00 </span>{
+                    <span class="comment">// We seem to have reached the end of entropy-coded data and encountered a
+                    // marker. Since we can&#39;t put data back into the reader, we have to continue
+                    // reading to identify the marker so we can pass it on.
 
-                    <span class="comment">// Section B.1.1.2</span>
-                    <span class="comment">// &quot;Any marker may optionally be preceded by any number of fill bytes, which are bytes assigned code X’FF’.&quot;</span>
-                    <span class="kw">while</span> <span class="ident">next_byte</span> <span class="op">==</span> <span class="number">0xFF</span> {
-                        <span class="ident">next_byte</span> <span class="op">=</span> <span class="ident">read_u8</span>(<span class="ident">reader</span>)<span class="question-mark">?</span>;
+                    // Section B.1.1.2
+                    // &quot;Any marker may optionally be preceded by any number of fill bytes, which are bytes assigned code X’FF’.&quot;
+                    </span><span class="kw">while </span>next_byte == <span class="number">0xFF </span>{
+                        next_byte = read_u8(reader)<span class="question-mark">?</span>;
                     }
 
-                    <span class="kw">match</span> <span class="ident">next_byte</span> {
-                        <span class="number">0x00</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;FF 00 found where marker was expected&quot;</span>.<span class="ident">to_owned</span>())),
-                        <span class="kw">_</span>    =&gt; <span class="self">self</span>.<span class="ident">marker</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Marker::from_u8</span>(<span class="ident">next_byte</span>).<span class="ident">unwrap</span>()),
+                    <span class="kw">match </span>next_byte {
+                        <span class="number">0x00 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;FF 00 found where marker was expected&quot;</span>.to_owned())),
+                        <span class="kw">_    </span>=&gt; <span class="self">self</span>.marker = <span class="prelude-val">Some</span>(Marker::from_u8(next_byte).unwrap()),
                     }
 
                     <span class="kw">continue</span>;
                 }
             }
 
-            <span class="self">self</span>.<span class="ident">bits</span> <span class="op">|</span><span class="op">=</span> (<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="number">56</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">num_bits</span>);
-            <span class="self">self</span>.<span class="ident">num_bits</span> <span class="op">+</span><span class="op">=</span> <span class="number">8</span>;
+            <span class="self">self</span>.bits |= (byte <span class="kw">as </span>u64) &lt;&lt; (<span class="number">56 </span>- <span class="self">self</span>.num_bits);
+            <span class="self">self</span>.num_bits += <span class="number">8</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="comment">// Section F.2.2.1</span>
-<span class="comment">// Figure F.12</span>
-<span class="kw">fn</span> <span class="ident">extend</span>(<span class="ident">value</span>: <span class="ident">u16</span>, <span class="ident">count</span>: <span class="ident">u8</span>) -&gt; <span class="ident">i16</span> {
-    <span class="kw">let</span> <span class="ident">vt</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="ident">count</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">-</span> <span class="number">1</span>);
+<span class="comment">// Section F.2.2.1
+// Figure F.12
+</span><span class="kw">fn </span>extend(value: u16, count: u8) -&gt; i16 {
+    <span class="kw">let </span>vt = <span class="number">1 </span>&lt;&lt; (count <span class="kw">as </span>u16 - <span class="number">1</span>);
 
-    <span class="kw">if</span> <span class="ident">value</span> <span class="op">&lt;</span> <span class="ident">vt</span> {
-        <span class="ident">value</span> <span class="kw">as</span> <span class="ident">i16</span> <span class="op">+</span> (<span class="op">-</span><span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">count</span> <span class="kw">as</span> <span class="ident">i16</span>) <span class="op">+</span> <span class="number">1</span>
-    } <span class="kw">else</span> {
-        <span class="ident">value</span> <span class="kw">as</span> <span class="ident">i16</span>
+    <span class="kw">if </span>value &lt; vt {
+        value <span class="kw">as </span>i16 + (-<span class="number">1 </span>&lt;&lt; count <span class="kw">as </span>i16) + <span class="number">1
+    </span>} <span class="kw">else </span>{
+        value <span class="kw">as </span>i16
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HuffmanTableClass</span> {
-    <span class="ident">DC</span>,
-    <span class="ident">AC</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, PartialEq)]
+</span><span class="kw">pub enum </span>HuffmanTableClass {
+    DC,
+    AC,
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HuffmanTable</span> {
-    <span class="ident">values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="ident">delta</span>: [<span class="ident">i32</span>; <span class="number">16</span>],
-    <span class="ident">maxcode</span>: [<span class="ident">i32</span>; <span class="number">16</span>],
+<span class="kw">pub struct </span>HuffmanTable {
+    values: Vec&lt;u8&gt;,
+    delta: [i32; <span class="number">16</span>],
+    maxcode: [i32; <span class="number">16</span>],
 
-    <span class="ident">lut</span>: [(<span class="ident">u8</span>, <span class="ident">u8</span>); <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">LUT_BITS</span>],
-    <span class="ident">ac_lut</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>[(<span class="ident">i16</span>, <span class="ident">u8</span>); <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">LUT_BITS</span>]<span class="op">&gt;</span>,
+    lut: [(u8, u8); <span class="number">1 </span>&lt;&lt; LUT_BITS],
+    ac_lut: <span class="prelude-ty">Option</span>&lt;[(i16, u8); <span class="number">1 </span>&lt;&lt; LUT_BITS]&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">HuffmanTable</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">bits</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>; <span class="number">16</span>], <span class="ident">values</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">class</span>: <span class="ident">HuffmanTableClass</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">HuffmanTable</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">huffcode</span>, <span class="ident">huffsize</span>) <span class="op">=</span> <span class="ident">derive_huffman_codes</span>(<span class="ident">bits</span>)<span class="question-mark">?</span>;
+<span class="kw">impl </span>HuffmanTable {
+    <span class="kw">pub fn </span>new(bits: <span class="kw-2">&amp;</span>[u8; <span class="number">16</span>], values: <span class="kw-2">&amp;</span>[u8], class: HuffmanTableClass) -&gt; <span class="prelude-ty">Result</span>&lt;HuffmanTable&gt; {
+        <span class="kw">let </span>(huffcode, huffsize) = derive_huffman_codes(bits)<span class="question-mark">?</span>;
 
-        <span class="comment">// Section F.2.2.3</span>
-        <span class="comment">// Figure F.15</span>
-        <span class="comment">// delta[i] is set to VALPTR(I) - MINCODE(I)</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">delta</span> <span class="op">=</span> [<span class="number">0i32</span>; <span class="number">16</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">maxcode</span> <span class="op">=</span> [<span class="op">-</span><span class="number">1i32</span>; <span class="number">16</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">j</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="comment">// Section F.2.2.3
+        // Figure F.15
+        // delta[i] is set to VALPTR(I) - MINCODE(I)
+        </span><span class="kw">let </span><span class="kw-2">mut </span>delta = [<span class="number">0i32</span>; <span class="number">16</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>maxcode = [-<span class="number">1i32</span>; <span class="number">16</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>j = <span class="number">0</span>;
 
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">16</span> {
-            <span class="kw">if</span> <span class="ident">bits</span>[<span class="ident">i</span>] <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="ident">delta</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">j</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">-</span> <span class="ident">huffcode</span>[<span class="ident">j</span>] <span class="kw">as</span> <span class="ident">i32</span>;
-                <span class="ident">j</span> <span class="op">+</span><span class="op">=</span> <span class="ident">bits</span>[<span class="ident">i</span>] <span class="kw">as</span> <span class="ident">usize</span>;
-                <span class="ident">maxcode</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">huffcode</span>[<span class="ident">j</span> <span class="op">-</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">i32</span>;
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. <span class="number">16 </span>{
+            <span class="kw">if </span>bits[i] != <span class="number">0 </span>{
+                delta[i] = j <span class="kw">as </span>i32 - huffcode[j] <span class="kw">as </span>i32;
+                j += bits[i] <span class="kw">as </span>usize;
+                maxcode[i] = huffcode[j - <span class="number">1</span>] <span class="kw">as </span>i32;
             }
         }
 
-        <span class="comment">// Build a lookup table for faster decoding.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lut</span> <span class="op">=</span> [(<span class="number">0u8</span>, <span class="number">0u8</span>); <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">LUT_BITS</span>];
+        <span class="comment">// Build a lookup table for faster decoding.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>lut = [(<span class="number">0u8</span>, <span class="number">0u8</span>); <span class="number">1 </span>&lt;&lt; LUT_BITS];
 
-        <span class="kw">for</span> (<span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>) <span class="kw">in</span> <span class="ident">huffsize</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>)<span class="op">|</span> <span class="ident">size</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">LUT_BITS</span>) {
-            <span class="kw">let</span> <span class="ident">bits_remaining</span> <span class="op">=</span> <span class="ident">LUT_BITS</span> <span class="op">-</span> <span class="ident">size</span>;
-            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> (<span class="ident">huffcode</span>[<span class="ident">i</span>] <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bits_remaining</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">for </span>(i, <span class="kw-2">&amp;</span>size) <span class="kw">in </span>huffsize.iter().enumerate().filter(|<span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="kw-2">&amp;</span>size)| size &lt;= LUT_BITS) {
+            <span class="kw">let </span>bits_remaining = LUT_BITS - size;
+            <span class="kw">let </span>start = (huffcode[i] &lt;&lt; bits_remaining) <span class="kw">as </span>usize;
 
-            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> (<span class="ident">values</span>[<span class="ident">i</span>], <span class="ident">size</span>);
-            <span class="kw">for</span> <span class="ident">b</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">lut</span>[<span class="ident">start</span>..][..<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bits_remaining</span>] {
-                <span class="kw-2">*</span><span class="ident">b</span> <span class="op">=</span> <span class="ident">val</span>;
+            <span class="kw">let </span>val = (values[i], size);
+            <span class="kw">for </span>b <span class="kw">in </span><span class="kw-2">&amp;mut </span>lut[start..][..<span class="number">1 </span>&lt;&lt; bits_remaining] {
+                <span class="kw-2">*</span>b = val;
             }
         }
 
-        <span class="comment">// Build a lookup table for small AC coefficients which both decodes the value and does the</span>
-        <span class="comment">// equivalent of receive_extend.</span>
-        <span class="kw">let</span> <span class="ident">ac_lut</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">class</span> {
-            <span class="ident">HuffmanTableClass::DC</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="ident">HuffmanTableClass::AC</span> =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">table</span> <span class="op">=</span> [(<span class="number">0i16</span>, <span class="number">0u8</span>); <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">LUT_BITS</span>];
+        <span class="comment">// Build a lookup table for small AC coefficients which both decodes the value and does the
+        // equivalent of receive_extend.
+        </span><span class="kw">let </span>ac_lut = <span class="kw">match </span>class {
+            HuffmanTableClass::DC =&gt; <span class="prelude-val">None</span>,
+            HuffmanTableClass::AC =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>table = [(<span class="number">0i16</span>, <span class="number">0u8</span>); <span class="number">1 </span>&lt;&lt; LUT_BITS];
 
-                <span class="kw">for</span> (<span class="ident">i</span>, <span class="kw-2">&amp;</span>(<span class="ident">value</span>, <span class="ident">size</span>)) <span class="kw">in</span> <span class="ident">lut</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                    <span class="kw">let</span> <span class="ident">run_length</span> <span class="op">=</span> <span class="ident">value</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">4</span>;
-                    <span class="kw">let</span> <span class="ident">magnitude_category</span> <span class="op">=</span> <span class="ident">value</span> <span class="op">&amp;</span> <span class="number">0x0f</span>;
+                <span class="kw">for </span>(i, <span class="kw-2">&amp;</span>(value, size)) <span class="kw">in </span>lut.iter().enumerate() {
+                    <span class="kw">let </span>run_length = value &gt;&gt; <span class="number">4</span>;
+                    <span class="kw">let </span>magnitude_category = value &amp; <span class="number">0x0f</span>;
 
-                    <span class="kw">if</span> <span class="ident">magnitude_category</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">size</span> <span class="op">+</span> <span class="ident">magnitude_category</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">LUT_BITS</span> {
-                        <span class="kw">let</span> <span class="ident">unextended_ac_value</span> <span class="op">=</span> (((<span class="ident">i</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">size</span>) <span class="op">&amp;</span> ((<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">LUT_BITS</span>) <span class="op">-</span> <span class="number">1</span>)) <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="ident">LUT_BITS</span> <span class="op">-</span> <span class="ident">magnitude_category</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
-                        <span class="kw">let</span> <span class="ident">ac_value</span> <span class="op">=</span> <span class="ident">extend</span>(<span class="ident">unextended_ac_value</span>, <span class="ident">magnitude_category</span>);
+                    <span class="kw">if </span>magnitude_category &gt; <span class="number">0 </span>&amp;&amp; size + magnitude_category &lt;= LUT_BITS {
+                        <span class="kw">let </span>unextended_ac_value = (((i &lt;&lt; size) &amp; ((<span class="number">1 </span>&lt;&lt; LUT_BITS) - <span class="number">1</span>)) &gt;&gt; (LUT_BITS - magnitude_category)) <span class="kw">as </span>u16;
+                        <span class="kw">let </span>ac_value = extend(unextended_ac_value, magnitude_category);
 
-                        <span class="ident">table</span>[<span class="ident">i</span>] <span class="op">=</span> (<span class="ident">ac_value</span>, (<span class="ident">run_length</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">4</span>) <span class="op">|</span> (<span class="ident">size</span> <span class="op">+</span> <span class="ident">magnitude_category</span>));
+                        table[i] = (ac_value, (run_length &lt;&lt; <span class="number">4</span>) | (size + magnitude_category));
                     }
                 }
 
-                <span class="prelude-val">Some</span>(<span class="ident">table</span>)
+                <span class="prelude-val">Some</span>(table)
             },
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">HuffmanTable</span> {
-            <span class="ident">values</span>: <span class="ident">values</span>.<span class="ident">to_vec</span>(),
-            <span class="ident">delta</span>,
-            <span class="ident">maxcode</span>,
-            <span class="ident">lut</span>,
-            <span class="ident">ac_lut</span>,
+        <span class="prelude-val">Ok</span>(HuffmanTable {
+            values: values.to_vec(),
+            delta,
+            maxcode,
+            lut,
+            ac_lut,
         })
     }
 }
 
-<span class="comment">// Section C.2</span>
-<span class="kw">fn</span> <span class="ident">derive_huffman_codes</span>(<span class="ident">bits</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>; <span class="number">16</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="comment">// Figure C.1</span>
-    <span class="kw">let</span> <span class="ident">huffsize</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">iter</span>()
-                       .<span class="ident">enumerate</span>()
-                       .<span class="ident">fold</span>(<span class="ident">Vec::new</span>(), <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">acc</span>, (<span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>)<span class="op">|</span> {
-                           <span class="ident">acc</span>.<span class="ident">extend</span>(<span class="ident">iter::repeat</span>((<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">take</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">usize</span>));
-                           <span class="ident">acc</span>
+<span class="comment">// Section C.2
+</span><span class="kw">fn </span>derive_huffman_codes(bits: <span class="kw-2">&amp;</span>[u8; <span class="number">16</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;u16&gt;, Vec&lt;u8&gt;)&gt; {
+    <span class="comment">// Figure C.1
+    </span><span class="kw">let </span>huffsize = bits.iter()
+                       .enumerate()
+                       .fold(Vec::new(), |<span class="kw-2">mut </span>acc, (i, <span class="kw-2">&amp;</span>value)| {
+                           acc.extend(iter::repeat((i + <span class="number">1</span>) <span class="kw">as </span>u8).take(value <span class="kw">as </span>usize));
+                           acc
                        });
 
-    <span class="comment">// Figure C.2</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">huffcode</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u16</span>; <span class="ident">huffsize</span>.<span class="ident">len</span>()];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">code_size</span> <span class="op">=</span> <span class="ident">huffsize</span>[<span class="number">0</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">code</span> <span class="op">=</span> <span class="number">0u32</span>;
+    <span class="comment">// Figure C.2
+    </span><span class="kw">let </span><span class="kw-2">mut </span>huffcode = <span class="macro">vec!</span>[<span class="number">0u16</span>; huffsize.len()];
+    <span class="kw">let </span><span class="kw-2">mut </span>code_size = huffsize[<span class="number">0</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>code = <span class="number">0u32</span>;
 
-    <span class="kw">for</span> (<span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">size</span>) <span class="kw">in</span> <span class="ident">huffsize</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">while</span> <span class="ident">code_size</span> <span class="op">&lt;</span> <span class="ident">size</span> {
-            <span class="ident">code</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="op">=</span> <span class="number">1</span>;
-            <span class="ident">code_size</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">for </span>(i, <span class="kw-2">&amp;</span>size) <span class="kw">in </span>huffsize.iter().enumerate() {
+        <span class="kw">while </span>code_size &lt; size {
+            code &lt;&lt;= <span class="number">1</span>;
+            code_size += <span class="number">1</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">code</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">1u32</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">size</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Format</span>(<span class="string">&quot;bad huffman code length&quot;</span>.<span class="ident">to_owned</span>()));
+        <span class="kw">if </span>code &gt;= (<span class="number">1u32 </span>&lt;&lt; size) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Format(<span class="string">&quot;bad huffman code length&quot;</span>.to_owned()));
         }
 
-        <span class="ident">huffcode</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">code</span> <span class="kw">as</span> <span class="ident">u16</span>;
-        <span class="ident">code</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        huffcode[i] = code <span class="kw">as </span>u16;
+        code += <span class="number">1</span>;
     }
 
-    <span class="prelude-val">Ok</span>((<span class="ident">huffcode</span>, <span class="ident">huffsize</span>))
+    <span class="prelude-val">Ok</span>((huffcode, huffsize))
 }
 
-<span class="comment">// https://www.loc.gov/preservation/digital/formats/fdd/fdd000063.shtml</span>
-<span class="comment">// &quot;Avery Lee, writing in the rec.video.desktop newsgroup in 2001, commented that &quot;MJPEG, or at</span>
-<span class="comment">//  least the MJPEG in AVIs having the MJPG fourcc, is restricted JPEG with a fixed -- and</span>
-<span class="comment">//  *omitted* -- Huffman table. The JPEG must be YCbCr colorspace, it must be 4:2:2, and it must</span>
-<span class="comment">//  use basic Huffman encoding, not arithmetic or progressive.... You can indeed extract the</span>
-<span class="comment">//  MJPEG frames and decode them with a regular JPEG decoder, but you have to prepend the DHT</span>
-<span class="comment">//  segment to them, or else the decoder won&#39;t have any idea how to decompress the data.</span>
-<span class="comment">//  The exact table necessary is given in the OpenDML spec.&quot;&quot;</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill_default_mjpeg_tables</span>(<span class="ident">scan</span>: <span class="kw-2">&amp;</span><span class="ident">ScanInfo</span>,
-                                 <span class="ident">dc_huffman_tables</span>: <span class="kw-2">&amp;mut</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HuffmanTable</span><span class="op">&gt;</span>],
-                                 <span class="ident">ac_huffman_tables</span>: <span class="kw-2">&amp;mut</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HuffmanTable</span><span class="op">&gt;</span>]) {
-    <span class="comment">// Section K.3.3</span>
+<span class="comment">// https://www.loc.gov/preservation/digital/formats/fdd/fdd000063.shtml
+// &quot;Avery Lee, writing in the rec.video.desktop newsgroup in 2001, commented that &quot;MJPEG, or at
+//  least the MJPEG in AVIs having the MJPG fourcc, is restricted JPEG with a fixed -- and
+//  *omitted* -- Huffman table. The JPEG must be YCbCr colorspace, it must be 4:2:2, and it must
+//  use basic Huffman encoding, not arithmetic or progressive.... You can indeed extract the
+//  MJPEG frames and decode them with a regular JPEG decoder, but you have to prepend the DHT
+//  segment to them, or else the decoder won&#39;t have any idea how to decompress the data.
+//  The exact table necessary is given in the OpenDML spec.&quot;&quot;
+</span><span class="kw">pub fn </span>fill_default_mjpeg_tables(scan: <span class="kw-2">&amp;</span>ScanInfo,
+                                 dc_huffman_tables: <span class="kw-2">&amp;mut</span>[<span class="prelude-ty">Option</span>&lt;HuffmanTable&gt;],
+                                 ac_huffman_tables: <span class="kw-2">&amp;mut</span>[<span class="prelude-ty">Option</span>&lt;HuffmanTable&gt;]) {
+    <span class="comment">// Section K.3.3
 
-    <span class="kw">if</span> <span class="ident">dc_huffman_tables</span>[<span class="number">0</span>].<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">scan</span>.<span class="ident">dc_table_indices</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">0</span>) {
-        <span class="comment">// Table K.3</span>
-        <span class="ident">dc_huffman_tables</span>[<span class="number">0</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HuffmanTable::new</span>(
+    </span><span class="kw">if </span>dc_huffman_tables[<span class="number">0</span>].is_none() &amp;&amp; scan.dc_table_indices.iter().any(|<span class="kw-2">&amp;</span>i| i == <span class="number">0</span>) {
+        <span class="comment">// Table K.3
+        </span>dc_huffman_tables[<span class="number">0</span>] = <span class="prelude-val">Some</span>(HuffmanTable::new(
             <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x05</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>],
-            <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0A</span>, <span class="number">0x0B</span>], <span class="ident">HuffmanTableClass::DC</span>).<span class="ident">unwrap</span>());
+            <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0A</span>, <span class="number">0x0B</span>], HuffmanTableClass::DC).unwrap());
     }
-    <span class="kw">if</span> <span class="ident">dc_huffman_tables</span>[<span class="number">1</span>].<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">scan</span>.<span class="ident">dc_table_indices</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">1</span>) {
-        <span class="comment">// Table K.4</span>
-        <span class="ident">dc_huffman_tables</span>[<span class="number">1</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HuffmanTable::new</span>(
+    <span class="kw">if </span>dc_huffman_tables[<span class="number">1</span>].is_none() &amp;&amp; scan.dc_table_indices.iter().any(|<span class="kw-2">&amp;</span>i| i == <span class="number">1</span>) {
+        <span class="comment">// Table K.4
+        </span>dc_huffman_tables[<span class="number">1</span>] = <span class="prelude-val">Some</span>(HuffmanTable::new(
             <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x03</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x01</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x00</span>],
-            <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0A</span>, <span class="number">0x0B</span>], <span class="ident">HuffmanTableClass::DC</span>).<span class="ident">unwrap</span>());
+            <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x06</span>, <span class="number">0x07</span>, <span class="number">0x08</span>, <span class="number">0x09</span>, <span class="number">0x0A</span>, <span class="number">0x0B</span>], HuffmanTableClass::DC).unwrap());
     }
-    <span class="kw">if</span> <span class="ident">ac_huffman_tables</span>[<span class="number">0</span>].<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">scan</span>.<span class="ident">ac_table_indices</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">0</span>) {
-        <span class="comment">// Table K.5</span>
-        <span class="ident">ac_huffman_tables</span>[<span class="number">0</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HuffmanTable::new</span>(
+    <span class="kw">if </span>ac_huffman_tables[<span class="number">0</span>].is_none() &amp;&amp; scan.ac_table_indices.iter().any(|<span class="kw-2">&amp;</span>i| i == <span class="number">0</span>) {
+        <span class="comment">// Table K.5
+        </span>ac_huffman_tables[<span class="number">0</span>] = <span class="prelude-val">Some</span>(HuffmanTable::new(
             <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x03</span>, <span class="number">0x03</span>, <span class="number">0x02</span>, <span class="number">0x04</span>, <span class="number">0x03</span>, <span class="number">0x05</span>, <span class="number">0x05</span>, <span class="number">0x04</span>, <span class="number">0x04</span>, <span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x7D</span>],
             <span class="kw-2">&amp;</span>[<span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x00</span>, <span class="number">0x04</span>, <span class="number">0x11</span>, <span class="number">0x05</span>, <span class="number">0x12</span>, <span class="number">0x21</span>, <span class="number">0x31</span>, <span class="number">0x41</span>, <span class="number">0x06</span>, <span class="number">0x13</span>, <span class="number">0x51</span>, <span class="number">0x61</span>, <span class="number">0x07</span>,
               <span class="number">0x22</span>, <span class="number">0x71</span>, <span class="number">0x14</span>, <span class="number">0x32</span>, <span class="number">0x81</span>, <span class="number">0x91</span>, <span class="number">0xA1</span>, <span class="number">0x08</span>, <span class="number">0x23</span>, <span class="number">0x42</span>, <span class="number">0xB1</span>, <span class="number">0xC1</span>, <span class="number">0x15</span>, <span class="number">0x52</span>, <span class="number">0xD1</span>, <span class="number">0xF0</span>,
@@ -675,12 +669,12 @@
               <span class="number">0xA8</span>, <span class="number">0xA9</span>, <span class="number">0xAA</span>, <span class="number">0xB2</span>, <span class="number">0xB3</span>, <span class="number">0xB4</span>, <span class="number">0xB5</span>, <span class="number">0xB6</span>, <span class="number">0xB7</span>, <span class="number">0xB8</span>, <span class="number">0xB9</span>, <span class="number">0xBA</span>, <span class="number">0xC2</span>, <span class="number">0xC3</span>, <span class="number">0xC4</span>, <span class="number">0xC5</span>,
               <span class="number">0xC6</span>, <span class="number">0xC7</span>, <span class="number">0xC8</span>, <span class="number">0xC9</span>, <span class="number">0xCA</span>, <span class="number">0xD2</span>, <span class="number">0xD3</span>, <span class="number">0xD4</span>, <span class="number">0xD5</span>, <span class="number">0xD6</span>, <span class="number">0xD7</span>, <span class="number">0xD8</span>, <span class="number">0xD9</span>, <span class="number">0xDA</span>, <span class="number">0xE1</span>, <span class="number">0xE2</span>,
               <span class="number">0xE3</span>, <span class="number">0xE4</span>, <span class="number">0xE5</span>, <span class="number">0xE6</span>, <span class="number">0xE7</span>, <span class="number">0xE8</span>, <span class="number">0xE9</span>, <span class="number">0xEA</span>, <span class="number">0xF1</span>, <span class="number">0xF2</span>, <span class="number">0xF3</span>, <span class="number">0xF4</span>, <span class="number">0xF5</span>, <span class="number">0xF6</span>, <span class="number">0xF7</span>, <span class="number">0xF8</span>,
-              <span class="number">0xF9</span>, <span class="number">0xFA</span>
-            ], <span class="ident">HuffmanTableClass::AC</span>).<span class="ident">unwrap</span>());
+              <span class="number">0xF9</span>, <span class="number">0xFA
+            </span>], HuffmanTableClass::AC).unwrap());
     }
-    <span class="kw">if</span> <span class="ident">ac_huffman_tables</span>[<span class="number">1</span>].<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">scan</span>.<span class="ident">ac_table_indices</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">1</span>) {
-        <span class="comment">// Table K.6</span>
-        <span class="ident">ac_huffman_tables</span>[<span class="number">1</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">HuffmanTable::new</span>(
+    <span class="kw">if </span>ac_huffman_tables[<span class="number">1</span>].is_none() &amp;&amp; scan.ac_table_indices.iter().any(|<span class="kw-2">&amp;</span>i| i == <span class="number">1</span>) {
+        <span class="comment">// Table K.6
+        </span>ac_huffman_tables[<span class="number">1</span>] = <span class="prelude-val">Some</span>(HuffmanTable::new(
             <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x02</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x04</span>, <span class="number">0x04</span>, <span class="number">0x03</span>, <span class="number">0x04</span>, <span class="number">0x07</span>, <span class="number">0x05</span>, <span class="number">0x04</span>, <span class="number">0x04</span>, <span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x77</span>],
             <span class="kw-2">&amp;</span>[<span class="number">0x00</span>, <span class="number">0x01</span>, <span class="number">0x02</span>, <span class="number">0x03</span>, <span class="number">0x11</span>, <span class="number">0x04</span>, <span class="number">0x05</span>, <span class="number">0x21</span>, <span class="number">0x31</span>, <span class="number">0x06</span>, <span class="number">0x12</span>, <span class="number">0x41</span>, <span class="number">0x51</span>, <span class="number">0x07</span>, <span class="number">0x61</span>, <span class="number">0x71</span>,
               <span class="number">0x13</span>, <span class="number">0x22</span>, <span class="number">0x32</span>, <span class="number">0x81</span>, <span class="number">0x08</span>, <span class="number">0x14</span>, <span class="number">0x42</span>, <span class="number">0x91</span>, <span class="number">0xA1</span>, <span class="number">0xB1</span>, <span class="number">0xC1</span>, <span class="number">0x09</span>, <span class="number">0x23</span>, <span class="number">0x33</span>, <span class="number">0x52</span>, <span class="number">0xF0</span>,
@@ -692,10 +686,9 @@
               <span class="number">0xA6</span>, <span class="number">0xA7</span>, <span class="number">0xA8</span>, <span class="number">0xA9</span>, <span class="number">0xAA</span>, <span class="number">0xB2</span>, <span class="number">0xB3</span>, <span class="number">0xB4</span>, <span class="number">0xB5</span>, <span class="number">0xB6</span>, <span class="number">0xB7</span>, <span class="number">0xB8</span>, <span class="number">0xB9</span>, <span class="number">0xBA</span>, <span class="number">0xC2</span>, <span class="number">0xC3</span>,
               <span class="number">0xC4</span>, <span class="number">0xC5</span>, <span class="number">0xC6</span>, <span class="number">0xC7</span>, <span class="number">0xC8</span>, <span class="number">0xC9</span>, <span class="number">0xCA</span>, <span class="number">0xD2</span>, <span class="number">0xD3</span>, <span class="number">0xD4</span>, <span class="number">0xD5</span>, <span class="number">0xD6</span>, <span class="number">0xD7</span>, <span class="number">0xD8</span>, <span class="number">0xD9</span>, <span class="number">0xDA</span>,
               <span class="number">0xE2</span>, <span class="number">0xE3</span>, <span class="number">0xE4</span>, <span class="number">0xE5</span>, <span class="number">0xE6</span>, <span class="number">0xE7</span>, <span class="number">0xE8</span>, <span class="number">0xE9</span>, <span class="number">0xEA</span>, <span class="number">0xF2</span>, <span class="number">0xF3</span>, <span class="number">0xF4</span>, <span class="number">0xF5</span>, <span class="number">0xF6</span>, <span class="number">0xF7</span>, <span class="number">0xF8</span>,
-              <span class="number">0xF9</span>, <span class="number">0xFA</span>
-            ], <span class="ident">HuffmanTableClass::AC</span>).<span class="ident">unwrap</span>());
+              <span class="number">0xF9</span>, <span class="number">0xFA
+            </span>], HuffmanTableClass::AC).unwrap());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="jpeg_decoder" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="jpeg_decoder" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/io/reader.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/io/reader.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>reader.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -243,245 +237,244 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fs::File</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">BufRead</span>, <span class="ident">BufReader</span>, <span class="ident">Cursor</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>, <span class="ident">SeekFrom</span>};
-<span class="kw">use</span> <span class="ident">std::path::Path</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::fs::File;
+<span class="kw">use </span>std::io::{<span class="self">self</span>, BufRead, BufReader, Cursor, Read, Seek, SeekFrom};
+<span class="kw">use </span>std::path::Path;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::dynimage::DynamicImage</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">ImageFormatHint</span>, <span class="ident">UnsupportedError</span>, <span class="ident">UnsupportedErrorKind</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image::ImageFormat</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ImageError</span>, <span class="ident">ImageResult</span>};
+<span class="kw">use </span><span class="kw">crate</span>::dynimage::DynamicImage;
+<span class="kw">use </span><span class="kw">crate</span>::error::{ImageFormatHint, UnsupportedError, UnsupportedErrorKind};
+<span class="kw">use </span><span class="kw">crate</span>::image::ImageFormat;
+<span class="kw">use crate</span>::{ImageError, ImageResult};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::free_functions</span>;
+<span class="kw">use </span><span class="kw">super</span>::free_functions;
 
-<span class="doccomment">/// A multi-format image reader.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Wraps an input reader to facilitate automatic detection of an image&#39;s format, appropriate</span>
-<span class="doccomment">/// decoding method, and dispatches into the set of supported [`ImageDecoder`] implementations.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ## Usage</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Opening a file, deducing the format based on the file path automatically, and trying to decode</span>
-<span class="doccomment">/// the image contained can be performed by constructing the reader and immediately consuming it.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// # use image::ImageError;</span>
-<span class="doccomment">/// # use image::io::Reader;</span>
-<span class="doccomment">/// # fn main() -&gt; Result&lt;(), ImageError&gt; {</span>
-<span class="doccomment">/// let image = Reader::open(&quot;path/to/image.png&quot;)?</span>
-<span class="doccomment">///     .decode()?;</span>
-<span class="doccomment">/// # Ok(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It is also possible to make a guess based on the content. This is especially handy if the</span>
-<span class="doccomment">/// source is some blob in memory and you have constructed the reader in another way. Here is an</span>
-<span class="doccomment">/// example with a `pnm` black-and-white subformat that encodes its pixel matrix with ascii values.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use image::ImageError;</span>
-<span class="doccomment">/// # use image::io::Reader;</span>
-<span class="doccomment">/// # fn main() -&gt; Result&lt;(), ImageError&gt; {</span>
-<span class="doccomment">/// use std::io::Cursor;</span>
-<span class="doccomment">/// use image::ImageFormat;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let raw_data = b&quot;P1 2 2\n\</span>
-<span class="doccomment">///     0 1\n\</span>
-<span class="doccomment">///     1 0\n&quot;;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let mut reader = Reader::new(Cursor::new(raw_data))</span>
-<span class="doccomment">///     .with_guessed_format()</span>
-<span class="doccomment">///     .expect(&quot;Cursor io never fails&quot;);</span>
-<span class="doccomment">/// assert_eq!(reader.format(), Some(ImageFormat::Pnm));</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # #[cfg(feature = &quot;pnm&quot;)]</span>
-<span class="doccomment">/// let image = reader.decode()?;</span>
-<span class="doccomment">/// # Ok(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// As a final fallback or if only a specific format must be used, the reader always allows manual</span>
-<span class="doccomment">/// specification of the supposed image format with [`set_format`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`set_format`]: #method.set_format</span>
-<span class="doccomment">/// [`ImageDecoder`]: ../trait.ImageDecoder.html</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Reader</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The reader. Should be buffered.</span>
-    <span class="ident">inner</span>: <span class="ident">R</span>,
-    <span class="doccomment">/// The format, if one has been set or deduced.</span>
-    <span class="ident">format</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageFormat</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Decoding limits</span>
-    <span class="ident">limits</span>: <span class="ident"><span class="kw">super</span>::Limits</span>,
+<span class="doccomment">/// A multi-format image reader.
+///
+/// Wraps an input reader to facilitate automatic detection of an image&#39;s format, appropriate
+/// decoding method, and dispatches into the set of supported [`ImageDecoder`] implementations.
+///
+/// ## Usage
+///
+/// Opening a file, deducing the format based on the file path automatically, and trying to decode
+/// the image contained can be performed by constructing the reader and immediately consuming it.
+///
+/// ```no_run
+/// # use image::ImageError;
+/// # use image::io::Reader;
+/// # fn main() -&gt; Result&lt;(), ImageError&gt; {
+/// let image = Reader::open(&quot;path/to/image.png&quot;)?
+///     .decode()?;
+/// # Ok(()) }
+/// ```
+///
+/// It is also possible to make a guess based on the content. This is especially handy if the
+/// source is some blob in memory and you have constructed the reader in another way. Here is an
+/// example with a `pnm` black-and-white subformat that encodes its pixel matrix with ascii values.
+///
+/// ```
+/// # use image::ImageError;
+/// # use image::io::Reader;
+/// # fn main() -&gt; Result&lt;(), ImageError&gt; {
+/// use std::io::Cursor;
+/// use image::ImageFormat;
+///
+/// let raw_data = b&quot;P1 2 2\n\
+///     0 1\n\
+///     1 0\n&quot;;
+///
+/// let mut reader = Reader::new(Cursor::new(raw_data))
+///     .with_guessed_format()
+///     .expect(&quot;Cursor io never fails&quot;);
+/// assert_eq!(reader.format(), Some(ImageFormat::Pnm));
+///
+/// # #[cfg(feature = &quot;pnm&quot;)]
+/// let image = reader.decode()?;
+/// # Ok(()) }
+/// ```
+///
+/// As a final fallback or if only a specific format must be used, the reader always allows manual
+/// specification of the supposed image format with [`set_format`].
+///
+/// [`set_format`]: #method.set_format
+/// [`ImageDecoder`]: ../trait.ImageDecoder.html
+</span><span class="kw">pub struct </span>Reader&lt;R: Read&gt; {
+    <span class="doccomment">/// The reader. Should be buffered.
+    </span>inner: R,
+    <span class="doccomment">/// The format, if one has been set or deduced.
+    </span>format: <span class="prelude-ty">Option</span>&lt;ImageFormat&gt;,
+    <span class="doccomment">/// Decoding limits
+    </span>limits: <span class="kw">super</span>::Limits,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">Reader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new image reader without a preset format.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Assumes the reader is already buffered. For optimal performance,</span>
-    <span class="doccomment">/// consider wrapping the reader with a `BufReader::new()`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// It is possible to guess the format based on the content of the read object with</span>
-    <span class="doccomment">/// [`with_guessed_format`], or to set the format directly with [`set_format`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`with_guessed_format`]: #method.with_guessed_format</span>
-    <span class="doccomment">/// [`set_format`]: method.set_format</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buffered_reader</span>: <span class="ident">R</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Reader</span> {
-            <span class="ident">inner</span>: <span class="ident">buffered_reader</span>,
-            <span class="ident">format</span>: <span class="prelude-val">None</span>,
-            <span class="ident">limits</span>: <span class="ident"><span class="kw">super</span>::Limits::default</span>(),
+<span class="kw">impl</span>&lt;R: Read&gt; Reader&lt;R&gt; {
+    <span class="doccomment">/// Create a new image reader without a preset format.
+    ///
+    /// Assumes the reader is already buffered. For optimal performance,
+    /// consider wrapping the reader with a `BufReader::new()`.
+    ///
+    /// It is possible to guess the format based on the content of the read object with
+    /// [`with_guessed_format`], or to set the format directly with [`set_format`].
+    ///
+    /// [`with_guessed_format`]: #method.with_guessed_format
+    /// [`set_format`]: method.set_format
+    </span><span class="kw">pub fn </span>new(buffered_reader: R) -&gt; <span class="self">Self </span>{
+        Reader {
+            inner: buffered_reader,
+            format: <span class="prelude-val">None</span>,
+            limits: <span class="kw">super</span>::Limits::default(),
         }
     }
 
-    <span class="doccomment">/// Construct a reader with specified format.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Assumes the reader is already buffered. For optimal performance,</span>
-    <span class="doccomment">/// consider wrapping the reader with a `BufReader::new()`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_format</span>(<span class="ident">buffered_reader</span>: <span class="ident">R</span>, <span class="ident">format</span>: <span class="ident">ImageFormat</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Reader</span> {
-            <span class="ident">inner</span>: <span class="ident">buffered_reader</span>,
-            <span class="ident">format</span>: <span class="prelude-val">Some</span>(<span class="ident">format</span>),
-            <span class="ident">limits</span>: <span class="ident"><span class="kw">super</span>::Limits::default</span>(),
+    <span class="doccomment">/// Construct a reader with specified format.
+    ///
+    /// Assumes the reader is already buffered. For optimal performance,
+    /// consider wrapping the reader with a `BufReader::new()`.
+    </span><span class="kw">pub fn </span>with_format(buffered_reader: R, format: ImageFormat) -&gt; <span class="self">Self </span>{
+        Reader {
+            inner: buffered_reader,
+            format: <span class="prelude-val">Some</span>(format),
+            limits: <span class="kw">super</span>::Limits::default(),
         }
     }
 
-    <span class="doccomment">/// Get the currently determined format.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageFormat</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">format</span>
+    <span class="doccomment">/// Get the currently determined format.
+    </span><span class="kw">pub fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;ImageFormat&gt; {
+        <span class="self">self</span>.format
     }
 
-    <span class="doccomment">/// Supply the format as which to interpret the read image.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_format</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">format</span>: <span class="ident">ImageFormat</span>) {
-        <span class="self">self</span>.<span class="ident">format</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">format</span>);
+    <span class="doccomment">/// Supply the format as which to interpret the read image.
+    </span><span class="kw">pub fn </span>set_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>, format: ImageFormat) {
+        <span class="self">self</span>.format = <span class="prelude-val">Some</span>(format);
     }
 
-    <span class="doccomment">/// Remove the current information on the image format.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Note that many operations require format information to be present and will return e.g. an</span>
-    <span class="doccomment">/// `ImageError::Unsupported` when the image format has not been set.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_format</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">format</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="doccomment">/// Remove the current information on the image format.
+    ///
+    /// Note that many operations require format information to be present and will return e.g. an
+    /// `ImageError::Unsupported` when the image format has not been set.
+    </span><span class="kw">pub fn </span>clear_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.format = <span class="prelude-val">None</span>;
     }
 
-    <span class="doccomment">/// Disable all decoding limits.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">no_limits</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">limits</span> <span class="op">=</span> <span class="ident"><span class="kw">super</span>::Limits::no_limits</span>();
+    <span class="doccomment">/// Disable all decoding limits.
+    </span><span class="kw">pub fn </span>no_limits(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.limits = <span class="kw">super</span>::Limits::no_limits();
     }
 
-    <span class="doccomment">/// Set a custom set of decoding limits.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">limits</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">limits</span>: <span class="ident"><span class="kw">super</span>::Limits</span>) {
-        <span class="self">self</span>.<span class="ident">limits</span> <span class="op">=</span> <span class="ident">limits</span>;
+    <span class="doccomment">/// Set a custom set of decoding limits.
+    </span><span class="kw">pub fn </span>limits(<span class="kw-2">&amp;mut </span><span class="self">self</span>, limits: <span class="kw">super</span>::Limits) {
+        <span class="self">self</span>.limits = limits;
     }
 
-    <span class="doccomment">/// Unwrap the reader.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) -&gt; <span class="ident">R</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>
+    <span class="doccomment">/// Unwrap the reader.
+    </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; R {
+        <span class="self">self</span>.inner
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Reader</span><span class="op">&lt;</span><span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">File</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Open a file to read, format will be guessed from path.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will not attempt any io operation on the opened file.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If you want to inspect the content for a better guess on the format, which does not depend</span>
-    <span class="doccomment">/// on file extensions, follow this call with a call to [`with_guessed_format`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`with_guessed_format`]: #method.with_guessed_format</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">P</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>,
+<span class="kw">impl </span>Reader&lt;BufReader&lt;File&gt;&gt; {
+    <span class="doccomment">/// Open a file to read, format will be guessed from path.
+    ///
+    /// This will not attempt any io operation on the opened file.
+    ///
+    /// If you want to inspect the content for a better guess on the format, which does not depend
+    /// on file extensions, follow this call with a call to [`with_guessed_format`].
+    ///
+    /// [`with_guessed_format`]: #method.with_guessed_format
+    </span><span class="kw">pub fn </span>open&lt;P&gt;(path: P) -&gt; io::Result&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>P: AsRef&lt;Path&gt;,
     {
-        <span class="ident"><span class="self">Self</span>::open_impl</span>(<span class="ident">path</span>.<span class="ident">as_ref</span>())
+        <span class="self">Self</span>::open_impl(path.as_ref())
     }
 
-    <span class="kw">fn</span> <span class="ident">open_impl</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">Reader</span> {
-            <span class="ident">inner</span>: <span class="ident">BufReader::new</span>(<span class="ident">File::open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>),
-            <span class="ident">format</span>: <span class="ident">ImageFormat::from_path</span>(<span class="ident">path</span>).<span class="ident">ok</span>(),
-            <span class="ident">limits</span>: <span class="ident"><span class="kw">super</span>::Limits::default</span>(),
+    <span class="kw">fn </span>open_impl(path: <span class="kw-2">&amp;</span>Path) -&gt; io::Result&lt;<span class="self">Self</span>&gt; {
+        <span class="prelude-val">Ok</span>(Reader {
+            inner: BufReader::new(File::open(path)<span class="question-mark">?</span>),
+            format: ImageFormat::from_path(path).ok(),
+            limits: <span class="kw">super</span>::Limits::default(),
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">BufRead</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">Reader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Make a format guess based on the content, replacing it on success.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `Ok` with the guess if no io error occurs. Additionally, replaces the current</span>
-    <span class="doccomment">/// format if the guess was successful. If the guess was unable to determine a format then</span>
-    <span class="doccomment">/// the current format of the reader is unchanged.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error if the underlying reader fails. The format is unchanged. The error is a</span>
-    <span class="doccomment">/// `std::io::Error` and not `ImageError` since the only error case is an error when the</span>
-    <span class="doccomment">/// underlying reader seeks.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// When an error occurs, the reader may not have been properly reset and it is potentially</span>
-    <span class="doccomment">/// hazardous to continue with more io.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Usage</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This supplements the path based type deduction from [`open`](Reader::open) with content based deduction.</span>
-    <span class="doccomment">/// This is more common in Linux and UNIX operating systems and also helpful if the path can</span>
-    <span class="doccomment">/// not be directly controlled.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```no_run</span>
-    <span class="doccomment">/// # use image::ImageError;</span>
-    <span class="doccomment">/// # use image::io::Reader;</span>
-    <span class="doccomment">/// # fn main() -&gt; Result&lt;(), ImageError&gt; {</span>
-    <span class="doccomment">/// let image = Reader::open(&quot;image.unknown&quot;)?</span>
-    <span class="doccomment">///     .with_guessed_format()?</span>
-    <span class="doccomment">///     .decode()?;</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_guessed_format</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">guess_format</span>()<span class="question-mark">?</span>;
-        <span class="comment">// Replace format if found, keep current state if not.</span>
-        <span class="self">self</span>.<span class="ident">format</span> <span class="op">=</span> <span class="ident">format</span>.<span class="ident">or</span>(<span class="self">self</span>.<span class="ident">format</span>);
+<span class="kw">impl</span>&lt;R: BufRead + Seek&gt; Reader&lt;R&gt; {
+    <span class="doccomment">/// Make a format guess based on the content, replacing it on success.
+    ///
+    /// Returns `Ok` with the guess if no io error occurs. Additionally, replaces the current
+    /// format if the guess was successful. If the guess was unable to determine a format then
+    /// the current format of the reader is unchanged.
+    ///
+    /// Returns an error if the underlying reader fails. The format is unchanged. The error is a
+    /// `std::io::Error` and not `ImageError` since the only error case is an error when the
+    /// underlying reader seeks.
+    ///
+    /// When an error occurs, the reader may not have been properly reset and it is potentially
+    /// hazardous to continue with more io.
+    ///
+    /// ## Usage
+    ///
+    /// This supplements the path based type deduction from [`open`](Reader::open) with content based deduction.
+    /// This is more common in Linux and UNIX operating systems and also helpful if the path can
+    /// not be directly controlled.
+    ///
+    /// ```no_run
+    /// # use image::ImageError;
+    /// # use image::io::Reader;
+    /// # fn main() -&gt; Result&lt;(), ImageError&gt; {
+    /// let image = Reader::open(&quot;image.unknown&quot;)?
+    ///     .with_guessed_format()?
+    ///     .decode()?;
+    /// # Ok(()) }
+    /// ```
+    </span><span class="kw">pub fn </span>with_guessed_format(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; io::Result&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>format = <span class="self">self</span>.guess_format()<span class="question-mark">?</span>;
+        <span class="comment">// Replace format if found, keep current state if not.
+        </span><span class="self">self</span>.format = format.or(<span class="self">self</span>.format);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">guess_format</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageFormat</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">16</span>];
+    <span class="kw">fn </span>guess_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; io::Result&lt;<span class="prelude-ty">Option</span>&lt;ImageFormat&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>start = [<span class="number">0</span>; <span class="number">16</span>];
 
-        <span class="comment">// Save current offset, read start, restore offset.</span>
-        <span class="kw">let</span> <span class="ident">cur</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">seek</span>(<span class="ident">SeekFrom::Current</span>(<span class="number">0</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">io::copy</span>(
-            <span class="comment">// Accept shorter files but read at most 16 bytes.</span>
-            <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">by_ref</span>().<span class="ident">take</span>(<span class="number">16</span>),
-            <span class="kw-2">&amp;mut</span> <span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">start</span>[..]),
+        <span class="comment">// Save current offset, read start, restore offset.
+        </span><span class="kw">let </span>cur = <span class="self">self</span>.inner.seek(SeekFrom::Current(<span class="number">0</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>len = io::copy(
+            <span class="comment">// Accept shorter files but read at most 16 bytes.
+            </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.inner.by_ref().take(<span class="number">16</span>),
+            <span class="kw-2">&amp;mut </span>Cursor::new(<span class="kw-2">&amp;mut </span>start[..]),
         )<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">seek</span>(<span class="ident">SeekFrom::Start</span>(<span class="ident">cur</span>))<span class="question-mark">?</span>;
+        <span class="self">self</span>.inner.seek(SeekFrom::Start(cur))<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">free_functions::guess_format_impl</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>[..<span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>]))
+        <span class="prelude-val">Ok</span>(free_functions::guess_format_impl(<span class="kw-2">&amp;</span>start[..len <span class="kw">as </span>usize]))
     }
 
-    <span class="doccomment">/// Read the image dimensions.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Uses the current format to construct the correct reader for the format.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no format was determined, returns an `ImageError::Unsupported`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_dimensions</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">require_format</span>()<span class="question-mark">?</span>;
-        <span class="ident">free_functions::image_dimensions_with_format_impl</span>(<span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">format</span>)
+    <span class="doccomment">/// Read the image dimensions.
+    ///
+    /// Uses the current format to construct the correct reader for the format.
+    ///
+    /// If no format was determined, returns an `ImageError::Unsupported`.
+    </span><span class="kw">pub fn </span>into_dimensions(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; ImageResult&lt;(u32, u32)&gt; {
+        <span class="kw">let </span>format = <span class="self">self</span>.require_format()<span class="question-mark">?</span>;
+        free_functions::image_dimensions_with_format_impl(<span class="self">self</span>.inner, format)
     }
 
-    <span class="doccomment">/// Read the image (replaces `load`).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Uses the current format to construct the correct reader for the format.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no format was determined, returns an `ImageError::Unsupported`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">DynamicImage</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">format</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">require_format</span>()<span class="question-mark">?</span>;
-        <span class="ident">free_functions::load_inner</span>(<span class="self">self</span>.<span class="ident">inner</span>, <span class="self">self</span>.<span class="ident">limits</span>, <span class="ident">format</span>)
+    <span class="doccomment">/// Read the image (replaces `load`).
+    ///
+    /// Uses the current format to construct the correct reader for the format.
+    ///
+    /// If no format was determined, returns an `ImageError::Unsupported`.
+    </span><span class="kw">pub fn </span>decode(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; ImageResult&lt;DynamicImage&gt; {
+        <span class="kw">let </span>format = <span class="self">self</span>.require_format()<span class="question-mark">?</span>;
+        free_functions::load_inner(<span class="self">self</span>.inner, <span class="self">self</span>.limits, format)
     }
 
-    <span class="kw">fn</span> <span class="ident">require_format</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">ImageFormat</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">format</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">ImageError::Unsupported</span>(<span class="ident">UnsupportedError::from_format_and_kind</span>(
-                <span class="ident">ImageFormatHint::Unknown</span>,
-                <span class="ident">UnsupportedErrorKind::Format</span>(<span class="ident">ImageFormatHint::Unknown</span>),
+    <span class="kw">fn </span>require_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;ImageFormat&gt; {
+        <span class="self">self</span>.format.ok_or_else(|| {
+            ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+                ImageFormatHint::Unknown,
+                UnsupportedErrorKind::Format(ImageFormatHint::Unknown),
             ))
         })
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

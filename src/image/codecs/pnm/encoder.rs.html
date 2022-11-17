@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/pnm/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/pnm/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -677,679 +671,678 @@
 <span id="671">671</span>
 <span id="672">672</span>
 <span id="673">673</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Encoding of PNM Images</span>
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>;
+</pre><pre class="rust"><code><span class="doccomment">//! Encoding of PNM Images
+</span><span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::io;
 
-<span class="kw">use</span> <span class="ident">std::io::Write</span>;
+<span class="kw">use </span>std::io::Write;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::AutoBreak</span>;
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ArbitraryHeader</span>, <span class="ident">ArbitraryTuplType</span>, <span class="ident">BitmapHeader</span>, <span class="ident">GraymapHeader</span>, <span class="ident">PixmapHeader</span>};
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">HeaderRecord</span>, <span class="ident">PnmHeader</span>, <span class="ident">PnmSubtype</span>, <span class="ident">SampleEncoding</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color</span>::{<span class="ident">ColorType</span>, <span class="ident">ExtendedColorType</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{
-    <span class="ident">ImageError</span>, <span class="ident">ImageResult</span>, <span class="ident">ParameterError</span>, <span class="ident">ParameterErrorKind</span>, <span class="ident">UnsupportedError</span>,
-    <span class="ident">UnsupportedErrorKind</span>,
+<span class="kw">use </span><span class="kw">super</span>::AutoBreak;
+<span class="kw">use super</span>::{ArbitraryHeader, ArbitraryTuplType, BitmapHeader, GraymapHeader, PixmapHeader};
+<span class="kw">use super</span>::{HeaderRecord, PnmHeader, PnmSubtype, SampleEncoding};
+<span class="kw">use </span><span class="kw">crate</span>::color::{ColorType, ExtendedColorType};
+<span class="kw">use </span><span class="kw">crate</span>::error::{
+    ImageError, ImageResult, ParameterError, ParameterErrorKind, UnsupportedError,
+    UnsupportedErrorKind,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::{<span class="ident">ImageEncoder</span>, <span class="ident">ImageFormat</span>};
+<span class="kw">use </span><span class="kw">crate</span>::image::{ImageEncoder, ImageFormat};
 
-<span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">BigEndian</span>, <span class="ident">WriteBytesExt</span>};
+<span class="kw">use </span>byteorder::{BigEndian, WriteBytesExt};
 
-<span class="kw">enum</span> <span class="ident">HeaderStrategy</span> {
-    <span class="ident">Dynamic</span>,
-    <span class="ident">Subtype</span>(<span class="ident">PnmSubtype</span>),
-    <span class="ident">Chosen</span>(<span class="ident">PnmHeader</span>),
+<span class="kw">enum </span>HeaderStrategy {
+    Dynamic,
+    Subtype(PnmSubtype),
+    Chosen(PnmHeader),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">U8</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]),
-    <span class="ident">U16</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u16</span>]),
+<span class="attribute">#[derive(Clone, Copy)]
+</span><span class="kw">pub enum </span>FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt; {
+    U8(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]),
+    U16(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u16]),
 }
 
-<span class="doccomment">/// Encodes images to any of the `pnm` image formats.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PnmEncoder</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> {
-    <span class="ident">writer</span>: <span class="ident">W</span>,
-    <span class="ident">header</span>: <span class="ident">HeaderStrategy</span>,
+<span class="doccomment">/// Encodes images to any of the `pnm` image formats.
+</span><span class="kw">pub struct </span>PnmEncoder&lt;W: Write&gt; {
+    writer: W,
+    header: HeaderStrategy,
 }
 
-<span class="doccomment">/// Encapsulate the checking system in the type system. Non of the fields are actually accessed</span>
-<span class="doccomment">/// but requiring them forces us to validly construct the struct anyways.</span>
-<span class="kw">struct</span> <span class="ident">CheckedImageBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">_image</span>: <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">_width</span>: <span class="ident">u32</span>,
-    <span class="ident">_height</span>: <span class="ident">u32</span>,
-    <span class="ident">_color</span>: <span class="ident">ExtendedColorType</span>,
+<span class="doccomment">/// Encapsulate the checking system in the type system. Non of the fields are actually accessed
+/// but requiring them forces us to validly construct the struct anyways.
+</span><span class="kw">struct </span>CheckedImageBuffer&lt;<span class="lifetime">&#39;a</span>&gt; {
+    _image: FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt;,
+    _width: u32,
+    _height: u32,
+    _color: ExtendedColorType,
 }
 
-<span class="comment">// Check the header against the buffer. Each struct produces the next after a check.</span>
-<span class="kw">struct</span> <span class="ident">UncheckedHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PnmHeader</span>,
+<span class="comment">// Check the header against the buffer. Each struct produces the next after a check.
+</span><span class="kw">struct </span>UncheckedHeader&lt;<span class="lifetime">&#39;a</span>&gt; {
+    header: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PnmHeader,
 }
 
-<span class="kw">struct</span> <span class="ident">CheckedDimensions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">unchecked</span>: <span class="ident">UncheckedHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">width</span>: <span class="ident">u32</span>,
-    <span class="ident">height</span>: <span class="ident">u32</span>,
+<span class="kw">struct </span>CheckedDimensions&lt;<span class="lifetime">&#39;a</span>&gt; {
+    unchecked: UncheckedHeader&lt;<span class="lifetime">&#39;a</span>&gt;,
+    width: u32,
+    height: u32,
 }
 
-<span class="kw">struct</span> <span class="ident">CheckedHeaderColor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">dimensions</span>: <span class="ident">CheckedDimensions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">color</span>: <span class="ident">ExtendedColorType</span>,
+<span class="kw">struct </span>CheckedHeaderColor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    dimensions: CheckedDimensions&lt;<span class="lifetime">&#39;a</span>&gt;,
+    color: ExtendedColorType,
 }
 
-<span class="kw">struct</span> <span class="ident">CheckedHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">color</span>: <span class="ident">CheckedHeaderColor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">encoding</span>: <span class="ident">TupleEncoding</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">_image</span>: <span class="ident">CheckedImageBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>CheckedHeader&lt;<span class="lifetime">&#39;a</span>&gt; {
+    color: CheckedHeaderColor&lt;<span class="lifetime">&#39;a</span>&gt;,
+    encoding: TupleEncoding&lt;<span class="lifetime">&#39;a</span>&gt;,
+    _image: CheckedImageBuffer&lt;<span class="lifetime">&#39;a</span>&gt;,
 }
 
-<span class="kw">enum</span> <span class="ident">TupleEncoding</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">PbmBits</span> {
-        <span class="ident">samples</span>: <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
+<span class="kw">enum </span>TupleEncoding&lt;<span class="lifetime">&#39;a</span>&gt; {
+    PbmBits {
+        samples: FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt;,
+        width: u32,
     },
-    <span class="ident">Ascii</span> {
-        <span class="ident">samples</span>: <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    Ascii {
+        samples: FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt;,
     },
-    <span class="ident">Bytes</span> {
-        <span class="ident">samples</span>: <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    Bytes {
+        samples: FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt;,
     },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">PnmEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create new PnmEncoder from the `writer`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The encoded images will have some `pnm` format. If more control over the image type is</span>
-    <span class="doccomment">/// required, use either one of `with_subtype` or `with_header`. For more information on the</span>
-    <span class="doccomment">/// behaviour, see `with_dynamic_header`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">writer</span>: <span class="ident">W</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">PnmEncoder</span> {
-            <span class="ident">writer</span>,
-            <span class="ident">header</span>: <span class="ident">HeaderStrategy::Dynamic</span>,
+<span class="kw">impl</span>&lt;W: Write&gt; PnmEncoder&lt;W&gt; {
+    <span class="doccomment">/// Create new PnmEncoder from the `writer`.
+    ///
+    /// The encoded images will have some `pnm` format. If more control over the image type is
+    /// required, use either one of `with_subtype` or `with_header`. For more information on the
+    /// behaviour, see `with_dynamic_header`.
+    </span><span class="kw">pub fn </span>new(writer: W) -&gt; <span class="self">Self </span>{
+        PnmEncoder {
+            writer,
+            header: HeaderStrategy::Dynamic,
         }
     }
 
-    <span class="doccomment">/// Encode a specific pnm subtype image.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The magic number and encoding type will be chosen as provided while the rest of the header</span>
-    <span class="doccomment">/// data will be generated dynamically. Trying to encode incompatible images (e.g. encoding an</span>
-    <span class="doccomment">/// RGB image as Graymap) will result in an error.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will overwrite the effect of earlier calls to `with_header` and `with_dynamic_header`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_subtype</span>(<span class="self">self</span>, <span class="ident">subtype</span>: <span class="ident">PnmSubtype</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">PnmEncoder</span> {
-            <span class="ident">writer</span>: <span class="self">self</span>.<span class="ident">writer</span>,
-            <span class="ident">header</span>: <span class="ident">HeaderStrategy::Subtype</span>(<span class="ident">subtype</span>),
+    <span class="doccomment">/// Encode a specific pnm subtype image.
+    ///
+    /// The magic number and encoding type will be chosen as provided while the rest of the header
+    /// data will be generated dynamically. Trying to encode incompatible images (e.g. encoding an
+    /// RGB image as Graymap) will result in an error.
+    ///
+    /// This will overwrite the effect of earlier calls to `with_header` and `with_dynamic_header`.
+    </span><span class="kw">pub fn </span>with_subtype(<span class="self">self</span>, subtype: PnmSubtype) -&gt; <span class="self">Self </span>{
+        PnmEncoder {
+            writer: <span class="self">self</span>.writer,
+            header: HeaderStrategy::Subtype(subtype),
         }
     }
 
-    <span class="doccomment">/// Enforce the use of a chosen header.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// While this option gives the most control over the actual written data, the encoding process</span>
-    <span class="doccomment">/// will error in case the header data and image parameters do not agree. It is the users</span>
-    <span class="doccomment">/// obligation to ensure that the width and height are set accordingly, for example.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Choose this option if you want a lossless decoding/encoding round trip.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will overwrite the effect of earlier calls to `with_subtype` and `with_dynamic_header`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_header</span>(<span class="self">self</span>, <span class="ident">header</span>: <span class="ident">PnmHeader</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">PnmEncoder</span> {
-            <span class="ident">writer</span>: <span class="self">self</span>.<span class="ident">writer</span>,
-            <span class="ident">header</span>: <span class="ident">HeaderStrategy::Chosen</span>(<span class="ident">header</span>),
+    <span class="doccomment">/// Enforce the use of a chosen header.
+    ///
+    /// While this option gives the most control over the actual written data, the encoding process
+    /// will error in case the header data and image parameters do not agree. It is the users
+    /// obligation to ensure that the width and height are set accordingly, for example.
+    ///
+    /// Choose this option if you want a lossless decoding/encoding round trip.
+    ///
+    /// This will overwrite the effect of earlier calls to `with_subtype` and `with_dynamic_header`.
+    </span><span class="kw">pub fn </span>with_header(<span class="self">self</span>, header: PnmHeader) -&gt; <span class="self">Self </span>{
+        PnmEncoder {
+            writer: <span class="self">self</span>.writer,
+            header: HeaderStrategy::Chosen(header),
         }
     }
 
-    <span class="doccomment">/// Create the header dynamically for each image.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is the default option upon creation of the encoder. With this, most images should be</span>
-    <span class="doccomment">/// encodable but the specific format chosen is out of the users control. The pnm subtype is</span>
-    <span class="doccomment">/// chosen arbitrarily by the library.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will overwrite the effect of earlier calls to `with_subtype` and `with_header`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_dynamic_header</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">PnmEncoder</span> {
-            <span class="ident">writer</span>: <span class="self">self</span>.<span class="ident">writer</span>,
-            <span class="ident">header</span>: <span class="ident">HeaderStrategy::Dynamic</span>,
+    <span class="doccomment">/// Create the header dynamically for each image.
+    ///
+    /// This is the default option upon creation of the encoder. With this, most images should be
+    /// encodable but the specific format chosen is out of the users control. The pnm subtype is
+    /// chosen arbitrarily by the library.
+    ///
+    /// This will overwrite the effect of earlier calls to `with_subtype` and `with_header`.
+    </span><span class="kw">pub fn </span>with_dynamic_header(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        PnmEncoder {
+            writer: <span class="self">self</span>.writer,
+            header: HeaderStrategy::Dynamic,
         }
     }
 
-    <span class="doccomment">/// Encode an image whose samples are represented as `u8`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Some `pnm` subtypes are incompatible with some color options, a chosen header most</span>
-    <span class="doccomment">/// certainly with any deviation from the original decoded image.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">S</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="ident">S</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color</span>: <span class="ident">ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Encode an image whose samples are represented as `u8`.
+    ///
+    /// Some `pnm` subtypes are incompatible with some color options, a chosen header most
+    /// certainly with any deviation from the original decoded image.
+    </span><span class="kw">pub fn </span>encode&lt;<span class="lifetime">&#39;s</span>, S&gt;(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: S,
+        width: u32,
+        height: u32,
+        color: ColorType,
+    ) -&gt; ImageResult&lt;()&gt;
+    <span class="kw">where
+        </span>S: Into&lt;FlatSamples&lt;<span class="lifetime">&#39;s</span>&gt;&gt;,
     {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">image</span>.<span class="ident">into</span>();
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">header</span> {
-            <span class="ident">HeaderStrategy::Dynamic</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">write_dynamic_header</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color</span>.<span class="ident">into</span>())
+        <span class="kw">let </span>image = image.into();
+        <span class="kw">match </span><span class="self">self</span>.header {
+            HeaderStrategy::Dynamic =&gt; {
+                <span class="self">self</span>.write_dynamic_header(image, width, height, color.into())
             }
-            <span class="ident">HeaderStrategy::Subtype</span>(<span class="ident">subtype</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">write_subtyped_header</span>(<span class="ident">subtype</span>, <span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color</span>.<span class="ident">into</span>())
+            HeaderStrategy::Subtype(subtype) =&gt; {
+                <span class="self">self</span>.write_subtyped_header(subtype, image, width, height, color.into())
             }
-            <span class="ident">HeaderStrategy::Chosen</span>(<span class="kw-2">ref</span> <span class="ident">header</span>) =&gt; <span class="ident"><span class="self">Self</span>::write_with_header</span>(
-                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">writer</span>,
-                <span class="ident">header</span>,
-                <span class="ident">image</span>,
-                <span class="ident">width</span>,
-                <span class="ident">height</span>,
-                <span class="ident">color</span>.<span class="ident">into</span>(),
+            HeaderStrategy::Chosen(<span class="kw-2">ref </span>header) =&gt; <span class="self">Self</span>::write_with_header(
+                <span class="kw-2">&amp;mut </span><span class="self">self</span>.writer,
+                header,
+                image,
+                width,
+                height,
+                color.into(),
             ),
         }
     }
 
-    <span class="doccomment">/// Choose any valid pnm format that the image can be expressed in and write its header.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns how the body should be written if successful.</span>
-    <span class="kw">fn</span> <span class="ident">write_dynamic_header</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="ident">FlatSamples</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color</span>: <span class="ident">ExtendedColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">depth</span> <span class="op">=</span> <span class="ident">u32::from</span>(<span class="ident">color</span>.<span class="ident">channel_count</span>());
-        <span class="kw">let</span> (<span class="ident">maxval</span>, <span class="ident">tupltype</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">color</span> {
-            <span class="ident">ExtendedColorType::L1</span> =&gt; (<span class="number">1</span>, <span class="ident">ArbitraryTuplType::BlackAndWhite</span>),
-            <span class="ident">ExtendedColorType::L8</span> =&gt; (<span class="number">0xff</span>, <span class="ident">ArbitraryTuplType::Grayscale</span>),
-            <span class="ident">ExtendedColorType::L16</span> =&gt; (<span class="number">0xffff</span>, <span class="ident">ArbitraryTuplType::Grayscale</span>),
-            <span class="ident">ExtendedColorType::La1</span> =&gt; (<span class="number">1</span>, <span class="ident">ArbitraryTuplType::BlackAndWhiteAlpha</span>),
-            <span class="ident">ExtendedColorType::La8</span> =&gt; (<span class="number">0xff</span>, <span class="ident">ArbitraryTuplType::GrayscaleAlpha</span>),
-            <span class="ident">ExtendedColorType::La16</span> =&gt; (<span class="number">0xffff</span>, <span class="ident">ArbitraryTuplType::GrayscaleAlpha</span>),
-            <span class="ident">ExtendedColorType::Rgb8</span> =&gt; (<span class="number">0xff</span>, <span class="ident">ArbitraryTuplType::RGB</span>),
-            <span class="ident">ExtendedColorType::Rgb16</span> =&gt; (<span class="number">0xffff</span>, <span class="ident">ArbitraryTuplType::RGB</span>),
-            <span class="ident">ExtendedColorType::Rgba8</span> =&gt; (<span class="number">0xff</span>, <span class="ident">ArbitraryTuplType::RGBAlpha</span>),
-            <span class="ident">ExtendedColorType::Rgba16</span> =&gt; (<span class="number">0xffff</span>, <span class="ident">ArbitraryTuplType::RGBAlpha</span>),
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                    <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                        <span class="ident">ImageFormat::Pnm</span>.<span class="ident">into</span>(),
-                        <span class="ident">UnsupportedErrorKind::Color</span>(<span class="ident">color</span>),
+    <span class="doccomment">/// Choose any valid pnm format that the image can be expressed in and write its header.
+    ///
+    /// Returns how the body should be written if successful.
+    </span><span class="kw">fn </span>write_dynamic_header(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: FlatSamples,
+        width: u32,
+        height: u32,
+        color: ExtendedColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span>depth = u32::from(color.channel_count());
+        <span class="kw">let </span>(maxval, tupltype) = <span class="kw">match </span>color {
+            ExtendedColorType::L1 =&gt; (<span class="number">1</span>, ArbitraryTuplType::BlackAndWhite),
+            ExtendedColorType::L8 =&gt; (<span class="number">0xff</span>, ArbitraryTuplType::Grayscale),
+            ExtendedColorType::L16 =&gt; (<span class="number">0xffff</span>, ArbitraryTuplType::Grayscale),
+            ExtendedColorType::La1 =&gt; (<span class="number">1</span>, ArbitraryTuplType::BlackAndWhiteAlpha),
+            ExtendedColorType::La8 =&gt; (<span class="number">0xff</span>, ArbitraryTuplType::GrayscaleAlpha),
+            ExtendedColorType::La16 =&gt; (<span class="number">0xffff</span>, ArbitraryTuplType::GrayscaleAlpha),
+            ExtendedColorType::Rgb8 =&gt; (<span class="number">0xff</span>, ArbitraryTuplType::RGB),
+            ExtendedColorType::Rgb16 =&gt; (<span class="number">0xffff</span>, ArbitraryTuplType::RGB),
+            ExtendedColorType::Rgba8 =&gt; (<span class="number">0xff</span>, ArbitraryTuplType::RGBAlpha),
+            ExtendedColorType::Rgba16 =&gt; (<span class="number">0xffff</span>, ArbitraryTuplType::RGBAlpha),
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Pnm.into(),
+                        UnsupportedErrorKind::Color(color),
                     ),
                 ))
             }
         };
 
-        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">PnmHeader</span> {
-            <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Arbitrary</span>(<span class="ident">ArbitraryHeader</span> {
-                <span class="ident">width</span>,
-                <span class="ident">height</span>,
-                <span class="ident">depth</span>,
-                <span class="ident">maxval</span>,
-                <span class="ident">tupltype</span>: <span class="prelude-val">Some</span>(<span class="ident">tupltype</span>),
+        <span class="kw">let </span>header = PnmHeader {
+            decoded: HeaderRecord::Arbitrary(ArbitraryHeader {
+                width,
+                height,
+                depth,
+                maxval,
+                tupltype: <span class="prelude-val">Some</span>(tupltype),
             }),
-            <span class="ident">encoded</span>: <span class="prelude-val">None</span>,
+            encoded: <span class="prelude-val">None</span>,
         };
 
-        <span class="ident"><span class="self">Self</span>::write_with_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">writer</span>, <span class="kw-2">&amp;</span><span class="ident">header</span>, <span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color</span>)
+        <span class="self">Self</span>::write_with_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>.writer, <span class="kw-2">&amp;</span>header, image, width, height, color)
     }
 
-    <span class="doccomment">/// Try to encode the image with the chosen format, give its corresponding pixel encoding type.</span>
-    <span class="kw">fn</span> <span class="ident">write_subtyped_header</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">subtype</span>: <span class="ident">PnmSubtype</span>,
-        <span class="ident">image</span>: <span class="ident">FlatSamples</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color</span>: <span class="ident">ExtendedColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">subtype</span>, <span class="ident">color</span>) {
-            (<span class="ident">PnmSubtype::ArbitraryMap</span>, <span class="ident">color</span>) =&gt; {
-                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">write_dynamic_header</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color</span>)
+    <span class="doccomment">/// Try to encode the image with the chosen format, give its corresponding pixel encoding type.
+    </span><span class="kw">fn </span>write_subtyped_header(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        subtype: PnmSubtype,
+        image: FlatSamples,
+        width: u32,
+        height: u32,
+        color: ExtendedColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span>header = <span class="kw">match </span>(subtype, color) {
+            (PnmSubtype::ArbitraryMap, color) =&gt; {
+                <span class="kw">return </span><span class="self">self</span>.write_dynamic_header(image, width, height, color)
             }
-            (<span class="ident">PnmSubtype::Pixmap</span>(<span class="ident">encoding</span>), <span class="ident">ExtendedColorType::Rgb8</span>) =&gt; <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Pixmap</span>(<span class="ident">PixmapHeader</span> {
-                    <span class="ident">encoding</span>,
-                    <span class="ident">width</span>,
-                    <span class="ident">height</span>,
-                    <span class="ident">maxval</span>: <span class="number">255</span>,
+            (PnmSubtype::Pixmap(encoding), ExtendedColorType::Rgb8) =&gt; PnmHeader {
+                decoded: HeaderRecord::Pixmap(PixmapHeader {
+                    encoding,
+                    width,
+                    height,
+                    maxval: <span class="number">255</span>,
                 }),
-                <span class="ident">encoded</span>: <span class="prelude-val">None</span>,
+                encoded: <span class="prelude-val">None</span>,
             },
-            (<span class="ident">PnmSubtype::Graymap</span>(<span class="ident">encoding</span>), <span class="ident">ExtendedColorType::L8</span>) =&gt; <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Graymap</span>(<span class="ident">GraymapHeader</span> {
-                    <span class="ident">encoding</span>,
-                    <span class="ident">width</span>,
-                    <span class="ident">height</span>,
-                    <span class="ident">maxwhite</span>: <span class="number">255</span>,
+            (PnmSubtype::Graymap(encoding), ExtendedColorType::L8) =&gt; PnmHeader {
+                decoded: HeaderRecord::Graymap(GraymapHeader {
+                    encoding,
+                    width,
+                    height,
+                    maxwhite: <span class="number">255</span>,
                 }),
-                <span class="ident">encoded</span>: <span class="prelude-val">None</span>,
+                encoded: <span class="prelude-val">None</span>,
             },
-            (<span class="ident">PnmSubtype::Bitmap</span>(<span class="ident">encoding</span>), <span class="ident">ExtendedColorType::L8</span>)
-            <span class="op">|</span> (<span class="ident">PnmSubtype::Bitmap</span>(<span class="ident">encoding</span>), <span class="ident">ExtendedColorType::L1</span>) =&gt; <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Bitmap</span>(<span class="ident">BitmapHeader</span> {
-                    <span class="ident">encoding</span>,
-                    <span class="ident">width</span>,
-                    <span class="ident">height</span>,
+            (PnmSubtype::Bitmap(encoding), ExtendedColorType::L8)
+            | (PnmSubtype::Bitmap(encoding), ExtendedColorType::L1) =&gt; PnmHeader {
+                decoded: HeaderRecord::Bitmap(BitmapHeader {
+                    encoding,
+                    width,
+                    height,
                 }),
-                <span class="ident">encoded</span>: <span class="prelude-val">None</span>,
+                encoded: <span class="prelude-val">None</span>,
             },
             (<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                    <span class="ident">ParameterErrorKind::Generic</span>(
-                        <span class="string">&quot;Color type can not be represented in the chosen format&quot;</span>.<span class="ident">to_owned</span>(),
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                    ParameterErrorKind::Generic(
+                        <span class="string">&quot;Color type can not be represented in the chosen format&quot;</span>.to_owned(),
                     ),
                 )));
             }
         };
 
-        <span class="ident"><span class="self">Self</span>::write_with_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">writer</span>, <span class="kw-2">&amp;</span><span class="ident">header</span>, <span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color</span>)
+        <span class="self">Self</span>::write_with_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>.writer, <span class="kw-2">&amp;</span>header, image, width, height, color)
     }
 
-    <span class="doccomment">/// Try to encode the image with the chosen header, checking if values are correct.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns how the body should be written if successful.</span>
-    <span class="kw">fn</span> <span class="ident">write_with_header</span>(
-        <span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Write</span>,
-        <span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">PnmHeader</span>,
-        <span class="ident">image</span>: <span class="ident">FlatSamples</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color</span>: <span class="ident">ExtendedColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">unchecked</span> <span class="op">=</span> <span class="ident">UncheckedHeader</span> { <span class="ident">header</span> };
+    <span class="doccomment">/// Try to encode the image with the chosen header, checking if values are correct.
+    ///
+    /// Returns how the body should be written if successful.
+    </span><span class="kw">fn </span>write_with_header(
+        writer: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write,
+        header: <span class="kw-2">&amp;</span>PnmHeader,
+        image: FlatSamples,
+        width: u32,
+        height: u32,
+        color: ExtendedColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span>unchecked = UncheckedHeader { header };
 
-        <span class="ident">unchecked</span>
-            .<span class="ident">check_header_dimensions</span>(<span class="ident">width</span>, <span class="ident">height</span>)<span class="question-mark">?</span>
-            .<span class="ident">check_header_color</span>(<span class="ident">color</span>)<span class="question-mark">?</span>
-            .<span class="ident">check_sample_values</span>(<span class="ident">image</span>)<span class="question-mark">?</span>
-            .<span class="ident">write_header</span>(<span class="ident">writer</span>)<span class="question-mark">?</span>
-            .<span class="ident">write_image</span>(<span class="ident">writer</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">ImageEncoder</span> <span class="kw">for</span> <span class="ident">PnmEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_image</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encode</span>(<span class="ident">buf</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color_type</span>)
+        unchecked
+            .check_header_dimensions(width, height)<span class="question-mark">?
+            </span>.check_header_color(color)<span class="question-mark">?
+            </span>.check_sample_values(image)<span class="question-mark">?
+            </span>.write_header(writer)<span class="question-mark">?
+            </span>.write_image(writer)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CheckedImageBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check</span>(
-        <span class="ident">image</span>: <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color</span>: <span class="ident">ExtendedColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">CheckedImageBuffer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">components</span> <span class="op">=</span> <span class="ident">color</span>.<span class="ident">channel_count</span>() <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">uwidth</span> <span class="op">=</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">uheight</span> <span class="op">=</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">expected_len</span> <span class="op">=</span> <span class="ident">components</span>
-            .<span class="ident">checked_mul</span>(<span class="ident">uwidth</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">checked_mul</span>(<span class="ident">uheight</span>));
-        <span class="kw">if</span> <span class="prelude-val">Some</span>(<span class="ident">image</span>.<span class="ident">len</span>()) <span class="op">!</span><span class="op">=</span> <span class="ident">expected_len</span> {
-            <span class="comment">// Image buffer does not correspond to size and colour.</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                <span class="ident">ParameterErrorKind::DimensionMismatch</span>,
+<span class="kw">impl</span>&lt;W: Write&gt; ImageEncoder <span class="kw">for </span>PnmEncoder&lt;W&gt; {
+    <span class="kw">fn </span>write_image(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        buf: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        color_type: ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.encode(buf, width, height, color_type)
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CheckedImageBuffer&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>check(
+        image: FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt;,
+        width: u32,
+        height: u32,
+        color: ExtendedColorType,
+    ) -&gt; ImageResult&lt;CheckedImageBuffer&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="kw">let </span>components = color.channel_count() <span class="kw">as </span>usize;
+        <span class="kw">let </span>uwidth = width <span class="kw">as </span>usize;
+        <span class="kw">let </span>uheight = height <span class="kw">as </span>usize;
+        <span class="kw">let </span>expected_len = components
+            .checked_mul(uwidth)
+            .and_then(|v| v.checked_mul(uheight));
+        <span class="kw">if </span><span class="prelude-val">Some</span>(image.len()) != expected_len {
+            <span class="comment">// Image buffer does not correspond to size and colour.
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::DimensionMismatch,
             )));
         }
-        <span class="prelude-val">Ok</span>(<span class="ident">CheckedImageBuffer</span> {
-            <span class="ident">_image</span>: <span class="ident">image</span>,
-            <span class="ident">_width</span>: <span class="ident">width</span>,
-            <span class="ident">_height</span>: <span class="ident">height</span>,
-            <span class="ident">_color</span>: <span class="ident">color</span>,
+        <span class="prelude-val">Ok</span>(CheckedImageBuffer {
+            _image: image,
+            _width: width,
+            _height: height,
+            _color: color,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">UncheckedHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check_header_dimensions</span>(
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; UncheckedHeader&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>check_header_dimensions(
         <span class="self">self</span>,
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">CheckedDimensions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">width</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">width</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">height</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">height</span> {
-            <span class="comment">// Chosen header does not match Image dimensions.</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                <span class="ident">ParameterErrorKind::DimensionMismatch</span>,
+        width: u32,
+        height: u32,
+    ) -&gt; ImageResult&lt;CheckedDimensions&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="kw">if </span><span class="self">self</span>.header.width() != width || <span class="self">self</span>.header.height() != height {
+            <span class="comment">// Chosen header does not match Image dimensions.
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::DimensionMismatch,
             )));
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">CheckedDimensions</span> {
-            <span class="ident">unchecked</span>: <span class="self">self</span>,
-            <span class="ident">width</span>,
-            <span class="ident">height</span>,
+        <span class="prelude-val">Ok</span>(CheckedDimensions {
+            unchecked: <span class="self">self</span>,
+            width,
+            height,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CheckedDimensions</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="comment">// Check color compatibility with the header. This will only error when we are certain that</span>
-    <span class="comment">// the comination is bogus (e.g. combining Pixmap and Palette) but allows uncertain</span>
-    <span class="comment">// combinations (basically a ArbitraryTuplType::Custom with any color of fitting depth).</span>
-    <span class="kw">fn</span> <span class="ident">check_header_color</span>(<span class="self">self</span>, <span class="ident">color</span>: <span class="ident">ExtendedColorType</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">CheckedHeaderColor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">components</span> <span class="op">=</span> <span class="ident">u32::from</span>(<span class="ident">color</span>.<span class="ident">channel_count</span>());
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CheckedDimensions&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="comment">// Check color compatibility with the header. This will only error when we are certain that
+    // the comination is bogus (e.g. combining Pixmap and Palette) but allows uncertain
+    // combinations (basically a ArbitraryTuplType::Custom with any color of fitting depth).
+    </span><span class="kw">fn </span>check_header_color(<span class="self">self</span>, color: ExtendedColorType) -&gt; ImageResult&lt;CheckedHeaderColor&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="kw">let </span>components = u32::from(color.channel_count());
 
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">unchecked</span>.<span class="ident">header</span> {
-            <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Bitmap</span>(<span class="kw">_</span>),
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self</span>.unchecked.header {
+            PnmHeader {
+                decoded: HeaderRecord::Bitmap(<span class="kw">_</span>),
                 ..
-            } =&gt; <span class="kw">match</span> <span class="ident">color</span> {
-                <span class="ident">ExtendedColorType::L1</span> <span class="op">|</span> <span class="ident">ExtendedColorType::L8</span> <span class="op">|</span> <span class="ident">ExtendedColorType::L16</span> =&gt; (),
-                <span class="kw">_</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                        <span class="ident">ParameterErrorKind::Generic</span>(
-                            <span class="string">&quot;PBM format only support luma color types&quot;</span>.<span class="ident">to_owned</span>(),
+            } =&gt; <span class="kw">match </span>color {
+                ExtendedColorType::L1 | ExtendedColorType::L8 | ExtendedColorType::L16 =&gt; (),
+                <span class="kw">_ </span>=&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                        ParameterErrorKind::Generic(
+                            <span class="string">&quot;PBM format only support luma color types&quot;</span>.to_owned(),
                         ),
                     )))
                 }
             },
-            <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Graymap</span>(<span class="kw">_</span>),
+            PnmHeader {
+                decoded: HeaderRecord::Graymap(<span class="kw">_</span>),
                 ..
-            } =&gt; <span class="kw">match</span> <span class="ident">color</span> {
-                <span class="ident">ExtendedColorType::L1</span> <span class="op">|</span> <span class="ident">ExtendedColorType::L8</span> <span class="op">|</span> <span class="ident">ExtendedColorType::L16</span> =&gt; (),
-                <span class="kw">_</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                        <span class="ident">ParameterErrorKind::Generic</span>(
-                            <span class="string">&quot;PGM format only support luma color types&quot;</span>.<span class="ident">to_owned</span>(),
+            } =&gt; <span class="kw">match </span>color {
+                ExtendedColorType::L1 | ExtendedColorType::L8 | ExtendedColorType::L16 =&gt; (),
+                <span class="kw">_ </span>=&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                        ParameterErrorKind::Generic(
+                            <span class="string">&quot;PGM format only support luma color types&quot;</span>.to_owned(),
                         ),
                     )))
                 }
             },
-            <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>: <span class="ident">HeaderRecord::Pixmap</span>(<span class="kw">_</span>),
+            PnmHeader {
+                decoded: HeaderRecord::Pixmap(<span class="kw">_</span>),
                 ..
-            } =&gt; <span class="kw">match</span> <span class="ident">color</span> {
-                <span class="ident">ExtendedColorType::Rgb8</span> =&gt; (),
-                <span class="kw">_</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                        <span class="ident">ParameterErrorKind::Generic</span>(
-                            <span class="string">&quot;PPM format only support ExtendedColorType::Rgb8&quot;</span>.<span class="ident">to_owned</span>(),
+            } =&gt; <span class="kw">match </span>color {
+                ExtendedColorType::Rgb8 =&gt; (),
+                <span class="kw">_ </span>=&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                        ParameterErrorKind::Generic(
+                            <span class="string">&quot;PPM format only support ExtendedColorType::Rgb8&quot;</span>.to_owned(),
                         ),
                     )))
                 }
             },
-            <span class="ident">PnmHeader</span> {
-                <span class="ident">decoded</span>:
-                    <span class="ident">HeaderRecord::Arbitrary</span>(<span class="ident">ArbitraryHeader</span> {
-                        <span class="ident">depth</span>,
-                        <span class="kw-2">ref</span> <span class="ident">tupltype</span>,
+            PnmHeader {
+                decoded:
+                    HeaderRecord::Arbitrary(ArbitraryHeader {
+                        depth,
+                        <span class="kw-2">ref </span>tupltype,
                         ..
                     }),
                 ..
-            } =&gt; <span class="kw">match</span> (<span class="ident">tupltype</span>, <span class="ident">color</span>) {
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::BlackAndWhite</span>), <span class="ident">ExtendedColorType::L1</span>) =&gt; (),
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::BlackAndWhiteAlpha</span>), <span class="ident">ExtendedColorType::La8</span>) =&gt; (),
+            } =&gt; <span class="kw">match </span>(tupltype, color) {
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::BlackAndWhite), ExtendedColorType::L1) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::BlackAndWhiteAlpha), ExtendedColorType::La8) =&gt; (),
 
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::Grayscale</span>), <span class="ident">ExtendedColorType::L1</span>) =&gt; (),
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::Grayscale</span>), <span class="ident">ExtendedColorType::L8</span>) =&gt; (),
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::Grayscale</span>), <span class="ident">ExtendedColorType::L16</span>) =&gt; (),
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::GrayscaleAlpha</span>), <span class="ident">ExtendedColorType::La8</span>) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::Grayscale), ExtendedColorType::L1) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::Grayscale), ExtendedColorType::L8) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::Grayscale), ExtendedColorType::L16) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::GrayscaleAlpha), ExtendedColorType::La8) =&gt; (),
 
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::RGB</span>), <span class="ident">ExtendedColorType::Rgb8</span>) =&gt; (),
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::RGBAlpha</span>), <span class="ident">ExtendedColorType::Rgba8</span>) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::RGB), ExtendedColorType::Rgb8) =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::RGBAlpha), ExtendedColorType::Rgba8) =&gt; (),
 
-                (<span class="kw-2">&amp;</span><span class="prelude-val">None</span>, <span class="kw">_</span>) <span class="kw">if</span> <span class="ident">depth</span> <span class="op">==</span> <span class="ident">components</span> =&gt; (),
-                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">ArbitraryTuplType::Custom</span>(<span class="kw">_</span>)), <span class="kw">_</span>) <span class="kw">if</span> <span class="ident">depth</span> <span class="op">==</span> <span class="ident">components</span> =&gt; (),
-                <span class="kw">_</span> <span class="kw">if</span> <span class="ident">depth</span> <span class="op">!</span><span class="op">=</span> <span class="ident">components</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                        <span class="ident">ParameterErrorKind::Generic</span>(<span class="macro">format!</span>(
+                (<span class="kw-2">&amp;</span><span class="prelude-val">None</span>, <span class="kw">_</span>) <span class="kw">if </span>depth == components =&gt; (),
+                (<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(ArbitraryTuplType::Custom(<span class="kw">_</span>)), <span class="kw">_</span>) <span class="kw">if </span>depth == components =&gt; (),
+                <span class="kw">_ if </span>depth != components =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                        ParameterErrorKind::Generic(<span class="macro">format!</span>(
                             <span class="string">&quot;Depth mismatch: header {} vs. color {}&quot;</span>,
-                            <span class="ident">depth</span>, <span class="ident">components</span>
+                            depth, components
                         )),
                     )))
                 }
-                <span class="kw">_</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                        <span class="ident">ParameterErrorKind::Generic</span>(
-                            <span class="string">&quot;Invalid color type for selected PAM color type&quot;</span>.<span class="ident">to_owned</span>(),
+                <span class="kw">_ </span>=&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
+                        ParameterErrorKind::Generic(
+                            <span class="string">&quot;Invalid color type for selected PAM color type&quot;</span>.to_owned(),
                         ),
                     )))
                 }
             },
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">CheckedHeaderColor</span> {
-            <span class="ident">dimensions</span>: <span class="self">self</span>,
-            <span class="ident">color</span>,
+        <span class="prelude-val">Ok</span>(CheckedHeaderColor {
+            dimensions: <span class="self">self</span>,
+            color,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CheckedHeaderColor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">check_sample_values</span>(<span class="self">self</span>, <span class="ident">image</span>: <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">CheckedHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">header_maxval</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">dimensions</span>.<span class="ident">unchecked</span>.<span class="ident">header</span>.<span class="ident">decoded</span> {
-            <span class="ident">HeaderRecord::Bitmap</span>(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
-            <span class="ident">HeaderRecord::Graymap</span>(<span class="ident">GraymapHeader</span> { <span class="ident">maxwhite</span>, .. }) =&gt; <span class="ident">maxwhite</span>,
-            <span class="ident">HeaderRecord::Pixmap</span>(<span class="ident">PixmapHeader</span> { <span class="ident">maxval</span>, .. }) =&gt; <span class="ident">maxval</span>,
-            <span class="ident">HeaderRecord::Arbitrary</span>(<span class="ident">ArbitraryHeader</span> { <span class="ident">maxval</span>, .. }) =&gt; <span class="ident">maxval</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CheckedHeaderColor&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>check_sample_values(<span class="self">self</span>, image: FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; ImageResult&lt;CheckedHeader&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="kw">let </span>header_maxval = <span class="kw">match </span><span class="self">self</span>.dimensions.unchecked.header.decoded {
+            HeaderRecord::Bitmap(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
+            HeaderRecord::Graymap(GraymapHeader { maxwhite, .. }) =&gt; maxwhite,
+            HeaderRecord::Pixmap(PixmapHeader { maxval, .. }) =&gt; maxval,
+            HeaderRecord::Arbitrary(ArbitraryHeader { maxval, .. }) =&gt; maxval,
         };
 
-        <span class="comment">// We trust the image color bit count to be correct at least.</span>
-        <span class="kw">let</span> <span class="ident">max_sample</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">color</span> {
-            <span class="ident">ExtendedColorType::Unknown</span>(<span class="ident">n</span>) <span class="kw">if</span> <span class="ident">n</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">16</span> =&gt; (<span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">n</span>) <span class="op">-</span> <span class="number">1</span>,
-            <span class="ident">ExtendedColorType::L1</span> =&gt; <span class="number">1</span>,
-            <span class="ident">ExtendedColorType::L8</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::La8</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::Rgb8</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::Rgba8</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::Bgr8</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::Bgra8</span> =&gt; <span class="number">0xff</span>,
-            <span class="ident">ExtendedColorType::L16</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::La16</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::Rgb16</span>
-            <span class="op">|</span> <span class="ident">ExtendedColorType::Rgba16</span> =&gt; <span class="number">0xffff</span>,
-            <span class="kw">_</span> =&gt; {
-                <span class="comment">// Unsupported target color type.</span>
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                    <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                        <span class="ident">ImageFormat::Pnm</span>.<span class="ident">into</span>(),
-                        <span class="ident">UnsupportedErrorKind::Color</span>(<span class="self">self</span>.<span class="ident">color</span>),
+        <span class="comment">// We trust the image color bit count to be correct at least.
+        </span><span class="kw">let </span>max_sample = <span class="kw">match </span><span class="self">self</span>.color {
+            ExtendedColorType::Unknown(n) <span class="kw">if </span>n &lt;= <span class="number">16 </span>=&gt; (<span class="number">1 </span>&lt;&lt; n) - <span class="number">1</span>,
+            ExtendedColorType::L1 =&gt; <span class="number">1</span>,
+            ExtendedColorType::L8
+            | ExtendedColorType::La8
+            | ExtendedColorType::Rgb8
+            | ExtendedColorType::Rgba8
+            | ExtendedColorType::Bgr8
+            | ExtendedColorType::Bgra8 =&gt; <span class="number">0xff</span>,
+            ExtendedColorType::L16
+            | ExtendedColorType::La16
+            | ExtendedColorType::Rgb16
+            | ExtendedColorType::Rgba16 =&gt; <span class="number">0xffff</span>,
+            <span class="kw">_ </span>=&gt; {
+                <span class="comment">// Unsupported target color type.
+                </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Pnm.into(),
+                        UnsupportedErrorKind::Color(<span class="self">self</span>.color),
                     ),
                 ));
             }
         };
 
-        <span class="comment">// Avoid the performance heavy check if possible, e.g. if the header has been chosen by us.</span>
-        <span class="kw">if</span> <span class="ident">header_maxval</span> <span class="op">&lt;</span> <span class="ident">max_sample</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">image</span>.<span class="ident">all_smaller</span>(<span class="ident">header_maxval</span>) {
-            <span class="comment">// Sample value greater than allowed for chosen header.</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                    <span class="ident">ImageFormat::Pnm</span>.<span class="ident">into</span>(),
-                    <span class="ident">UnsupportedErrorKind::GenericFeature</span>(
-                        <span class="string">&quot;Sample value greater than allowed for chosen header&quot;</span>.<span class="ident">to_owned</span>(),
+        <span class="comment">// Avoid the performance heavy check if possible, e.g. if the header has been chosen by us.
+        </span><span class="kw">if </span>header_maxval &lt; max_sample &amp;&amp; !image.all_smaller(header_maxval) {
+            <span class="comment">// Sample value greater than allowed for chosen header.
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                UnsupportedError::from_format_and_kind(
+                    ImageFormat::Pnm.into(),
+                    UnsupportedErrorKind::GenericFeature(
+                        <span class="string">&quot;Sample value greater than allowed for chosen header&quot;</span>.to_owned(),
                     ),
                 ),
             ));
         }
 
-        <span class="kw">let</span> <span class="ident">encoding</span> <span class="op">=</span> <span class="ident">image</span>.<span class="ident">encoding_for</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">dimensions</span>.<span class="ident">unchecked</span>.<span class="ident">header</span>.<span class="ident">decoded</span>);
+        <span class="kw">let </span>encoding = image.encoding_for(<span class="kw-2">&amp;</span><span class="self">self</span>.dimensions.unchecked.header.decoded);
 
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="ident">CheckedImageBuffer::check</span>(
-            <span class="ident">image</span>,
-            <span class="self">self</span>.<span class="ident">dimensions</span>.<span class="ident">width</span>,
-            <span class="self">self</span>.<span class="ident">dimensions</span>.<span class="ident">height</span>,
-            <span class="self">self</span>.<span class="ident">color</span>,
+        <span class="kw">let </span>image = CheckedImageBuffer::check(
+            image,
+            <span class="self">self</span>.dimensions.width,
+            <span class="self">self</span>.dimensions.height,
+            <span class="self">self</span>.color,
         )<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">CheckedHeader</span> {
-            <span class="ident">color</span>: <span class="self">self</span>,
-            <span class="ident">encoding</span>,
-            <span class="ident">_image</span>: <span class="ident">image</span>,
+        <span class="prelude-val">Ok</span>(CheckedHeader {
+            color: <span class="self">self</span>,
+            encoding,
+            _image: image,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CheckedHeader</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_header</span>(<span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Write</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">TupleEncoding</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">header</span>().<span class="ident">write</span>(<span class="ident">writer</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">encoding</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CheckedHeader&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>write_header(<span class="self">self</span>, writer: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; ImageResult&lt;TupleEncoding&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="self">self</span>.header().write(writer)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.encoding)
     }
 
-    <span class="kw">fn</span> <span class="ident">header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">PnmHeader</span> {
-        <span class="self">self</span>.<span class="ident">color</span>.<span class="ident">dimensions</span>.<span class="ident">unchecked</span>.<span class="ident">header</span>
+    <span class="kw">fn </span>header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>PnmHeader {
+        <span class="self">self</span>.color.dimensions.unchecked.header
     }
 }
 
-<span class="kw">struct</span> <span class="ident">SampleWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Write</span>);
+<span class="kw">struct </span>SampleWriter&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">dyn </span>Write);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">SampleWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_samples_ascii</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">samples</span>: <span class="ident">V</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">V</span>: <span class="ident">Iterator</span>,
-        <span class="ident">V::Item</span>: <span class="ident">fmt::Display</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SampleWriter&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>write_samples_ascii&lt;V&gt;(<span class="self">self</span>, samples: V) -&gt; io::Result&lt;()&gt;
+    <span class="kw">where
+        </span>V: Iterator,
+        V::Item: fmt::Display,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">auto_break_writer</span> <span class="op">=</span> <span class="ident">AutoBreak::new</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="number">70</span>);
-        <span class="kw">for</span> <span class="ident">value</span> <span class="kw">in</span> <span class="ident">samples</span> {
-            <span class="macro">write!</span>(<span class="ident">auto_break_writer</span>, <span class="string">&quot;{} &quot;</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>auto_break_writer = AutoBreak::new(<span class="self">self</span>.<span class="number">0</span>, <span class="number">70</span>);
+        <span class="kw">for </span>value <span class="kw">in </span>samples {
+            <span class="macro">write!</span>(auto_break_writer, <span class="string">&quot;{} &quot;</span>, value)<span class="question-mark">?</span>;
         }
-        <span class="ident">auto_break_writer</span>.<span class="ident">flush</span>()
+        auto_break_writer.flush()
     }
 
-    <span class="kw">fn</span> <span class="ident">write_pbm_bits</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">samples</span>: <span class="kw-2">&amp;</span>[<span class="ident">V</span>], <span class="ident">width</span>: <span class="ident">u32</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-    <span class="comment">/* Default gives 0 for all primitives. TODO: replace this with `Zeroable` once it hits stable */</span>
-    <span class="kw">where</span>
-        <span class="ident">V</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Copy</span>,
+    <span class="kw">fn </span>write_pbm_bits&lt;V&gt;(<span class="self">self</span>, samples: <span class="kw-2">&amp;</span>[V], width: u32) -&gt; io::Result&lt;()&gt;
+    <span class="comment">/* Default gives 0 for all primitives. TODO: replace this with `Zeroable` once it hits stable */
+    </span><span class="kw">where
+        </span>V: Default + Eq + Copy,
     {
-        <span class="comment">// The length of an encoded scanline</span>
-        <span class="kw">let</span> <span class="ident">line_width</span> <span class="op">=</span> (<span class="ident">width</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="number">8</span> <span class="op">+</span> <span class="number">1</span>;
+        <span class="comment">// The length of an encoded scanline
+        </span><span class="kw">let </span>line_width = (width - <span class="number">1</span>) / <span class="number">8 </span>+ <span class="number">1</span>;
 
-        <span class="comment">// We&#39;ll be writing single bytes, so buffer</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">line_buffer</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">line_width</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="comment">// We&#39;ll be writing single bytes, so buffer
+        </span><span class="kw">let </span><span class="kw-2">mut </span>line_buffer = Vec::with_capacity(line_width <span class="kw">as </span>usize);
 
-        <span class="kw">for</span> <span class="ident">line</span> <span class="kw">in</span> <span class="ident">samples</span>.<span class="ident">chunks</span>(<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>) {
-            <span class="kw">for</span> <span class="ident">byte_bits</span> <span class="kw">in</span> <span class="ident">line</span>.<span class="ident">chunks</span>(<span class="number">8</span>) {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">byte</span> <span class="op">=</span> <span class="number">0u8</span>;
-                <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">8</span> {
-                    <span class="comment">// Black pixels are encoded as 1s</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) <span class="op">=</span> <span class="ident">byte_bits</span>.<span class="ident">get</span>(<span class="ident">i</span>) {
-                        <span class="kw">if</span> <span class="ident">v</span> <span class="op">==</span> <span class="ident">V::default</span>() {
-                            <span class="ident">byte</span> <span class="op">|</span><span class="op">=</span> <span class="number">1u8</span> <span class="op">&lt;</span><span class="op">&lt;</span> (<span class="number">7</span> <span class="op">-</span> <span class="ident">i</span>)
+        <span class="kw">for </span>line <span class="kw">in </span>samples.chunks(width <span class="kw">as </span>usize) {
+            <span class="kw">for </span>byte_bits <span class="kw">in </span>line.chunks(<span class="number">8</span>) {
+                <span class="kw">let </span><span class="kw-2">mut </span>byte = <span class="number">0u8</span>;
+                <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">8 </span>{
+                    <span class="comment">// Black pixels are encoded as 1s
+                    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>v) = byte_bits.get(i) {
+                        <span class="kw">if </span>v == V::default() {
+                            byte |= <span class="number">1u8 </span>&lt;&lt; (<span class="number">7 </span>- i)
                         }
                     }
                 }
-                <span class="ident">line_buffer</span>.<span class="ident">push</span>(<span class="ident">byte</span>)
+                line_buffer.push(byte)
             }
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_all</span>(<span class="ident">line_buffer</span>.<span class="ident">as_slice</span>())<span class="question-mark">?</span>;
-            <span class="ident">line_buffer</span>.<span class="ident">clear</span>();
+            <span class="self">self</span>.<span class="number">0</span>.write_all(line_buffer.as_slice())<span class="question-mark">?</span>;
+            line_buffer.clear();
         }
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">flush</span>()
+        <span class="self">self</span>.<span class="number">0</span>.flush()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">FlatSamples::U8</span>(<span class="ident">arr</span>) =&gt; <span class="ident">arr</span>.<span class="ident">len</span>(),
-            <span class="ident">FlatSamples::U16</span>(<span class="ident">arr</span>) =&gt; <span class="ident">arr</span>.<span class="ident">len</span>(),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            FlatSamples::U8(arr) =&gt; arr.len(),
+            FlatSamples::U16(arr) =&gt; arr.len(),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">all_smaller</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">max_val</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">FlatSamples::U8</span>(<span class="ident">arr</span>) =&gt; <span class="ident">arr</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">val</span><span class="op">|</span> <span class="ident">u32::from</span>(<span class="ident">val</span>) <span class="op">&gt;</span> <span class="ident">max_val</span>),
-            <span class="ident">FlatSamples::U16</span>(<span class="ident">arr</span>) =&gt; <span class="ident">arr</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">val</span><span class="op">|</span> <span class="ident">u32::from</span>(<span class="ident">val</span>) <span class="op">&gt;</span> <span class="ident">max_val</span>),
+    <span class="kw">fn </span>all_smaller(<span class="kw-2">&amp;</span><span class="self">self</span>, max_val: u32) -&gt; bool {
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            FlatSamples::U8(arr) =&gt; arr.iter().any(|<span class="kw-2">&amp;</span>val| u32::from(val) &gt; max_val),
+            FlatSamples::U16(arr) =&gt; arr.iter().any(|<span class="kw-2">&amp;</span>val| u32::from(val) &gt; max_val),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">encoding_for</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">HeaderRecord</span>) -&gt; <span class="ident">TupleEncoding</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">header</span> {
-            <span class="ident">HeaderRecord::Bitmap</span>(<span class="ident">BitmapHeader</span> {
-                <span class="ident">encoding</span>: <span class="ident">SampleEncoding::Binary</span>,
-                <span class="ident">width</span>,
+    <span class="kw">fn </span>encoding_for(<span class="kw-2">&amp;</span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>HeaderRecord) -&gt; TupleEncoding&lt;<span class="lifetime">&#39;a</span>&gt; {
+        <span class="kw">match </span><span class="kw-2">*</span>header {
+            HeaderRecord::Bitmap(BitmapHeader {
+                encoding: SampleEncoding::Binary,
+                width,
                 ..
-            }) =&gt; <span class="ident">TupleEncoding::PbmBits</span> {
-                <span class="ident">samples</span>: <span class="kw-2">*</span><span class="self">self</span>,
-                <span class="ident">width</span>,
+            }) =&gt; TupleEncoding::PbmBits {
+                samples: <span class="kw-2">*</span><span class="self">self</span>,
+                width,
             },
 
-            <span class="ident">HeaderRecord::Bitmap</span>(<span class="ident">BitmapHeader</span> {
-                <span class="ident">encoding</span>: <span class="ident">SampleEncoding::Ascii</span>,
+            HeaderRecord::Bitmap(BitmapHeader {
+                encoding: SampleEncoding::Ascii,
                 ..
-            }) =&gt; <span class="ident">TupleEncoding::Ascii</span> { <span class="ident">samples</span>: <span class="kw-2">*</span><span class="self">self</span> },
+            }) =&gt; TupleEncoding::Ascii { samples: <span class="kw-2">*</span><span class="self">self </span>},
 
-            <span class="ident">HeaderRecord::Arbitrary</span>(<span class="kw">_</span>) =&gt; <span class="ident">TupleEncoding::Bytes</span> { <span class="ident">samples</span>: <span class="kw-2">*</span><span class="self">self</span> },
+            HeaderRecord::Arbitrary(<span class="kw">_</span>) =&gt; TupleEncoding::Bytes { samples: <span class="kw-2">*</span><span class="self">self </span>},
 
-            <span class="ident">HeaderRecord::Graymap</span>(<span class="ident">GraymapHeader</span> {
-                <span class="ident">encoding</span>: <span class="ident">SampleEncoding::Ascii</span>,
+            HeaderRecord::Graymap(GraymapHeader {
+                encoding: SampleEncoding::Ascii,
                 ..
             })
-            <span class="op">|</span> <span class="ident">HeaderRecord::Pixmap</span>(<span class="ident">PixmapHeader</span> {
-                <span class="ident">encoding</span>: <span class="ident">SampleEncoding::Ascii</span>,
+            | HeaderRecord::Pixmap(PixmapHeader {
+                encoding: SampleEncoding::Ascii,
                 ..
-            }) =&gt; <span class="ident">TupleEncoding::Ascii</span> { <span class="ident">samples</span>: <span class="kw-2">*</span><span class="self">self</span> },
+            }) =&gt; TupleEncoding::Ascii { samples: <span class="kw-2">*</span><span class="self">self </span>},
 
-            <span class="ident">HeaderRecord::Graymap</span>(<span class="ident">GraymapHeader</span> {
-                <span class="ident">encoding</span>: <span class="ident">SampleEncoding::Binary</span>,
+            HeaderRecord::Graymap(GraymapHeader {
+                encoding: SampleEncoding::Binary,
                 ..
             })
-            <span class="op">|</span> <span class="ident">HeaderRecord::Pixmap</span>(<span class="ident">PixmapHeader</span> {
-                <span class="ident">encoding</span>: <span class="ident">SampleEncoding::Binary</span>,
+            | HeaderRecord::Pixmap(PixmapHeader {
+                encoding: SampleEncoding::Binary,
                 ..
-            }) =&gt; <span class="ident">TupleEncoding::Bytes</span> { <span class="ident">samples</span>: <span class="kw-2">*</span><span class="self">self</span> },
+            }) =&gt; TupleEncoding::Bytes { samples: <span class="kw-2">*</span><span class="self">self </span>},
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">samples</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
-        <span class="ident">FlatSamples::U8</span>(<span class="ident">samples</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]&gt; <span class="kw">for </span>FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from(samples: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; <span class="self">Self </span>{
+        FlatSamples::U8(samples)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u16</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FlatSamples</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">samples</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u16</span>]) -&gt; <span class="self">Self</span> {
-        <span class="ident">FlatSamples::U16</span>(<span class="ident">samples</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u16]&gt; <span class="kw">for </span>FlatSamples&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from(samples: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u16]) -&gt; <span class="self">Self </span>{
+        FlatSamples::U16(samples)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">TupleEncoding</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_image</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Write</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">TupleEncoding::PbmBits</span> {
-                <span class="ident">samples</span>: <span class="ident">FlatSamples::U8</span>(<span class="ident">samples</span>),
-                <span class="ident">width</span>,
-            } =&gt; <span class="ident">SampleWriter</span>(<span class="ident">writer</span>)
-                .<span class="ident">write_pbm_bits</span>(<span class="ident">samples</span>, <span class="ident">width</span>)
-                .<span class="ident">map_err</span>(<span class="ident">ImageError::IoError</span>),
-            <span class="ident">TupleEncoding::PbmBits</span> {
-                <span class="ident">samples</span>: <span class="ident">FlatSamples::U16</span>(<span class="ident">samples</span>),
-                <span class="ident">width</span>,
-            } =&gt; <span class="ident">SampleWriter</span>(<span class="ident">writer</span>)
-                .<span class="ident">write_pbm_bits</span>(<span class="ident">samples</span>, <span class="ident">width</span>)
-                .<span class="ident">map_err</span>(<span class="ident">ImageError::IoError</span>),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TupleEncoding&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>write_image(<span class="kw-2">&amp;</span><span class="self">self</span>, writer: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Write) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+            TupleEncoding::PbmBits {
+                samples: FlatSamples::U8(samples),
+                width,
+            } =&gt; SampleWriter(writer)
+                .write_pbm_bits(samples, width)
+                .map_err(ImageError::IoError),
+            TupleEncoding::PbmBits {
+                samples: FlatSamples::U16(samples),
+                width,
+            } =&gt; SampleWriter(writer)
+                .write_pbm_bits(samples, width)
+                .map_err(ImageError::IoError),
 
-            <span class="ident">TupleEncoding::Bytes</span> {
-                <span class="ident">samples</span>: <span class="ident">FlatSamples::U8</span>(<span class="ident">samples</span>),
-            } =&gt; <span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="ident">samples</span>).<span class="ident">map_err</span>(<span class="ident">ImageError::IoError</span>),
-            <span class="ident">TupleEncoding::Bytes</span> {
-                <span class="ident">samples</span>: <span class="ident">FlatSamples::U16</span>(<span class="ident">samples</span>),
-            } =&gt; <span class="ident">samples</span>.<span class="ident">iter</span>().<span class="ident">try_for_each</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">sample</span><span class="op">|</span> {
-                <span class="ident">writer</span>
-                    .<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">BigEndian</span><span class="op">&gt;</span>(<span class="ident">sample</span>)
-                    .<span class="ident">map_err</span>(<span class="ident">ImageError::IoError</span>)
+            TupleEncoding::Bytes {
+                samples: FlatSamples::U8(samples),
+            } =&gt; writer.write_all(samples).map_err(ImageError::IoError),
+            TupleEncoding::Bytes {
+                samples: FlatSamples::U16(samples),
+            } =&gt; samples.iter().try_for_each(|<span class="kw-2">&amp;</span>sample| {
+                writer
+                    .write_u16::&lt;BigEndian&gt;(sample)
+                    .map_err(ImageError::IoError)
             }),
 
-            <span class="ident">TupleEncoding::Ascii</span> {
-                <span class="ident">samples</span>: <span class="ident">FlatSamples::U8</span>(<span class="ident">samples</span>),
-            } =&gt; <span class="ident">SampleWriter</span>(<span class="ident">writer</span>)
-                .<span class="ident">write_samples_ascii</span>(<span class="ident">samples</span>.<span class="ident">iter</span>())
-                .<span class="ident">map_err</span>(<span class="ident">ImageError::IoError</span>),
-            <span class="ident">TupleEncoding::Ascii</span> {
-                <span class="ident">samples</span>: <span class="ident">FlatSamples::U16</span>(<span class="ident">samples</span>),
-            } =&gt; <span class="ident">SampleWriter</span>(<span class="ident">writer</span>)
-                .<span class="ident">write_samples_ascii</span>(<span class="ident">samples</span>.<span class="ident">iter</span>())
-                .<span class="ident">map_err</span>(<span class="ident">ImageError::IoError</span>),
+            TupleEncoding::Ascii {
+                samples: FlatSamples::U8(samples),
+            } =&gt; SampleWriter(writer)
+                .write_samples_ascii(samples.iter())
+                .map_err(ImageError::IoError),
+            TupleEncoding::Ascii {
+                samples: FlatSamples::U16(samples),
+            } =&gt; SampleWriter(writer)
+                .write_samples_ascii(samples.iter())
+                .map_err(ImageError::IoError),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

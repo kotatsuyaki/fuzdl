@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/thirtyfour-0.31.0/src/common/command.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>command.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../thirtyfour/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/thirtyfour-0.31.0/src/common/command.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>command.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../thirtyfour/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../thirtyfour/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -120,122 +114,121 @@
 <span id="114">114</span>
 <span id="115">115</span>
 <span id="116">116</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Locator</span>;
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
-<span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::Locator;
+<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>std::fmt::Debug;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BySelector</span> {
-    <span class="ident">Id</span>(<span class="ident">String</span>),
-    <span class="ident">LinkText</span>(<span class="ident">String</span>),
-    <span class="ident">Css</span>(<span class="ident">String</span>),
-    <span class="ident">XPath</span>(<span class="ident">String</span>),
+<span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub enum </span>BySelector {
+    Id(String),
+    LinkText(String),
+    Css(String),
+    XPath(String),
 }
 
-<span class="comment">// NOTE: This needs to own its data so that we allow the user to specify custom</span>
-<span class="comment">//       CSS selectors such as tag/name/class etc and send fantoccini a reference</span>
-<span class="comment">//       to the formatted Css selector.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">By</span> {
-    <span class="ident">selector</span>: <span class="ident">BySelector</span>,
+<span class="comment">// NOTE: This needs to own its data so that we allow the user to specify custom
+//       CSS selectors such as tag/name/class etc and send fantoccini a reference
+//       to the formatted Css selector.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>By {
+    selector: BySelector,
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">By</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">selector</span> {
-            <span class="ident">BySelector::Id</span>(<span class="ident">id</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Id({})&quot;</span>, <span class="ident">id</span>),
-            <span class="ident">BySelector::XPath</span>(<span class="ident">xpath</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;XPath({})&quot;</span>, <span class="ident">xpath</span>),
-            <span class="ident">BySelector::LinkText</span>(<span class="ident">text</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Link Text({})&quot;</span>, <span class="ident">text</span>),
-            <span class="ident">BySelector::Css</span>(<span class="ident">css</span>) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;CSS({})&quot;</span>, <span class="ident">css</span>),
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">By</span> {
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Id</span>(<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::Id</span>(<span class="ident">id</span>.<span class="ident">to_string</span>()),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">LinkText</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::LinkText</span>(<span class="ident">text</span>.<span class="ident">to_string</span>()),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Css</span>(<span class="ident">css</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::Css</span>(<span class="ident">css</span>.<span class="ident">to_string</span>()),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">XPath</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::XPath</span>(<span class="ident">x</span>.<span class="ident">to_string</span>()),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Name</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::Css</span>(<span class="macro">format!</span>(<span class="string">r#&quot;[name=&quot;{}&quot;]&quot;#</span>, <span class="ident">name</span>)),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Tag</span>(<span class="ident">tag</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::Css</span>(<span class="ident">tag</span>.<span class="ident">to_string</span>()),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ClassName</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">selector</span>: <span class="ident">BySelector::Css</span>(<span class="macro">format!</span>(<span class="string">&quot;.{}&quot;</span>, <span class="ident">name</span>)),
-        }
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">locator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Locator</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">selector</span> {
-            <span class="ident">BySelector::Id</span>(<span class="ident">id</span>) =&gt; <span class="ident">Locator::Id</span>(<span class="ident">id</span>),
-            <span class="ident">BySelector::LinkText</span>(<span class="ident">text</span>) =&gt; <span class="ident">Locator::LinkText</span>(<span class="ident">text</span>),
-            <span class="ident">BySelector::Css</span>(<span class="ident">css</span>) =&gt; <span class="ident">Locator::Css</span>(<span class="ident">css</span>),
-            <span class="ident">BySelector::XPath</span>(<span class="ident">x</span>) =&gt; <span class="ident">Locator::XPath</span>(<span class="ident">x</span>),
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>By {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.selector {
+            BySelector::Id(id) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Id({})&quot;</span>, id),
+            BySelector::XPath(xpath) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;XPath({})&quot;</span>, xpath),
+            BySelector::LinkText(text) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Link Text({})&quot;</span>, text),
+            BySelector::Css(css) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;CSS({})&quot;</span>, css),
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">By</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Locator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">by</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">By</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">by</span>.<span class="ident">locator</span>()
+<span class="kw">impl </span>By {
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>Id(id: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::Id(id.to_string()),
+        }
     }
-}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Locator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">By</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">locator</span>: <span class="ident">Locator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">locator</span> {
-            <span class="ident">Locator::Css</span>(<span class="ident">s</span>) =&gt; <span class="ident">By::Css</span>(<span class="ident">s</span>),
-            <span class="ident">Locator::Id</span>(<span class="ident">s</span>) =&gt; <span class="ident">By::Id</span>(<span class="ident">s</span>),
-            <span class="ident">Locator::LinkText</span>(<span class="ident">s</span>) =&gt; <span class="ident">By::LinkText</span>(<span class="ident">s</span>),
-            <span class="ident">Locator::XPath</span>(<span class="ident">s</span>) =&gt; <span class="ident">By::XPath</span>(<span class="ident">s</span>),
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>LinkText(text: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::LinkText(text.to_string()),
+        }
+    }
+
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>Css(css: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::Css(css.to_string()),
+        }
+    }
+
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>XPath(x: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::XPath(x.to_string()),
+        }
+    }
+
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>Name(name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::Css(<span class="macro">format!</span>(<span class="string">r#&quot;[name=&quot;{}&quot;]&quot;#</span>, name)),
+        }
+    }
+
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>Tag(tag: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::Css(tag.to_string()),
+        }
+    }
+
+    <span class="attribute">#[allow(non_snake_case)]
+    </span><span class="kw">pub fn </span>ClassName(name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            selector: BySelector::Css(<span class="macro">format!</span>(<span class="string">&quot;.{}&quot;</span>, name)),
+        }
+    }
+
+    <span class="kw">pub fn </span>locator(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Locator {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.selector {
+            BySelector::Id(id) =&gt; Locator::Id(id),
+            BySelector::LinkText(text) =&gt; Locator::LinkText(text),
+            BySelector::Css(css) =&gt; Locator::Css(css),
+            BySelector::XPath(x) =&gt; Locator::XPath(x),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">locator_to_string</span>(<span class="ident">locator</span>: <span class="ident">Locator</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">String</span> {
-    <span class="kw">match</span> <span class="ident">locator</span> {
-        <span class="ident">Locator::Css</span>(<span class="ident">s</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;Css({})&quot;</span>, <span class="ident">s</span>),
-        <span class="ident">Locator::Id</span>(<span class="ident">s</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;Id({}&quot;</span>, <span class="ident">s</span>),
-        <span class="ident">Locator::LinkText</span>(<span class="ident">s</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;LinkText({})&quot;</span>, <span class="ident">s</span>),
-        <span class="ident">Locator::XPath</span>(<span class="ident">s</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;XPath({})&quot;</span>, <span class="ident">s</span>),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>By&gt; <span class="kw">for </span>Locator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from(by: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>By) -&gt; <span class="self">Self </span>{
+        by.locator()
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;Locator&lt;<span class="lifetime">&#39;a</span>&gt;&gt; <span class="kw">for </span>By {
+    <span class="kw">fn </span>from(locator: Locator&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>locator {
+            Locator::Css(s) =&gt; By::Css(s),
+            Locator::Id(s) =&gt; By::Id(s),
+            Locator::LinkText(s) =&gt; By::LinkText(s),
+            Locator::XPath(s) =&gt; By::XPath(s),
+        }
+    }
+}
+
+<span class="kw">pub fn </span>locator_to_string(locator: Locator&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; String {
+    <span class="kw">match </span>locator {
+        Locator::Css(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;Css({})&quot;</span>, s),
+        Locator::Id(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;Id({}&quot;</span>, s),
+        Locator::LinkText(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;LinkText({})&quot;</span>, s),
+        Locator::XPath(s) =&gt; <span class="macro">format!</span>(<span class="string">&quot;XPath({})&quot;</span>, s),
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="thirtyfour" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="thirtyfour" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

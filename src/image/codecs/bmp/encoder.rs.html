@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/bmp/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/bmp/encoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -381,133 +375,133 @@
 <span id="375">375</span>
 <span id="376">376</span>
 <span id="377">377</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">LittleEndian</span>, <span class="ident">WriteBytesExt</span>};
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Write</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>byteorder::{LittleEndian, WriteBytesExt};
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Write};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">ImageError</span>, <span class="ident">ImageResult</span>, <span class="ident">ParameterError</span>, <span class="ident">ParameterErrorKind</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image::ImageEncoder</span>;
+<span class="kw">use </span><span class="kw">crate</span>::color;
+<span class="kw">use </span><span class="kw">crate</span>::error::{ImageError, ImageResult, ParameterError, ParameterErrorKind};
+<span class="kw">use </span><span class="kw">crate</span>::image::ImageEncoder;
 
-<span class="kw">const</span> <span class="ident">BITMAPFILEHEADER_SIZE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">14</span>;
-<span class="kw">const</span> <span class="ident">BITMAPINFOHEADER_SIZE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">40</span>;
-<span class="kw">const</span> <span class="ident">BITMAPV4HEADER_SIZE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">108</span>;
+<span class="kw">const </span>BITMAPFILEHEADER_SIZE: u32 = <span class="number">14</span>;
+<span class="kw">const </span>BITMAPINFOHEADER_SIZE: u32 = <span class="number">40</span>;
+<span class="kw">const </span>BITMAPV4HEADER_SIZE: u32 = <span class="number">108</span>;
 
-<span class="doccomment">/// The representation of a BMP encoder.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BmpEncoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
+<span class="doccomment">/// The representation of a BMP encoder.
+</span><span class="kw">pub struct </span>BmpEncoder&lt;<span class="lifetime">&#39;a</span>, W: <span class="lifetime">&#39;a</span>&gt; {
+    writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>W,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">BmpEncoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new encoder that writes its output to ```w```.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">W</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">BmpEncoder</span> { <span class="ident">writer</span>: <span class="ident">w</span> }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, W: Write + <span class="lifetime">&#39;a</span>&gt; BmpEncoder&lt;<span class="lifetime">&#39;a</span>, W&gt; {
+    <span class="doccomment">/// Create a new encoder that writes its output to ```w```.
+    </span><span class="kw">pub fn </span>new(w: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>W) -&gt; <span class="self">Self </span>{
+        BmpEncoder { writer: w }
     }
 
-    <span class="doccomment">/// Encodes the image ```image```</span>
-    <span class="doccomment">/// that has dimensions ```width``` and ```height```</span>
-    <span class="doccomment">/// and ```ColorType``` ```c```.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">c</span>: <span class="ident">color::ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encode_with_palette</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">c</span>, <span class="prelude-val">None</span>)
+    <span class="doccomment">/// Encodes the image ```image```
+    /// that has dimensions ```width``` and ```height```
+    /// and ```ColorType``` ```c```.
+    </span><span class="kw">pub fn </span>encode(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        c: color::ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.encode_with_palette(image, width, height, c, <span class="prelude-val">None</span>)
     }
 
-    <span class="doccomment">/// Same as ```encode```, but allow a palette to be passed in.</span>
-    <span class="doccomment">/// The ```palette``` is ignored for color types other than Luma/Luma-with-alpha.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_with_palette</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">c</span>: <span class="ident">color::ColorType</span>,
-        <span class="ident">palette</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[[<span class="ident">u8</span>; <span class="number">3</span>]]<span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">palette</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="ident">color::ColorType::L8</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="ident">color::ColorType::La8</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::IoError</span>(<span class="ident">io::Error::new</span>(
-                <span class="ident">io::ErrorKind::InvalidInput</span>,
+    <span class="doccomment">/// Same as ```encode```, but allow a palette to be passed in.
+    /// The ```palette``` is ignored for color types other than Luma/Luma-with-alpha.
+    </span><span class="kw">pub fn </span>encode_with_palette(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        c: color::ColorType,
+        palette: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]]&gt;,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">if </span>palette.is_some() &amp;&amp; c != color::ColorType::L8 &amp;&amp; c != color::ColorType::La8 {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::IoError(io::Error::new(
+                io::ErrorKind::InvalidInput,
                 <span class="macro">format!</span>(
                     <span class="string">&quot;Unsupported color type {:?} when using a non-empty palette. Supported types: Gray(8), GrayA(8).&quot;</span>,
-                    <span class="ident">c</span>
+                    c
                 ),
             )));
         }
 
-        <span class="kw">let</span> <span class="ident">bmp_header_size</span> <span class="op">=</span> <span class="ident">BITMAPFILEHEADER_SIZE</span>;
+        <span class="kw">let </span>bmp_header_size = BITMAPFILEHEADER_SIZE;
 
-        <span class="kw">let</span> (<span class="ident">dib_header_size</span>, <span class="ident">written_pixel_size</span>, <span class="ident">palette_color_count</span>) <span class="op">=</span>
-            <span class="ident">get_pixel_info</span>(<span class="ident">c</span>, <span class="ident">palette</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">row_pad_size</span> <span class="op">=</span> (<span class="number">4</span> <span class="op">-</span> (<span class="ident">width</span> <span class="op">*</span> <span class="ident">written_pixel_size</span>) <span class="op">%</span> <span class="number">4</span>) <span class="op">%</span> <span class="number">4</span>; <span class="comment">// each row must be padded to a multiple of 4 bytes</span>
-        <span class="kw">let</span> <span class="ident">image_size</span> <span class="op">=</span> <span class="ident">width</span>
-            .<span class="ident">checked_mul</span>(<span class="ident">height</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">checked_mul</span>(<span class="ident">written_pixel_size</span>))
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">checked_add</span>(<span class="ident">height</span> <span class="op">*</span> <span class="ident">row_pad_size</span>))
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(
-                    <span class="ident">ParameterErrorKind::DimensionMismatch</span>,
+        <span class="kw">let </span>(dib_header_size, written_pixel_size, palette_color_count) =
+            get_pixel_info(c, palette)<span class="question-mark">?</span>;
+        <span class="kw">let </span>row_pad_size = (<span class="number">4 </span>- (width * written_pixel_size) % <span class="number">4</span>) % <span class="number">4</span>; <span class="comment">// each row must be padded to a multiple of 4 bytes
+        </span><span class="kw">let </span>image_size = width
+            .checked_mul(height)
+            .and_then(|v| v.checked_mul(written_pixel_size))
+            .and_then(|v| v.checked_add(height * row_pad_size))
+            .ok_or_else(|| {
+                ImageError::Parameter(ParameterError::from_kind(
+                    ParameterErrorKind::DimensionMismatch,
                 ))
             })<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">palette_size</span> <span class="op">=</span> <span class="ident">palette_color_count</span> <span class="op">*</span> <span class="number">4</span>; <span class="comment">// all palette colors are BGRA</span>
-        <span class="kw">let</span> <span class="ident">file_size</span> <span class="op">=</span> <span class="ident">bmp_header_size</span> <span class="op">+</span> <span class="ident">dib_header_size</span> <span class="op">+</span> <span class="ident">palette_size</span> <span class="op">+</span> <span class="ident">image_size</span>;
+        <span class="kw">let </span>palette_size = palette_color_count * <span class="number">4</span>; <span class="comment">// all palette colors are BGRA
+        </span><span class="kw">let </span>file_size = bmp_header_size + dib_header_size + palette_size + image_size;
 
-        <span class="comment">// write BMP header</span>
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u8</span>(<span class="string">b&#39;B&#39;</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u8</span>(<span class="string">b&#39;M&#39;</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">file_size</span>)<span class="question-mark">?</span>; <span class="comment">// file size</span>
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// reserved 1</span>
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// reserved 2</span>
-        <span class="self">self</span>.<span class="ident">writer</span>
-            .<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">bmp_header_size</span> <span class="op">+</span> <span class="ident">dib_header_size</span> <span class="op">+</span> <span class="ident">palette_size</span>)<span class="question-mark">?</span>; <span class="comment">// image data offset</span>
+        <span class="comment">// write BMP header
+        </span><span class="self">self</span>.writer.write_u8(<span class="string">b&#39;B&#39;</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_u8(<span class="string">b&#39;M&#39;</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(file_size)<span class="question-mark">?</span>; <span class="comment">// file size
+        </span><span class="self">self</span>.writer.write_u16::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// reserved 1
+        </span><span class="self">self</span>.writer.write_u16::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// reserved 2
+        </span><span class="self">self</span>.writer
+            .write_u32::&lt;LittleEndian&gt;(bmp_header_size + dib_header_size + palette_size)<span class="question-mark">?</span>; <span class="comment">// image data offset
 
-        <span class="comment">// write DIB header</span>
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">dib_header_size</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_i32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">width</span> <span class="kw">as</span> <span class="ident">i32</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_i32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">height</span> <span class="kw">as</span> <span class="ident">i32</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">1</span>)<span class="question-mark">?</span>; <span class="comment">// color planes</span>
-        <span class="self">self</span>.<span class="ident">writer</span>
-            .<span class="ident">write_u16</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>((<span class="ident">written_pixel_size</span> <span class="op">*</span> <span class="number">8</span>) <span class="kw">as</span> <span class="ident">u16</span>)<span class="question-mark">?</span>; <span class="comment">// bits per pixel</span>
-        <span class="kw">if</span> <span class="ident">dib_header_size</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">BITMAPV4HEADER_SIZE</span> {
-            <span class="comment">// Assume BGRA32</span>
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">3</span>)<span class="question-mark">?</span>; <span class="comment">// compression method - bitfields</span>
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// compression method - no compression</span>
-        }
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">image_size</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_i32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// horizontal ppm</span>
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_i32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// vertical ppm</span>
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="ident">palette_color_count</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// all colors are important</span>
-        <span class="kw">if</span> <span class="ident">dib_header_size</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">BITMAPV4HEADER_SIZE</span> {
-            <span class="comment">// Assume BGRA32</span>
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0xff</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">16</span>)<span class="question-mark">?</span>; <span class="comment">// red mask</span>
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0xff</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span>)<span class="question-mark">?</span>; <span class="comment">// green mask</span>
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0xff</span>)<span class="question-mark">?</span>; <span class="comment">// blue mask</span>
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0xff</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">24</span>)<span class="question-mark">?</span>; <span class="comment">// alpha mask</span>
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0x73524742</span>)<span class="question-mark">?</span>; <span class="comment">// colorspace - sRGB</span>
+        // write DIB header
+        </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(dib_header_size)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_i32::&lt;LittleEndian&gt;(width <span class="kw">as </span>i32)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_i32::&lt;LittleEndian&gt;(height <span class="kw">as </span>i32)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_u16::&lt;LittleEndian&gt;(<span class="number">1</span>)<span class="question-mark">?</span>; <span class="comment">// color planes
+        </span><span class="self">self</span>.writer
+            .write_u16::&lt;LittleEndian&gt;((written_pixel_size * <span class="number">8</span>) <span class="kw">as </span>u16)<span class="question-mark">?</span>; <span class="comment">// bits per pixel
+        </span><span class="kw">if </span>dib_header_size &gt;= BITMAPV4HEADER_SIZE {
+            <span class="comment">// Assume BGRA32
+            </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">3</span>)<span class="question-mark">?</span>; <span class="comment">// compression method - bitfields
+        </span>} <span class="kw">else </span>{
+            <span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// compression method - no compression
+        </span>}
+        <span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(image_size)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_i32::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// horizontal ppm
+        </span><span class="self">self</span>.writer.write_i32::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// vertical ppm
+        </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(palette_color_count)<span class="question-mark">?</span>;
+        <span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>; <span class="comment">// all colors are important
+        </span><span class="kw">if </span>dib_header_size &gt;= BITMAPV4HEADER_SIZE {
+            <span class="comment">// Assume BGRA32
+            </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0xff </span>&lt;&lt; <span class="number">16</span>)<span class="question-mark">?</span>; <span class="comment">// red mask
+            </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0xff </span>&lt;&lt; <span class="number">8</span>)<span class="question-mark">?</span>; <span class="comment">// green mask
+            </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0xff</span>)<span class="question-mark">?</span>; <span class="comment">// blue mask
+            </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0xff </span>&lt;&lt; <span class="number">24</span>)<span class="question-mark">?</span>; <span class="comment">// alpha mask
+            </span><span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0x73524742</span>)<span class="question-mark">?</span>; <span class="comment">// colorspace - sRGB
 
-            <span class="comment">// endpoints (3x3) and gamma (3)</span>
-            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">12</span> {
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u32</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="number">0</span>)<span class="question-mark">?</span>;
+            // endpoints (3x3) and gamma (3)
+            </span><span class="kw">for _ in </span><span class="number">0</span>..<span class="number">12 </span>{
+                <span class="self">self</span>.writer.write_u32::&lt;LittleEndian&gt;(<span class="number">0</span>)<span class="question-mark">?</span>;
             }
         }
 
-        <span class="comment">// write image data</span>
-        <span class="kw">match</span> <span class="ident">c</span> {
-            <span class="ident">color::ColorType::Rgb8</span> =&gt; <span class="self">self</span>.<span class="ident">encode_rgb</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">row_pad_size</span>, <span class="number">3</span>)<span class="question-mark">?</span>,
-            <span class="ident">color::ColorType::Rgba8</span> =&gt; <span class="self">self</span>.<span class="ident">encode_rgba</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">row_pad_size</span>, <span class="number">4</span>)<span class="question-mark">?</span>,
-            <span class="ident">color::ColorType::L8</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">encode_gray</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">row_pad_size</span>, <span class="number">1</span>, <span class="ident">palette</span>)<span class="question-mark">?</span>
-            }
-            <span class="ident">color::ColorType::La8</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">encode_gray</span>(<span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">row_pad_size</span>, <span class="number">2</span>, <span class="ident">palette</span>)<span class="question-mark">?</span>
-            }
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::IoError</span>(<span class="ident">io::Error::new</span>(
-                    <span class="ident">io::ErrorKind::InvalidInput</span>,
-                    <span class="kw-2">&amp;</span><span class="ident">get_unsupported_error_message</span>(<span class="ident">c</span>)[..],
+        <span class="comment">// write image data
+        </span><span class="kw">match </span>c {
+            color::ColorType::Rgb8 =&gt; <span class="self">self</span>.encode_rgb(image, width, height, row_pad_size, <span class="number">3</span>)<span class="question-mark">?</span>,
+            color::ColorType::Rgba8 =&gt; <span class="self">self</span>.encode_rgba(image, width, height, row_pad_size, <span class="number">4</span>)<span class="question-mark">?</span>,
+            color::ColorType::L8 =&gt; {
+                <span class="self">self</span>.encode_gray(image, width, height, row_pad_size, <span class="number">1</span>, palette)<span class="question-mark">?
+            </span>}
+            color::ColorType::La8 =&gt; {
+                <span class="self">self</span>.encode_gray(image, width, height, row_pad_size, <span class="number">2</span>, palette)<span class="question-mark">?
+            </span>}
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::IoError(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    <span class="kw-2">&amp;</span>get_unsupported_error_message(c)[..],
                 )))
             }
         }
@@ -515,249 +509,248 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">encode_rgb</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">row_pad_size</span>: <span class="ident">u32</span>,
-        <span class="ident">bytes_per_pixel</span>: <span class="ident">u32</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">x_stride</span> <span class="op">=</span> <span class="ident">bytes_per_pixel</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">y_stride</span> <span class="op">=</span> <span class="ident">width</span> <span class="op">*</span> <span class="ident">x_stride</span>;
-        <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> (<span class="number">0</span>..<span class="ident">height</span>).<span class="ident">rev</span>() {
-            <span class="comment">// from the bottom up</span>
-            <span class="kw">let</span> <span class="ident">row_start</span> <span class="op">=</span> <span class="ident">row</span> <span class="op">*</span> <span class="ident">y_stride</span>;
-            <span class="kw">for</span> <span class="ident">px</span> <span class="kw">in</span> <span class="ident">image</span>[<span class="ident">row_start</span>..][..<span class="ident">y_stride</span>].<span class="ident">chunks_exact</span>(<span class="ident">x_stride</span>) {
-                <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">0</span>];
-                <span class="kw">let</span> <span class="ident">g</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">1</span>];
-                <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">2</span>];
-                <span class="comment">// written as BGR</span>
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">b</span>, <span class="ident">g</span>, <span class="ident">r</span>])<span class="question-mark">?</span>;
+    <span class="kw">fn </span>encode_rgb(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        row_pad_size: u32,
+        bytes_per_pixel: u32,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span>width = width <span class="kw">as </span>usize;
+        <span class="kw">let </span>height = height <span class="kw">as </span>usize;
+        <span class="kw">let </span>x_stride = bytes_per_pixel <span class="kw">as </span>usize;
+        <span class="kw">let </span>y_stride = width * x_stride;
+        <span class="kw">for </span>row <span class="kw">in </span>(<span class="number">0</span>..height).rev() {
+            <span class="comment">// from the bottom up
+            </span><span class="kw">let </span>row_start = row * y_stride;
+            <span class="kw">for </span>px <span class="kw">in </span>image[row_start..][..y_stride].chunks_exact(x_stride) {
+                <span class="kw">let </span>r = px[<span class="number">0</span>];
+                <span class="kw">let </span>g = px[<span class="number">1</span>];
+                <span class="kw">let </span>b = px[<span class="number">2</span>];
+                <span class="comment">// written as BGR
+                </span><span class="self">self</span>.writer.write_all(<span class="kw-2">&amp;</span>[b, g, r])<span class="question-mark">?</span>;
             }
-            <span class="self">self</span>.<span class="ident">write_row_pad</span>(<span class="ident">row_pad_size</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.write_row_pad(row_pad_size)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">encode_rgba</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">row_pad_size</span>: <span class="ident">u32</span>,
-        <span class="ident">bytes_per_pixel</span>: <span class="ident">u32</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">x_stride</span> <span class="op">=</span> <span class="ident">bytes_per_pixel</span> <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> <span class="ident">y_stride</span> <span class="op">=</span> <span class="ident">width</span> <span class="op">*</span> <span class="ident">x_stride</span>;
-        <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> (<span class="number">0</span>..<span class="ident">height</span>).<span class="ident">rev</span>() {
-            <span class="comment">// from the bottom up</span>
-            <span class="kw">let</span> <span class="ident">row_start</span> <span class="op">=</span> <span class="ident">row</span> <span class="op">*</span> <span class="ident">y_stride</span>;
-            <span class="kw">for</span> <span class="ident">px</span> <span class="kw">in</span> <span class="ident">image</span>[<span class="ident">row_start</span>..][..<span class="ident">y_stride</span>].<span class="ident">chunks_exact</span>(<span class="ident">x_stride</span>) {
-                <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">0</span>];
-                <span class="kw">let</span> <span class="ident">g</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">1</span>];
-                <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">2</span>];
-                <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">px</span>[<span class="number">3</span>];
-                <span class="comment">// written as BGRA</span>
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">b</span>, <span class="ident">g</span>, <span class="ident">r</span>, <span class="ident">a</span>])<span class="question-mark">?</span>;
+    <span class="kw">fn </span>encode_rgba(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        row_pad_size: u32,
+        bytes_per_pixel: u32,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">let </span>width = width <span class="kw">as </span>usize;
+        <span class="kw">let </span>height = height <span class="kw">as </span>usize;
+        <span class="kw">let </span>x_stride = bytes_per_pixel <span class="kw">as </span>usize;
+        <span class="kw">let </span>y_stride = width * x_stride;
+        <span class="kw">for </span>row <span class="kw">in </span>(<span class="number">0</span>..height).rev() {
+            <span class="comment">// from the bottom up
+            </span><span class="kw">let </span>row_start = row * y_stride;
+            <span class="kw">for </span>px <span class="kw">in </span>image[row_start..][..y_stride].chunks_exact(x_stride) {
+                <span class="kw">let </span>r = px[<span class="number">0</span>];
+                <span class="kw">let </span>g = px[<span class="number">1</span>];
+                <span class="kw">let </span>b = px[<span class="number">2</span>];
+                <span class="kw">let </span>a = px[<span class="number">3</span>];
+                <span class="comment">// written as BGRA
+                </span><span class="self">self</span>.writer.write_all(<span class="kw-2">&amp;</span>[b, g, r, a])<span class="question-mark">?</span>;
             }
-            <span class="self">self</span>.<span class="ident">write_row_pad</span>(<span class="ident">row_pad_size</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.write_row_pad(row_pad_size)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">encode_gray</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">row_pad_size</span>: <span class="ident">u32</span>,
-        <span class="ident">bytes_per_pixel</span>: <span class="ident">u32</span>,
-        <span class="ident">palette</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[[<span class="ident">u8</span>; <span class="number">3</span>]]<span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// write grayscale palette</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">palette</span>) <span class="op">=</span> <span class="ident">palette</span> {
-            <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">palette</span> {
-                <span class="comment">// each color is written as BGRA, where A is always 0</span>
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">item</span>[<span class="number">2</span>], <span class="ident">item</span>[<span class="number">1</span>], <span class="ident">item</span>[<span class="number">0</span>], <span class="number">0</span>])<span class="question-mark">?</span>;
+    <span class="kw">fn </span>encode_gray(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        image: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        row_pad_size: u32,
+        bytes_per_pixel: u32,
+        palette: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]]&gt;,
+    ) -&gt; io::Result&lt;()&gt; {
+        <span class="comment">// write grayscale palette
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(palette) = palette {
+            <span class="kw">for </span>item <span class="kw">in </span>palette {
+                <span class="comment">// each color is written as BGRA, where A is always 0
+                </span><span class="self">self</span>.writer.write_all(<span class="kw-2">&amp;</span>[item[<span class="number">2</span>], item[<span class="number">1</span>], item[<span class="number">0</span>], <span class="number">0</span>])<span class="question-mark">?</span>;
             }
-        } <span class="kw">else</span> {
-            <span class="kw">for</span> <span class="ident">val</span> <span class="kw">in</span> <span class="number">0u8</span>..<span class="op">=</span><span class="number">255</span> {
-                <span class="comment">// each color is written as BGRA, where A is always 0 and since only grayscale is being written, B = G = R = index</span>
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">val</span>, <span class="ident">val</span>, <span class="ident">val</span>, <span class="number">0</span>])<span class="question-mark">?</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">for </span>val <span class="kw">in </span><span class="number">0u8</span>..=<span class="number">255 </span>{
+                <span class="comment">// each color is written as BGRA, where A is always 0 and since only grayscale is being written, B = G = R = index
+                </span><span class="self">self</span>.writer.write_all(<span class="kw-2">&amp;</span>[val, val, val, <span class="number">0</span>])<span class="question-mark">?</span>;
             }
         }
 
-        <span class="comment">// write image data</span>
-        <span class="kw">let</span> <span class="ident">x_stride</span> <span class="op">=</span> <span class="ident">bytes_per_pixel</span>;
-        <span class="kw">let</span> <span class="ident">y_stride</span> <span class="op">=</span> <span class="ident">width</span> <span class="op">*</span> <span class="ident">x_stride</span>;
-        <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> (<span class="number">0</span>..<span class="ident">height</span>).<span class="ident">rev</span>() {
-            <span class="comment">// from the bottom up</span>
-            <span class="kw">let</span> <span class="ident">row_start</span> <span class="op">=</span> <span class="ident">row</span> <span class="op">*</span> <span class="ident">y_stride</span>;
-            <span class="kw">for</span> <span class="ident">col</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">width</span> {
-                <span class="kw">let</span> <span class="ident">pixel_start</span> <span class="op">=</span> (<span class="ident">row_start</span> <span class="op">+</span> (<span class="ident">col</span> <span class="op">*</span> <span class="ident">x_stride</span>)) <span class="kw">as</span> <span class="ident">usize</span>;
-                <span class="comment">// color value is equal to the palette index</span>
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u8</span>(<span class="ident">image</span>[<span class="ident">pixel_start</span>])<span class="question-mark">?</span>;
-                <span class="comment">// alpha is never written as it&#39;s not widely supported</span>
-            }
+        <span class="comment">// write image data
+        </span><span class="kw">let </span>x_stride = bytes_per_pixel;
+        <span class="kw">let </span>y_stride = width * x_stride;
+        <span class="kw">for </span>row <span class="kw">in </span>(<span class="number">0</span>..height).rev() {
+            <span class="comment">// from the bottom up
+            </span><span class="kw">let </span>row_start = row * y_stride;
+            <span class="kw">for </span>col <span class="kw">in </span><span class="number">0</span>..width {
+                <span class="kw">let </span>pixel_start = (row_start + (col * x_stride)) <span class="kw">as </span>usize;
+                <span class="comment">// color value is equal to the palette index
+                </span><span class="self">self</span>.writer.write_u8(image[pixel_start])<span class="question-mark">?</span>;
+                <span class="comment">// alpha is never written as it&#39;s not widely supported
+            </span>}
 
-            <span class="self">self</span>.<span class="ident">write_row_pad</span>(<span class="ident">row_pad_size</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.write_row_pad(row_pad_size)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">write_row_pad</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">row_pad_size</span>: <span class="ident">u32</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">row_pad_size</span> {
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_u8</span>(<span class="number">0</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>write_row_pad(<span class="kw-2">&amp;mut </span><span class="self">self</span>, row_pad_size: u32) -&gt; io::Result&lt;()&gt; {
+        <span class="kw">for _ in </span><span class="number">0</span>..row_pad_size {
+            <span class="self">self</span>.writer.write_u8(<span class="number">0</span>)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">ImageEncoder</span> <span class="kw">for</span> <span class="ident">BmpEncoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_image</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color_type</span>: <span class="ident">color::ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encode</span>(<span class="ident">buf</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color_type</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, W: Write&gt; ImageEncoder <span class="kw">for </span>BmpEncoder&lt;<span class="lifetime">&#39;a</span>, W&gt; {
+    <span class="kw">fn </span>write_image(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        buf: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        color_type: color::ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.encode(buf, width, height, color_type)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_unsupported_error_message</span>(<span class="ident">c</span>: <span class="ident">color::ColorType</span>) -&gt; <span class="ident">String</span> {
+<span class="kw">fn </span>get_unsupported_error_message(c: color::ColorType) -&gt; String {
     <span class="macro">format!</span>(
         <span class="string">&quot;Unsupported color type {:?}.  Supported types: RGB(8), RGBA(8), Gray(8), GrayA(8).&quot;</span>,
-        <span class="ident">c</span>
+        c
     )
 }
 
-<span class="doccomment">/// Returns a tuple representing: (dib header size, written pixel size, palette color count).</span>
-<span class="kw">fn</span> <span class="ident">get_pixel_info</span>(<span class="ident">c</span>: <span class="ident">color::ColorType</span>, <span class="ident">palette</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[[<span class="ident">u8</span>; <span class="number">3</span>]]<span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">sizes</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">c</span> {
-        <span class="ident">color::ColorType::Rgb8</span> =&gt; (<span class="ident">BITMAPINFOHEADER_SIZE</span>, <span class="number">3</span>, <span class="number">0</span>),
-        <span class="ident">color::ColorType::Rgba8</span> =&gt; (<span class="ident">BITMAPV4HEADER_SIZE</span>, <span class="number">4</span>, <span class="number">0</span>),
-        <span class="ident">color::ColorType::L8</span> =&gt; (
-            <span class="ident">BITMAPINFOHEADER_SIZE</span>,
+<span class="doccomment">/// Returns a tuple representing: (dib header size, written pixel size, palette color count).
+</span><span class="kw">fn </span>get_pixel_info(c: color::ColorType, palette: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]]&gt;) -&gt; io::Result&lt;(u32, u32, u32)&gt; {
+    <span class="kw">let </span>sizes = <span class="kw">match </span>c {
+        color::ColorType::Rgb8 =&gt; (BITMAPINFOHEADER_SIZE, <span class="number">3</span>, <span class="number">0</span>),
+        color::ColorType::Rgba8 =&gt; (BITMAPV4HEADER_SIZE, <span class="number">4</span>, <span class="number">0</span>),
+        color::ColorType::L8 =&gt; (
+            BITMAPINFOHEADER_SIZE,
             <span class="number">1</span>,
-            <span class="ident">palette</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">len</span>()).<span class="ident">unwrap_or</span>(<span class="number">256</span>) <span class="kw">as</span> <span class="ident">u32</span>,
+            palette.map(|p| p.len()).unwrap_or(<span class="number">256</span>) <span class="kw">as </span>u32,
         ),
-        <span class="ident">color::ColorType::La8</span> =&gt; (
-            <span class="ident">BITMAPINFOHEADER_SIZE</span>,
+        color::ColorType::La8 =&gt; (
+            BITMAPINFOHEADER_SIZE,
             <span class="number">1</span>,
-            <span class="ident">palette</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">len</span>()).<span class="ident">unwrap_or</span>(<span class="number">256</span>) <span class="kw">as</span> <span class="ident">u32</span>,
+            palette.map(|p| p.len()).unwrap_or(<span class="number">256</span>) <span class="kw">as </span>u32,
         ),
-        <span class="kw">_</span> =&gt; {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io::Error::new</span>(
-                <span class="ident">io::ErrorKind::InvalidInput</span>,
-                <span class="kw-2">&amp;</span><span class="ident">get_unsupported_error_message</span>(<span class="ident">c</span>)[..],
+        <span class="kw">_ </span>=&gt; {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                <span class="kw-2">&amp;</span>get_unsupported_error_message(c)[..],
             ))
         }
     };
 
-    <span class="prelude-val">Ok</span>(<span class="ident">sizes</span>)
+    <span class="prelude-val">Ok</span>(sizes)
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span>::BmpDecoder</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::BmpEncoder</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color::ColorType</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image::ImageDecoder</span>;
-    <span class="kw">use</span> <span class="ident">std::io::Cursor</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::BmpDecoder;
+    <span class="kw">use </span><span class="kw">super</span>::BmpEncoder;
+    <span class="kw">use </span><span class="kw">crate</span>::color::ColorType;
+    <span class="kw">use </span><span class="kw">crate</span>::image::ImageDecoder;
+    <span class="kw">use </span>std::io::Cursor;
 
-    <span class="kw">fn</span> <span class="ident">round_trip_image</span>(<span class="ident">image</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>, <span class="ident">c</span>: <span class="ident">ColorType</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded_data</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+    <span class="kw">fn </span>round_trip_image(image: <span class="kw-2">&amp;</span>[u8], width: u32, height: u32, c: ColorType) -&gt; Vec&lt;u8&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>encoded_data = Vec::new();
         {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">BmpEncoder::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded_data</span>);
-            <span class="ident">encoder</span>
-                .<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">c</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;could not encode image&quot;</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>encoder = BmpEncoder::new(<span class="kw-2">&amp;mut </span>encoded_data);
+            encoder
+                .encode(<span class="kw-2">&amp;</span>image, width, height, c)
+                .expect(<span class="string">&quot;could not encode image&quot;</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">BmpDecoder::new</span>(<span class="ident">Cursor::new</span>(<span class="kw-2">&amp;</span><span class="ident">encoded_data</span>)).<span class="ident">expect</span>(<span class="string">&quot;failed to decode&quot;</span>);
+        <span class="kw">let </span>decoder = BmpDecoder::new(Cursor::new(<span class="kw-2">&amp;</span>encoded_data)).expect(<span class="string">&quot;failed to decode&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">decoder</span>.<span class="ident">total_bytes</span>() <span class="kw">as</span> <span class="ident">usize</span>];
-        <span class="ident">decoder</span>.<span class="ident">read_image</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>).<span class="ident">expect</span>(<span class="string">&quot;failed to decode&quot;</span>);
-        <span class="ident">buf</span>
+        <span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0</span>; decoder.total_bytes() <span class="kw">as </span>usize];
+        decoder.read_image(<span class="kw-2">&amp;mut </span>buf).expect(<span class="string">&quot;failed to decode&quot;</span>);
+        buf
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_single_pixel_rgb</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">255u8</span>, <span class="number">0</span>, <span class="number">0</span>]; <span class="comment">// single red pixel</span>
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="ident">ColorType::Rgb8</span>);
-        <span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">decoded</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">255</span>, <span class="ident">decoded</span>[<span class="number">0</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">1</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">2</span>]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_single_pixel_rgb() {
+        <span class="kw">let </span>image = [<span class="number">255u8</span>, <span class="number">0</span>, <span class="number">0</span>]; <span class="comment">// single red pixel
+        </span><span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">1</span>, <span class="number">1</span>, ColorType::Rgb8);
+        <span class="macro">assert_eq!</span>(<span class="number">3</span>, decoded.len());
+        <span class="macro">assert_eq!</span>(<span class="number">255</span>, decoded[<span class="number">0</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">1</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">2</span>]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> <span class="op">=</span> <span class="string">&quot;64&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">huge_files_return_error</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded_data</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="number">3</span> <span class="op">*</span> <span class="number">40_000</span> <span class="op">*</span> <span class="number">40_000</span>]; <span class="comment">// 40_000x40_000 pixels, 3 bytes per pixel, allocated on the heap</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">BmpEncoder::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded_data</span>);
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">encoder</span>.<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">40_000</span>, <span class="number">40_000</span>, <span class="ident">ColorType::Rgb8</span>);
-        <span class="macro">assert!</span>(<span class="ident">result</span>.<span class="ident">is_err</span>());
+    <span class="attribute">#[test]
+    #[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+    </span><span class="kw">fn </span>huge_files_return_error() {
+        <span class="kw">let </span><span class="kw-2">mut </span>encoded_data = Vec::new();
+        <span class="kw">let </span>image = <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="number">3 </span>* <span class="number">40_000 </span>* <span class="number">40_000</span>]; <span class="comment">// 40_000x40_000 pixels, 3 bytes per pixel, allocated on the heap
+        </span><span class="kw">let </span><span class="kw-2">mut </span>encoder = BmpEncoder::new(<span class="kw-2">&amp;mut </span>encoded_data);
+        <span class="kw">let </span>result = encoder.encode(<span class="kw-2">&amp;</span>image, <span class="number">40_000</span>, <span class="number">40_000</span>, ColorType::Rgb8);
+        <span class="macro">assert!</span>(result.is_err());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_single_pixel_rgba</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="ident">ColorType::Rgba8</span>);
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">decoded</span>[..], <span class="kw-2">&amp;</span><span class="ident">image</span>[..]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_single_pixel_rgba() {
+        <span class="kw">let </span>image = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
+        <span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">1</span>, <span class="number">1</span>, ColorType::Rgba8);
+        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>decoded[..], <span class="kw-2">&amp;</span>image[..]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_3px_rgb</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">3</span> <span class="op">*</span> <span class="number">3</span> <span class="op">*</span> <span class="number">3</span>]; <span class="comment">// 3x3 pixels, 3 bytes per pixel</span>
-        <span class="kw">let</span> <span class="ident">_decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="ident">ColorType::Rgb8</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_3px_rgb() {
+        <span class="kw">let </span>image = [<span class="number">0u8</span>; <span class="number">3 </span>* <span class="number">3 </span>* <span class="number">3</span>]; <span class="comment">// 3x3 pixels, 3 bytes per pixel
+        </span><span class="kw">let </span>_decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">3</span>, <span class="number">3</span>, ColorType::Rgb8);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_gray</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0u8</span>, <span class="number">1</span>, <span class="number">2</span>]; <span class="comment">// 3 pixels</span>
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="ident">ColorType::L8</span>);
-        <span class="comment">// should be read back as 3 RGB pixels</span>
-        <span class="macro">assert_eq!</span>(<span class="number">9</span>, <span class="ident">decoded</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">0</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">1</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">2</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">decoded</span>[<span class="number">3</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">decoded</span>[<span class="number">4</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">decoded</span>[<span class="number">5</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">decoded</span>[<span class="number">6</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">decoded</span>[<span class="number">7</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">decoded</span>[<span class="number">8</span>]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_gray() {
+        <span class="kw">let </span>image = [<span class="number">0u8</span>, <span class="number">1</span>, <span class="number">2</span>]; <span class="comment">// 3 pixels
+        </span><span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">3</span>, <span class="number">1</span>, ColorType::L8);
+        <span class="comment">// should be read back as 3 RGB pixels
+        </span><span class="macro">assert_eq!</span>(<span class="number">9</span>, decoded.len());
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">0</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">1</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">2</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, decoded[<span class="number">3</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, decoded[<span class="number">4</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, decoded[<span class="number">5</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, decoded[<span class="number">6</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, decoded[<span class="number">7</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, decoded[<span class="number">8</span>]);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">round_trip_graya</span>() {
-        <span class="kw">let</span> <span class="ident">image</span> <span class="op">=</span> [<span class="number">0u8</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>]; <span class="comment">// 3 pixels, each with an alpha channel</span>
-        <span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">round_trip_image</span>(<span class="kw-2">&amp;</span><span class="ident">image</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="ident">ColorType::La8</span>);
-        <span class="comment">// should be read back as 3 RGB pixels</span>
-        <span class="macro">assert_eq!</span>(<span class="number">9</span>, <span class="ident">decoded</span>.<span class="ident">len</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">0</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">1</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">decoded</span>[<span class="number">2</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">decoded</span>[<span class="number">3</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">decoded</span>[<span class="number">4</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">decoded</span>[<span class="number">5</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">decoded</span>[<span class="number">6</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">decoded</span>[<span class="number">7</span>]);
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">decoded</span>[<span class="number">8</span>]);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>round_trip_graya() {
+        <span class="kw">let </span>image = [<span class="number">0u8</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>]; <span class="comment">// 3 pixels, each with an alpha channel
+        </span><span class="kw">let </span>decoded = round_trip_image(<span class="kw-2">&amp;</span>image, <span class="number">1</span>, <span class="number">3</span>, ColorType::La8);
+        <span class="comment">// should be read back as 3 RGB pixels
+        </span><span class="macro">assert_eq!</span>(<span class="number">9</span>, decoded.len());
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">0</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">1</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">0</span>, decoded[<span class="number">2</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, decoded[<span class="number">3</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, decoded[<span class="number">4</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, decoded[<span class="number">5</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, decoded[<span class="number">6</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, decoded[<span class="number">7</span>]);
+        <span class="macro">assert_eq!</span>(<span class="number">2</span>, decoded[<span class="number">8</span>]);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

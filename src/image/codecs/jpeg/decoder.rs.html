@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/jpeg/decoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/jpeg/decoder.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1289,247 +1283,247 @@
 <span id="1283">1283</span>
 <span id="1284">1284</span>
 <span id="1285">1285</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Cursor</span>, <span class="ident">Read</span>};
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
-<span class="kw">use</span> <span class="ident">std::mem</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Cursor, Read};
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>std::mem;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color::ColorType</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{
-    <span class="ident">DecodingError</span>, <span class="ident">ImageError</span>, <span class="ident">ImageResult</span>, <span class="ident">UnsupportedError</span>, <span class="ident">UnsupportedErrorKind</span>,
+<span class="kw">use </span><span class="kw">crate</span>::color::ColorType;
+<span class="kw">use </span><span class="kw">crate</span>::error::{
+    DecodingError, ImageError, ImageResult, UnsupportedError, UnsupportedErrorKind,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::{<span class="ident">ImageDecoder</span>, <span class="ident">ImageFormat</span>};
+<span class="kw">use </span><span class="kw">crate</span>::image::{ImageDecoder, ImageFormat};
 
-<span class="doccomment">/// JPEG decoder</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JpegDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">decoder</span>: <span class="ident">jpeg::Decoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-    <span class="ident">metadata</span>: <span class="ident">jpeg::ImageInfo</span>,
+<span class="doccomment">/// JPEG decoder
+</span><span class="kw">pub struct </span>JpegDecoder&lt;R&gt; {
+    decoder: jpeg::Decoder&lt;R&gt;,
+    metadata: jpeg::ImageInfo,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">JpegDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new decoder that decodes from the stream ```r```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">r</span>: <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">JpegDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">jpeg::Decoder::new</span>(<span class="ident">r</span>);
+<span class="kw">impl</span>&lt;R: Read&gt; JpegDecoder&lt;R&gt; {
+    <span class="doccomment">/// Create a new decoder that decodes from the stream ```r```
+    </span><span class="kw">pub fn </span>new(r: R) -&gt; ImageResult&lt;JpegDecoder&lt;R&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>decoder = jpeg::Decoder::new(r);
 
-        <span class="ident">decoder</span>.<span class="ident">read_info</span>().<span class="ident">map_err</span>(<span class="ident">ImageError::from_jpeg</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">decoder</span>.<span class="ident">info</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::from_format_hint</span>(<span class="ident">ImageFormat::Jpeg</span>.<span class="ident">into</span>()))
+        decoder.read_info().map_err(ImageError::from_jpeg)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>metadata = decoder.info().ok_or_else(|| {
+            ImageError::Decoding(DecodingError::from_format_hint(ImageFormat::Jpeg.into()))
         })<span class="question-mark">?</span>;
 
-        <span class="comment">// We convert CMYK data to RGB before returning it to the user.</span>
-        <span class="kw">if</span> <span class="ident">metadata</span>.<span class="ident">pixel_format</span> <span class="op">==</span> <span class="ident">jpeg::PixelFormat::CMYK32</span> {
-            <span class="ident">metadata</span>.<span class="ident">pixel_format</span> <span class="op">=</span> <span class="ident">jpeg::PixelFormat::RGB24</span>;
+        <span class="comment">// We convert CMYK data to RGB before returning it to the user.
+        </span><span class="kw">if </span>metadata.pixel_format == jpeg::PixelFormat::CMYK32 {
+            metadata.pixel_format = jpeg::PixelFormat::RGB24;
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">JpegDecoder</span> { <span class="ident">decoder</span>, <span class="ident">metadata</span> })
+        <span class="prelude-val">Ok</span>(JpegDecoder { decoder, metadata })
     }
 
-    <span class="doccomment">/// Configure the decoder to scale the image during decoding.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This efficiently scales the image by the smallest supported</span>
-    <span class="doccomment">/// scale factor that produces an image larger than or equal to</span>
-    <span class="doccomment">/// the requested size in at least one axis. The currently</span>
-    <span class="doccomment">/// implemented scale factors are 1/8, 1/4, 1/2 and 1.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// To generate a thumbnail of an exact size, pass the desired</span>
-    <span class="doccomment">/// size and then scale to the final size using a traditional</span>
-    <span class="doccomment">/// resampling algorithm.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The size of the image to be loaded, with the scale factor</span>
-    <span class="doccomment">/// applied, is returned.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scale</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">requested_width</span>: <span class="ident">u16</span>,
-        <span class="ident">requested_height</span>: <span class="ident">u16</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>(<span class="ident">u16</span>, <span class="ident">u16</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">decoder</span>
-            .<span class="ident">scale</span>(<span class="ident">requested_width</span>, <span class="ident">requested_height</span>)
-            .<span class="ident">map_err</span>(<span class="ident">ImageError::from_jpeg</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Configure the decoder to scale the image during decoding.
+    ///
+    /// This efficiently scales the image by the smallest supported
+    /// scale factor that produces an image larger than or equal to
+    /// the requested size in at least one axis. The currently
+    /// implemented scale factors are 1/8, 1/4, 1/2 and 1.
+    ///
+    /// To generate a thumbnail of an exact size, pass the desired
+    /// size and then scale to the final size using a traditional
+    /// resampling algorithm.
+    ///
+    /// The size of the image to be loaded, with the scale factor
+    /// applied, is returned.
+    </span><span class="kw">pub fn </span>scale(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        requested_width: u16,
+        requested_height: u16,
+    ) -&gt; ImageResult&lt;(u16, u16)&gt; {
+        <span class="kw">let </span>result = <span class="self">self
+            </span>.decoder
+            .scale(requested_width, requested_height)
+            .map_err(ImageError::from_jpeg)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">width</span> <span class="op">=</span> <span class="ident">result</span>.<span class="number">0</span>;
-        <span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">height</span> <span class="op">=</span> <span class="ident">result</span>.<span class="number">1</span>;
+        <span class="self">self</span>.metadata.width = result.<span class="number">0</span>;
+        <span class="self">self</span>.metadata.height = result.<span class="number">1</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+        <span class="prelude-val">Ok</span>(result)
     }
 }
 
-<span class="doccomment">/// Wrapper struct around a `Cursor&lt;Vec&lt;u8&gt;&gt;`</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JpegReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>);
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">JpegReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
+<span class="doccomment">/// Wrapper struct around a `Cursor&lt;Vec&lt;u8&gt;&gt;`
+</span><span class="kw">pub struct </span>JpegReader&lt;R&gt;(Cursor&lt;Vec&lt;u8&gt;&gt;, PhantomData&lt;R&gt;);
+<span class="kw">impl</span>&lt;R&gt; Read <span class="kw">for </span>JpegReader&lt;R&gt; {
+    <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.read(buf)
     }
-    <span class="kw">fn</span> <span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">position</span>() <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">buf</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">mem::swap</span>(<span class="ident">buf</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_mut</span>());
-            <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read_to_end</span>(<span class="ident">buf</span>)
+    <span class="kw">fn </span>read_to_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.position() == <span class="number">0 </span>&amp;&amp; buf.is_empty() {
+            mem::swap(buf, <span class="self">self</span>.<span class="number">0</span>.get_mut());
+            <span class="prelude-val">Ok</span>(buf.len())
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.<span class="number">0</span>.read_to_end(buf)
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">ImageDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">JpegDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Reader</span> <span class="op">=</span> <span class="ident">JpegReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>JpegDecoder&lt;R&gt; {
+    <span class="kw">type </span>Reader = JpegReader&lt;R&gt;;
 
-    <span class="kw">fn</span> <span class="ident">dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
+    <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
         (
-            <span class="ident">u32::from</span>(<span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">width</span>),
-            <span class="ident">u32::from</span>(<span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">height</span>),
+            u32::from(<span class="self">self</span>.metadata.width),
+            u32::from(<span class="self">self</span>.metadata.height),
         )
     }
 
-    <span class="kw">fn</span> <span class="ident">color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ColorType</span> {
-        <span class="ident">ColorType::from_jpeg</span>(<span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">pixel_format</span>)
+    <span class="kw">fn </span>color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ColorType {
+        ColorType::from_jpeg(<span class="self">self</span>.metadata.pixel_format)
     }
 
-    <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decoder</span>.<span class="ident">decode</span>().<span class="ident">map_err</span>(<span class="ident">ImageError::from_jpeg</span>)<span class="question-mark">?</span>;
-        <span class="ident">data</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">decoder</span>.<span class="ident">info</span>().<span class="ident">unwrap</span>().<span class="ident">pixel_format</span> {
-            <span class="ident">jpeg::PixelFormat::CMYK32</span> =&gt; <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>),
-            <span class="kw">_</span> =&gt; <span class="ident">data</span>,
+    <span class="kw">fn </span>into_reader(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; ImageResult&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="self">self</span>.decoder.decode().map_err(ImageError::from_jpeg)<span class="question-mark">?</span>;
+        data = <span class="kw">match </span><span class="self">self</span>.decoder.info().unwrap().pixel_format {
+            jpeg::PixelFormat::CMYK32 =&gt; cmyk_to_rgb(<span class="kw-2">&amp;</span>data),
+            <span class="kw">_ </span>=&gt; data,
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">JpegReader</span>(<span class="ident">Cursor::new</span>(<span class="ident">data</span>), <span class="ident">PhantomData</span>))
+        <span class="prelude-val">Ok</span>(JpegReader(Cursor::new(data), PhantomData))
     }
 
-    <span class="kw">fn</span> <span class="ident">read_image</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">assert_eq!</span>(<span class="ident">u64::try_from</span>(<span class="ident">buf</span>.<span class="ident">len</span>()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">total_bytes</span>()));
+    <span class="kw">fn </span>read_image(<span class="kw-2">mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; ImageResult&lt;()&gt; {
+        <span class="macro">assert_eq!</span>(u64::try_from(buf.len()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.total_bytes()));
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decoder</span>.<span class="ident">decode</span>().<span class="ident">map_err</span>(<span class="ident">ImageError::from_jpeg</span>)<span class="question-mark">?</span>;
-        <span class="ident">data</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">decoder</span>.<span class="ident">info</span>().<span class="ident">unwrap</span>().<span class="ident">pixel_format</span> {
-            <span class="ident">jpeg::PixelFormat::CMYK32</span> =&gt; <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>),
-            <span class="kw">_</span> =&gt; <span class="ident">data</span>,
+        <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="self">self</span>.decoder.decode().map_err(ImageError::from_jpeg)<span class="question-mark">?</span>;
+        data = <span class="kw">match </span><span class="self">self</span>.decoder.info().unwrap().pixel_format {
+            jpeg::PixelFormat::CMYK32 =&gt; cmyk_to_rgb(<span class="kw-2">&amp;</span>data),
+            <span class="kw">_ </span>=&gt; data,
         };
 
-        <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>);
+        buf.copy_from_slice(<span class="kw-2">&amp;</span>data);
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">fn</span> <span class="ident">cmyk_to_rgb</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">4</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">3</span> <span class="op">*</span> <span class="ident">count</span>];
+<span class="kw">fn </span>cmyk_to_rgb(input: <span class="kw-2">&amp;</span>[u8]) -&gt; Vec&lt;u8&gt; {
+    <span class="kw">let </span>count = input.len() / <span class="number">4</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>output = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">3 </span>* count];
 
-    <span class="kw">let</span> <span class="ident">in_pixels</span> <span class="op">=</span> <span class="ident">input</span>[..<span class="number">4</span> <span class="op">*</span> <span class="ident">count</span>].<span class="ident">chunks_exact</span>(<span class="number">4</span>);
-    <span class="kw">let</span> <span class="ident">out_pixels</span> <span class="op">=</span> <span class="ident">output</span>[..<span class="number">3</span> <span class="op">*</span> <span class="ident">count</span>].<span class="ident">chunks_exact_mut</span>(<span class="number">3</span>);
+    <span class="kw">let </span>in_pixels = input[..<span class="number">4 </span>* count].chunks_exact(<span class="number">4</span>);
+    <span class="kw">let </span>out_pixels = output[..<span class="number">3 </span>* count].chunks_exact_mut(<span class="number">3</span>);
 
-    <span class="kw">for</span> (<span class="ident">pixel</span>, <span class="ident">outp</span>) <span class="kw">in</span> <span class="ident">in_pixels</span>.<span class="ident">zip</span>(<span class="ident">out_pixels</span>) {
-        <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="number">255</span> <span class="op">-</span> <span class="ident">u16::from</span>(<span class="ident">pixel</span>[<span class="number">0</span>]);
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="number">255</span> <span class="op">-</span> <span class="ident">u16::from</span>(<span class="ident">pixel</span>[<span class="number">1</span>]);
-        <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="number">255</span> <span class="op">-</span> <span class="ident">u16::from</span>(<span class="ident">pixel</span>[<span class="number">2</span>]);
-        <span class="kw">let</span> <span class="ident">k</span> <span class="op">=</span> <span class="number">255</span> <span class="op">-</span> <span class="ident">u16::from</span>(<span class="ident">pixel</span>[<span class="number">3</span>]);
-        <span class="comment">// CMY -&gt; RGB</span>
-        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> (<span class="ident">k</span> <span class="op">*</span> <span class="ident">c</span>) <span class="op">/</span> <span class="number">255</span>;
-        <span class="kw">let</span> <span class="ident">g</span> <span class="op">=</span> (<span class="ident">k</span> <span class="op">*</span> <span class="ident">m</span>) <span class="op">/</span> <span class="number">255</span>;
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> (<span class="ident">k</span> <span class="op">*</span> <span class="ident">y</span>) <span class="op">/</span> <span class="number">255</span>;
+    <span class="kw">for </span>(pixel, outp) <span class="kw">in </span>in_pixels.zip(out_pixels) {
+        <span class="kw">let </span>c = <span class="number">255 </span>- u16::from(pixel[<span class="number">0</span>]);
+        <span class="kw">let </span>m = <span class="number">255 </span>- u16::from(pixel[<span class="number">1</span>]);
+        <span class="kw">let </span>y = <span class="number">255 </span>- u16::from(pixel[<span class="number">2</span>]);
+        <span class="kw">let </span>k = <span class="number">255 </span>- u16::from(pixel[<span class="number">3</span>]);
+        <span class="comment">// CMY -&gt; RGB
+        </span><span class="kw">let </span>r = (k * c) / <span class="number">255</span>;
+        <span class="kw">let </span>g = (k * m) / <span class="number">255</span>;
+        <span class="kw">let </span>b = (k * y) / <span class="number">255</span>;
 
-        <span class="ident">outp</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">u8</span>;
-        <span class="ident">outp</span>[<span class="number">1</span>] <span class="op">=</span> <span class="ident">g</span> <span class="kw">as</span> <span class="ident">u8</span>;
-        <span class="ident">outp</span>[<span class="number">2</span>] <span class="op">=</span> <span class="ident">b</span> <span class="kw">as</span> <span class="ident">u8</span>;
+        outp[<span class="number">0</span>] = r <span class="kw">as </span>u8;
+        outp[<span class="number">1</span>] = g <span class="kw">as </span>u8;
+        outp[<span class="number">2</span>] = b <span class="kw">as </span>u8;
     }
 
-    <span class="ident">output</span>
+    output
 }
 
-<span class="kw">impl</span> <span class="ident">ColorType</span> {
-    <span class="kw">fn</span> <span class="ident">from_jpeg</span>(<span class="ident">pixel_format</span>: <span class="ident">jpeg::PixelFormat</span>) -&gt; <span class="ident">ColorType</span> {
-        <span class="kw">use</span> <span class="ident">jpeg::PixelFormat</span>::<span class="kw-2">*</span>;
-        <span class="kw">match</span> <span class="ident">pixel_format</span> {
-            <span class="ident">L8</span> =&gt; <span class="ident">ColorType::L8</span>,
-            <span class="ident">L16</span> =&gt; <span class="ident">ColorType::L16</span>,
-            <span class="ident">RGB24</span> =&gt; <span class="ident">ColorType::Rgb8</span>,
-            <span class="ident">CMYK32</span> =&gt; <span class="macro">panic!</span>(),
+<span class="kw">impl </span>ColorType {
+    <span class="kw">fn </span>from_jpeg(pixel_format: jpeg::PixelFormat) -&gt; ColorType {
+        <span class="kw">use </span>jpeg::PixelFormat::<span class="kw-2">*</span>;
+        <span class="kw">match </span>pixel_format {
+            L8 =&gt; ColorType::L8,
+            L16 =&gt; ColorType::L16,
+            RGB24 =&gt; ColorType::Rgb8,
+            CMYK32 =&gt; <span class="macro">panic!</span>(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ImageError</span> {
-    <span class="kw">fn</span> <span class="ident">from_jpeg</span>(<span class="ident">err</span>: <span class="ident">jpeg::Error</span>) -&gt; <span class="ident">ImageError</span> {
-        <span class="kw">use</span> <span class="ident">jpeg::Error</span>::<span class="kw-2">*</span>;
-        <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">err</span> @ <span class="ident">Format</span>(<span class="kw">_</span>) =&gt; {
-                <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(<span class="ident">ImageFormat::Jpeg</span>.<span class="ident">into</span>(), <span class="ident">err</span>))
+<span class="kw">impl </span>ImageError {
+    <span class="kw">fn </span>from_jpeg(err: jpeg::Error) -&gt; ImageError {
+        <span class="kw">use </span>jpeg::Error::<span class="kw-2">*</span>;
+        <span class="kw">match </span>err {
+            err @ Format(<span class="kw">_</span>) =&gt; {
+                ImageError::Decoding(DecodingError::new(ImageFormat::Jpeg.into(), err))
             }
-            <span class="ident">Unsupported</span>(<span class="ident">desc</span>) =&gt; <span class="ident">ImageError::Unsupported</span>(<span class="ident">UnsupportedError::from_format_and_kind</span>(
-                <span class="ident">ImageFormat::Jpeg</span>.<span class="ident">into</span>(),
-                <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">desc</span>)),
+            Unsupported(desc) =&gt; ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+                ImageFormat::Jpeg.into(),
+                UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, desc)),
             )),
-            <span class="ident">Io</span>(<span class="ident">err</span>) =&gt; <span class="ident">ImageError::IoError</span>(<span class="ident">err</span>),
-            <span class="ident">Internal</span>(<span class="ident">err</span>) =&gt; {
-                <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(<span class="ident">ImageFormat::Jpeg</span>.<span class="ident">into</span>(), <span class="ident">err</span>))
+            Io(err) =&gt; ImageError::IoError(err),
+            Internal(err) =&gt; {
+                ImageError::Decoding(DecodingError::new(ImageFormat::Jpeg.into(), err))
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>)]</span>
-    <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">test</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+    </span><span class="kw">extern crate </span>test;
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::cmyk_to_rgb</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>)]</span>
-    <span class="kw">use</span> <span class="ident">test::Bencher</span>;
+    <span class="kw">use </span><span class="kw">super</span>::cmyk_to_rgb;
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+    </span><span class="kw">use </span>test::Bencher;
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>)]</span>
-    <span class="kw">const</span> <span class="ident">W</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">256</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>)]</span>
-    <span class="kw">const</span> <span class="ident">H</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">256</span>;
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+    </span><span class="kw">const </span>W: usize = <span class="number">256</span>;
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+    </span><span class="kw">const </span>H: usize = <span class="number">256</span>;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">cmyk_to_rgb_correct</span>() {
-        <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="number">0</span>..<span class="op">=</span><span class="number">255</span> {
-            <span class="kw">for</span> <span class="ident">k</span> <span class="kw">in</span> <span class="number">0</span>..<span class="op">=</span><span class="number">255</span> {
-                <span class="comment">// Based on R = 255 * (1-C/255) * (1-K/255)</span>
-                <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> (<span class="number">255.0</span> <span class="op">-</span> <span class="ident">f32::from</span>(<span class="ident">c</span>)) <span class="op">*</span> (<span class="number">255.0</span> <span class="op">-</span> <span class="ident">f32::from</span>(<span class="ident">k</span>)) <span class="op">/</span> <span class="number">255.0</span>;
-                <span class="kw">let</span> <span class="ident">r_u8</span> <span class="op">=</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">u8</span>;
-                <span class="kw">let</span> <span class="ident">convert_r</span> <span class="op">=</span> <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span>[<span class="ident">c</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="ident">k</span>])[<span class="number">0</span>];
-                <span class="kw">let</span> <span class="ident">convert_g</span> <span class="op">=</span> <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="ident">c</span>, <span class="number">0</span>, <span class="ident">k</span>])[<span class="number">1</span>];
-                <span class="kw">let</span> <span class="ident">convert_b</span> <span class="op">=</span> <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, <span class="ident">c</span>, <span class="ident">k</span>])[<span class="number">2</span>];
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>cmyk_to_rgb_correct() {
+        <span class="kw">for </span>c <span class="kw">in </span><span class="number">0</span>..=<span class="number">255 </span>{
+            <span class="kw">for </span>k <span class="kw">in </span><span class="number">0</span>..=<span class="number">255 </span>{
+                <span class="comment">// Based on R = 255 * (1-C/255) * (1-K/255)
+                </span><span class="kw">let </span>r = (<span class="number">255.0 </span>- f32::from(c)) * (<span class="number">255.0 </span>- f32::from(k)) / <span class="number">255.0</span>;
+                <span class="kw">let </span>r_u8 = r <span class="kw">as </span>u8;
+                <span class="kw">let </span>convert_r = cmyk_to_rgb(<span class="kw-2">&amp;</span>[c, <span class="number">0</span>, <span class="number">0</span>, k])[<span class="number">0</span>];
+                <span class="kw">let </span>convert_g = cmyk_to_rgb(<span class="kw-2">&amp;</span>[<span class="number">0</span>, c, <span class="number">0</span>, k])[<span class="number">1</span>];
+                <span class="kw">let </span>convert_b = cmyk_to_rgb(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>, c, k])[<span class="number">2</span>];
 
                 <span class="macro">assert_eq!</span>(
-                    <span class="ident">convert_r</span>, <span class="ident">r_u8</span>,
+                    convert_r, r_u8,
                     <span class="string">&quot;c = {}, k = {}, cymk_to_rgb[0] = {}, should be {}&quot;</span>,
-                    <span class="ident">c</span>, <span class="ident">k</span>, <span class="ident">convert_r</span>, <span class="ident">r_u8</span>
+                    c, k, convert_r, r_u8
                 );
                 <span class="macro">assert_eq!</span>(
-                    <span class="ident">convert_g</span>, <span class="ident">r_u8</span>,
+                    convert_g, r_u8,
                     <span class="string">&quot;m = {}, k = {}, cymk_to_rgb[1] = {}, should be {}&quot;</span>,
-                    <span class="ident">c</span>, <span class="ident">k</span>, <span class="ident">convert_g</span>, <span class="ident">r_u8</span>
+                    c, k, convert_g, r_u8
                 );
                 <span class="macro">assert_eq!</span>(
-                    <span class="ident">convert_b</span>, <span class="ident">r_u8</span>,
+                    convert_b, r_u8,
                     <span class="string">&quot;y = {}, k = {}, cymk_to_rgb[2] = {}, should be {}&quot;</span>,
-                    <span class="ident">c</span>, <span class="ident">k</span>, <span class="ident">convert_b</span>, <span class="ident">r_u8</span>
+                    c, k, convert_b, r_u8
                 );
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">single_pix_correct</span>(<span class="ident">cmyk_pix</span>: [<span class="ident">u8</span>; <span class="number">4</span>], <span class="ident">rgb_pix_true</span>: [<span class="ident">u8</span>; <span class="number">3</span>]) {
-        <span class="kw">let</span> <span class="ident">rgb_pix</span> <span class="op">=</span> <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span><span class="ident">cmyk_pix</span>);
+    <span class="kw">fn </span>single_pix_correct(cmyk_pix: [u8; <span class="number">4</span>], rgb_pix_true: [u8; <span class="number">3</span>]) {
+        <span class="kw">let </span>rgb_pix = cmyk_to_rgb(<span class="kw-2">&amp;</span>cmyk_pix);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">rgb_pix_true</span>[<span class="number">0</span>], <span class="ident">rgb_pix</span>[<span class="number">0</span>],
+            rgb_pix_true[<span class="number">0</span>], rgb_pix[<span class="number">0</span>],
             <span class="string">&quot;With CMYK {:?} expected {:?}, got {:?}&quot;</span>,
-            <span class="ident">cmyk_pix</span>, <span class="ident">rgb_pix_true</span>, <span class="ident">rgb_pix</span>
+            cmyk_pix, rgb_pix_true, rgb_pix
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">rgb_pix_true</span>[<span class="number">1</span>], <span class="ident">rgb_pix</span>[<span class="number">1</span>],
+            rgb_pix_true[<span class="number">1</span>], rgb_pix[<span class="number">1</span>],
             <span class="string">&quot;With CMYK {:?} expected {:?}, got {:?}&quot;</span>,
-            <span class="ident">cmyk_pix</span>, <span class="ident">rgb_pix_true</span>, <span class="ident">rgb_pix</span>
+            cmyk_pix, rgb_pix_true, rgb_pix
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident">rgb_pix_true</span>[<span class="number">2</span>], <span class="ident">rgb_pix</span>[<span class="number">2</span>],
+            rgb_pix_true[<span class="number">2</span>], rgb_pix[<span class="number">2</span>],
             <span class="string">&quot;With CMYK {:?} expected {:?}, got {:?}&quot;</span>,
-            <span class="ident">cmyk_pix</span>, <span class="ident">rgb_pix_true</span>, <span class="ident">rgb_pix</span>
+            cmyk_pix, rgb_pix_true, rgb_pix
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_assorted_colors</span>() {
-        <span class="kw">let</span> <span class="ident">cmyk_pixels</span> <span class="op">=</span> <span class="macro">vec!</span>[
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_assorted_colors() {
+        <span class="kw">let </span>cmyk_pixels = <span class="macro">vec!</span>[
             [<span class="number">0</span>, <span class="number">51</span>, <span class="number">102</span>, <span class="number">65</span>],
             [<span class="number">153</span>, <span class="number">204</span>, <span class="number">0</span>, <span class="number">65</span>],
             [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">67</span>],
@@ -2036,7 +2030,7 @@
             [<span class="number">102</span>, <span class="number">153</span>, <span class="number">204</span>, <span class="number">5</span>],
             [<span class="number">153</span>, <span class="number">204</span>, <span class="number">0</span>, <span class="number">10</span>],
         ];
-        <span class="kw">let</span> <span class="ident">rgb_pixels</span> <span class="op">=</span> <span class="macro">vec!</span>[
+        <span class="kw">let </span>rgb_pixels = <span class="macro">vec!</span>[
             [<span class="number">190</span>, <span class="number">152</span>, <span class="number">114</span>],
             [<span class="number">76</span>, <span class="number">38</span>, <span class="number">190</span>],
             [<span class="number">188</span>, <span class="number">188</span>, <span class="number">188</span>],
@@ -2543,37 +2537,36 @@
             [<span class="number">150</span>, <span class="number">100</span>, <span class="number">50</span>],
             [<span class="number">98</span>, <span class="number">49</span>, <span class="number">245</span>],
         ];
-        <span class="kw">for</span> (<span class="kw-2">&amp;</span><span class="ident">cmyk_pixel</span>, <span class="ident">rgb_pixel</span>) <span class="kw">in</span> <span class="ident">cmyk_pixels</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">rgb_pixels</span>) {
-            <span class="ident">single_pix_correct</span>(<span class="ident">cmyk_pixel</span>, <span class="ident">rgb_pixel</span>);
+        <span class="kw">for </span>(<span class="kw-2">&amp;</span>cmyk_pixel, rgb_pixel) <span class="kw">in </span>cmyk_pixels.iter().zip(rgb_pixels) {
+            single_pix_correct(cmyk_pixel, rgb_pixel);
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">bench</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bench_cmyk_to_rgb</span>(<span class="ident">b</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Bencher</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>((<span class="ident">W</span> <span class="op">*</span> <span class="ident">H</span> <span class="op">*</span> <span class="number">4</span>) <span class="kw">as</span> <span class="ident">usize</span>);
-        <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="number">0</span>..<span class="op">=</span><span class="number">255</span> {
-            <span class="kw">for</span> <span class="ident">k</span> <span class="kw">in</span> <span class="number">0</span>..<span class="op">=</span><span class="number">255</span> {
-                <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u8</span>);
-                <span class="ident">v</span>.<span class="ident">push</span>(<span class="number">0</span>);
-                <span class="ident">v</span>.<span class="ident">push</span>(<span class="number">0</span>);
-                <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">k</span> <span class="kw">as</span> <span class="ident">u8</span>);
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+    #[bench]
+    </span><span class="kw">fn </span>bench_cmyk_to_rgb(b: <span class="kw-2">&amp;mut </span>Bencher) {
+        <span class="kw">let </span><span class="kw-2">mut </span>v = Vec::with_capacity((W * H * <span class="number">4</span>) <span class="kw">as </span>usize);
+        <span class="kw">for </span>c <span class="kw">in </span><span class="number">0</span>..=<span class="number">255 </span>{
+            <span class="kw">for </span>k <span class="kw">in </span><span class="number">0</span>..=<span class="number">255 </span>{
+                v.push(c <span class="kw">as </span>u8);
+                v.push(<span class="number">0</span>);
+                v.push(<span class="number">0</span>);
+                v.push(k <span class="kw">as </span>u8);
             }
         }
 
-        <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>);
+        b.iter(|| {
+            cmyk_to_rgb(<span class="kw-2">&amp;</span>v);
         });
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;benchmarks&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">bench</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bench_cmyk_to_rgb_single</span>(<span class="ident">b</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Bencher</span>) {
-        <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="ident">cmyk_to_rgb</span>(<span class="kw-2">&amp;</span>[<span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>]);
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+    #[bench]
+    </span><span class="kw">fn </span>bench_cmyk_to_rgb_single(b: <span class="kw-2">&amp;mut </span>Bencher) {
+        b.iter(|| {
+            cmyk_to_rgb(<span class="kw-2">&amp;</span>[<span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>]);
         });
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

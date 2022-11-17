@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/encoder_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/encoder_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encoder_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -134,136 +128,135 @@
 <span id="128">128</span>
 <span id="129">129</span>
 <span id="130">130</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::bitstream::LsbWriter</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman_table::HuffmanTable</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lzvalue::LZType</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">use</span> <span class="ident">std::mem</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::bitstream::LsbWriter;
+<span class="kw">use </span><span class="kw">crate</span>::huffman_table::HuffmanTable;
+<span class="kw">use </span><span class="kw">crate</span>::lzvalue::LZType;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">use </span>std::mem;
 
-<span class="comment">// The first bits of each block, which describe the type of the block</span>
-<span class="comment">// `-TTF` - TT = type, 00 = stored, 01 = fixed, 10 = dynamic, 11 = reserved, F - 1 if final block</span>
-<span class="comment">// `0000`;</span>
-<span class="kw">const</span> <span class="ident">FIXED_FIRST_BYTE</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">0b010</span>;
-<span class="kw">const</span> <span class="ident">FIXED_FIRST_BYTE_FINAL</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">0b011</span>;
-<span class="kw">const</span> <span class="ident">DYNAMIC_FIRST_BYTE</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">0b100</span>;
-<span class="kw">const</span> <span class="ident">DYNAMIC_FIRST_BYTE_FINAL</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">0b101</span>;
+<span class="comment">// The first bits of each block, which describe the type of the block
+// `-TTF` - TT = type, 00 = stored, 01 = fixed, 10 = dynamic, 11 = reserved, F - 1 if final block
+// `0000`;
+</span><span class="kw">const </span>FIXED_FIRST_BYTE: u16 = <span class="number">0b010</span>;
+<span class="kw">const </span>FIXED_FIRST_BYTE_FINAL: u16 = <span class="number">0b011</span>;
+<span class="kw">const </span>DYNAMIC_FIRST_BYTE: u16 = <span class="number">0b100</span>;
+<span class="kw">const </span>DYNAMIC_FIRST_BYTE_FINAL: u16 = <span class="number">0b101</span>;
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BType</span> {
-    <span class="ident">NoCompression</span> <span class="op">=</span> <span class="number">0b00</span>,
-    <span class="ident">FixedHuffman</span> <span class="op">=</span> <span class="number">0b01</span>,
-    <span class="ident">DynamicHuffman</span> <span class="op">=</span> <span class="number">0b10</span>, <span class="comment">// Reserved = 0b11, //Error</span>
+<span class="attribute">#[allow(dead_code)]
+</span><span class="kw">pub enum </span>BType {
+    NoCompression = <span class="number">0b00</span>,
+    FixedHuffman = <span class="number">0b01</span>,
+    DynamicHuffman = <span class="number">0b10</span>, <span class="comment">// Reserved = 0b11, //Error
+</span>}
+
+<span class="doccomment">/// A struct wrapping a writer that writes data compressed using the provided Huffman table
+</span><span class="kw">pub struct </span>EncoderState {
+    <span class="kw">pub </span>huffman_table: HuffmanTable,
+    <span class="kw">pub </span>writer: LsbWriter,
 }
 
-<span class="doccomment">/// A struct wrapping a writer that writes data compressed using the provided Huffman table</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncoderState</span> {
-    <span class="kw">pub</span> <span class="ident">huffman_table</span>: <span class="ident">HuffmanTable</span>,
-    <span class="kw">pub</span> <span class="ident">writer</span>: <span class="ident">LsbWriter</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">EncoderState</span> {
-    <span class="doccomment">/// Creates a new encoder state using the provided Huffman table and writer</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">writer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">EncoderState</span> {
-        <span class="ident">EncoderState</span> {
-            <span class="ident">huffman_table</span>: <span class="ident">HuffmanTable::empty</span>(),
-            <span class="ident">writer</span>: <span class="ident">LsbWriter::new</span>(<span class="ident">writer</span>),
+<span class="kw">impl </span>EncoderState {
+    <span class="doccomment">/// Creates a new encoder state using the provided Huffman table and writer
+    </span><span class="kw">pub fn </span>new(writer: Vec&lt;u8&gt;) -&gt; EncoderState {
+        EncoderState {
+            huffman_table: HuffmanTable::empty(),
+            writer: LsbWriter::new(writer),
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-    <span class="doccomment">/// Creates a new encoder state using the fixed Huffman table</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fixed</span>(<span class="ident">writer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">EncoderState</span> {
-        <span class="ident">EncoderState</span> {
-            <span class="ident">huffman_table</span>: <span class="ident">HuffmanTable::fixed_table</span>(),
-            <span class="ident">writer</span>: <span class="ident">LsbWriter::new</span>(<span class="ident">writer</span>),
+    <span class="attribute">#[cfg(test)]
+    </span><span class="doccomment">/// Creates a new encoder state using the fixed Huffman table
+    </span><span class="kw">pub fn </span>fixed(writer: Vec&lt;u8&gt;) -&gt; EncoderState {
+        EncoderState {
+            huffman_table: HuffmanTable::fixed_table(),
+            writer: LsbWriter::new(writer),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inner_vec</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">w</span>
+    <span class="kw">pub fn </span>inner_vec(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt; {
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>.writer.w
     }
 
-    <span class="doccomment">/// Encodes a literal value to the writer</span>
-    <span class="kw">fn</span> <span class="ident">write_literal</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">u8</span>) {
-        <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">huffman_table</span>.<span class="ident">get_literal</span>(<span class="ident">value</span>);
-        <span class="macro">debug_assert!</span>(<span class="ident">code</span>.<span class="ident">length</span> <span class="op">&gt;</span> <span class="number">0</span>);
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">code</span>.<span class="ident">code</span>, <span class="ident">code</span>.<span class="ident">length</span>);
+    <span class="doccomment">/// Encodes a literal value to the writer
+    </span><span class="kw">fn </span>write_literal(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: u8) {
+        <span class="kw">let </span>code = <span class="self">self</span>.huffman_table.get_literal(value);
+        <span class="macro">debug_assert!</span>(code.length &gt; <span class="number">0</span>);
+        <span class="self">self</span>.writer.write_bits(code.code, code.length);
     }
 
-    <span class="doccomment">/// Write a LZvalue to the contained writer, returning Err if the write operation fails</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_lzvalue</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">LZType</span>) {
-        <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="ident">LZType::Literal</span>(<span class="ident">l</span>) =&gt; <span class="self">self</span>.<span class="ident">write_literal</span>(<span class="ident">l</span>),
-            <span class="ident">LZType::StoredLengthDistance</span>(<span class="ident">l</span>, <span class="ident">d</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">code</span>, <span class="ident">extra_bits_code</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">huffman_table</span>.<span class="ident">get_length_huffman</span>(<span class="ident">l</span>);
+    <span class="doccomment">/// Write a LZvalue to the contained writer, returning Err if the write operation fails
+    </span><span class="kw">pub fn </span>write_lzvalue(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: LZType) {
+        <span class="kw">match </span>value {
+            LZType::Literal(l) =&gt; <span class="self">self</span>.write_literal(l),
+            LZType::StoredLengthDistance(l, d) =&gt; {
+                <span class="kw">let </span>(code, extra_bits_code) = <span class="self">self</span>.huffman_table.get_length_huffman(l);
                 <span class="macro">debug_assert!</span>(
-                    <span class="ident">code</span>.<span class="ident">length</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>,
-                    <span class="string">&quot;Code: {:?}, Value: {:?}&quot;</span>, <span class="ident">code</span>, <span class="ident">value</span>
+                    code.length != <span class="number">0</span>,
+                    <span class="string">&quot;Code: {:?}, Value: {:?}&quot;</span>, code, value
                 );
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">code</span>.<span class="ident">code</span>, <span class="ident">code</span>.<span class="ident">length</span>);
-                <span class="self">self</span>.<span class="ident">writer</span>
-                    .<span class="ident">write_bits</span>(<span class="ident">extra_bits_code</span>.<span class="ident">code</span>, <span class="ident">extra_bits_code</span>.<span class="ident">length</span>);
+                <span class="self">self</span>.writer.write_bits(code.code, code.length);
+                <span class="self">self</span>.writer
+                    .write_bits(extra_bits_code.code, extra_bits_code.length);
 
-                <span class="kw">let</span> (<span class="ident">code</span>, <span class="ident">extra_bits_code</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">huffman_table</span>.<span class="ident">get_distance_huffman</span>(<span class="ident">d</span>);
+                <span class="kw">let </span>(code, extra_bits_code) = <span class="self">self</span>.huffman_table.get_distance_huffman(d);
                 <span class="macro">debug_assert!</span>(
-                    <span class="ident">code</span>.<span class="ident">length</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span>,
-                    <span class="string">&quot;Code: {:?}, Value: {:?}&quot;</span>, <span class="ident">code</span>, <span class="ident">value</span>
+                    code.length != <span class="number">0</span>,
+                    <span class="string">&quot;Code: {:?}, Value: {:?}&quot;</span>, code, value
                 );
 
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">code</span>.<span class="ident">code</span>, <span class="ident">code</span>.<span class="ident">length</span>);
-                <span class="self">self</span>.<span class="ident">writer</span>
-                    .<span class="ident">write_bits</span>(<span class="ident">extra_bits_code</span>.<span class="ident">code</span>, <span class="ident">extra_bits_code</span>.<span class="ident">length</span>)
+                <span class="self">self</span>.writer.write_bits(code.code, code.length);
+                <span class="self">self</span>.writer
+                    .write_bits(extra_bits_code.code, extra_bits_code.length)
             }
         };
     }
 
-    <span class="doccomment">/// Write the start of a block, returning Err if the write operation fails.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_start_of_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">fixed</span>: <span class="ident">bool</span>, <span class="ident">final_block</span>: <span class="ident">bool</span>) {
-        <span class="kw">if</span> <span class="ident">final_block</span> {
-            <span class="comment">// The final block has one bit flipped to indicate it&#39;s</span>
-            <span class="comment">// the final one</span>
-            <span class="kw">if</span> <span class="ident">fixed</span> {
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">FIXED_FIRST_BYTE_FINAL</span>, <span class="number">3</span>)
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">DYNAMIC_FIRST_BYTE_FINAL</span>, <span class="number">3</span>)
+    <span class="doccomment">/// Write the start of a block, returning Err if the write operation fails.
+    </span><span class="kw">pub fn </span>write_start_of_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>, fixed: bool, final_block: bool) {
+        <span class="kw">if </span>final_block {
+            <span class="comment">// The final block has one bit flipped to indicate it&#39;s
+            // the final one
+            </span><span class="kw">if </span>fixed {
+                <span class="self">self</span>.writer.write_bits(FIXED_FIRST_BYTE_FINAL, <span class="number">3</span>)
+            } <span class="kw">else </span>{
+                <span class="self">self</span>.writer.write_bits(DYNAMIC_FIRST_BYTE_FINAL, <span class="number">3</span>)
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">fixed</span> {
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">FIXED_FIRST_BYTE</span>, <span class="number">3</span>)
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">DYNAMIC_FIRST_BYTE</span>, <span class="number">3</span>)
+        } <span class="kw">else if </span>fixed {
+            <span class="self">self</span>.writer.write_bits(FIXED_FIRST_BYTE, <span class="number">3</span>)
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.writer.write_bits(DYNAMIC_FIRST_BYTE, <span class="number">3</span>)
         }
     }
 
-    <span class="doccomment">/// Write the end of block code</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_end_of_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">huffman_table</span>.<span class="ident">get_end_of_block</span>();
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">code</span>.<span class="ident">code</span>, <span class="ident">code</span>.<span class="ident">length</span>)
+    <span class="doccomment">/// Write the end of block code
+    </span><span class="kw">pub fn </span>write_end_of_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>code = <span class="self">self</span>.huffman_table.get_end_of_block();
+        <span class="self">self</span>.writer.write_bits(code.code, code.length)
     }
 
-    <span class="doccomment">/// Flush the contained writer and it&#39;s bitstream wrapper.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">flush_raw</span>()
+    <span class="doccomment">/// Flush the contained writer and it&#39;s bitstream wrapper.
+    </span><span class="kw">pub fn </span>flush(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.writer.flush_raw()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_huffman_to_fixed</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">huffman_table</span>.<span class="ident">set_to_fixed</span>()
+    <span class="kw">pub fn </span>set_huffman_to_fixed(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.huffman_table.set_to_fixed()
     }
 
-    <span class="doccomment">/// Reset the encoder state with a new writer, returning the old one if flushing</span>
-    <span class="doccomment">/// succeeds.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">writer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="comment">// Make sure the writer is flushed</span>
-        <span class="comment">// Ideally this should be done before this function is called, but we</span>
-        <span class="comment">// do it here just in case.</span>
-        <span class="self">self</span>.<span class="ident">flush</span>();
-        <span class="comment">// Reset the huffman table</span>
-        <span class="comment">// This probably isn&#39;t needed, but again, we do it just in case to avoid leaking any data</span>
-        <span class="comment">// If this turns out to be a performance issue, it can probably be ignored later.</span>
-        <span class="self">self</span>.<span class="ident">huffman_table</span> <span class="op">=</span> <span class="ident">HuffmanTable::empty</span>();
-        <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">w</span>, <span class="ident">writer</span>)
+    <span class="doccomment">/// Reset the encoder state with a new writer, returning the old one if flushing
+    /// succeeds.
+    </span><span class="attribute">#[cfg(test)]
+    </span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>, writer: Vec&lt;u8&gt;) -&gt; Vec&lt;u8&gt; {
+        <span class="comment">// Make sure the writer is flushed
+        // Ideally this should be done before this function is called, but we
+        // do it here just in case.
+        </span><span class="self">self</span>.flush();
+        <span class="comment">// Reset the huffman table
+        // This probably isn&#39;t needed, but again, we do it just in case to avoid leaking any data
+        // If this turns out to be a performance issue, it can probably be ignored later.
+        </span><span class="self">self</span>.huffman_table = HuffmanTable::empty();
+        mem::replace(<span class="kw-2">&amp;mut </span><span class="self">self</span>.writer.w, writer)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

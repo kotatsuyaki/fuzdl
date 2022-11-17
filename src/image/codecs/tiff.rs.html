@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/tiff.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tiff.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/tiff.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tiff.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -348,350 +342,349 @@
 <span id="342">342</span>
 <span id="343">343</span>
 <span id="344">344</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Decoding and Encoding of TIFF Images</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! TIFF (Tagged Image File Format) is a versatile image format that supports</span>
-<span class="doccomment">//! lossless and lossy compression.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Related Links</span>
-<span class="doccomment">//! * &lt;http://partners.adobe.com/public/developer/tiff/index.html&gt; - The TIFF specification</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Decoding and Encoding of TIFF Images
+//!
+//! TIFF (Tagged Image File Format) is a versatile image format that supports
+//! lossless and lossy compression.
+//!
+//! # Related Links
+//! * &lt;http://partners.adobe.com/public/developer/tiff/index.html&gt; - The TIFF specification
 
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">tiff</span>;
+</span><span class="kw">extern crate </span>tiff;
 
-<span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Cursor</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>, <span class="ident">Write</span>};
-<span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
-<span class="kw">use</span> <span class="ident">std::mem</span>;
+<span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Cursor, Read, Seek, Write};
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>std::mem;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::color</span>::{<span class="ident">ColorType</span>, <span class="ident">ExtendedColorType</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{
-    <span class="ident">DecodingError</span>, <span class="ident">EncodingError</span>, <span class="ident">ImageError</span>, <span class="ident">ImageResult</span>, <span class="ident">LimitError</span>, <span class="ident">LimitErrorKind</span>,
-    <span class="ident">ParameterError</span>, <span class="ident">ParameterErrorKind</span>, <span class="ident">UnsupportedError</span>, <span class="ident">UnsupportedErrorKind</span>,
+<span class="kw">use </span><span class="kw">crate</span>::color::{ColorType, ExtendedColorType};
+<span class="kw">use </span><span class="kw">crate</span>::error::{
+    DecodingError, EncodingError, ImageError, ImageResult, LimitError, LimitErrorKind,
+    ParameterError, ParameterErrorKind, UnsupportedError, UnsupportedErrorKind,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image</span>::{<span class="ident">ImageDecoder</span>, <span class="ident">ImageEncoder</span>, <span class="ident">ImageFormat</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>;
+<span class="kw">use </span><span class="kw">crate</span>::image::{ImageDecoder, ImageEncoder, ImageFormat};
+<span class="kw">use </span><span class="kw">crate</span>::utils;
 
-<span class="doccomment">/// Decoder for TIFF images.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TiffDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>,
+<span class="doccomment">/// Decoder for TIFF images.
+</span><span class="kw">pub struct </span>TiffDecoder&lt;R&gt;
+<span class="kw">where
+    </span>R: Read + Seek,
 {
-    <span class="ident">dimensions</span>: (<span class="ident">u32</span>, <span class="ident">u32</span>),
-    <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
+    dimensions: (u32, u32),
+    color_type: ColorType,
 
-    <span class="comment">// We only use an Option here so we can call with_limits on the decoder without moving.</span>
-    <span class="ident">inner</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">tiff::decoder::Decoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="comment">// We only use an Option here so we can call with_limits on the decoder without moving.
+    </span>inner: <span class="prelude-ty">Option</span>&lt;tiff::decoder::Decoder&lt;R&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">TiffDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>,
+<span class="kw">impl</span>&lt;R&gt; TiffDecoder&lt;R&gt;
+<span class="kw">where
+    </span>R: Read + Seek,
 {
-    <span class="doccomment">/// Create a new TiffDecoder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">r</span>: <span class="ident">R</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TiffDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">ImageError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">tiff::decoder::Decoder::new</span>(<span class="ident">r</span>).<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_decode</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Create a new TiffDecoder.
+    </span><span class="kw">pub fn </span>new(r: R) -&gt; <span class="prelude-ty">Result</span>&lt;TiffDecoder&lt;R&gt;, ImageError&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>inner = tiff::decoder::Decoder::new(r).map_err(ImageError::from_tiff_decode)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">dimensions</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">dimensions</span>().<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_decode</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">color_type</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">colortype</span>().<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_decode</span>)<span class="question-mark">?</span>;
-        <span class="kw">match</span> <span class="ident">inner</span>.<span class="ident">find_tag_unsigned_vec</span>::<span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>(<span class="ident">tiff::tags::Tag::SampleFormat</span>) {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">sample_formats</span>)) =&gt; {
-                <span class="kw">for</span> <span class="ident">format</span> <span class="kw">in</span> <span class="ident">sample_formats</span> {
-                    <span class="ident">check_sample_format</span>(<span class="ident">format</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>dimensions = inner.dimensions().map_err(ImageError::from_tiff_decode)<span class="question-mark">?</span>;
+        <span class="kw">let </span>color_type = inner.colortype().map_err(ImageError::from_tiff_decode)<span class="question-mark">?</span>;
+        <span class="kw">match </span>inner.find_tag_unsigned_vec::&lt;u16&gt;(tiff::tags::Tag::SampleFormat) {
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(sample_formats)) =&gt; {
+                <span class="kw">for </span>format <span class="kw">in </span>sample_formats {
+                    check_sample_format(format)<span class="question-mark">?</span>;
                 }
             }
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; { <span class="comment">/* assume UInt format */</span> }
-            <span class="prelude-val">Err</span>(<span class="ident">other</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::from_tiff_decode</span>(<span class="ident">other</span>)),
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; { <span class="comment">/* assume UInt format */ </span>}
+            <span class="prelude-val">Err</span>(other) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::from_tiff_decode(other)),
         };
 
-        <span class="kw">let</span> <span class="ident">color_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">color_type</span> {
-            <span class="ident">tiff::ColorType::Gray</span>(<span class="number">8</span>) =&gt; <span class="ident">ColorType::L8</span>,
-            <span class="ident">tiff::ColorType::Gray</span>(<span class="number">16</span>) =&gt; <span class="ident">ColorType::L16</span>,
-            <span class="ident">tiff::ColorType::GrayA</span>(<span class="number">8</span>) =&gt; <span class="ident">ColorType::La8</span>,
-            <span class="ident">tiff::ColorType::GrayA</span>(<span class="number">16</span>) =&gt; <span class="ident">ColorType::La16</span>,
-            <span class="ident">tiff::ColorType::RGB</span>(<span class="number">8</span>) =&gt; <span class="ident">ColorType::Rgb8</span>,
-            <span class="ident">tiff::ColorType::RGB</span>(<span class="number">16</span>) =&gt; <span class="ident">ColorType::Rgb16</span>,
-            <span class="ident">tiff::ColorType::RGBA</span>(<span class="number">8</span>) =&gt; <span class="ident">ColorType::Rgba8</span>,
-            <span class="ident">tiff::ColorType::RGBA</span>(<span class="number">16</span>) =&gt; <span class="ident">ColorType::Rgba16</span>,
+        <span class="kw">let </span>color_type = <span class="kw">match </span>color_type {
+            tiff::ColorType::Gray(<span class="number">8</span>) =&gt; ColorType::L8,
+            tiff::ColorType::Gray(<span class="number">16</span>) =&gt; ColorType::L16,
+            tiff::ColorType::GrayA(<span class="number">8</span>) =&gt; ColorType::La8,
+            tiff::ColorType::GrayA(<span class="number">16</span>) =&gt; ColorType::La16,
+            tiff::ColorType::RGB(<span class="number">8</span>) =&gt; ColorType::Rgb8,
+            tiff::ColorType::RGB(<span class="number">16</span>) =&gt; ColorType::Rgb16,
+            tiff::ColorType::RGBA(<span class="number">8</span>) =&gt; ColorType::Rgba8,
+            tiff::ColorType::RGBA(<span class="number">16</span>) =&gt; ColorType::Rgba16,
 
-            <span class="ident">tiff::ColorType::Palette</span>(<span class="ident">n</span>) <span class="op">|</span> <span class="ident">tiff::ColorType::Gray</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_unknown_color_type</span>(<span class="ident">n</span>))
+            tiff::ColorType::Palette(n) | tiff::ColorType::Gray(n) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(err_unknown_color_type(n))
             }
-            <span class="ident">tiff::ColorType::GrayA</span>(<span class="ident">n</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_unknown_color_type</span>(<span class="ident">n</span>.<span class="ident">saturating_mul</span>(<span class="number">2</span>))),
-            <span class="ident">tiff::ColorType::RGB</span>(<span class="ident">n</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_unknown_color_type</span>(<span class="ident">n</span>.<span class="ident">saturating_mul</span>(<span class="number">3</span>))),
-            <span class="ident">tiff::ColorType::RGBA</span>(<span class="ident">n</span>) <span class="op">|</span> <span class="ident">tiff::ColorType::CMYK</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_unknown_color_type</span>(<span class="ident">n</span>.<span class="ident">saturating_mul</span>(<span class="number">4</span>)))
+            tiff::ColorType::GrayA(n) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err_unknown_color_type(n.saturating_mul(<span class="number">2</span>))),
+            tiff::ColorType::RGB(n) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err_unknown_color_type(n.saturating_mul(<span class="number">3</span>))),
+            tiff::ColorType::RGBA(n) | tiff::ColorType::CMYK(n) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(err_unknown_color_type(n.saturating_mul(<span class="number">4</span>)))
             }
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">TiffDecoder</span> {
-            <span class="ident">dimensions</span>,
-            <span class="ident">color_type</span>,
-            <span class="ident">inner</span>: <span class="prelude-val">Some</span>(<span class="ident">inner</span>),
+        <span class="prelude-val">Ok</span>(TiffDecoder {
+            dimensions,
+            color_type,
+            inner: <span class="prelude-val">Some</span>(inner),
         })
     }
 }
 
-<span class="kw">fn</span> <span class="ident">check_sample_format</span>(<span class="ident">sample_format</span>: <span class="ident">u16</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ImageError</span><span class="op">&gt;</span> {
-    <span class="kw">match</span> <span class="ident">tiff::tags::SampleFormat::from_u16</span>(<span class="ident">sample_format</span>) {
-        <span class="prelude-val">Some</span>(<span class="ident">tiff::tags::SampleFormat::Uint</span>) =&gt; <span class="prelude-val">Ok</span>(()),
-        <span class="prelude-val">Some</span>(<span class="ident">other</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-            <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                <span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(),
-                <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="macro">format!</span>(
+<span class="kw">fn </span>check_sample_format(sample_format: u16) -&gt; <span class="prelude-ty">Result</span>&lt;(), ImageError&gt; {
+    <span class="kw">match </span>tiff::tags::SampleFormat::from_u16(sample_format) {
+        <span class="prelude-val">Some</span>(tiff::tags::SampleFormat::Uint) =&gt; <span class="prelude-val">Ok</span>(()),
+        <span class="prelude-val">Some</span>(other) =&gt; <span class="prelude-val">Err</span>(ImageError::Unsupported(
+            UnsupportedError::from_format_and_kind(
+                ImageFormat::Tiff.into(),
+                UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
                     <span class="string">&quot;Unhandled TIFF sample format {:?}&quot;</span>,
-                    <span class="ident">other</span>
+                    other
                 )),
             ),
         )),
-        <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::from_format_hint</span>(
-            <span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(),
+        <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ImageError::Decoding(DecodingError::from_format_hint(
+            ImageFormat::Tiff.into(),
         ))),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">err_unknown_color_type</span>(<span class="ident">value</span>: <span class="ident">u8</span>) -&gt; <span class="ident">ImageError</span> {
-    <span class="ident">ImageError::Unsupported</span>(<span class="ident">UnsupportedError::from_format_and_kind</span>(
-        <span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(),
-        <span class="ident">UnsupportedErrorKind::Color</span>(<span class="ident">ExtendedColorType::Unknown</span>(<span class="ident">value</span>)),
+<span class="kw">fn </span>err_unknown_color_type(value: u8) -&gt; ImageError {
+    ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+        ImageFormat::Tiff.into(),
+        UnsupportedErrorKind::Color(ExtendedColorType::Unknown(value)),
     ))
 }
 
-<span class="kw">impl</span> <span class="ident">ImageError</span> {
-    <span class="kw">fn</span> <span class="ident">from_tiff_decode</span>(<span class="ident">err</span>: <span class="ident">tiff::TiffError</span>) -&gt; <span class="ident">ImageError</span> {
-        <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">tiff::TiffError::IoError</span>(<span class="ident">err</span>) =&gt; <span class="ident">ImageError::IoError</span>(<span class="ident">err</span>),
-            <span class="ident">err</span> @ <span class="ident">tiff::TiffError::FormatError</span>(<span class="kw">_</span>)
-            <span class="op">|</span> <span class="ident">err</span> @ <span class="ident">tiff::TiffError::IntSizeError</span>
-            <span class="op">|</span> <span class="ident">err</span> @ <span class="ident">tiff::TiffError::UsageError</span>(<span class="kw">_</span>) =&gt; {
-                <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(<span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(), <span class="ident">err</span>))
+<span class="kw">impl </span>ImageError {
+    <span class="kw">fn </span>from_tiff_decode(err: tiff::TiffError) -&gt; ImageError {
+        <span class="kw">match </span>err {
+            tiff::TiffError::IoError(err) =&gt; ImageError::IoError(err),
+            err @ tiff::TiffError::FormatError(<span class="kw">_</span>)
+            | err @ tiff::TiffError::IntSizeError
+            | err @ tiff::TiffError::UsageError(<span class="kw">_</span>) =&gt; {
+                ImageError::Decoding(DecodingError::new(ImageFormat::Tiff.into(), err))
             }
-            <span class="ident">tiff::TiffError::UnsupportedError</span>(<span class="ident">desc</span>) =&gt; {
-                <span class="ident">ImageError::Unsupported</span>(<span class="ident">UnsupportedError::from_format_and_kind</span>(
-                    <span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(),
-                    <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="ident">desc</span>.<span class="ident">to_string</span>()),
+            tiff::TiffError::UnsupportedError(desc) =&gt; {
+                ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tiff.into(),
+                    UnsupportedErrorKind::GenericFeature(desc.to_string()),
                 ))
             }
-            <span class="ident">tiff::TiffError::LimitsExceeded</span> =&gt; {
-                <span class="ident">ImageError::Limits</span>(<span class="ident">LimitError::from_kind</span>(<span class="ident">LimitErrorKind::InsufficientMemory</span>))
+            tiff::TiffError::LimitsExceeded =&gt; {
+                ImageError::Limits(LimitError::from_kind(LimitErrorKind::InsufficientMemory))
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">from_tiff_encode</span>(<span class="ident">err</span>: <span class="ident">tiff::TiffError</span>) -&gt; <span class="ident">ImageError</span> {
-        <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">tiff::TiffError::IoError</span>(<span class="ident">err</span>) =&gt; <span class="ident">ImageError::IoError</span>(<span class="ident">err</span>),
-            <span class="ident">err</span> @ <span class="ident">tiff::TiffError::FormatError</span>(<span class="kw">_</span>)
-            <span class="op">|</span> <span class="ident">err</span> @ <span class="ident">tiff::TiffError::IntSizeError</span>
-            <span class="op">|</span> <span class="ident">err</span> @ <span class="ident">tiff::TiffError::UsageError</span>(<span class="kw">_</span>) =&gt; {
-                <span class="ident">ImageError::Encoding</span>(<span class="ident">EncodingError::new</span>(<span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(), <span class="ident">err</span>))
+    <span class="kw">fn </span>from_tiff_encode(err: tiff::TiffError) -&gt; ImageError {
+        <span class="kw">match </span>err {
+            tiff::TiffError::IoError(err) =&gt; ImageError::IoError(err),
+            err @ tiff::TiffError::FormatError(<span class="kw">_</span>)
+            | err @ tiff::TiffError::IntSizeError
+            | err @ tiff::TiffError::UsageError(<span class="kw">_</span>) =&gt; {
+                ImageError::Encoding(EncodingError::new(ImageFormat::Tiff.into(), err))
             }
-            <span class="ident">tiff::TiffError::UnsupportedError</span>(<span class="ident">desc</span>) =&gt; {
-                <span class="ident">ImageError::Unsupported</span>(<span class="ident">UnsupportedError::from_format_and_kind</span>(
-                    <span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(),
-                    <span class="ident">UnsupportedErrorKind::GenericFeature</span>(<span class="ident">desc</span>.<span class="ident">to_string</span>()),
+            tiff::TiffError::UnsupportedError(desc) =&gt; {
+                ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tiff.into(),
+                    UnsupportedErrorKind::GenericFeature(desc.to_string()),
                 ))
             }
-            <span class="ident">tiff::TiffError::LimitsExceeded</span> =&gt; {
-                <span class="ident">ImageError::Limits</span>(<span class="ident">LimitError::from_kind</span>(<span class="ident">LimitErrorKind::InsufficientMemory</span>))
+            tiff::TiffError::LimitsExceeded =&gt; {
+                ImageError::Limits(LimitError::from_kind(LimitErrorKind::InsufficientMemory))
             }
         }
     }
 }
 
-<span class="doccomment">/// Wrapper struct around a `Cursor&lt;Vec&lt;u8&gt;&gt;`</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TiffReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>);
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">TiffReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
+<span class="doccomment">/// Wrapper struct around a `Cursor&lt;Vec&lt;u8&gt;&gt;`
+</span><span class="kw">pub struct </span>TiffReader&lt;R&gt;(Cursor&lt;Vec&lt;u8&gt;&gt;, PhantomData&lt;R&gt;);
+<span class="kw">impl</span>&lt;R&gt; Read <span class="kw">for </span>TiffReader&lt;R&gt; {
+    <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.read(buf)
     }
-    <span class="kw">fn</span> <span class="ident">read_to_end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">position</span>() <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">buf</span>.<span class="ident">is_empty</span>() {
-            <span class="ident">mem::swap</span>(<span class="ident">buf</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_mut</span>());
-            <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">read_to_end</span>(<span class="ident">buf</span>)
+    <span class="kw">fn </span>read_to_end(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;) -&gt; io::Result&lt;usize&gt; {
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.position() == <span class="number">0 </span>&amp;&amp; buf.is_empty() {
+            mem::swap(buf, <span class="self">self</span>.<span class="number">0</span>.get_mut());
+            <span class="prelude-val">Ok</span>(buf.len())
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.<span class="number">0</span>.read_to_end(buf)
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ImageDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TiffDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Reader</span> <span class="op">=</span> <span class="ident">TiffReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>TiffDecoder&lt;R&gt; {
+    <span class="kw">type </span>Reader = TiffReader&lt;R&gt;;
 
-    <span class="kw">fn</span> <span class="ident">dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
-        <span class="self">self</span>.<span class="ident">dimensions</span>
+    <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
+        <span class="self">self</span>.dimensions
     }
 
-    <span class="kw">fn</span> <span class="ident">color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ColorType</span> {
-        <span class="self">self</span>.<span class="ident">color_type</span>
+    <span class="kw">fn </span>color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ColorType {
+        <span class="self">self</span>.color_type
     }
 
-    <span class="kw">fn</span> <span class="ident">set_limits</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">limits</span>: <span class="ident"><span class="kw">crate</span>::io::Limits</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">limits</span>.<span class="ident">check_support</span>(<span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::io::LimitSupport::default</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn </span>set_limits(<span class="kw-2">&amp;mut </span><span class="self">self</span>, limits: <span class="kw">crate</span>::io::Limits) -&gt; ImageResult&lt;()&gt; {
+        limits.check_support(<span class="kw-2">&amp;</span><span class="kw">crate</span>::io::LimitSupport::default())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">dimensions</span>();
-        <span class="ident">limits</span>.<span class="ident">check_dimensions</span>(<span class="ident">width</span>, <span class="ident">height</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>(width, height) = <span class="self">self</span>.dimensions();
+        limits.check_dimensions(width, height)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">max_alloc</span> <span class="op">=</span> <span class="ident">limits</span>.<span class="ident">max_alloc</span>.<span class="ident">unwrap_or</span>(<span class="ident">u64::MAX</span>);
-        <span class="kw">let</span> <span class="ident">max_intermediate_alloc</span> <span class="op">=</span> <span class="ident">max_alloc</span>.<span class="ident">saturating_sub</span>(<span class="self">self</span>.<span class="ident">total_bytes</span>());
+        <span class="kw">let </span>max_alloc = limits.max_alloc.unwrap_or(u64::MAX);
+        <span class="kw">let </span>max_intermediate_alloc = max_alloc.saturating_sub(<span class="self">self</span>.total_bytes());
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tiff_limits</span>: <span class="ident">tiff::decoder::Limits</span> <span class="op">=</span> <span class="ident">Default::default</span>();
-        <span class="ident">tiff_limits</span>.<span class="ident">decoding_buffer_size</span> <span class="op">=</span>
-            <span class="ident">usize::try_from</span>(<span class="ident">max_alloc</span> <span class="op">-</span> <span class="ident">max_intermediate_alloc</span>).<span class="ident">unwrap_or</span>(<span class="ident">usize::MAX</span>);
-        <span class="ident">tiff_limits</span>.<span class="ident">intermediate_buffer_size</span> <span class="op">=</span>
-            <span class="ident">usize::try_from</span>(<span class="ident">max_intermediate_alloc</span>).<span class="ident">unwrap_or</span>(<span class="ident">usize::MAX</span>);
-        <span class="ident">tiff_limits</span>.<span class="ident">ifd_value_size</span> <span class="op">=</span> <span class="ident">tiff_limits</span>.<span class="ident">intermediate_buffer_size</span>;
-        <span class="self">self</span>.<span class="ident">inner</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>().<span class="ident">with_limits</span>(<span class="ident">tiff_limits</span>));
+        <span class="kw">let </span><span class="kw-2">mut </span>tiff_limits: tiff::decoder::Limits = Default::default();
+        tiff_limits.decoding_buffer_size =
+            usize::try_from(max_alloc - max_intermediate_alloc).unwrap_or(usize::MAX);
+        tiff_limits.intermediate_buffer_size =
+            usize::try_from(max_intermediate_alloc).unwrap_or(usize::MAX);
+        tiff_limits.ifd_value_size = tiff_limits.intermediate_buffer_size;
+        <span class="self">self</span>.inner = <span class="prelude-val">Some</span>(<span class="self">self</span>.inner.take().unwrap().with_limits(tiff_limits));
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
-            .<span class="ident">inner</span>
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">read_image</span>()
-            .<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_decode</span>)<span class="question-mark">?</span>
-        {
-            <span class="ident">tiff::decoder::DecodingResult::U8</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
-            <span class="ident">tiff::decoder::DecodingResult::U16</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::U32</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::U64</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::I8</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::I16</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::I32</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::I64</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::F32</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
-            <span class="ident">tiff::decoder::DecodingResult::F64</span>(<span class="ident">v</span>) =&gt; <span class="ident">utils::vec_copy_to_u8</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>),
+    <span class="kw">fn </span>into_reader(<span class="self">self</span>) -&gt; ImageResult&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="kw">let </span>buf = <span class="kw">match </span><span class="self">self
+            </span>.inner
+            .unwrap()
+            .read_image()
+            .map_err(ImageError::from_tiff_decode)<span class="question-mark">?
+        </span>{
+            tiff::decoder::DecodingResult::U8(v) =&gt; v,
+            tiff::decoder::DecodingResult::U16(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::U32(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::U64(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::I8(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::I16(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::I32(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::I64(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::F32(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
+            tiff::decoder::DecodingResult::F64(v) =&gt; utils::vec_copy_to_u8(<span class="kw-2">&amp;</span>v),
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">TiffReader</span>(<span class="ident">Cursor::new</span>(<span class="ident">buf</span>), <span class="ident">PhantomData</span>))
+        <span class="prelude-val">Ok</span>(TiffReader(Cursor::new(buf), PhantomData))
     }
 
-    <span class="kw">fn</span> <span class="ident">read_image</span>(<span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">assert_eq!</span>(<span class="ident">u64::try_from</span>(<span class="ident">buf</span>.<span class="ident">len</span>()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">total_bytes</span>()));
-        <span class="kw">match</span> <span class="self">self</span>
-            .<span class="ident">inner</span>
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">read_image</span>()
-            .<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_decode</span>)<span class="question-mark">?</span>
-        {
-            <span class="ident">tiff::decoder::DecodingResult::U8</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>);
+    <span class="kw">fn </span>read_image(<span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; ImageResult&lt;()&gt; {
+        <span class="macro">assert_eq!</span>(u64::try_from(buf.len()), <span class="prelude-val">Ok</span>(<span class="self">self</span>.total_bytes()));
+        <span class="kw">match </span><span class="self">self
+            </span>.inner
+            .unwrap()
+            .read_image()
+            .map_err(ImageError::from_tiff_decode)<span class="question-mark">?
+        </span>{
+            tiff::decoder::DecodingResult::U8(v) =&gt; {
+                buf.copy_from_slice(<span class="kw-2">&amp;</span>v);
             }
-            <span class="ident">tiff::decoder::DecodingResult::U16</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::U16(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::U32</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::U32(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::U64</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::U64(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::I8</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::I8(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::I16</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::I16(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::I32</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::I32(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::I64</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::I64(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::F32</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::F32(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
-            <span class="ident">tiff::decoder::DecodingResult::F64</span>(<span class="ident">v</span>) =&gt; {
-                <span class="ident">buf</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>));
+            tiff::decoder::DecodingResult::F64(v) =&gt; {
+                buf.copy_from_slice(bytemuck::cast_slice(<span class="kw-2">&amp;</span>v));
             }
         }
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Encoder for tiff images</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TiffEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="ident">w</span>: <span class="ident">W</span>,
+<span class="doccomment">/// Encoder for tiff images
+</span><span class="kw">pub struct </span>TiffEncoder&lt;W&gt; {
+    w: W,
 }
 
-<span class="comment">// Utility to simplify and deduplicate error handling during 16-bit encoding.</span>
-<span class="kw">fn</span> <span class="ident">u8_slice_as_u16</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u16</span>]<span class="op">&gt;</span> {
-    <span class="ident">bytemuck::try_cast_slice</span>(<span class="ident">buf</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-        <span class="comment">// If the buffer is not aligned or the correct length for a u16 slice, err.</span>
-        <span class="comment">//</span>
-        <span class="comment">// `bytemuck::PodCastError` of bytemuck-1.2.0 does not implement</span>
-        <span class="comment">// `Error` and `Display` trait.</span>
-        <span class="comment">// See &lt;https://github.com/Lokathor/bytemuck/issues/22&gt;.</span>
-        <span class="ident">ImageError::Parameter</span>(<span class="ident">ParameterError::from_kind</span>(<span class="ident">ParameterErrorKind::Generic</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">err</span>),
+<span class="comment">// Utility to simplify and deduplicate error handling during 16-bit encoding.
+</span><span class="kw">fn </span>u8_slice_as_u16(buf: <span class="kw-2">&amp;</span>[u8]) -&gt; ImageResult&lt;<span class="kw-2">&amp;</span>[u16]&gt; {
+    bytemuck::try_cast_slice(buf).map_err(|err| {
+        <span class="comment">// If the buffer is not aligned or the correct length for a u16 slice, err.
+        //
+        // `bytemuck::PodCastError` of bytemuck-1.2.0 does not implement
+        // `Error` and `Display` trait.
+        // See &lt;https://github.com/Lokathor/bytemuck/issues/22&gt;.
+        </span>ImageError::Parameter(ParameterError::from_kind(ParameterErrorKind::Generic(
+            <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, err),
         )))
     })
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">TiffEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a new encoder that writes its output to `w`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">w</span>: <span class="ident">W</span>) -&gt; <span class="ident">TiffEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="ident">TiffEncoder</span> { <span class="ident">w</span> }
+<span class="kw">impl</span>&lt;W: Write + Seek&gt; TiffEncoder&lt;W&gt; {
+    <span class="doccomment">/// Create a new encoder that writes its output to `w`
+    </span><span class="kw">pub fn </span>new(w: W) -&gt; TiffEncoder&lt;W&gt; {
+        TiffEncoder { w }
     }
 
-    <span class="doccomment">/// Encodes the image `image` that has dimensions `width` and `height` and `ColorType` `c`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// 16-bit types assume the buffer is native endian.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode</span>(<span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">width</span>: <span class="ident">u32</span>, <span class="ident">height</span>: <span class="ident">u32</span>, <span class="ident">color</span>: <span class="ident">ColorType</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoder</span> <span class="op">=</span>
-            <span class="ident">tiff::encoder::TiffEncoder::new</span>(<span class="self">self</span>.<span class="ident">w</span>).<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_encode</span>)<span class="question-mark">?</span>;
-        <span class="kw">match</span> <span class="ident">color</span> {
-            <span class="ident">ColorType::L8</span> =&gt; {
-                <span class="ident">encoder</span>.<span class="ident">write_image</span>::<span class="op">&lt;</span><span class="ident">tiff::encoder::colortype::Gray8</span><span class="op">&gt;</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">data</span>)
+    <span class="doccomment">/// Encodes the image `image` that has dimensions `width` and `height` and `ColorType` `c`.
+    ///
+    /// 16-bit types assume the buffer is native endian.
+    </span><span class="kw">pub fn </span>encode(<span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8], width: u32, height: u32, color: ColorType) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>encoder =
+            tiff::encoder::TiffEncoder::new(<span class="self">self</span>.w).map_err(ImageError::from_tiff_encode)<span class="question-mark">?</span>;
+        <span class="kw">match </span>color {
+            ColorType::L8 =&gt; {
+                encoder.write_image::&lt;tiff::encoder::colortype::Gray8&gt;(width, height, data)
             }
-            <span class="ident">ColorType::Rgb8</span> =&gt; {
-                <span class="ident">encoder</span>.<span class="ident">write_image</span>::<span class="op">&lt;</span><span class="ident">tiff::encoder::colortype::RGB8</span><span class="op">&gt;</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">data</span>)
+            ColorType::Rgb8 =&gt; {
+                encoder.write_image::&lt;tiff::encoder::colortype::RGB8&gt;(width, height, data)
             }
-            <span class="ident">ColorType::Rgba8</span> =&gt; {
-                <span class="ident">encoder</span>.<span class="ident">write_image</span>::<span class="op">&lt;</span><span class="ident">tiff::encoder::colortype::RGBA8</span><span class="op">&gt;</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">data</span>)
+            ColorType::Rgba8 =&gt; {
+                encoder.write_image::&lt;tiff::encoder::colortype::RGBA8&gt;(width, height, data)
             }
-            <span class="ident">ColorType::L16</span> =&gt; <span class="ident">encoder</span>.<span class="ident">write_image</span>::<span class="op">&lt;</span><span class="ident">tiff::encoder::colortype::Gray16</span><span class="op">&gt;</span>(
-                <span class="ident">width</span>,
-                <span class="ident">height</span>,
-                <span class="ident">u8_slice_as_u16</span>(<span class="ident">data</span>)<span class="question-mark">?</span>,
+            ColorType::L16 =&gt; encoder.write_image::&lt;tiff::encoder::colortype::Gray16&gt;(
+                width,
+                height,
+                u8_slice_as_u16(data)<span class="question-mark">?</span>,
             ),
-            <span class="ident">ColorType::Rgb16</span> =&gt; <span class="ident">encoder</span>.<span class="ident">write_image</span>::<span class="op">&lt;</span><span class="ident">tiff::encoder::colortype::RGB16</span><span class="op">&gt;</span>(
-                <span class="ident">width</span>,
-                <span class="ident">height</span>,
-                <span class="ident">u8_slice_as_u16</span>(<span class="ident">data</span>)<span class="question-mark">?</span>,
+            ColorType::Rgb16 =&gt; encoder.write_image::&lt;tiff::encoder::colortype::RGB16&gt;(
+                width,
+                height,
+                u8_slice_as_u16(data)<span class="question-mark">?</span>,
             ),
-            <span class="ident">ColorType::Rgba16</span> =&gt; <span class="ident">encoder</span>.<span class="ident">write_image</span>::<span class="op">&lt;</span><span class="ident">tiff::encoder::colortype::RGBA16</span><span class="op">&gt;</span>(
-                <span class="ident">width</span>,
-                <span class="ident">height</span>,
-                <span class="ident">u8_slice_as_u16</span>(<span class="ident">data</span>)<span class="question-mark">?</span>,
+            ColorType::Rgba16 =&gt; encoder.write_image::&lt;tiff::encoder::colortype::RGBA16&gt;(
+                width,
+                height,
+                u8_slice_as_u16(data)<span class="question-mark">?</span>,
             ),
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Unsupported</span>(
-                    <span class="ident">UnsupportedError::from_format_and_kind</span>(
-                        <span class="ident">ImageFormat::Tiff</span>.<span class="ident">into</span>(),
-                        <span class="ident">UnsupportedErrorKind::Color</span>(<span class="ident">color</span>.<span class="ident">into</span>()),
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Tiff.into(),
+                        UnsupportedErrorKind::Color(color.into()),
                     ),
                 ))
             }
         }
-        .<span class="ident">map_err</span>(<span class="ident">ImageError::from_tiff_encode</span>)<span class="question-mark">?</span>;
+        .map_err(ImageError::from_tiff_encode)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ImageEncoder</span> <span class="kw">for</span> <span class="ident">TiffEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write_image</span>(
+<span class="kw">impl</span>&lt;W: Write + Seek&gt; ImageEncoder <span class="kw">for </span>TiffEncoder&lt;W&gt; {
+    <span class="kw">fn </span>write_image(
         <span class="self">self</span>,
-        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encode</span>(<span class="ident">buf</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color_type</span>)
+        buf: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        color_type: ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="self">self</span>.encode(buf, width, height, color_type)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

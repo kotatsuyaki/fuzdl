@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/openexr.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>openexr.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/openexr.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>openexr.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../image/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -597,336 +591,336 @@
 <span id="591">591</span>
 <span id="592">592</span>
 <span id="593">593</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Decoding of OpenEXR (.exr) Images</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! OpenEXR is an image format that is widely used, especially in VFX,</span>
-<span class="doccomment">//! because it supports lossless and lossy compression for float data.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This decoder only supports RGB and RGBA images.</span>
-<span class="doccomment">//! If an image does not contain alpha information,</span>
-<span class="doccomment">//! it is defaulted to `1.0` (no transparency).</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Related Links</span>
-<span class="doccomment">//! * &lt;https://www.openexr.com/documentation.html&gt; - The OpenEXR reference.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Current limitations (July 2021):</span>
-<span class="doccomment">//!     - only pixel type `Rgba32F` and `Rgba16F` are supported</span>
-<span class="doccomment">//!     - only non-deep rgb/rgba files supported, no conversion from/to YCbCr or similar</span>
-<span class="doccomment">//!     - only the first non-deep rgb layer is used</span>
-<span class="doccomment">//!     - only the largest mip map level is used</span>
-<span class="doccomment">//!     - pixels outside display window are lost</span>
-<span class="doccomment">//!     - meta data is lost</span>
-<span class="doccomment">//!     - dwaa/dwab compressed images not supported yet by the exr library</span>
-<span class="doccomment">//!     - (chroma) subsampling not supported yet by the exr library</span>
-<span class="kw">use</span> <span class="ident">exr::prelude</span>::<span class="kw-2">*</span>;
+</pre><pre class="rust"><code><span class="doccomment">//! Decoding of OpenEXR (.exr) Images
+//!
+//! OpenEXR is an image format that is widely used, especially in VFX,
+//! because it supports lossless and lossy compression for float data.
+//!
+//! This decoder only supports RGB and RGBA images.
+//! If an image does not contain alpha information,
+//! it is defaulted to `1.0` (no transparency).
+//!
+//! # Related Links
+//! * &lt;https://www.openexr.com/documentation.html&gt; - The OpenEXR reference.
+//!
+//!
+//! Current limitations (July 2021):
+//!     - only pixel type `Rgba32F` and `Rgba16F` are supported
+//!     - only non-deep rgb/rgba files supported, no conversion from/to YCbCr or similar
+//!     - only the first non-deep rgb layer is used
+//!     - only the largest mip map level is used
+//!     - pixels outside display window are lost
+//!     - meta data is lost
+//!     - dwaa/dwab compressed images not supported yet by the exr library
+//!     - (chroma) subsampling not supported yet by the exr library
+</span><span class="kw">use </span>exr::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">DecodingError</span>, <span class="ident">EncodingError</span>, <span class="ident">ImageFormatHint</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::image::decoder_to_vec</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">ColorType</span>, <span class="ident">ExtendedColorType</span>, <span class="ident">ImageDecoder</span>, <span class="ident">ImageEncoder</span>, <span class="ident">ImageError</span>, <span class="ident">ImageFormat</span>, <span class="ident">ImageResult</span>,
-    <span class="ident">Progress</span>,
+<span class="kw">use </span><span class="kw">crate</span>::error::{DecodingError, EncodingError, ImageFormatHint};
+<span class="kw">use </span><span class="kw">crate</span>::image::decoder_to_vec;
+<span class="kw">use crate</span>::{
+    ColorType, ExtendedColorType, ImageDecoder, ImageEncoder, ImageError, ImageFormat, ImageResult,
+    Progress,
 };
-<span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="ident">Cursor</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>, <span class="ident">Write</span>};
+<span class="kw">use </span>std::convert::TryInto;
+<span class="kw">use </span>std::io::{Cursor, Read, Seek, Write};
 
-<span class="doccomment">/// An OpenEXR decoder. Immediately reads the meta data from the file.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpenExrDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="ident">exr_reader</span>: <span class="ident">exr::block::reader::Reader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+<span class="doccomment">/// An OpenEXR decoder. Immediately reads the meta data from the file.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>OpenExrDecoder&lt;R&gt; {
+    exr_reader: exr::block::reader::Reader&lt;R&gt;,
 
-    <span class="comment">// select a header that is rgb and not deep</span>
-    <span class="ident">header_index</span>: <span class="ident">usize</span>,
+    <span class="comment">// select a header that is rgb and not deep
+    </span>header_index: usize,
 
-    <span class="comment">// decode either rgb or rgba.</span>
-    <span class="comment">// can be specified to include or discard alpha channels.</span>
-    <span class="comment">// if none, the alpha channel will only be allocated where the file contains data for it.</span>
-    <span class="ident">alpha_preference</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+    <span class="comment">// decode either rgb or rgba.
+    // can be specified to include or discard alpha channels.
+    // if none, the alpha channel will only be allocated where the file contains data for it.
+    </span>alpha_preference: <span class="prelude-ty">Option</span>&lt;bool&gt;,
 
-    <span class="ident">alpha_present_in_file</span>: <span class="ident">bool</span>,
+    alpha_present_in_file: bool,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">OpenExrDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a decoder. Consumes the first few bytes of the source to extract image dimensions.</span>
-    <span class="doccomment">/// Assumes the reader is buffered. In most cases,</span>
-    <span class="doccomment">/// you should wrap your reader in a `BufReader` for best performance.</span>
-    <span class="doccomment">/// Loads an alpha channel if the file has alpha samples.</span>
-    <span class="doccomment">/// Use `with_alpha_preference` if you want to load or not load alpha unconditionally.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">R</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident"><span class="self">Self</span>::with_alpha_preference</span>(<span class="ident">source</span>, <span class="prelude-val">None</span>)
+<span class="kw">impl</span>&lt;R: Read + Seek&gt; OpenExrDecoder&lt;R&gt; {
+    <span class="doccomment">/// Create a decoder. Consumes the first few bytes of the source to extract image dimensions.
+    /// Assumes the reader is buffered. In most cases,
+    /// you should wrap your reader in a `BufReader` for best performance.
+    /// Loads an alpha channel if the file has alpha samples.
+    /// Use `with_alpha_preference` if you want to load or not load alpha unconditionally.
+    </span><span class="kw">pub fn </span>new(source: R) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::with_alpha_preference(source, <span class="prelude-val">None</span>)
     }
 
-    <span class="doccomment">/// Create a decoder. Consumes the first few bytes of the source to extract image dimensions.</span>
-    <span class="doccomment">/// Assumes the reader is buffered. In most cases,</span>
-    <span class="doccomment">/// you should wrap your reader in a `BufReader` for best performance.</span>
-    <span class="doccomment">/// If alpha preference is specified, an alpha channel will</span>
-    <span class="doccomment">/// always be present or always be not present in the returned image.</span>
-    <span class="doccomment">/// If alpha preference is none, the alpha channel will only be returned if it is found in the file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_alpha_preference</span>(<span class="ident">source</span>: <span class="ident">R</span>, <span class="ident">alpha_preference</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="comment">// read meta data, then wait for further instructions, keeping the file open and ready</span>
-        <span class="kw">let</span> <span class="ident">exr_reader</span> <span class="op">=</span> <span class="ident">exr::block::read</span>(<span class="ident">source</span>, <span class="bool-val">false</span>).<span class="ident">map_err</span>(<span class="ident">to_image_err</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Create a decoder. Consumes the first few bytes of the source to extract image dimensions.
+    /// Assumes the reader is buffered. In most cases,
+    /// you should wrap your reader in a `BufReader` for best performance.
+    /// If alpha preference is specified, an alpha channel will
+    /// always be present or always be not present in the returned image.
+    /// If alpha preference is none, the alpha channel will only be returned if it is found in the file.
+    </span><span class="kw">pub fn </span>with_alpha_preference(source: R, alpha_preference: <span class="prelude-ty">Option</span>&lt;bool&gt;) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
+        <span class="comment">// read meta data, then wait for further instructions, keeping the file open and ready
+        </span><span class="kw">let </span>exr_reader = exr::block::read(source, <span class="bool-val">false</span>).map_err(to_image_err)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">header_index</span> <span class="op">=</span> <span class="ident">exr_reader</span>
-            .<span class="ident">headers</span>()
-            .<span class="ident">iter</span>()
-            .<span class="ident">position</span>(<span class="op">|</span><span class="ident">header</span><span class="op">|</span> {
-                <span class="comment">// check if r/g/b exists in the channels</span>
-                <span class="kw">let</span> <span class="ident">has_rgb</span> <span class="op">=</span> [<span class="string">&quot;R&quot;</span>, <span class="string">&quot;G&quot;</span>, <span class="string">&quot;B&quot;</span>]
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">all</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">required</span><span class="op">|</span>  <span class="comment">// alpha will be optional</span>
-                    <span class="ident">header</span>.<span class="ident">channels</span>.<span class="ident">find_index_of_channel</span>(<span class="kw-2">&amp;</span><span class="ident">Text::from</span>(<span class="ident">required</span>)).<span class="ident">is_some</span>());
+        <span class="kw">let </span>header_index = exr_reader
+            .headers()
+            .iter()
+            .position(|header| {
+                <span class="comment">// check if r/g/b exists in the channels
+                </span><span class="kw">let </span>has_rgb = [<span class="string">&quot;R&quot;</span>, <span class="string">&quot;G&quot;</span>, <span class="string">&quot;B&quot;</span>]
+                    .iter()
+                    .all(|<span class="kw-2">&amp;</span>required|  <span class="comment">// alpha will be optional
+                    </span>header.channels.find_index_of_channel(<span class="kw-2">&amp;</span>Text::from(required)).is_some());
 
-                <span class="comment">// we currently dont support deep images, or images with other color spaces than rgb</span>
-                <span class="op">!</span><span class="ident">header</span>.<span class="ident">deep</span> <span class="op">&amp;&amp;</span> <span class="ident">has_rgb</span>
+                <span class="comment">// we currently dont support deep images, or images with other color spaces than rgb
+                </span>!header.deep &amp;&amp; has_rgb
             })
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(
-                    <span class="ident">ImageFormatHint::Exact</span>(<span class="ident">ImageFormat::OpenExr</span>),
+            .ok_or_else(|| {
+                ImageError::Decoding(DecodingError::new(
+                    ImageFormatHint::Exact(ImageFormat::OpenExr),
                     <span class="string">&quot;image does not contain non-deep rgb channels&quot;</span>,
                 ))
             })<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">has_alpha</span> <span class="op">=</span> <span class="ident">exr_reader</span>.<span class="ident">headers</span>()[<span class="ident">header_index</span>]
-            .<span class="ident">channels</span>
-            .<span class="ident">find_index_of_channel</span>(<span class="kw-2">&amp;</span><span class="ident">Text::from</span>(<span class="string">&quot;A&quot;</span>))
-            .<span class="ident">is_some</span>();
+        <span class="kw">let </span>has_alpha = exr_reader.headers()[header_index]
+            .channels
+            .find_index_of_channel(<span class="kw-2">&amp;</span>Text::from(<span class="string">&quot;A&quot;</span>))
+            .is_some();
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">alpha_preference</span>,
-            <span class="ident">exr_reader</span>,
-            <span class="ident">header_index</span>,
-            <span class="ident">alpha_present_in_file</span>: <span class="ident">has_alpha</span>,
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            alpha_preference,
+            exr_reader,
+            header_index,
+            alpha_present_in_file: has_alpha,
         })
     }
 
-    <span class="comment">// does not leak exrs-specific meta data into public api, just does it for this module</span>
-    <span class="kw">fn</span> <span class="ident">selected_exr_header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">exr::meta::header::Header</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">exr_reader</span>.<span class="ident">meta_data</span>().<span class="ident">headers</span>[<span class="self">self</span>.<span class="ident">header_index</span>]
+    <span class="comment">// does not leak exrs-specific meta data into public api, just does it for this module
+    </span><span class="kw">fn </span>selected_exr_header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>exr::meta::header::Header {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.exr_reader.meta_data().headers[<span class="self">self</span>.header_index]
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>: <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span> <span class="ident">ImageDecoder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">OpenExrDecoder</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Reader</span> <span class="op">=</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>OpenExrDecoder&lt;R&gt; {
+    <span class="kw">type </span>Reader = Cursor&lt;Vec&lt;u8&gt;&gt;;
 
-    <span class="kw">fn</span> <span class="ident">dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>) {
-        <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">selected_exr_header</span>()
-            .<span class="ident">shared_attributes</span>
-            .<span class="ident">display_window</span>
-            .<span class="ident">size</span>;
-        (<span class="ident">size</span>.<span class="ident">width</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">size</span>.<span class="ident">height</span>() <span class="kw">as</span> <span class="ident">u32</span>)
+    <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
+        <span class="kw">let </span>size = <span class="self">self
+            </span>.selected_exr_header()
+            .shared_attributes
+            .display_window
+            .size;
+        (size.width() <span class="kw">as </span>u32, size.height() <span class="kw">as </span>u32)
     }
 
-    <span class="kw">fn</span> <span class="ident">color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ColorType</span> {
-        <span class="kw">let</span> <span class="ident">returns_alpha</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">alpha_preference</span>.<span class="ident">unwrap_or</span>(<span class="self">self</span>.<span class="ident">alpha_present_in_file</span>);
-        <span class="kw">if</span> <span class="ident">returns_alpha</span> {
-            <span class="ident">ColorType::Rgba32F</span>
-        } <span class="kw">else</span> {
-            <span class="ident">ColorType::Rgb32F</span>
+    <span class="kw">fn </span>color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ColorType {
+        <span class="kw">let </span>returns_alpha = <span class="self">self</span>.alpha_preference.unwrap_or(<span class="self">self</span>.alpha_present_in_file);
+        <span class="kw">if </span>returns_alpha {
+            ColorType::Rgba32F
+        } <span class="kw">else </span>{
+            ColorType::Rgb32F
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">original_color_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ExtendedColorType</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">alpha_present_in_file</span> {
-            <span class="ident">ExtendedColorType::Rgba32F</span>
-        } <span class="kw">else</span> {
-            <span class="ident">ExtendedColorType::Rgb32F</span>
+    <span class="kw">fn </span>original_color_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ExtendedColorType {
+        <span class="kw">if </span><span class="self">self</span>.alpha_present_in_file {
+            ExtendedColorType::Rgba32F
+        } <span class="kw">else </span>{
+            ExtendedColorType::Rgb32F
         }
     }
 
-    <span class="doccomment">/// Use `read_image` instead if possible,</span>
-    <span class="doccomment">/// as this method creates a whole new buffer just to contain the entire image.</span>
-    <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="self">self</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Reader</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">Cursor::new</span>(<span class="ident">decoder_to_vec</span>(<span class="self">self</span>)<span class="question-mark">?</span>))
+    <span class="doccomment">/// Use `read_image` instead if possible,
+    /// as this method creates a whole new buffer just to contain the entire image.
+    </span><span class="kw">fn </span>into_reader(<span class="self">self</span>) -&gt; ImageResult&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="prelude-val">Ok</span>(Cursor::new(decoder_to_vec(<span class="self">self</span>)<span class="question-mark">?</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">scanline_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="comment">// we cannot always read individual scan lines for every file,</span>
-        <span class="comment">// as the tiles or lines in the file could be in random or reversed order.</span>
-        <span class="comment">// therefore we currently read all lines at once</span>
-        <span class="comment">// Todo: optimize for specific exr.line_order?</span>
-        <span class="self">self</span>.<span class="ident">total_bytes</span>()
+    <span class="kw">fn </span>scanline_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="comment">// we cannot always read individual scan lines for every file,
+        // as the tiles or lines in the file could be in random or reversed order.
+        // therefore we currently read all lines at once
+        // Todo: optimize for specific exr.line_order?
+        </span><span class="self">self</span>.total_bytes()
     }
 
-    <span class="comment">// reads with or without alpha, depending on `self.alpha_preference` and `self.alpha_present_in_file`</span>
-    <span class="kw">fn</span> <span class="ident">read_image_with_progress</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Progress</span>)<span class="op">&gt;</span>(
+    <span class="comment">// reads with or without alpha, depending on `self.alpha_preference` and `self.alpha_present_in_file`
+    </span><span class="kw">fn </span>read_image_with_progress&lt;F: Fn(Progress)&gt;(
         <span class="self">self</span>,
-        <span class="ident">unaligned_bytes</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>],
-        <span class="ident">progress_callback</span>: <span class="ident">F</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">blocks_in_header</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">selected_exr_header</span>().<span class="ident">chunk_count</span> <span class="kw">as</span> <span class="ident">u64</span>;
-        <span class="kw">let</span> <span class="ident">channel_count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">color_type</span>().<span class="ident">channel_count</span>() <span class="kw">as</span> <span class="ident">usize</span>;
+        unaligned_bytes: <span class="kw-2">&amp;mut </span>[u8],
+        progress_callback: F,
+    ) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span>blocks_in_header = <span class="self">self</span>.selected_exr_header().chunk_count <span class="kw">as </span>u64;
+        <span class="kw">let </span>channel_count = <span class="self">self</span>.color_type().channel_count() <span class="kw">as </span>usize;
 
-        <span class="kw">let</span> <span class="ident">display_window</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">selected_exr_header</span>().<span class="ident">shared_attributes</span>.<span class="ident">display_window</span>;
-        <span class="kw">let</span> <span class="ident">data_window_offset</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">selected_exr_header</span>().<span class="ident">own_attributes</span>.<span class="ident">layer_position</span> <span class="op">-</span> <span class="ident">display_window</span>.<span class="ident">position</span>;
+        <span class="kw">let </span>display_window = <span class="self">self</span>.selected_exr_header().shared_attributes.display_window;
+        <span class="kw">let </span>data_window_offset =
+            <span class="self">self</span>.selected_exr_header().own_attributes.layer_position - display_window.position;
 
         {
-            <span class="comment">// check whether the buffer is large enough for the dimensions of the file</span>
-            <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">dimensions</span>();
-            <span class="kw">let</span> <span class="ident">bytes_per_pixel</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">color_type</span>().<span class="ident">bytes_per_pixel</span>() <span class="kw">as</span> <span class="ident">usize</span>;
-            <span class="kw">let</span> <span class="ident">expected_byte_count</span> <span class="op">=</span> (<span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>)
-                .<span class="ident">checked_mul</span>(<span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>)
-                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">checked_mul</span>(<span class="ident">bytes_per_pixel</span>));
+            <span class="comment">// check whether the buffer is large enough for the dimensions of the file
+            </span><span class="kw">let </span>(width, height) = <span class="self">self</span>.dimensions();
+            <span class="kw">let </span>bytes_per_pixel = <span class="self">self</span>.color_type().bytes_per_pixel() <span class="kw">as </span>usize;
+            <span class="kw">let </span>expected_byte_count = (width <span class="kw">as </span>usize)
+                .checked_mul(height <span class="kw">as </span>usize)
+                .and_then(|size| size.checked_mul(bytes_per_pixel));
 
-            <span class="comment">// if the width and height does not match the length of the bytes, the arguments are invalid</span>
-            <span class="kw">let</span> <span class="ident">has_invalid_size_or_overflowed</span> <span class="op">=</span> <span class="ident">expected_byte_count</span>
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">expected_byte_count</span><span class="op">|</span> <span class="ident">unaligned_bytes</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">expected_byte_count</span>)
-                <span class="comment">// otherwise, size calculation overflowed, is bigger than memory,</span>
-                <span class="comment">// therefore data is too small, so it is invalid.</span>
-                .<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>);
+            <span class="comment">// if the width and height does not match the length of the bytes, the arguments are invalid
+            </span><span class="kw">let </span>has_invalid_size_or_overflowed = expected_byte_count
+                .map(|expected_byte_count| unaligned_bytes.len() != expected_byte_count)
+                <span class="comment">// otherwise, size calculation overflowed, is bigger than memory,
+                // therefore data is too small, so it is invalid.
+                </span>.unwrap_or(<span class="bool-val">true</span>);
 
-            <span class="kw">if</span> <span class="ident">has_invalid_size_or_overflowed</span> {
+            <span class="kw">if </span>has_invalid_size_or_overflowed {
                 <span class="macro">panic!</span>(<span class="string">&quot;byte buffer not large enough for the specified dimensions and f32 pixels&quot;</span>);
             }
         }
 
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">read</span>()
-            .<span class="ident">no_deep_data</span>()
-            .<span class="ident">largest_resolution_level</span>()
-            .<span class="ident">rgba_channels</span>(
-                <span class="kw">move</span> <span class="op">|</span><span class="ident">_size</span>, <span class="ident">_channels</span><span class="op">|</span> <span class="macro">vec!</span>[<span class="number">0_f32</span>; <span class="ident">display_window</span>.<span class="ident">size</span>.<span class="ident">area</span>() <span class="op">*</span> <span class="ident">channel_count</span>],
-                <span class="kw">move</span> <span class="op">|</span><span class="ident">buffer</span>, <span class="ident">index_in_data_window</span>, (<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>, <span class="ident">a_or_1</span>): (<span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>, <span class="ident">f32</span>)<span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">index_in_display_window</span> <span class="op">=</span>
-                        <span class="ident">index_in_data_window</span>.<span class="ident">to_i32</span>() <span class="op">+</span> <span class="ident">data_window_offset</span>;
+        <span class="kw">let </span>result = read()
+            .no_deep_data()
+            .largest_resolution_level()
+            .rgba_channels(
+                <span class="kw">move </span>|_size, _channels| <span class="macro">vec!</span>[<span class="number">0_f32</span>; display_window.size.area() * channel_count],
+                <span class="kw">move </span>|buffer, index_in_data_window, (r, g, b, a_or_1): (f32, f32, f32, f32)| {
+                    <span class="kw">let </span>index_in_display_window =
+                        index_in_data_window.to_i32() + data_window_offset;
 
-                    <span class="comment">// only keep pixels inside the data window</span>
-                    <span class="comment">// TODO filter chunks based on this</span>
-                    <span class="kw">if</span> <span class="ident">index_in_display_window</span>.<span class="ident">x</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span>
-                        <span class="op">&amp;&amp;</span> <span class="ident">index_in_display_window</span>.<span class="ident">y</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">0</span>
-                        <span class="op">&amp;&amp;</span> <span class="ident">index_in_display_window</span>.<span class="ident">x</span>() <span class="op">&lt;</span> <span class="ident">display_window</span>.<span class="ident">size</span>.<span class="ident">width</span>() <span class="kw">as</span> <span class="ident">i32</span>
-                        <span class="op">&amp;&amp;</span> <span class="ident">index_in_display_window</span>.<span class="ident">y</span>() <span class="op">&lt;</span> <span class="ident">display_window</span>.<span class="ident">size</span>.<span class="ident">height</span>() <span class="kw">as</span> <span class="ident">i32</span>
+                    <span class="comment">// only keep pixels inside the data window
+                    // TODO filter chunks based on this
+                    </span><span class="kw">if </span>index_in_display_window.x() &gt;= <span class="number">0
+                        </span>&amp;&amp; index_in_display_window.y() &gt;= <span class="number">0
+                        </span>&amp;&amp; index_in_display_window.x() &lt; display_window.size.width() <span class="kw">as </span>i32
+                        &amp;&amp; index_in_display_window.y() &lt; display_window.size.height() <span class="kw">as </span>i32
                     {
-                        <span class="kw">let</span> <span class="ident">index_in_display_window</span> <span class="op">=</span>
-                            <span class="ident">index_in_display_window</span>.<span class="ident">to_usize</span>(<span class="string">&quot;index bug&quot;</span>).<span class="ident">unwrap</span>();
-                        <span class="kw">let</span> <span class="ident">first_f32_index</span> <span class="op">=</span>
-                            <span class="ident">index_in_display_window</span>.<span class="ident">flat_index_for_size</span>(<span class="ident">display_window</span>.<span class="ident">size</span>);
+                        <span class="kw">let </span>index_in_display_window =
+                            index_in_display_window.to_usize(<span class="string">&quot;index bug&quot;</span>).unwrap();
+                        <span class="kw">let </span>first_f32_index =
+                            index_in_display_window.flat_index_for_size(display_window.size);
 
-                        <span class="ident">buffer</span>[<span class="ident">first_f32_index</span> <span class="op">*</span> <span class="ident">channel_count</span>
-                            ..(<span class="ident">first_f32_index</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">*</span> <span class="ident">channel_count</span>]
-                            .<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span>[<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>, <span class="ident">a_or_1</span>][<span class="number">0</span>..<span class="ident">channel_count</span>]);
+                        buffer[first_f32_index * channel_count
+                            ..(first_f32_index + <span class="number">1</span>) * channel_count]
+                            .copy_from_slice(<span class="kw-2">&amp;</span>[r, g, b, a_or_1][<span class="number">0</span>..channel_count]);
 
-                        <span class="comment">// TODO white point chromaticities + srgb/linear conversion?</span>
-                    }
+                        <span class="comment">// TODO white point chromaticities + srgb/linear conversion?
+                    </span>}
                 },
             )
-            .<span class="ident">first_valid_layer</span>() <span class="comment">// TODO select exact layer by self.header_index?</span>
-            .<span class="ident">all_attributes</span>()
-            .<span class="ident">on_progress</span>(<span class="op">|</span><span class="ident">progress</span><span class="op">|</span> {
-                <span class="ident">progress_callback</span>(
-                    <span class="ident">Progress::new</span>(
-                        (<span class="ident">progress</span> <span class="op">*</span> <span class="ident">blocks_in_header</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="kw">as</span> <span class="ident">u64</span>,
-                        <span class="ident">blocks_in_header</span>,
-                    ), <span class="comment">// TODO precision errors?</span>
-                );
+            .first_valid_layer() <span class="comment">// TODO select exact layer by self.header_index?
+            </span>.all_attributes()
+            .on_progress(|progress| {
+                progress_callback(
+                    Progress::new(
+                        (progress * blocks_in_header <span class="kw">as </span>f64) <span class="kw">as </span>u64,
+                        blocks_in_header,
+                    ), <span class="comment">// TODO precision errors?
+                </span>);
             })
-            .<span class="ident">from_chunks</span>(<span class="self">self</span>.<span class="ident">exr_reader</span>)
-            .<span class="ident">map_err</span>(<span class="ident">to_image_err</span>)<span class="question-mark">?</span>;
+            .from_chunks(<span class="self">self</span>.exr_reader)
+            .map_err(to_image_err)<span class="question-mark">?</span>;
 
-        <span class="comment">// TODO this copy is strictly not necessary, but the exr api is a little too simple for reading into a borrowed target slice</span>
+        <span class="comment">// TODO this copy is strictly not necessary, but the exr api is a little too simple for reading into a borrowed target slice
 
-        <span class="comment">// this cast is safe and works with any alignment, as bytes are copied, and not f32 values.</span>
-        <span class="comment">// note: buffer slice length is checked in the beginning of this function and will be correct at this point</span>
-        <span class="ident">unaligned_bytes</span>.<span class="ident">copy_from_slice</span>(<span class="ident">bytemuck::cast_slice</span>(
-            <span class="ident">result</span>.<span class="ident">layer_data</span>.<span class="ident">channel_data</span>.<span class="ident">pixels</span>.<span class="ident">as_slice</span>(),
+        // this cast is safe and works with any alignment, as bytes are copied, and not f32 values.
+        // note: buffer slice length is checked in the beginning of this function and will be correct at this point
+        </span>unaligned_bytes.copy_from_slice(bytemuck::cast_slice(
+            result.layer_data.channel_data.pixels.as_slice(),
         ));
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="doccomment">/// Write a raw byte buffer of pixels,</span>
-<span class="doccomment">/// returning an Error if it has an invalid length.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Assumes the writer is buffered. In most cases,</span>
-<span class="doccomment">/// you should wrap your writer in a `BufWriter` for best performance.</span>
-<span class="comment">// private. access via `OpenExrEncoder`</span>
-<span class="kw">fn</span> <span class="ident">write_buffer</span>(
-    <span class="kw-2">mut</span> <span class="ident">buffered_write</span>: <span class="kw">impl</span> <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>,
-    <span class="ident">unaligned_bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    <span class="ident">width</span>: <span class="ident">u32</span>,
-    <span class="ident">height</span>: <span class="ident">u32</span>,
-    <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">width</span> <span class="kw">as</span> <span class="ident">usize</span>;
-    <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>;
+<span class="doccomment">/// Write a raw byte buffer of pixels,
+/// returning an Error if it has an invalid length.
+///
+/// Assumes the writer is buffered. In most cases,
+/// you should wrap your writer in a `BufWriter` for best performance.
+</span><span class="comment">// private. access via `OpenExrEncoder`
+</span><span class="kw">fn </span>write_buffer(
+    <span class="kw-2">mut </span>buffered_write: <span class="kw">impl </span>Write + Seek,
+    unaligned_bytes: <span class="kw-2">&amp;</span>[u8],
+    width: u32,
+    height: u32,
+    color_type: ColorType,
+) -&gt; ImageResult&lt;()&gt; {
+    <span class="kw">let </span>width = width <span class="kw">as </span>usize;
+    <span class="kw">let </span>height = height <span class="kw">as </span>usize;
 
     {
-        <span class="comment">// check whether the buffer is large enough for the specified dimensions</span>
-        <span class="kw">let</span> <span class="ident">expected_byte_count</span> <span class="op">=</span> <span class="ident">width</span>
-            .<span class="ident">checked_mul</span>(<span class="ident">height</span>)
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">size</span><span class="op">|</span> <span class="ident">size</span>.<span class="ident">checked_mul</span>(<span class="ident">color_type</span>.<span class="ident">bytes_per_pixel</span>() <span class="kw">as</span> <span class="ident">usize</span>));
+        <span class="comment">// check whether the buffer is large enough for the specified dimensions
+        </span><span class="kw">let </span>expected_byte_count = width
+            .checked_mul(height)
+            .and_then(|size| size.checked_mul(color_type.bytes_per_pixel() <span class="kw">as </span>usize));
 
-        <span class="comment">// if the width and height does not match the length of the bytes, the arguments are invalid</span>
-        <span class="kw">let</span> <span class="ident">has_invalid_size_or_overflowed</span> <span class="op">=</span> <span class="ident">expected_byte_count</span>
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">expected_byte_count</span><span class="op">|</span> <span class="ident">unaligned_bytes</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">expected_byte_count</span>)
-            <span class="comment">// otherwise, size calculation overflowed, is bigger than memory,</span>
-            <span class="comment">// therefore data is too small, so it is invalid.</span>
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>);
+        <span class="comment">// if the width and height does not match the length of the bytes, the arguments are invalid
+        </span><span class="kw">let </span>has_invalid_size_or_overflowed = expected_byte_count
+            .map(|expected_byte_count| unaligned_bytes.len() &lt; expected_byte_count)
+            <span class="comment">// otherwise, size calculation overflowed, is bigger than memory,
+            // therefore data is too small, so it is invalid.
+            </span>.unwrap_or(<span class="bool-val">true</span>);
 
-        <span class="kw">if</span> <span class="ident">has_invalid_size_or_overflowed</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Encoding</span>(<span class="ident">EncodingError::new</span>(
-                <span class="ident">ImageFormatHint::Exact</span>(<span class="ident">ImageFormat::OpenExr</span>),
+        <span class="kw">if </span>has_invalid_size_or_overflowed {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Encoding(EncodingError::new(
+                ImageFormatHint::Exact(ImageFormat::OpenExr),
                 <span class="string">&quot;byte buffer not large enough for the specified dimensions and f32 pixels&quot;</span>,
             )));
         }
     }
 
-    <span class="comment">// bytes might be unaligned so we cannot cast the whole thing, instead lookup each f32 individually</span>
-    <span class="kw">let</span> <span class="ident">lookup_f32</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">f32_index</span>: <span class="ident">usize</span><span class="op">|</span> {
-        <span class="kw">let</span> <span class="ident">unaligned_f32_bytes_slice</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">unaligned_bytes</span>[<span class="ident">f32_index</span> <span class="op">*</span> <span class="number">4</span>..(<span class="ident">f32_index</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">*</span> <span class="number">4</span>];
-        <span class="kw">let</span> <span class="ident">f32_bytes_array</span> <span class="op">=</span> <span class="ident">unaligned_f32_bytes_slice</span>
-            .<span class="ident">try_into</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;indexing error&quot;</span>);
-        <span class="ident">f32::from_ne_bytes</span>(<span class="ident">f32_bytes_array</span>)
+    <span class="comment">// bytes might be unaligned so we cannot cast the whole thing, instead lookup each f32 individually
+    </span><span class="kw">let </span>lookup_f32 = <span class="kw">move </span>|f32_index: usize| {
+        <span class="kw">let </span>unaligned_f32_bytes_slice = <span class="kw-2">&amp;</span>unaligned_bytes[f32_index * <span class="number">4</span>..(f32_index + <span class="number">1</span>) * <span class="number">4</span>];
+        <span class="kw">let </span>f32_bytes_array = unaligned_f32_bytes_slice
+            .try_into()
+            .expect(<span class="string">&quot;indexing error&quot;</span>);
+        f32::from_ne_bytes(f32_bytes_array)
     };
 
-    <span class="kw">match</span> <span class="ident">color_type</span> {
-        <span class="ident">ColorType::Rgb32F</span> =&gt; {
-            <span class="ident">exr::prelude::Image</span> <span class="comment">// TODO compression method zip??</span>
-                <span class="ident">::from_channels</span>(
-                (<span class="ident">width</span>, <span class="ident">height</span>),
-                <span class="ident">SpecificChannels::rgb</span>(<span class="op">|</span><span class="ident">pixel</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">pixel_index</span> <span class="op">=</span> <span class="number">3</span> <span class="op">*</span> <span class="ident">pixel</span>.<span class="ident">flat_index_for_size</span>(<span class="ident">Vec2</span>(<span class="ident">width</span>, <span class="ident">height</span>));
+    <span class="kw">match </span>color_type {
+        ColorType::Rgb32F =&gt; {
+            exr::prelude::Image <span class="comment">// TODO compression method zip??
+                </span>::from_channels(
+                (width, height),
+                SpecificChannels::rgb(|pixel: Vec2&lt;usize&gt;| {
+                    <span class="kw">let </span>pixel_index = <span class="number">3 </span>* pixel.flat_index_for_size(Vec2(width, height));
                     (
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span>),
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span> <span class="op">+</span> <span class="number">1</span>),
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span> <span class="op">+</span> <span class="number">2</span>),
+                        lookup_f32(pixel_index),
+                        lookup_f32(pixel_index + <span class="number">1</span>),
+                        lookup_f32(pixel_index + <span class="number">2</span>),
                     )
                 }),
             )
-            .<span class="ident">write</span>()
-            <span class="comment">// .on_progress(|progress| todo!())</span>
-            .<span class="ident">to_buffered</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffered_write</span>)
-            .<span class="ident">map_err</span>(<span class="ident">to_image_err</span>)<span class="question-mark">?</span>;
+            .write()
+            <span class="comment">// .on_progress(|progress| todo!())
+            </span>.to_buffered(<span class="kw-2">&amp;mut </span>buffered_write)
+            .map_err(to_image_err)<span class="question-mark">?</span>;
         }
 
-        <span class="ident">ColorType::Rgba32F</span> =&gt; {
-            <span class="ident">exr::prelude::Image</span> <span class="comment">// TODO compression method zip??</span>
-                <span class="ident">::from_channels</span>(
-                (<span class="ident">width</span>, <span class="ident">height</span>),
-                <span class="ident">SpecificChannels::rgba</span>(<span class="op">|</span><span class="ident">pixel</span>: <span class="ident">Vec2</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">|</span> {
-                    <span class="kw">let</span> <span class="ident">pixel_index</span> <span class="op">=</span> <span class="number">4</span> <span class="op">*</span> <span class="ident">pixel</span>.<span class="ident">flat_index_for_size</span>(<span class="ident">Vec2</span>(<span class="ident">width</span>, <span class="ident">height</span>));
+        ColorType::Rgba32F =&gt; {
+            exr::prelude::Image <span class="comment">// TODO compression method zip??
+                </span>::from_channels(
+                (width, height),
+                SpecificChannels::rgba(|pixel: Vec2&lt;usize&gt;| {
+                    <span class="kw">let </span>pixel_index = <span class="number">4 </span>* pixel.flat_index_for_size(Vec2(width, height));
                     (
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span>),
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span> <span class="op">+</span> <span class="number">1</span>),
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span> <span class="op">+</span> <span class="number">2</span>),
-                        <span class="ident">lookup_f32</span>(<span class="ident">pixel_index</span> <span class="op">+</span> <span class="number">3</span>),
+                        lookup_f32(pixel_index),
+                        lookup_f32(pixel_index + <span class="number">1</span>),
+                        lookup_f32(pixel_index + <span class="number">2</span>),
+                        lookup_f32(pixel_index + <span class="number">3</span>),
                     )
                 }),
             )
-            .<span class="ident">write</span>()
-            <span class="comment">// .on_progress(|progress| todo!())</span>
-            .<span class="ident">to_buffered</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffered_write</span>)
-            .<span class="ident">map_err</span>(<span class="ident">to_image_err</span>)<span class="question-mark">?</span>;
+            .write()
+            <span class="comment">// .on_progress(|progress| todo!())
+            </span>.to_buffered(<span class="kw-2">&amp;mut </span>buffered_write)
+            .map_err(to_image_err)<span class="question-mark">?</span>;
         }
 
-        <span class="comment">// TODO other color types and channel types</span>
-        <span class="ident">unsupported_color_type</span> =&gt; {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ImageError::Encoding</span>(<span class="ident">EncodingError::new</span>(
-                <span class="ident">ImageFormatHint::Exact</span>(<span class="ident">ImageFormat::OpenExr</span>),
+        <span class="comment">// TODO other color types and channel types
+        </span>unsupported_color_type =&gt; {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Encoding(EncodingError::new(
+                ImageFormatHint::Exact(ImageFormat::OpenExr),
                 <span class="macro">format!</span>(
                     <span class="string">&quot;writing color type {:?} not yet supported&quot;</span>,
-                    <span class="ident">unsupported_color_type</span>
+                    unsupported_color_type
                 ),
             )))
         }
@@ -935,261 +929,260 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="comment">// TODO is this struct and trait actually used anywhere?</span>
-<span class="doccomment">/// A thin wrapper that implements `ImageEncoder` for OpenEXR images. Will behave like `image::codecs::openexr::write_buffer`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpenExrEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">W</span>);
+<span class="comment">// TODO is this struct and trait actually used anywhere?
+</span><span class="doccomment">/// A thin wrapper that implements `ImageEncoder` for OpenEXR images. Will behave like `image::codecs::openexr::write_buffer`.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>OpenExrEncoder&lt;W&gt;(W);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="ident">OpenExrEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create an `ImageEncoder`. Does not write anything yet. Writing later will behave like `image::codecs::openexr::write_buffer`.</span>
-    <span class="comment">// use constructor, not public field, for future backwards-compatibility</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">write</span>: <span class="ident">W</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">write</span>)
+<span class="kw">impl</span>&lt;W&gt; OpenExrEncoder&lt;W&gt; {
+    <span class="doccomment">/// Create an `ImageEncoder`. Does not write anything yet. Writing later will behave like `image::codecs::openexr::write_buffer`.
+    </span><span class="comment">// use constructor, not public field, for future backwards-compatibility
+    </span><span class="kw">pub fn </span>new(write: W) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(write)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> <span class="ident">ImageEncoder</span> <span class="kw">for</span> <span class="ident">OpenExrEncoder</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>,
+<span class="kw">impl</span>&lt;W&gt; ImageEncoder <span class="kw">for </span>OpenExrEncoder&lt;W&gt;
+<span class="kw">where
+    </span>W: Write + Seek,
 {
-    <span class="doccomment">/// Writes the complete image.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an Error if it has an invalid length.</span>
-    <span class="doccomment">/// Assumes the writer is buffered. In most cases,</span>
-    <span class="doccomment">/// you should wrap your writer in a `BufWriter` for best performance.</span>
-    <span class="kw">fn</span> <span class="ident">write_image</span>(
+    <span class="doccomment">/// Writes the complete image.
+    ///
+    /// Returns an Error if it has an invalid length.
+    /// Assumes the writer is buffered. In most cases,
+    /// you should wrap your writer in a `BufWriter` for best performance.
+    </span><span class="kw">fn </span>write_image(
         <span class="self">self</span>,
-        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-        <span class="ident">width</span>: <span class="ident">u32</span>,
-        <span class="ident">height</span>: <span class="ident">u32</span>,
-        <span class="ident">color_type</span>: <span class="ident">ColorType</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">write_buffer</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">buf</span>, <span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">color_type</span>)
+        buf: <span class="kw-2">&amp;</span>[u8],
+        width: u32,
+        height: u32,
+        color_type: ColorType,
+    ) -&gt; ImageResult&lt;()&gt; {
+        write_buffer(<span class="self">self</span>.<span class="number">0</span>, buf, width, height, color_type)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">to_image_err</span>(<span class="ident">exr_error</span>: <span class="ident">Error</span>) -&gt; <span class="ident">ImageError</span> {
-    <span class="ident">ImageError::Decoding</span>(<span class="ident">DecodingError::new</span>(
-        <span class="ident">ImageFormatHint::Exact</span>(<span class="ident">ImageFormat::OpenExr</span>),
-        <span class="ident">exr_error</span>.<span class="ident">to_string</span>(),
+<span class="kw">fn </span>to_image_err(exr_error: Error) -&gt; ImageError {
+    ImageError::Decoding(DecodingError::new(
+        ImageFormatHint::Exact(ImageFormat::OpenExr),
+        exr_error.to_string(),
     ))
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">use</span> <span class="ident">std::io::BufReader</span>;
-    <span class="kw">use</span> <span class="ident">std::path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
+    <span class="kw">use </span>std::io::BufReader;
+    <span class="kw">use </span>std::path::{Path, PathBuf};
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::buffer_</span>::{<span class="ident">Rgb32FImage</span>, <span class="ident">Rgba32FImage</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">LimitError</span>, <span class="ident">LimitErrorKind</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ImageBuffer</span>, <span class="ident">Rgb</span>, <span class="ident">Rgba</span>};
+    <span class="kw">use </span><span class="kw">crate</span>::buffer_::{Rgb32FImage, Rgba32FImage};
+    <span class="kw">use </span><span class="kw">crate</span>::error::{LimitError, LimitErrorKind};
+    <span class="kw">use crate</span>::{ImageBuffer, Rgb, Rgba};
 
-    <span class="kw">const</span> <span class="ident">BASE_PATH</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;.&quot;</span>, <span class="string">&quot;tests&quot;</span>, <span class="string">&quot;images&quot;</span>, <span class="string">&quot;exr&quot;</span>];
+    <span class="kw">const </span>BASE_PATH: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str] = <span class="kw-2">&amp;</span>[<span class="string">&quot;.&quot;</span>, <span class="string">&quot;tests&quot;</span>, <span class="string">&quot;images&quot;</span>, <span class="string">&quot;exr&quot;</span>];
 
-    <span class="doccomment">/// Write an `Rgb32FImage`.</span>
-    <span class="doccomment">/// Assumes the writer is buffered. In most cases,</span>
-    <span class="doccomment">/// you should wrap your writer in a `BufWriter` for best performance.</span>
-    <span class="kw">fn</span> <span class="ident">write_rgb_image</span>(<span class="ident">write</span>: <span class="kw">impl</span> <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>, <span class="ident">image</span>: <span class="kw-2">&amp;</span><span class="ident">Rgb32FImage</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">write_buffer</span>(
-            <span class="ident">write</span>,
-            <span class="ident">bytemuck::cast_slice</span>(<span class="ident">image</span>.<span class="ident">as_raw</span>().<span class="ident">as_slice</span>()),
-            <span class="ident">image</span>.<span class="ident">width</span>(),
-            <span class="ident">image</span>.<span class="ident">height</span>(),
-            <span class="ident">ColorType::Rgb32F</span>,
+    <span class="doccomment">/// Write an `Rgb32FImage`.
+    /// Assumes the writer is buffered. In most cases,
+    /// you should wrap your writer in a `BufWriter` for best performance.
+    </span><span class="kw">fn </span>write_rgb_image(write: <span class="kw">impl </span>Write + Seek, image: <span class="kw-2">&amp;</span>Rgb32FImage) -&gt; ImageResult&lt;()&gt; {
+        write_buffer(
+            write,
+            bytemuck::cast_slice(image.as_raw().as_slice()),
+            image.width(),
+            image.height(),
+            ColorType::Rgb32F,
         )
     }
 
-    <span class="doccomment">/// Write an `Rgba32FImage`.</span>
-    <span class="doccomment">/// Assumes the writer is buffered. In most cases,</span>
-    <span class="doccomment">/// you should wrap your writer in a `BufWriter` for best performance.</span>
-    <span class="kw">fn</span> <span class="ident">write_rgba_image</span>(<span class="ident">write</span>: <span class="kw">impl</span> <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>, <span class="ident">image</span>: <span class="kw-2">&amp;</span><span class="ident">Rgba32FImage</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">write_buffer</span>(
-            <span class="ident">write</span>,
-            <span class="ident">bytemuck::cast_slice</span>(<span class="ident">image</span>.<span class="ident">as_raw</span>().<span class="ident">as_slice</span>()),
-            <span class="ident">image</span>.<span class="ident">width</span>(),
-            <span class="ident">image</span>.<span class="ident">height</span>(),
-            <span class="ident">ColorType::Rgba32F</span>,
+    <span class="doccomment">/// Write an `Rgba32FImage`.
+    /// Assumes the writer is buffered. In most cases,
+    /// you should wrap your writer in a `BufWriter` for best performance.
+    </span><span class="kw">fn </span>write_rgba_image(write: <span class="kw">impl </span>Write + Seek, image: <span class="kw-2">&amp;</span>Rgba32FImage) -&gt; ImageResult&lt;()&gt; {
+        write_buffer(
+            write,
+            bytemuck::cast_slice(image.as_raw().as_slice()),
+            image.width(),
+            image.height(),
+            ColorType::Rgba32F,
         )
     }
 
-    <span class="doccomment">/// Read the file from the specified path into an `Rgba32FImage`.</span>
-    <span class="kw">fn</span> <span class="ident">read_as_rgba_image_from_file</span>(<span class="ident">path</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Rgba32FImage</span><span class="op">&gt;</span> {
-        <span class="ident">read_as_rgba_image</span>(<span class="ident">BufReader::new</span>(<span class="ident">std::fs::File::open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>))
+    <span class="doccomment">/// Read the file from the specified path into an `Rgba32FImage`.
+    </span><span class="kw">fn </span>read_as_rgba_image_from_file(path: <span class="kw">impl </span>AsRef&lt;Path&gt;) -&gt; ImageResult&lt;Rgba32FImage&gt; {
+        read_as_rgba_image(BufReader::new(std::fs::File::open(path)<span class="question-mark">?</span>))
     }
 
-    <span class="doccomment">/// Read the file from the specified path into an `Rgb32FImage`.</span>
-    <span class="kw">fn</span> <span class="ident">read_as_rgb_image_from_file</span>(<span class="ident">path</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Rgb32FImage</span><span class="op">&gt;</span> {
-        <span class="ident">read_as_rgb_image</span>(<span class="ident">BufReader::new</span>(<span class="ident">std::fs::File::open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>))
+    <span class="doccomment">/// Read the file from the specified path into an `Rgb32FImage`.
+    </span><span class="kw">fn </span>read_as_rgb_image_from_file(path: <span class="kw">impl </span>AsRef&lt;Path&gt;) -&gt; ImageResult&lt;Rgb32FImage&gt; {
+        read_as_rgb_image(BufReader::new(std::fs::File::open(path)<span class="question-mark">?</span>))
     }
 
-    <span class="doccomment">/// Read the file from the specified path into an `Rgb32FImage`.</span>
-    <span class="kw">fn</span> <span class="ident">read_as_rgb_image</span>(<span class="ident">read</span>: <span class="kw">impl</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Rgb32FImage</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">OpenExrDecoder::with_alpha_preference</span>(<span class="ident">read</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">decoder</span>.<span class="ident">dimensions</span>();
-        <span class="kw">let</span> <span class="ident">buffer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">decoder_to_vec</span>(<span class="ident">decoder</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Read the file from the specified path into an `Rgb32FImage`.
+    </span><span class="kw">fn </span>read_as_rgb_image(read: <span class="kw">impl </span>Read + Seek) -&gt; ImageResult&lt;Rgb32FImage&gt; {
+        <span class="kw">let </span>decoder = OpenExrDecoder::with_alpha_preference(read, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>(width, height) = decoder.dimensions();
+        <span class="kw">let </span>buffer: Vec&lt;f32&gt; = decoder_to_vec(decoder)<span class="question-mark">?</span>;
 
-        <span class="ident">ImageBuffer::from_raw</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">buffer</span>)
-            <span class="comment">// this should be the only reason for the &quot;from raw&quot; call to fail,</span>
-            <span class="comment">// even though such a large allocation would probably cause an error much earlier</span>
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ImageError::Limits</span>(<span class="ident">LimitError::from_kind</span>(<span class="ident">LimitErrorKind::InsufficientMemory</span>))
+        ImageBuffer::from_raw(width, height, buffer)
+            <span class="comment">// this should be the only reason for the &quot;from raw&quot; call to fail,
+            // even though such a large allocation would probably cause an error much earlier
+            </span>.ok_or_else(|| {
+                ImageError::Limits(LimitError::from_kind(LimitErrorKind::InsufficientMemory))
             })
     }
 
-    <span class="doccomment">/// Read the file from the specified path into an `Rgba32FImage`.</span>
-    <span class="kw">fn</span> <span class="ident">read_as_rgba_image</span>(<span class="ident">read</span>: <span class="kw">impl</span> <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Rgba32FImage</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">OpenExrDecoder::with_alpha_preference</span>(<span class="ident">read</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> (<span class="ident">width</span>, <span class="ident">height</span>) <span class="op">=</span> <span class="ident">decoder</span>.<span class="ident">dimensions</span>();
-        <span class="kw">let</span> <span class="ident">buffer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">decoder_to_vec</span>(<span class="ident">decoder</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Read the file from the specified path into an `Rgba32FImage`.
+    </span><span class="kw">fn </span>read_as_rgba_image(read: <span class="kw">impl </span>Read + Seek) -&gt; ImageResult&lt;Rgba32FImage&gt; {
+        <span class="kw">let </span>decoder = OpenExrDecoder::with_alpha_preference(read, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>(width, height) = decoder.dimensions();
+        <span class="kw">let </span>buffer: Vec&lt;f32&gt; = decoder_to_vec(decoder)<span class="question-mark">?</span>;
 
-        <span class="ident">ImageBuffer::from_raw</span>(<span class="ident">width</span>, <span class="ident">height</span>, <span class="ident">buffer</span>)
-            <span class="comment">// this should be the only reason for the &quot;from raw&quot; call to fail,</span>
-            <span class="comment">// even though such a large allocation would probably cause an error much earlier</span>
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="ident">ImageError::Limits</span>(<span class="ident">LimitError::from_kind</span>(<span class="ident">LimitErrorKind::InsufficientMemory</span>))
+        ImageBuffer::from_raw(width, height, buffer)
+            <span class="comment">// this should be the only reason for the &quot;from raw&quot; call to fail,
+            // even though such a large allocation would probably cause an error much earlier
+            </span>.ok_or_else(|| {
+                ImageError::Limits(LimitError::from_kind(LimitErrorKind::InsufficientMemory))
             })
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">compare_exr_hdr</span>() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>compare_exr_hdr() {
         <span class="macro">assert!</span>(
-            <span class="macro">cfg!</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;hdr&quot;</span>),
-            <span class="string">&quot;to run all the openexr tests, activate the hdr feature flag&quot;</span>
-        );
+            <span class="macro">cfg!</span>(feature = <span class="string">&quot;hdr&quot;</span>),
+            <span class="string">&quot;to run all the openexr tests, activate the hdr feature flag&quot;
+        </span>);
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;hdr&quot;</span>)]</span>
-        {
-            <span class="kw">let</span> <span class="ident">folder</span> <span class="op">=</span> <span class="ident">BASE_PATH</span>.<span class="ident">iter</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>();
-            <span class="kw">let</span> <span class="ident">reference_path</span> <span class="op">=</span> <span class="ident">folder</span>.<span class="ident">clone</span>().<span class="ident">join</span>(<span class="string">&quot;overexposed gradient.hdr&quot;</span>);
-            <span class="kw">let</span> <span class="ident">exr_path</span> <span class="op">=</span> <span class="ident">folder</span>
-                .<span class="ident">clone</span>()
-                .<span class="ident">join</span>(<span class="string">&quot;overexposed gradient - data window equals display window.exr&quot;</span>);
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;hdr&quot;</span>)]
+        </span>{
+            <span class="kw">let </span>folder = BASE_PATH.iter().collect::&lt;PathBuf&gt;();
+            <span class="kw">let </span>reference_path = folder.clone().join(<span class="string">&quot;overexposed gradient.hdr&quot;</span>);
+            <span class="kw">let </span>exr_path = folder
+                .clone()
+                .join(<span class="string">&quot;overexposed gradient - data window equals display window.exr&quot;</span>);
 
-            <span class="kw">let</span> <span class="ident">hdr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rgb</span><span class="op">&lt;</span><span class="ident">f32</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::codecs::hdr::HdrDecoder::new</span>(<span class="ident">std::io::BufReader::new</span>(
-                <span class="ident">std::fs::File::open</span>(<span class="kw-2">&amp;</span><span class="ident">reference_path</span>).<span class="ident">unwrap</span>(),
+            <span class="kw">let </span>hdr: Vec&lt;Rgb&lt;f32&gt;&gt; = <span class="kw">crate</span>::codecs::hdr::HdrDecoder::new(std::io::BufReader::new(
+                std::fs::File::open(<span class="kw-2">&amp;</span>reference_path).unwrap(),
             ))
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">read_image_hdr</span>()
-            .<span class="ident">unwrap</span>();
+            .unwrap()
+            .read_image_hdr()
+            .unwrap();
 
-            <span class="kw">let</span> <span class="ident">exr_pixels</span>: <span class="ident">Rgb32FImage</span> <span class="op">=</span> <span class="ident">read_as_rgb_image_from_file</span>(<span class="ident">exr_path</span>).<span class="ident">unwrap</span>();
+            <span class="kw">let </span>exr_pixels: Rgb32FImage = read_as_rgb_image_from_file(exr_path).unwrap();
             <span class="macro">assert_eq!</span>(
-                <span class="ident">exr_pixels</span>.<span class="ident">dimensions</span>().<span class="number">0</span> <span class="op">*</span> <span class="ident">exr_pixels</span>.<span class="ident">dimensions</span>().<span class="number">1</span>,
-                <span class="ident">hdr</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>
+                exr_pixels.dimensions().<span class="number">0 </span>* exr_pixels.dimensions().<span class="number">1</span>,
+                hdr.len() <span class="kw">as </span>u32
             );
 
-            <span class="kw">for</span> (<span class="ident">expected</span>, <span class="ident">found</span>) <span class="kw">in</span> <span class="ident">hdr</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">exr_pixels</span>.<span class="ident">pixels</span>()) {
-                <span class="kw">for</span> (<span class="ident">expected</span>, <span class="ident">found</span>) <span class="kw">in</span> <span class="ident">expected</span>.<span class="number">0</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">found</span>.<span class="number">0</span>.<span class="ident">iter</span>()) {
-                    <span class="comment">// the large tolerance seems to be caused by</span>
-                    <span class="comment">// the RGBE u8x4 pixel quantization of the hdr image format</span>
-                    <span class="macro">assert!</span>(
-                        (<span class="ident">expected</span> <span class="op">-</span> <span class="ident">found</span>).<span class="ident">abs</span>() <span class="op">&lt;</span> <span class="number">0.1</span>,
+            <span class="kw">for </span>(expected, found) <span class="kw">in </span>hdr.iter().zip(exr_pixels.pixels()) {
+                <span class="kw">for </span>(expected, found) <span class="kw">in </span>expected.<span class="number">0</span>.iter().zip(found.<span class="number">0</span>.iter()) {
+                    <span class="comment">// the large tolerance seems to be caused by
+                    // the RGBE u8x4 pixel quantization of the hdr image format
+                    </span><span class="macro">assert!</span>(
+                        (expected - found).abs() &lt; <span class="number">0.1</span>,
                         <span class="string">&quot;expected {}, found {}&quot;</span>,
-                        <span class="ident">expected</span>,
-                        <span class="ident">found</span>
+                        expected,
+                        found
                     );
                 }
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">roundtrip_rgba</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_random</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="op">-</span><span class="number">1.0</span>, <span class="op">-</span><span class="number">3.14</span>, <span class="number">27.0</span>, <span class="number">11.0</span>, <span class="number">31.0</span>]
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">cycle</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_random</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">next_random</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>roundtrip_rgba() {
+        <span class="kw">let </span><span class="kw-2">mut </span>next_random = <span class="macro">vec!</span>[<span class="number">1.0</span>, <span class="number">0.0</span>, -<span class="number">1.0</span>, -<span class="number">3.14</span>, <span class="number">27.0</span>, <span class="number">11.0</span>, <span class="number">31.0</span>]
+            .into_iter()
+            .cycle();
+        <span class="kw">let </span><span class="kw-2">mut </span>next_random = <span class="kw">move </span>|| next_random.next().unwrap();
 
-        <span class="kw">let</span> <span class="ident">generated_image</span>: <span class="ident">Rgba32FImage</span> <span class="op">=</span> <span class="ident">ImageBuffer::from_fn</span>(<span class="number">9</span>, <span class="number">31</span>, <span class="op">|</span><span class="ident">_x</span>, <span class="ident">_y</span><span class="op">|</span> {
-            <span class="ident">Rgba</span>([<span class="ident">next_random</span>(), <span class="ident">next_random</span>(), <span class="ident">next_random</span>(), <span class="ident">next_random</span>()])
+        <span class="kw">let </span>generated_image: Rgba32FImage = ImageBuffer::from_fn(<span class="number">9</span>, <span class="number">31</span>, |_x, _y| {
+            Rgba([next_random(), next_random(), next_random(), next_random()])
         });
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-        <span class="ident">write_rgba_image</span>(<span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bytes</span>), <span class="kw-2">&amp;</span><span class="ident">generated_image</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">decoded_image</span> <span class="op">=</span> <span class="ident">read_as_rgba_image</span>(<span class="ident">Cursor::new</span>(<span class="ident">bytes</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>bytes = <span class="macro">vec!</span>[];
+        write_rgba_image(Cursor::new(<span class="kw-2">&amp;mut </span>bytes), <span class="kw-2">&amp;</span>generated_image).unwrap();
+        <span class="kw">let </span>decoded_image = read_as_rgba_image(Cursor::new(bytes)).unwrap();
 
-        <span class="macro">debug_assert_eq!</span>(<span class="ident">generated_image</span>, <span class="ident">decoded_image</span>);
+        <span class="macro">debug_assert_eq!</span>(generated_image, decoded_image);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">roundtrip_rgb</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_random</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="op">-</span><span class="number">1.0</span>, <span class="op">-</span><span class="number">3.14</span>, <span class="number">27.0</span>, <span class="number">11.0</span>, <span class="number">31.0</span>]
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">cycle</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_random</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="ident">next_random</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>roundtrip_rgb() {
+        <span class="kw">let </span><span class="kw-2">mut </span>next_random = <span class="macro">vec!</span>[<span class="number">1.0</span>, <span class="number">0.0</span>, -<span class="number">1.0</span>, -<span class="number">3.14</span>, <span class="number">27.0</span>, <span class="number">11.0</span>, <span class="number">31.0</span>]
+            .into_iter()
+            .cycle();
+        <span class="kw">let </span><span class="kw-2">mut </span>next_random = <span class="kw">move </span>|| next_random.next().unwrap();
 
-        <span class="kw">let</span> <span class="ident">generated_image</span>: <span class="ident">Rgb32FImage</span> <span class="op">=</span> <span class="ident">ImageBuffer::from_fn</span>(<span class="number">9</span>, <span class="number">31</span>, <span class="op">|</span><span class="ident">_x</span>, <span class="ident">_y</span><span class="op">|</span> {
-            <span class="ident">Rgb</span>([<span class="ident">next_random</span>(), <span class="ident">next_random</span>(), <span class="ident">next_random</span>()])
+        <span class="kw">let </span>generated_image: Rgb32FImage = ImageBuffer::from_fn(<span class="number">9</span>, <span class="number">31</span>, |_x, _y| {
+            Rgb([next_random(), next_random(), next_random()])
         });
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-        <span class="ident">write_rgb_image</span>(<span class="ident">Cursor::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bytes</span>), <span class="kw-2">&amp;</span><span class="ident">generated_image</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">decoded_image</span> <span class="op">=</span> <span class="ident">read_as_rgb_image</span>(<span class="ident">Cursor::new</span>(<span class="ident">bytes</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>bytes = <span class="macro">vec!</span>[];
+        write_rgb_image(Cursor::new(<span class="kw-2">&amp;mut </span>bytes), <span class="kw-2">&amp;</span>generated_image).unwrap();
+        <span class="kw">let </span>decoded_image = read_as_rgb_image(Cursor::new(bytes)).unwrap();
 
-        <span class="macro">debug_assert_eq!</span>(<span class="ident">generated_image</span>, <span class="ident">decoded_image</span>);
+        <span class="macro">debug_assert_eq!</span>(generated_image, decoded_image);
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">compare_rgba_rgb</span>() {
-        <span class="kw">let</span> <span class="ident">exr_path</span> <span class="op">=</span> <span class="ident">BASE_PATH</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>()
-            .<span class="ident">join</span>(<span class="string">&quot;overexposed gradient - data window equals display window.exr&quot;</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>compare_rgba_rgb() {
+        <span class="kw">let </span>exr_path = BASE_PATH
+            .iter()
+            .collect::&lt;PathBuf&gt;()
+            .join(<span class="string">&quot;overexposed gradient - data window equals display window.exr&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">rgb</span>: <span class="ident">Rgb32FImage</span> <span class="op">=</span> <span class="ident">read_as_rgb_image_from_file</span>(<span class="kw-2">&amp;</span><span class="ident">exr_path</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">rgba</span>: <span class="ident">Rgba32FImage</span> <span class="op">=</span> <span class="ident">read_as_rgba_image_from_file</span>(<span class="kw-2">&amp;</span><span class="ident">exr_path</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>rgb: Rgb32FImage = read_as_rgb_image_from_file(<span class="kw-2">&amp;</span>exr_path).unwrap();
+        <span class="kw">let </span>rgba: Rgba32FImage = read_as_rgba_image_from_file(<span class="kw-2">&amp;</span>exr_path).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">rgba</span>.<span class="ident">dimensions</span>(), <span class="ident">rgb</span>.<span class="ident">dimensions</span>());
+        <span class="macro">assert_eq!</span>(rgba.dimensions(), rgb.dimensions());
 
-        <span class="kw">for</span> (<span class="ident">Rgb</span>(<span class="ident">rgb</span>), <span class="ident">Rgba</span>(<span class="ident">rgba</span>)) <span class="kw">in</span> <span class="ident">rgb</span>.<span class="ident">pixels</span>().<span class="ident">zip</span>(<span class="ident">rgba</span>.<span class="ident">pixels</span>()) {
-            <span class="macro">assert_eq!</span>(<span class="ident">rgb</span>, <span class="kw-2">&amp;</span><span class="ident">rgba</span>[..<span class="number">3</span>]);
+        <span class="kw">for </span>(Rgb(rgb), Rgba(rgba)) <span class="kw">in </span>rgb.pixels().zip(rgba.pixels()) {
+            <span class="macro">assert_eq!</span>(rgb, <span class="kw-2">&amp;</span>rgba[..<span class="number">3</span>]);
         }
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">compare_cropped</span>() {
-        <span class="comment">// like in photoshop, exr images may have layers placed anywhere in a canvas.</span>
-        <span class="comment">// we don&#39;t want to load the pixels from the layer, but we want to load the pixels from the canvas.</span>
-        <span class="comment">// a layer might be smaller than the canvas, in that case the canvas should be transparent black</span>
-        <span class="comment">// where no layer was covering it. a layer might also be larger than the canvas,</span>
-        <span class="comment">// these pixels should be discarded.</span>
-        <span class="comment">//</span>
-        <span class="comment">// in this test we want to make sure that an</span>
-        <span class="comment">// auto-cropped image will be reproduced to the original.</span>
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>compare_cropped() {
+        <span class="comment">// like in photoshop, exr images may have layers placed anywhere in a canvas.
+        // we don&#39;t want to load the pixels from the layer, but we want to load the pixels from the canvas.
+        // a layer might be smaller than the canvas, in that case the canvas should be transparent black
+        // where no layer was covering it. a layer might also be larger than the canvas,
+        // these pixels should be discarded.
+        //
+        // in this test we want to make sure that an
+        // auto-cropped image will be reproduced to the original.
 
-        <span class="kw">let</span> <span class="ident">exr_path</span> <span class="op">=</span> <span class="ident">BASE_PATH</span>.<span class="ident">iter</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> <span class="ident">original</span> <span class="op">=</span> <span class="ident">exr_path</span>.<span class="ident">clone</span>().<span class="ident">join</span>(<span class="string">&quot;cropping - uncropped original.exr&quot;</span>);
-        <span class="kw">let</span> <span class="ident">cropped</span> <span class="op">=</span> <span class="ident">exr_path</span>
-            .<span class="ident">clone</span>()
-            .<span class="ident">join</span>(<span class="string">&quot;cropping - data window differs display window.exr&quot;</span>);
+        </span><span class="kw">let </span>exr_path = BASE_PATH.iter().collect::&lt;PathBuf&gt;();
+        <span class="kw">let </span>original = exr_path.clone().join(<span class="string">&quot;cropping - uncropped original.exr&quot;</span>);
+        <span class="kw">let </span>cropped = exr_path
+            .clone()
+            .join(<span class="string">&quot;cropping - data window differs display window.exr&quot;</span>);
 
-        <span class="comment">// smoke-check that the exr files are actually not the same</span>
-        {
-            <span class="kw">let</span> <span class="ident">original_exr</span> <span class="op">=</span> <span class="ident">read_first_flat_layer_from_file</span>(<span class="kw-2">&amp;</span><span class="ident">original</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">cropped_exr</span> <span class="op">=</span> <span class="ident">read_first_flat_layer_from_file</span>(<span class="kw-2">&amp;</span><span class="ident">cropped</span>).<span class="ident">unwrap</span>();
+        <span class="comment">// smoke-check that the exr files are actually not the same
+        </span>{
+            <span class="kw">let </span>original_exr = read_first_flat_layer_from_file(<span class="kw-2">&amp;</span>original).unwrap();
+            <span class="kw">let </span>cropped_exr = read_first_flat_layer_from_file(<span class="kw-2">&amp;</span>cropped).unwrap();
             <span class="macro">assert_eq!</span>(
-                <span class="ident">original_exr</span>.<span class="ident">attributes</span>.<span class="ident">display_window</span>,
-                <span class="ident">cropped_exr</span>.<span class="ident">attributes</span>.<span class="ident">display_window</span>
+                original_exr.attributes.display_window,
+                cropped_exr.attributes.display_window
             );
             <span class="macro">assert_ne!</span>(
-                <span class="ident">original_exr</span>.<span class="ident">layer_data</span>.<span class="ident">attributes</span>.<span class="ident">layer_position</span>,
-                <span class="ident">cropped_exr</span>.<span class="ident">layer_data</span>.<span class="ident">attributes</span>.<span class="ident">layer_position</span>
+                original_exr.layer_data.attributes.layer_position,
+                cropped_exr.layer_data.attributes.layer_position
             );
-            <span class="macro">assert_ne!</span>(<span class="ident">original_exr</span>.<span class="ident">layer_data</span>.<span class="ident">size</span>, <span class="ident">cropped_exr</span>.<span class="ident">layer_data</span>.<span class="ident">size</span>);
+            <span class="macro">assert_ne!</span>(original_exr.layer_data.size, cropped_exr.layer_data.size);
         }
 
-        <span class="comment">// check that they result in the same image</span>
-        <span class="kw">let</span> <span class="ident">original</span>: <span class="ident">Rgba32FImage</span> <span class="op">=</span> <span class="ident">read_as_rgba_image_from_file</span>(<span class="kw-2">&amp;</span><span class="ident">original</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">cropped</span>: <span class="ident">Rgba32FImage</span> <span class="op">=</span> <span class="ident">read_as_rgba_image_from_file</span>(<span class="kw-2">&amp;</span><span class="ident">cropped</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">original</span>.<span class="ident">dimensions</span>(), <span class="ident">cropped</span>.<span class="ident">dimensions</span>());
+        <span class="comment">// check that they result in the same image
+        </span><span class="kw">let </span>original: Rgba32FImage = read_as_rgba_image_from_file(<span class="kw-2">&amp;</span>original).unwrap();
+        <span class="kw">let </span>cropped: Rgba32FImage = read_as_rgba_image_from_file(<span class="kw-2">&amp;</span>cropped).unwrap();
+        <span class="macro">assert_eq!</span>(original.dimensions(), cropped.dimensions());
 
-        <span class="comment">// the following is not a simple assert_eq, as in case of an error,</span>
-        <span class="comment">// the whole image would be printed to the console, which takes forever</span>
-        <span class="macro">assert!</span>(<span class="ident">original</span>.<span class="ident">pixels</span>().<span class="ident">zip</span>(<span class="ident">cropped</span>.<span class="ident">pixels</span>()).<span class="ident">all</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> <span class="ident">a</span> <span class="op">==</span> <span class="ident">b</span>));
+        <span class="comment">// the following is not a simple assert_eq, as in case of an error,
+        // the whole image would be printed to the console, which takes forever
+        </span><span class="macro">assert!</span>(original.pixels().zip(cropped.pixels()).all(|(a, b)| a == b));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

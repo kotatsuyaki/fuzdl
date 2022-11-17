@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/deflate_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>deflate_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/deflate_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>deflate_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -157,159 +151,158 @@
 <span id="151">151</span>
 <span id="152">152</span>
 <span id="153">153</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::io::Write</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp</span>, <span class="ident">io</span>, <span class="ident">mem</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::io::Write;
+<span class="kw">use </span>std::{cmp, io, mem};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::compress::Flush</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::compression_options</span>::{<span class="ident">CompressionOptions</span>, <span class="ident">MAX_HASH_CHECKS</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::encoder_state::EncoderState</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman_table::MAX_MATCH</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman_table::NUM_LITERALS_AND_LENGTHS</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::input_buffer::InputBuffer</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::length_encode</span>::{<span class="ident">EncodedLength</span>, <span class="ident">LeafVec</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lz77::LZ77State</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::output_writer::DynamicWriter</span>;
+<span class="kw">use </span><span class="kw">crate</span>::compress::Flush;
+<span class="kw">use </span><span class="kw">crate</span>::compression_options::{CompressionOptions, MAX_HASH_CHECKS};
+<span class="kw">use </span><span class="kw">crate</span>::encoder_state::EncoderState;
+<span class="kw">pub use </span><span class="kw">crate</span>::huffman_table::MAX_MATCH;
+<span class="kw">use </span><span class="kw">crate</span>::huffman_table::NUM_LITERALS_AND_LENGTHS;
+<span class="kw">use </span><span class="kw">crate</span>::input_buffer::InputBuffer;
+<span class="kw">use </span><span class="kw">crate</span>::length_encode::{EncodedLength, LeafVec};
+<span class="kw">use </span><span class="kw">crate</span>::lz77::LZ77State;
+<span class="kw">use </span><span class="kw">crate</span>::output_writer::DynamicWriter;
 
-<span class="doccomment">/// A counter used for checking values in debug mode.</span>
-<span class="doccomment">/// Does nothing when debug assertions are disabled.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DebugCounter</span> {
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="ident">count</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// A counter used for checking values in debug mode.
+/// Does nothing when debug assertions are disabled.
+</span><span class="attribute">#[derive(Default)]
+</span><span class="kw">pub struct </span>DebugCounter {
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span>count: u64,
 }
 
-<span class="kw">impl</span> <span class="ident">DebugCounter</span> {
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">count</span>
+<span class="kw">impl </span>DebugCounter {
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.count
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="number">0</span>
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    </span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="number">0
+    </span>}
+
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.count = <span class="number">0</span>;
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">count</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    </span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;</span><span class="self">self</span>) {}
+
+    <span class="attribute">#[cfg(debug_assertions)]
+    </span><span class="kw">pub fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: u64) {
+        <span class="self">self</span>.count += val;
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {}
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">debug_assertions</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">u64</span>) {
-        <span class="self">self</span>.<span class="ident">count</span> <span class="op">+</span><span class="op">=</span> <span class="ident">val</span>;
-    }
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">debug_assertions</span>))]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">u64</span>) {}
+    <span class="attribute">#[cfg(not(debug_assertions))]
+    </span><span class="kw">pub fn </span>add(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: u64) {}
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LengthBuffers</span> {
-    <span class="kw">pub</span> <span class="ident">leaf_buf</span>: <span class="ident">LeafVec</span>,
-    <span class="kw">pub</span> <span class="ident">length_buf</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodedLength</span><span class="op">&gt;</span>,
+<span class="kw">pub struct </span>LengthBuffers {
+    <span class="kw">pub </span>leaf_buf: LeafVec,
+    <span class="kw">pub </span>length_buf: Vec&lt;EncodedLength&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">LengthBuffers</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="ident">LengthBuffers</span> {
-        <span class="ident">LengthBuffers</span> {
-            <span class="ident">leaf_buf</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">NUM_LITERALS_AND_LENGTHS</span>),
-            <span class="ident">length_buf</span>: <span class="ident">Vec::with_capacity</span>(<span class="number">19</span>),
+<span class="kw">impl </span>LengthBuffers {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>new() -&gt; LengthBuffers {
+        LengthBuffers {
+            leaf_buf: Vec::with_capacity(NUM_LITERALS_AND_LENGTHS),
+            length_buf: Vec::with_capacity(<span class="number">19</span>),
         }
     }
 }
 
-<span class="doccomment">/// A struct containing all the stored state used for the encoder.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeflateState</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// State of lz77 compression.</span>
-    <span class="kw">pub</span> <span class="ident">lz77_state</span>: <span class="ident">LZ77State</span>,
-    <span class="kw">pub</span> <span class="ident">input_buffer</span>: <span class="ident">InputBuffer</span>,
-    <span class="kw">pub</span> <span class="ident">compression_options</span>: <span class="ident">CompressionOptions</span>,
-    <span class="doccomment">/// State the Huffman part of the compression and the output buffer.</span>
-    <span class="kw">pub</span> <span class="ident">encoder_state</span>: <span class="ident">EncoderState</span>,
-    <span class="doccomment">/// The buffer containing the raw output of the lz77-encoding.</span>
-    <span class="kw">pub</span> <span class="ident">lz77_writer</span>: <span class="ident">DynamicWriter</span>,
-    <span class="doccomment">/// Buffers used when generating Huffman code lengths.</span>
-    <span class="kw">pub</span> <span class="ident">length_buffers</span>: <span class="ident">LengthBuffers</span>,
-    <span class="doccomment">/// Total number of bytes consumed/written to the input buffer.</span>
-    <span class="kw">pub</span> <span class="ident">bytes_written</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// Wrapped writer.</span>
-    <span class="doccomment">/// Option is used to allow us to implement `Drop` and `finish()` at the same time for the</span>
-    <span class="doccomment">/// writer structs.</span>
-    <span class="kw">pub</span> <span class="ident">inner</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The position in the output buffer where data should be flushed from, to keep track of</span>
-    <span class="doccomment">/// what data has been output in case not all data is output when writing to the wrapped</span>
-    <span class="doccomment">/// writer.</span>
-    <span class="kw">pub</span> <span class="ident">output_buf_pos</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">flush_mode</span>: <span class="ident">Flush</span>,
-    <span class="doccomment">/// Whether we need to flush everything before continuing.</span>
-    <span class="doccomment">/// Currently only used after having output a sync flush.</span>
-    <span class="doccomment">/// This is implemented in a somewhat clunky manner at the moment,</span>
-    <span class="doccomment">/// ideally it should be done in a more fail-safe way to avoid</span>
-    <span class="doccomment">/// further bugs.</span>
-    <span class="kw">pub</span> <span class="ident">needs_flush</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Number of bytes written as calculated by sum of block input lengths.</span>
-    <span class="doccomment">/// Used to check that they are correct when `debug_assertions` are enabled.</span>
-    <span class="kw">pub</span> <span class="ident">bytes_written_control</span>: <span class="ident">DebugCounter</span>,
+<span class="doccomment">/// A struct containing all the stored state used for the encoder.
+</span><span class="kw">pub struct </span>DeflateState&lt;W: Write&gt; {
+    <span class="doccomment">/// State of lz77 compression.
+    </span><span class="kw">pub </span>lz77_state: LZ77State,
+    <span class="kw">pub </span>input_buffer: InputBuffer,
+    <span class="kw">pub </span>compression_options: CompressionOptions,
+    <span class="doccomment">/// State the Huffman part of the compression and the output buffer.
+    </span><span class="kw">pub </span>encoder_state: EncoderState,
+    <span class="doccomment">/// The buffer containing the raw output of the lz77-encoding.
+    </span><span class="kw">pub </span>lz77_writer: DynamicWriter,
+    <span class="doccomment">/// Buffers used when generating Huffman code lengths.
+    </span><span class="kw">pub </span>length_buffers: LengthBuffers,
+    <span class="doccomment">/// Total number of bytes consumed/written to the input buffer.
+    </span><span class="kw">pub </span>bytes_written: u64,
+    <span class="doccomment">/// Wrapped writer.
+    /// Option is used to allow us to implement `Drop` and `finish()` at the same time for the
+    /// writer structs.
+    </span><span class="kw">pub </span>inner: <span class="prelude-ty">Option</span>&lt;W&gt;,
+    <span class="doccomment">/// The position in the output buffer where data should be flushed from, to keep track of
+    /// what data has been output in case not all data is output when writing to the wrapped
+    /// writer.
+    </span><span class="kw">pub </span>output_buf_pos: usize,
+    <span class="kw">pub </span>flush_mode: Flush,
+    <span class="doccomment">/// Whether we need to flush everything before continuing.
+    /// Currently only used after having output a sync flush.
+    /// This is implemented in a somewhat clunky manner at the moment,
+    /// ideally it should be done in a more fail-safe way to avoid
+    /// further bugs.
+    </span><span class="kw">pub </span>needs_flush: bool,
+    <span class="doccomment">/// Number of bytes written as calculated by sum of block input lengths.
+    /// Used to check that they are correct when `debug_assertions` are enabled.
+    </span><span class="kw">pub </span>bytes_written_control: DebugCounter,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">DeflateState</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">compression_options</span>: <span class="ident">CompressionOptions</span>, <span class="ident">writer</span>: <span class="ident">W</span>) -&gt; <span class="ident">DeflateState</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="ident">DeflateState</span> {
-            <span class="ident">input_buffer</span>: <span class="ident">InputBuffer::empty</span>(),
-            <span class="ident">lz77_state</span>: <span class="ident">LZ77State::new</span>(
-                <span class="ident">compression_options</span>.<span class="ident">max_hash_checks</span>,
-                <span class="ident">cmp::min</span>(<span class="ident">compression_options</span>.<span class="ident">lazy_if_less_than</span>, <span class="ident">MAX_HASH_CHECKS</span>),
-                <span class="ident">compression_options</span>.<span class="ident">matching_type</span>,
+<span class="kw">impl</span>&lt;W: Write&gt; DeflateState&lt;W&gt; {
+    <span class="kw">pub fn </span>new(compression_options: CompressionOptions, writer: W) -&gt; DeflateState&lt;W&gt; {
+        DeflateState {
+            input_buffer: InputBuffer::empty(),
+            lz77_state: LZ77State::new(
+                compression_options.max_hash_checks,
+                cmp::min(compression_options.lazy_if_less_than, MAX_HASH_CHECKS),
+                compression_options.matching_type,
             ),
-            <span class="ident">encoder_state</span>: <span class="ident">EncoderState::new</span>(<span class="ident">Vec::with_capacity</span>(<span class="number">1024</span> <span class="op">*</span> <span class="number">32</span>)),
-            <span class="ident">lz77_writer</span>: <span class="ident">DynamicWriter::new</span>(),
-            <span class="ident">length_buffers</span>: <span class="ident">LengthBuffers::new</span>(),
-            <span class="ident">compression_options</span>,
-            <span class="ident">bytes_written</span>: <span class="number">0</span>,
-            <span class="ident">inner</span>: <span class="prelude-val">Some</span>(<span class="ident">writer</span>),
-            <span class="ident">output_buf_pos</span>: <span class="number">0</span>,
-            <span class="ident">flush_mode</span>: <span class="ident">Flush::None</span>,
-            <span class="ident">needs_flush</span>: <span class="bool-val">false</span>,
-            <span class="ident">bytes_written_control</span>: <span class="ident">DebugCounter::default</span>(),
+            encoder_state: EncoderState::new(Vec::with_capacity(<span class="number">1024 </span>* <span class="number">32</span>)),
+            lz77_writer: DynamicWriter::new(),
+            length_buffers: LengthBuffers::new(),
+            compression_options,
+            bytes_written: <span class="number">0</span>,
+            inner: <span class="prelude-val">Some</span>(writer),
+            output_buf_pos: <span class="number">0</span>,
+            flush_mode: Flush::None,
+            needs_flush: <span class="bool-val">false</span>,
+            bytes_written_control: DebugCounter::default(),
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">output_buf</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encoder_state</span>.<span class="ident">inner_vec</span>()
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>output_buf(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt; {
+        <span class="self">self</span>.encoder_state.inner_vec()
     }
 
-    <span class="doccomment">/// Resets the status of the decoder, leaving the compression options intact</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If flushing the current writer succeeds, it is replaced with the provided one,</span>
-    <span class="doccomment">/// buffers and status (except compression options) is reset and the old writer</span>
-    <span class="doccomment">/// is returned.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If flushing fails, the rest of the writer is not cleared.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">writer</span>: <span class="ident">W</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">encoder_state</span>.<span class="ident">flush</span>();
-        <span class="self">self</span>.<span class="ident">inner</span>
-            .<span class="ident">as_mut</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;Missing writer!&quot;</span>)
-            .<span class="ident">write_all</span>(<span class="self">self</span>.<span class="ident">encoder_state</span>.<span class="ident">inner_vec</span>())<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">encoder_state</span>.<span class="ident">inner_vec</span>().<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">input_buffer</span> <span class="op">=</span> <span class="ident">InputBuffer::empty</span>();
-        <span class="self">self</span>.<span class="ident">lz77_writer</span>.<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">lz77_state</span>.<span class="ident">reset</span>();
-        <span class="self">self</span>.<span class="ident">bytes_written</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="self">self</span>.<span class="ident">output_buf_pos</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="self">self</span>.<span class="ident">flush_mode</span> <span class="op">=</span> <span class="ident">Flush::None</span>;
-        <span class="self">self</span>.<span class="ident">needs_flush</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">debug_assertions</span>) {
-            <span class="self">self</span>.<span class="ident">bytes_written_control</span>.<span class="ident">reset</span>();
+    <span class="doccomment">/// Resets the status of the decoder, leaving the compression options intact
+    ///
+    /// If flushing the current writer succeeds, it is replaced with the provided one,
+    /// buffers and status (except compression options) is reset and the old writer
+    /// is returned.
+    ///
+    /// If flushing fails, the rest of the writer is not cleared.
+    </span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>, writer: W) -&gt; io::Result&lt;W&gt; {
+        <span class="self">self</span>.encoder_state.flush();
+        <span class="self">self</span>.inner
+            .as_mut()
+            .expect(<span class="string">&quot;Missing writer!&quot;</span>)
+            .write_all(<span class="self">self</span>.encoder_state.inner_vec())<span class="question-mark">?</span>;
+        <span class="self">self</span>.encoder_state.inner_vec().clear();
+        <span class="self">self</span>.input_buffer = InputBuffer::empty();
+        <span class="self">self</span>.lz77_writer.clear();
+        <span class="self">self</span>.lz77_state.reset();
+        <span class="self">self</span>.bytes_written = <span class="number">0</span>;
+        <span class="self">self</span>.output_buf_pos = <span class="number">0</span>;
+        <span class="self">self</span>.flush_mode = Flush::None;
+        <span class="self">self</span>.needs_flush = <span class="bool-val">false</span>;
+        <span class="kw">if </span><span class="macro">cfg!</span>(debug_assertions) {
+            <span class="self">self</span>.bytes_written_control.reset();
         }
-        <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">inner</span>, <span class="prelude-val">Some</span>(<span class="ident">writer</span>))
-            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">io::Error::new</span>(<span class="ident">io::ErrorKind::Other</span>, <span class="string">&quot;Missing writer&quot;</span>))
+        mem::replace(<span class="kw-2">&amp;mut </span><span class="self">self</span>.inner, <span class="prelude-val">Some</span>(writer))
+            .ok_or_else(|| io::Error::new(io::ErrorKind::Other, <span class="string">&quot;Missing writer&quot;</span>))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

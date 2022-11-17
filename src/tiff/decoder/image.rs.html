@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/decoder/image.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>image.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../tiff/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tiff-0.7.3/src/decoder/image.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>image.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../tiff/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../tiff/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -561,556 +555,556 @@
 <span id="555">555</span>
 <span id="556">556</span>
 <span id="557">557</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ifd</span>::{<span class="ident">Directory</span>, <span class="ident">Value</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::stream</span>::{
-    <span class="ident">add_app14segment</span>, <span class="ident">ByteOrder</span>, <span class="ident">DeflateReader</span>, <span class="ident">JpegReader</span>, <span class="ident">JpegTagApp14Transform</span>, <span class="ident">LZWReader</span>,
-    <span class="ident">PackBitsReader</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::ifd::{Directory, Value};
+<span class="kw">use </span><span class="kw">super</span>::stream::{
+    add_app14segment, ByteOrder, DeflateReader, JpegReader, JpegTagApp14Transform, LZWReader,
+    PackBitsReader,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::tag_reader::TagReader</span>;
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">fp_predict_f32</span>, <span class="ident">fp_predict_f64</span>, <span class="ident">DecodingBuffer</span>, <span class="ident">Limits</span>};
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">stream::SmartReader</span>, <span class="ident">ChunkType</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tags</span>::{<span class="ident">CompressionMethod</span>, <span class="ident">PhotometricInterpretation</span>, <span class="ident">Predictor</span>, <span class="ident">SampleFormat</span>, <span class="ident">Tag</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ColorType</span>, <span class="ident">TiffError</span>, <span class="ident">TiffFormatError</span>, <span class="ident">TiffResult</span>, <span class="ident">TiffUnsupportedError</span>, <span class="ident">UsageError</span>};
-<span class="kw">use</span> <span class="ident">std::convert</span>::{<span class="ident">TryFrom</span>, <span class="ident">TryInto</span>};
-<span class="kw">use</span> <span class="ident">std::io</span>::{<span class="self">self</span>, <span class="ident">Cursor</span>, <span class="ident">Read</span>, <span class="ident">Seek</span>};
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+<span class="kw">use </span><span class="kw">super</span>::tag_reader::TagReader;
+<span class="kw">use super</span>::{fp_predict_f32, fp_predict_f64, DecodingBuffer, Limits};
+<span class="kw">use super</span>::{stream::SmartReader, ChunkType};
+<span class="kw">use </span><span class="kw">crate</span>::tags::{CompressionMethod, PhotometricInterpretation, Predictor, SampleFormat, Tag};
+<span class="kw">use crate</span>::{ColorType, TiffError, TiffFormatError, TiffResult, TiffUnsupportedError, UsageError};
+<span class="kw">use </span>std::convert::{TryFrom, TryInto};
+<span class="kw">use </span>std::io::{<span class="self">self</span>, Cursor, Read, Seek};
+<span class="kw">use </span>std::sync::Arc;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">StripDecodeState</span> {
-    <span class="kw">pub</span> <span class="ident">rows_per_strip</span>: <span class="ident">u32</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>StripDecodeState {
+    <span class="kw">pub </span>rows_per_strip: u32,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="doccomment">/// Computed values useful for tile decoding</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">TileAttributes</span> {
-    <span class="kw">pub</span> <span class="ident">image_width</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">image_height</span>: <span class="ident">usize</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="doccomment">/// Computed values useful for tile decoding
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>TileAttributes {
+    <span class="kw">pub </span>image_width: usize,
+    <span class="kw">pub </span>image_height: usize,
 
-    <span class="kw">pub</span> <span class="ident">tile_width</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">tile_length</span>: <span class="ident">usize</span>,
+    <span class="kw">pub </span>tile_width: usize,
+    <span class="kw">pub </span>tile_length: usize,
 }
 
-<span class="kw">impl</span> <span class="ident">TileAttributes</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tiles_across</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        (<span class="self">self</span>.<span class="ident">image_width</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">tile_width</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">tile_width</span>
+<span class="kw">impl </span>TileAttributes {
+    <span class="kw">pub fn </span>tiles_across(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        (<span class="self">self</span>.image_width + <span class="self">self</span>.tile_width - <span class="number">1</span>) / <span class="self">self</span>.tile_width
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tiles_down</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        (<span class="self">self</span>.<span class="ident">image_height</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">tile_length</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">tile_length</span>
+    <span class="kw">pub fn </span>tiles_down(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        (<span class="self">self</span>.image_height + <span class="self">self</span>.tile_length - <span class="number">1</span>) / <span class="self">self</span>.tile_length
     }
-    <span class="kw">fn</span> <span class="ident">padding_right</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">tile_width</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">image_width</span> <span class="op">%</span> <span class="self">self</span>.<span class="ident">tile_width</span>
+    <span class="kw">fn </span>padding_right(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.tile_width - <span class="self">self</span>.image_width % <span class="self">self</span>.tile_width
     }
-    <span class="kw">fn</span> <span class="ident">padding_down</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">tile_length</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">image_height</span> <span class="op">%</span> <span class="self">self</span>.<span class="ident">tile_length</span>
+    <span class="kw">fn </span>padding_down(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.tile_length - <span class="self">self</span>.image_height % <span class="self">self</span>.tile_length
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_padding</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tile</span>: <span class="ident">usize</span>) -&gt; (<span class="ident">usize</span>, <span class="ident">usize</span>) {
-        <span class="kw">let</span> <span class="ident">row</span> <span class="op">=</span> <span class="ident">tile</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">tiles_across</span>();
-        <span class="kw">let</span> <span class="ident">column</span> <span class="op">=</span> <span class="ident">tile</span> <span class="op">%</span> <span class="self">self</span>.<span class="ident">tiles_across</span>();
+    <span class="kw">pub fn </span>get_padding(<span class="kw-2">&amp;</span><span class="self">self</span>, tile: usize) -&gt; (usize, usize) {
+        <span class="kw">let </span>row = tile / <span class="self">self</span>.tiles_across();
+        <span class="kw">let </span>column = tile % <span class="self">self</span>.tiles_across();
 
-        <span class="kw">let</span> <span class="ident">padding_right</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">column</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">tiles_across</span>() <span class="op">-</span> <span class="number">1</span> {
-            <span class="self">self</span>.<span class="ident">padding_right</span>()
-        } <span class="kw">else</span> {
-            <span class="number">0</span>
-        };
+        <span class="kw">let </span>padding_right = <span class="kw">if </span>column == <span class="self">self</span>.tiles_across() - <span class="number">1 </span>{
+            <span class="self">self</span>.padding_right()
+        } <span class="kw">else </span>{
+            <span class="number">0
+        </span>};
 
-        <span class="kw">let</span> <span class="ident">padding_down</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">row</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">tiles_down</span>() <span class="op">-</span> <span class="number">1</span> {
-            <span class="self">self</span>.<span class="ident">padding_down</span>()
-        } <span class="kw">else</span> {
-            <span class="number">0</span>
-        };
+        <span class="kw">let </span>padding_down = <span class="kw">if </span>row == <span class="self">self</span>.tiles_down() - <span class="number">1 </span>{
+            <span class="self">self</span>.padding_down()
+        } <span class="kw">else </span>{
+            <span class="number">0
+        </span>};
 
-        (<span class="ident">padding_right</span>, <span class="ident">padding_down</span>)
+        (padding_right, padding_down)
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Image</span> {
-    <span class="kw">pub</span> <span class="ident">ifd</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Directory</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">width</span>: <span class="ident">u32</span>,
-    <span class="kw">pub</span> <span class="ident">height</span>: <span class="ident">u32</span>,
-    <span class="kw">pub</span> <span class="ident">bits_per_sample</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">samples</span>: <span class="ident">u8</span>,
-    <span class="kw">pub</span> <span class="ident">sample_format</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SampleFormat</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">photometric_interpretation</span>: <span class="ident">PhotometricInterpretation</span>,
-    <span class="kw">pub</span> <span class="ident">compression_method</span>: <span class="ident">CompressionMethod</span>,
-    <span class="kw">pub</span> <span class="ident">predictor</span>: <span class="ident">Predictor</span>,
-    <span class="kw">pub</span> <span class="ident">jpeg_tables</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">chunk_type</span>: <span class="ident">ChunkType</span>,
-    <span class="kw">pub</span> <span class="ident">strip_decoder</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StripDecodeState</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">tile_attributes</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TileAttributes</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">chunk_offsets</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">chunk_bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Image {
+    <span class="kw">pub </span>ifd: <span class="prelude-ty">Option</span>&lt;Directory&gt;,
+    <span class="kw">pub </span>width: u32,
+    <span class="kw">pub </span>height: u32,
+    <span class="kw">pub </span>bits_per_sample: Vec&lt;u8&gt;,
+    <span class="attribute">#[allow(unused)]
+    </span><span class="kw">pub </span>samples: u8,
+    <span class="kw">pub </span>sample_format: Vec&lt;SampleFormat&gt;,
+    <span class="kw">pub </span>photometric_interpretation: PhotometricInterpretation,
+    <span class="kw">pub </span>compression_method: CompressionMethod,
+    <span class="kw">pub </span>predictor: Predictor,
+    <span class="kw">pub </span>jpeg_tables: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;u8&gt;&gt;&gt;,
+    <span class="kw">pub </span>chunk_type: ChunkType,
+    <span class="kw">pub </span>strip_decoder: <span class="prelude-ty">Option</span>&lt;StripDecodeState&gt;,
+    <span class="kw">pub </span>tile_attributes: <span class="prelude-ty">Option</span>&lt;TileAttributes&gt;,
+    <span class="kw">pub </span>chunk_offsets: Vec&lt;u64&gt;,
+    <span class="kw">pub </span>chunk_bytes: Vec&lt;u64&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Image</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_reader</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Seek</span><span class="op">&gt;</span>(
-        <span class="ident">reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">SmartReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-        <span class="ident">ifd</span>: <span class="ident">Directory</span>,
-        <span class="ident">limits</span>: <span class="kw-2">&amp;</span><span class="ident">Limits</span>,
-        <span class="ident">bigtiff</span>: <span class="ident">bool</span>,
-    ) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tag_reader</span> <span class="op">=</span> <span class="ident">TagReader</span> {
-            <span class="ident">reader</span>,
-            <span class="ident">limits</span>,
-            <span class="ident">ifd</span>: <span class="kw-2">&amp;</span><span class="ident">ifd</span>,
-            <span class="ident">bigtiff</span>,
+<span class="kw">impl </span>Image {
+    <span class="kw">pub fn </span>from_reader&lt;R: Read + Seek&gt;(
+        reader: <span class="kw-2">&amp;mut </span>SmartReader&lt;R&gt;,
+        ifd: Directory,
+        limits: <span class="kw-2">&amp;</span>Limits,
+        bigtiff: bool,
+    ) -&gt; TiffResult&lt;Image&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>tag_reader = TagReader {
+            reader,
+            limits,
+            ifd: <span class="kw-2">&amp;</span>ifd,
+            bigtiff,
         };
 
-        <span class="kw">let</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">tag_reader</span>.<span class="ident">require_tag</span>(<span class="ident">Tag::ImageWidth</span>)<span class="question-mark">?</span>.<span class="ident">into_u32</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">tag_reader</span>.<span class="ident">require_tag</span>(<span class="ident">Tag::ImageLength</span>)<span class="question-mark">?</span>.<span class="ident">into_u32</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>width = tag_reader.require_tag(Tag::ImageWidth)<span class="question-mark">?</span>.into_u32()<span class="question-mark">?</span>;
+        <span class="kw">let </span>height = tag_reader.require_tag(Tag::ImageLength)<span class="question-mark">?</span>.into_u32()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">photometric_interpretation</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-            .<span class="ident">find_tag</span>(<span class="ident">Tag::PhotometricInterpretation</span>)<span class="question-mark">?</span>
-            .<span class="ident">map</span>(<span class="ident">Value::into_u16</span>)
-            .<span class="ident">transpose</span>()<span class="question-mark">?</span>
-            .<span class="ident">and_then</span>(<span class="ident">PhotometricInterpretation::from_u16</span>)
-            .<span class="ident">ok_or</span>(<span class="ident">TiffUnsupportedError::UnknownInterpretation</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>photometric_interpretation = tag_reader
+            .find_tag(Tag::PhotometricInterpretation)<span class="question-mark">?
+            </span>.map(Value::into_u16)
+            .transpose()<span class="question-mark">?
+            </span>.and_then(PhotometricInterpretation::from_u16)
+            .ok_or(TiffUnsupportedError::UnknownInterpretation)<span class="question-mark">?</span>;
 
-        <span class="comment">// Try to parse both the compression method and the number, format, and bits of the included samples.</span>
-        <span class="comment">// If they are not explicitly specified, those tags are reset to their default values and not carried from previous images.</span>
-        <span class="kw">let</span> <span class="ident">compression_method</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tag_reader</span>.<span class="ident">find_tag</span>(<span class="ident">Tag::Compression</span>)<span class="question-mark">?</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">val</span>) =&gt; <span class="ident">CompressionMethod::from_u16</span>(<span class="ident">val</span>.<span class="ident">into_u16</span>()<span class="question-mark">?</span>)
-                .<span class="ident">ok_or</span>(<span class="ident">TiffUnsupportedError::UnknownCompressionMethod</span>)<span class="question-mark">?</span>,
-            <span class="prelude-val">None</span> =&gt; <span class="ident">CompressionMethod::None</span>,
+        <span class="comment">// Try to parse both the compression method and the number, format, and bits of the included samples.
+        // If they are not explicitly specified, those tags are reset to their default values and not carried from previous images.
+        </span><span class="kw">let </span>compression_method = <span class="kw">match </span>tag_reader.find_tag(Tag::Compression)<span class="question-mark">? </span>{
+            <span class="prelude-val">Some</span>(val) =&gt; CompressionMethod::from_u16(val.into_u16()<span class="question-mark">?</span>)
+                .ok_or(TiffUnsupportedError::UnknownCompressionMethod)<span class="question-mark">?</span>,
+            <span class="prelude-val">None </span>=&gt; CompressionMethod::None,
         };
 
-        <span class="kw">let</span> <span class="ident">jpeg_tables</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">compression_method</span> <span class="op">==</span> <span class="ident">CompressionMethod::ModernJPEG</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">ifd</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">Tag::JPEGTables</span>)
+        <span class="kw">let </span>jpeg_tables = <span class="kw">if </span>compression_method == CompressionMethod::ModernJPEG
+            &amp;&amp; ifd.contains_key(<span class="kw-2">&amp;</span>Tag::JPEGTables)
         {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-                .<span class="ident">find_tag</span>(<span class="ident">Tag::JPEGTables</span>)<span class="question-mark">?</span>
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">into_u8_vec</span>()<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="number">2</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                    <span class="ident">TiffFormatError::InvalidTagValueType</span>(<span class="ident">Tag::JPEGTables</span>),
+            <span class="kw">let </span><span class="kw-2">mut </span>vec = tag_reader
+                .find_tag(Tag::JPEGTables)<span class="question-mark">?
+                </span>.unwrap()
+                .into_u8_vec()<span class="question-mark">?</span>;
+            <span class="kw">if </span>vec.len() &lt; <span class="number">2 </span>{
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(
+                    TiffFormatError::InvalidTagValueType(Tag::JPEGTables),
                 ));
             }
 
-            <span class="comment">// TODO: Can we avoid this somehow?</span>
-            <span class="kw">if</span> <span class="ident">photometric_interpretation</span> <span class="op">==</span> <span class="ident">PhotometricInterpretation::RGB</span> {
-                <span class="ident">add_app14segment</span>(<span class="kw-2">&amp;mut</span> <span class="ident">vec</span>, <span class="ident">JpegTagApp14Transform::App14TransformUnknown</span>)
+            <span class="comment">// TODO: Can we avoid this somehow?
+            </span><span class="kw">if </span>photometric_interpretation == PhotometricInterpretation::RGB {
+                add_app14segment(<span class="kw-2">&amp;mut </span>vec, JpegTagApp14Transform::App14TransformUnknown)
             }
 
-            <span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">vec</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        };
+            <span class="prelude-val">Some</span>(Arc::new(vec))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>};
 
-        <span class="kw">let</span> <span class="ident">samples</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-            .<span class="ident">find_tag</span>(<span class="ident">Tag::SamplesPerPixel</span>)<span class="question-mark">?</span>
-            .<span class="ident">map</span>(<span class="ident">Value::into_u16</span>)
-            .<span class="ident">transpose</span>()<span class="question-mark">?</span>
-            .<span class="ident">unwrap_or</span>(<span class="number">1</span>)
-            .<span class="ident">try_into</span>()<span class="question-mark">?</span>;
+        <span class="kw">let </span>samples = tag_reader
+            .find_tag(Tag::SamplesPerPixel)<span class="question-mark">?
+            </span>.map(Value::into_u16)
+            .transpose()<span class="question-mark">?
+            </span>.unwrap_or(<span class="number">1</span>)
+            .try_into()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">sample_format</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tag_reader</span>.<span class="ident">find_tag_uint_vec</span>(<span class="ident">Tag::SampleFormat</span>)<span class="question-mark">?</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">vals</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">sample_format</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">vals</span>
-                    .<span class="ident">into_iter</span>()
-                    .<span class="ident">map</span>(<span class="ident">SampleFormat::from_u16_exhaustive</span>)
-                    .<span class="ident">collect</span>();
+        <span class="kw">let </span>sample_format = <span class="kw">match </span>tag_reader.find_tag_uint_vec(Tag::SampleFormat)<span class="question-mark">? </span>{
+            <span class="prelude-val">Some</span>(vals) =&gt; {
+                <span class="kw">let </span>sample_format: Vec&lt;<span class="kw">_</span>&gt; = vals
+                    .into_iter()
+                    .map(SampleFormat::from_u16_exhaustive)
+                    .collect();
 
-                <span class="comment">// TODO: for now, only homogenous formats across samples are supported.</span>
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">sample_format</span>.<span class="ident">windows</span>(<span class="number">2</span>).<span class="ident">all</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>[<span class="number">0</span>] <span class="op">==</span> <span class="ident">s</span>[<span class="number">1</span>]) {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffUnsupportedError::UnsupportedSampleFormat</span>(<span class="ident">sample_format</span>).<span class="ident">into</span>());
+                <span class="comment">// TODO: for now, only homogenous formats across samples are supported.
+                </span><span class="kw">if </span>!sample_format.windows(<span class="number">2</span>).all(|s| s[<span class="number">0</span>] == s[<span class="number">1</span>]) {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffUnsupportedError::UnsupportedSampleFormat(sample_format).into());
                 }
 
-                <span class="ident">sample_format</span>
+                sample_format
             }
-            <span class="prelude-val">None</span> =&gt; <span class="macro">vec!</span>[<span class="ident">SampleFormat::Uint</span>],
+            <span class="prelude-val">None </span>=&gt; <span class="macro">vec!</span>[SampleFormat::Uint],
         };
 
-        <span class="kw">let</span> <span class="ident">bits_per_sample</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">samples</span> {
-            <span class="number">1</span> <span class="op">|</span> <span class="number">3</span> <span class="op">|</span> <span class="number">4</span> =&gt; <span class="ident">tag_reader</span>
-                .<span class="ident">find_tag_uint_vec</span>(<span class="ident">Tag::BitsPerSample</span>)<span class="question-mark">?</span>
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="macro">vec!</span>[<span class="number">1</span>]),
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffUnsupportedError::UnsupportedSampleDepth</span>(<span class="ident">samples</span>).<span class="ident">into</span>()),
+        <span class="kw">let </span>bits_per_sample = <span class="kw">match </span>samples {
+            <span class="number">1 </span>| <span class="number">3 </span>| <span class="number">4 </span>=&gt; tag_reader
+                .find_tag_uint_vec(Tag::BitsPerSample)<span class="question-mark">?
+                </span>.unwrap_or_else(|| <span class="macro">vec!</span>[<span class="number">1</span>]),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TiffUnsupportedError::UnsupportedSampleDepth(samples).into()),
         };
 
-        <span class="kw">let</span> <span class="ident">predictor</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-            .<span class="ident">find_tag</span>(<span class="ident">Tag::Predictor</span>)<span class="question-mark">?</span>
-            .<span class="ident">map</span>(<span class="ident">Value::into_u16</span>)
-            .<span class="ident">transpose</span>()<span class="question-mark">?</span>
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-                <span class="ident">Predictor::from_u16</span>(<span class="ident">p</span>)
-                    .<span class="ident">ok_or</span>(<span class="ident">TiffError::FormatError</span>(<span class="ident">TiffFormatError::UnknownPredictor</span>(<span class="ident">p</span>)))
+        <span class="kw">let </span>predictor = tag_reader
+            .find_tag(Tag::Predictor)<span class="question-mark">?
+            </span>.map(Value::into_u16)
+            .transpose()<span class="question-mark">?
+            </span>.map(|p| {
+                Predictor::from_u16(p)
+                    .ok_or(TiffError::FormatError(TiffFormatError::UnknownPredictor(p)))
             })
-            .<span class="ident">transpose</span>()<span class="question-mark">?</span>
-            .<span class="ident">unwrap_or</span>(<span class="ident">Predictor::None</span>);
+            .transpose()<span class="question-mark">?
+            </span>.unwrap_or(Predictor::None);
 
-        <span class="kw">let</span> <span class="ident">chunk_type</span>;
-        <span class="kw">let</span> <span class="ident">chunk_offsets</span>;
-        <span class="kw">let</span> <span class="ident">chunk_bytes</span>;
-        <span class="kw">let</span> <span class="ident">strip_decoder</span>;
-        <span class="kw">let</span> <span class="ident">tile_attributes</span>;
-        <span class="kw">match</span> (
-            <span class="ident">ifd</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">Tag::StripByteCounts</span>),
-            <span class="ident">ifd</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">Tag::StripOffsets</span>),
-            <span class="ident">ifd</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">Tag::TileByteCounts</span>),
-            <span class="ident">ifd</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">Tag::TileOffsets</span>),
+        <span class="kw">let </span>chunk_type;
+        <span class="kw">let </span>chunk_offsets;
+        <span class="kw">let </span>chunk_bytes;
+        <span class="kw">let </span>strip_decoder;
+        <span class="kw">let </span>tile_attributes;
+        <span class="kw">match </span>(
+            ifd.contains_key(<span class="kw-2">&amp;</span>Tag::StripByteCounts),
+            ifd.contains_key(<span class="kw-2">&amp;</span>Tag::StripOffsets),
+            ifd.contains_key(<span class="kw-2">&amp;</span>Tag::TileByteCounts),
+            ifd.contains_key(<span class="kw-2">&amp;</span>Tag::TileOffsets),
         ) {
             (<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>) =&gt; {
-                <span class="ident">chunk_type</span> <span class="op">=</span> <span class="ident">ChunkType::Strip</span>;
+                chunk_type = ChunkType::Strip;
 
-                <span class="ident">chunk_offsets</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-                    .<span class="ident">find_tag</span>(<span class="ident">Tag::StripOffsets</span>)<span class="question-mark">?</span>
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">into_u64_vec</span>()<span class="question-mark">?</span>;
-                <span class="ident">chunk_bytes</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-                    .<span class="ident">find_tag</span>(<span class="ident">Tag::StripByteCounts</span>)<span class="question-mark">?</span>
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">into_u64_vec</span>()<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">rows_per_strip</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-                    .<span class="ident">find_tag</span>(<span class="ident">Tag::RowsPerStrip</span>)<span class="question-mark">?</span>
-                    .<span class="ident">map</span>(<span class="ident">Value::into_u32</span>)
-                    .<span class="ident">transpose</span>()<span class="question-mark">?</span>
-                    .<span class="ident">unwrap_or</span>(<span class="ident">height</span>);
-                <span class="ident">strip_decoder</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">StripDecodeState</span> { <span class="ident">rows_per_strip</span> });
-                <span class="ident">tile_attributes</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                chunk_offsets = tag_reader
+                    .find_tag(Tag::StripOffsets)<span class="question-mark">?
+                    </span>.unwrap()
+                    .into_u64_vec()<span class="question-mark">?</span>;
+                chunk_bytes = tag_reader
+                    .find_tag(Tag::StripByteCounts)<span class="question-mark">?
+                    </span>.unwrap()
+                    .into_u64_vec()<span class="question-mark">?</span>;
+                <span class="kw">let </span>rows_per_strip = tag_reader
+                    .find_tag(Tag::RowsPerStrip)<span class="question-mark">?
+                    </span>.map(Value::into_u32)
+                    .transpose()<span class="question-mark">?
+                    </span>.unwrap_or(height);
+                strip_decoder = <span class="prelude-val">Some</span>(StripDecodeState { rows_per_strip });
+                tile_attributes = <span class="prelude-val">None</span>;
 
-                <span class="kw">if</span> <span class="ident">chunk_offsets</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">chunk_bytes</span>.<span class="ident">len</span>() {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                        <span class="ident">TiffFormatError::InconsistentSizesEncountered</span>,
+                <span class="kw">if </span>chunk_offsets.len() != chunk_bytes.len() {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(
+                        TiffFormatError::InconsistentSizesEncountered,
                     ));
                 }
             }
             (<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>) =&gt; {
-                <span class="ident">chunk_type</span> <span class="op">=</span> <span class="ident">ChunkType::Tile</span>;
+                chunk_type = ChunkType::Tile;
 
-                <span class="kw">let</span> <span class="ident">tile_width</span> <span class="op">=</span>
-                    <span class="ident">usize::try_from</span>(<span class="ident">tag_reader</span>.<span class="ident">require_tag</span>(<span class="ident">Tag::TileWidth</span>)<span class="question-mark">?</span>.<span class="ident">into_u32</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">tile_length</span> <span class="op">=</span>
-                    <span class="ident">usize::try_from</span>(<span class="ident">tag_reader</span>.<span class="ident">require_tag</span>(<span class="ident">Tag::TileLength</span>)<span class="question-mark">?</span>.<span class="ident">into_u32</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+                <span class="kw">let </span>tile_width =
+                    usize::try_from(tag_reader.require_tag(Tag::TileWidth)<span class="question-mark">?</span>.into_u32()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+                <span class="kw">let </span>tile_length =
+                    usize::try_from(tag_reader.require_tag(Tag::TileLength)<span class="question-mark">?</span>.into_u32()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="ident">tile_width</span> <span class="op">==</span> <span class="number">0</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffFormatError::InvalidTagValueType</span>(<span class="ident">Tag::TileWidth</span>).<span class="ident">into</span>());
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">tile_length</span> <span class="op">==</span> <span class="number">0</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffFormatError::InvalidTagValueType</span>(<span class="ident">Tag::TileLength</span>).<span class="ident">into</span>());
+                <span class="kw">if </span>tile_width == <span class="number">0 </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffFormatError::InvalidTagValueType(Tag::TileWidth).into());
+                } <span class="kw">else if </span>tile_length == <span class="number">0 </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffFormatError::InvalidTagValueType(Tag::TileLength).into());
                 }
 
-                <span class="ident">strip_decoder</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="ident">tile_attributes</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">TileAttributes</span> {
-                    <span class="ident">image_width</span>: <span class="ident">usize::try_from</span>(<span class="ident">width</span>)<span class="question-mark">?</span>,
-                    <span class="ident">image_height</span>: <span class="ident">usize::try_from</span>(<span class="ident">height</span>)<span class="question-mark">?</span>,
-                    <span class="ident">tile_width</span>,
-                    <span class="ident">tile_length</span>,
+                strip_decoder = <span class="prelude-val">None</span>;
+                tile_attributes = <span class="prelude-val">Some</span>(TileAttributes {
+                    image_width: usize::try_from(width)<span class="question-mark">?</span>,
+                    image_height: usize::try_from(height)<span class="question-mark">?</span>,
+                    tile_width,
+                    tile_length,
                 });
-                <span class="ident">chunk_offsets</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-                    .<span class="ident">find_tag</span>(<span class="ident">Tag::TileOffsets</span>)<span class="question-mark">?</span>
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">into_u64_vec</span>()<span class="question-mark">?</span>;
-                <span class="ident">chunk_bytes</span> <span class="op">=</span> <span class="ident">tag_reader</span>
-                    .<span class="ident">find_tag</span>(<span class="ident">Tag::TileByteCounts</span>)<span class="question-mark">?</span>
-                    .<span class="ident">unwrap</span>()
-                    .<span class="ident">into_u64_vec</span>()<span class="question-mark">?</span>;
+                chunk_offsets = tag_reader
+                    .find_tag(Tag::TileOffsets)<span class="question-mark">?
+                    </span>.unwrap()
+                    .into_u64_vec()<span class="question-mark">?</span>;
+                chunk_bytes = tag_reader
+                    .find_tag(Tag::TileByteCounts)<span class="question-mark">?
+                    </span>.unwrap()
+                    .into_u64_vec()<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">tile</span> <span class="op">=</span> <span class="ident">tile_attributes</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>();
-                <span class="kw">if</span> <span class="ident">chunk_offsets</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">chunk_bytes</span>.<span class="ident">len</span>()
-                    <span class="op">|</span><span class="op">|</span> <span class="ident">chunk_offsets</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">tile</span>.<span class="ident">tiles_down</span>() <span class="op">*</span> <span class="ident">tile</span>.<span class="ident">tiles_across</span>()
+                <span class="kw">let </span>tile = tile_attributes.as_ref().unwrap();
+                <span class="kw">if </span>chunk_offsets.len() != chunk_bytes.len()
+                    || chunk_offsets.len() != tile.tiles_down() * tile.tiles_across()
                 {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                        <span class="ident">TiffFormatError::InconsistentSizesEncountered</span>,
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(
+                        TiffFormatError::InconsistentSizesEncountered,
                     ));
                 }
             }
             (<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                    <span class="ident">TiffFormatError::StripTileTagConflict</span>,
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(
+                    TiffFormatError::StripTileTagConflict,
                 ))
             }
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">Image</span> {
-            <span class="ident">ifd</span>: <span class="prelude-val">Some</span>(<span class="ident">ifd</span>),
-            <span class="ident">width</span>,
-            <span class="ident">height</span>,
-            <span class="ident">bits_per_sample</span>,
-            <span class="ident">samples</span>,
-            <span class="ident">sample_format</span>,
-            <span class="ident">photometric_interpretation</span>,
-            <span class="ident">compression_method</span>,
-            <span class="ident">jpeg_tables</span>,
-            <span class="ident">predictor</span>,
-            <span class="ident">chunk_type</span>,
-            <span class="ident">strip_decoder</span>,
-            <span class="ident">tile_attributes</span>,
-            <span class="ident">chunk_offsets</span>,
-            <span class="ident">chunk_bytes</span>,
+        <span class="prelude-val">Ok</span>(Image {
+            ifd: <span class="prelude-val">Some</span>(ifd),
+            width,
+            height,
+            bits_per_sample,
+            samples,
+            sample_format,
+            photometric_interpretation,
+            compression_method,
+            jpeg_tables,
+            predictor,
+            chunk_type,
+            strip_decoder,
+            tile_attributes,
+            chunk_offsets,
+            chunk_bytes,
         })
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">colortype</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">ColorType</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">photometric_interpretation</span> {
-            <span class="ident">PhotometricInterpretation::RGB</span> =&gt; <span class="kw">match</span> <span class="self">self</span>.<span class="ident">bits_per_sample</span>[..] {
-                [<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>] <span class="kw">if</span> [<span class="ident">r</span>, <span class="ident">r</span>] <span class="op">==</span> [<span class="ident">g</span>, <span class="ident">b</span>] =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ColorType::RGB</span>(<span class="ident">r</span>)),
-                [<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>, <span class="ident">a</span>] <span class="kw">if</span> [<span class="ident">r</span>, <span class="ident">r</span>, <span class="ident">r</span>] <span class="op">==</span> [<span class="ident">g</span>, <span class="ident">b</span>, <span class="ident">a</span>] =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ColorType::RGBA</span>(<span class="ident">r</span>)),
-                <span class="comment">// FIXME: We should _ignore_ other components. In particular:</span>
-                <span class="comment">// &gt; Beware of extra components. Some TIFF files may have more components per pixel</span>
-                <span class="comment">// than you think. A Baseline TIFF reader must skip over them gracefully,using the</span>
-                <span class="comment">// values of the SamplesPerPixel and BitsPerSample fields.</span>
-                <span class="comment">// &gt; -- TIFF 6.0 Specification, Section 7, Additional Baseline requirements.</span>
-                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                    <span class="ident">TiffUnsupportedError::InterpretationWithBits</span>(
-                        <span class="self">self</span>.<span class="ident">photometric_interpretation</span>,
-                        <span class="self">self</span>.<span class="ident">bits_per_sample</span>.<span class="ident">clone</span>(),
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>colortype(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TiffResult&lt;ColorType&gt; {
+        <span class="kw">match </span><span class="self">self</span>.photometric_interpretation {
+            PhotometricInterpretation::RGB =&gt; <span class="kw">match </span><span class="self">self</span>.bits_per_sample[..] {
+                [r, g, b] <span class="kw">if </span>[r, r] == [g, b] =&gt; <span class="prelude-val">Ok</span>(ColorType::RGB(r)),
+                [r, g, b, a] <span class="kw">if </span>[r, r, r] == [g, b, a] =&gt; <span class="prelude-val">Ok</span>(ColorType::RGBA(r)),
+                <span class="comment">// FIXME: We should _ignore_ other components. In particular:
+                // &gt; Beware of extra components. Some TIFF files may have more components per pixel
+                // than you think. A Baseline TIFF reader must skip over them gracefully,using the
+                // values of the SamplesPerPixel and BitsPerSample fields.
+                // &gt; -- TIFF 6.0 Specification, Section 7, Additional Baseline requirements.
+                </span><span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                    TiffUnsupportedError::InterpretationWithBits(
+                        <span class="self">self</span>.photometric_interpretation,
+                        <span class="self">self</span>.bits_per_sample.clone(),
                     ),
                 )),
             },
-            <span class="ident">PhotometricInterpretation::CMYK</span> =&gt; <span class="kw">match</span> <span class="self">self</span>.<span class="ident">bits_per_sample</span>[..] {
-                [<span class="ident">c</span>, <span class="ident">m</span>, <span class="ident">y</span>, <span class="ident">k</span>] <span class="kw">if</span> [<span class="ident">c</span>, <span class="ident">c</span>, <span class="ident">c</span>] <span class="op">==</span> [<span class="ident">m</span>, <span class="ident">y</span>, <span class="ident">k</span>] =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ColorType::CMYK</span>(<span class="ident">c</span>)),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                    <span class="ident">TiffUnsupportedError::InterpretationWithBits</span>(
-                        <span class="self">self</span>.<span class="ident">photometric_interpretation</span>,
-                        <span class="self">self</span>.<span class="ident">bits_per_sample</span>.<span class="ident">clone</span>(),
+            PhotometricInterpretation::CMYK =&gt; <span class="kw">match </span><span class="self">self</span>.bits_per_sample[..] {
+                [c, m, y, k] <span class="kw">if </span>[c, c, c] == [m, y, k] =&gt; <span class="prelude-val">Ok</span>(ColorType::CMYK(c)),
+                <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                    TiffUnsupportedError::InterpretationWithBits(
+                        <span class="self">self</span>.photometric_interpretation,
+                        <span class="self">self</span>.bits_per_sample.clone(),
                     ),
                 )),
             },
-            <span class="ident">PhotometricInterpretation::BlackIsZero</span> <span class="op">|</span> <span class="ident">PhotometricInterpretation::WhiteIsZero</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bits_per_sample</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> =&gt;
+            PhotometricInterpretation::BlackIsZero | PhotometricInterpretation::WhiteIsZero
+                <span class="kw">if </span><span class="self">self</span>.bits_per_sample.len() == <span class="number">1 </span>=&gt;
             {
-                <span class="prelude-val">Ok</span>(<span class="ident">ColorType::Gray</span>(<span class="self">self</span>.<span class="ident">bits_per_sample</span>[<span class="number">0</span>]))
+                <span class="prelude-val">Ok</span>(ColorType::Gray(<span class="self">self</span>.bits_per_sample[<span class="number">0</span>]))
             }
 
-            <span class="comment">// TODO: this is bad we should not fail at this point</span>
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                <span class="ident">TiffUnsupportedError::InterpretationWithBits</span>(
-                    <span class="self">self</span>.<span class="ident">photometric_interpretation</span>,
-                    <span class="self">self</span>.<span class="ident">bits_per_sample</span>.<span class="ident">clone</span>(),
+            <span class="comment">// TODO: this is bad we should not fail at this point
+            </span><span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                TiffUnsupportedError::InterpretationWithBits(
+                    <span class="self">self</span>.photometric_interpretation,
+                    <span class="self">self</span>.bits_per_sample.clone(),
                 ),
             )),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">create_reader</span><span class="op">&lt;</span><span class="lifetime">&#39;r</span>, <span class="ident">R</span>: <span class="lifetime">&#39;r</span> <span class="op">+</span> <span class="ident">Read</span><span class="op">&gt;</span>(
-        <span class="ident">reader</span>: <span class="ident">R</span>,
-        <span class="ident">compression_method</span>: <span class="ident">CompressionMethod</span>,
-        <span class="ident">compressed_length</span>: <span class="ident">u64</span>,
-        <span class="ident">jpeg_tables</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Read</span> <span class="op">+</span> <span class="lifetime">&#39;r</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">compression_method</span> {
-            <span class="ident">CompressionMethod::None</span> =&gt; <span class="ident">Box::new</span>(<span class="ident">reader</span>),
-            <span class="ident">CompressionMethod::LZW</span> =&gt; {
-                <span class="ident">Box::new</span>(<span class="ident">LZWReader::new</span>(<span class="ident">reader</span>, <span class="ident">usize::try_from</span>(<span class="ident">compressed_length</span>)<span class="question-mark">?</span>))
+    <span class="kw">fn </span>create_reader&lt;<span class="lifetime">&#39;r</span>, R: <span class="lifetime">&#39;r </span>+ Read&gt;(
+        reader: R,
+        compression_method: CompressionMethod,
+        compressed_length: u64,
+        jpeg_tables: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;u8&gt;&gt;&gt;,
+    ) -&gt; TiffResult&lt;Box&lt;<span class="kw">dyn </span>Read + <span class="lifetime">&#39;r</span>&gt;&gt; {
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span>compression_method {
+            CompressionMethod::None =&gt; Box::new(reader),
+            CompressionMethod::LZW =&gt; {
+                Box::new(LZWReader::new(reader, usize::try_from(compressed_length)<span class="question-mark">?</span>))
             }
-            <span class="ident">CompressionMethod::PackBits</span> =&gt; <span class="ident">Box::new</span>(<span class="ident">PackBitsReader::new</span>(<span class="ident">reader</span>, <span class="ident">compressed_length</span>)),
-            <span class="ident">CompressionMethod::Deflate</span> <span class="op">|</span> <span class="ident">CompressionMethod::OldDeflate</span> =&gt; {
-                <span class="ident">Box::new</span>(<span class="ident">DeflateReader::new</span>(<span class="ident">reader</span>))
+            CompressionMethod::PackBits =&gt; Box::new(PackBitsReader::new(reader, compressed_length)),
+            CompressionMethod::Deflate | CompressionMethod::OldDeflate =&gt; {
+                Box::new(DeflateReader::new(reader))
             }
-            <span class="ident">CompressionMethod::ModernJPEG</span> =&gt; {
-                <span class="kw">if</span> <span class="ident">jpeg_tables</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="ident">compressed_length</span> <span class="op">&lt;</span> <span class="number">2</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::FormatError</span>(
-                        <span class="ident">TiffFormatError::InvalidTagValueType</span>(<span class="ident">Tag::JPEGTables</span>),
+            CompressionMethod::ModernJPEG =&gt; {
+                <span class="kw">if </span>jpeg_tables.is_some() &amp;&amp; compressed_length &lt; <span class="number">2 </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::FormatError(
+                        TiffFormatError::InvalidTagValueType(Tag::JPEGTables),
                     ));
                 }
 
-                <span class="kw">let</span> <span class="ident">jpeg_reader</span> <span class="op">=</span> <span class="ident">JpegReader::new</span>(<span class="ident">reader</span>, <span class="ident">compressed_length</span>, <span class="ident">jpeg_tables</span>)<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">jpeg::Decoder::new</span>(<span class="ident">jpeg_reader</span>);
-                <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">decoder</span>.<span class="ident">decode</span>().<span class="ident">unwrap</span>();
+                <span class="kw">let </span>jpeg_reader = JpegReader::new(reader, compressed_length, jpeg_tables)<span class="question-mark">?</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>decoder = jpeg::Decoder::new(jpeg_reader);
+                <span class="kw">let </span>data = decoder.decode().unwrap();
 
-                <span class="ident">Box::new</span>(<span class="ident">Cursor::new</span>(<span class="ident">data</span>))
+                Box::new(Cursor::new(data))
             }
-            <span class="ident">method</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                    <span class="ident">TiffUnsupportedError::UnsupportedCompressionMethod</span>(<span class="ident">method</span>),
+            method =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                    TiffUnsupportedError::UnsupportedCompressionMethod(method),
                 ))
             }
         })
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">chunk_file_range</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">chunk</span>: <span class="ident">u32</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">file_offset</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">chunk_offsets</span>
-            .<span class="ident">get</span>(<span class="ident">chunk</span> <span class="kw">as</span> <span class="ident">usize</span>)
-            .<span class="ident">ok_or</span>(<span class="ident">TiffError::FormatError</span>(
-                <span class="ident">TiffFormatError::InconsistentSizesEncountered</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>chunk_file_range(<span class="kw-2">&amp;</span><span class="self">self</span>, chunk: u32) -&gt; TiffResult&lt;(u64, u64)&gt; {
+        <span class="kw">let </span>file_offset = <span class="self">self
+            </span>.chunk_offsets
+            .get(chunk <span class="kw">as </span>usize)
+            .ok_or(TiffError::FormatError(
+                TiffFormatError::InconsistentSizesEncountered,
             ))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">compressed_bytes</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">chunk_bytes</span>
-                .<span class="ident">get</span>(<span class="ident">chunk</span> <span class="kw">as</span> <span class="ident">usize</span>)
-                .<span class="ident">ok_or</span>(<span class="ident">TiffError::FormatError</span>(
-                    <span class="ident">TiffFormatError::InconsistentSizesEncountered</span>,
+        <span class="kw">let </span>compressed_bytes =
+            <span class="self">self</span>.chunk_bytes
+                .get(chunk <span class="kw">as </span>usize)
+                .ok_or(TiffError::FormatError(
+                    TiffFormatError::InconsistentSizesEncountered,
                 ))<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>((<span class="kw-2">*</span><span class="ident">file_offset</span>, <span class="kw-2">*</span><span class="ident">compressed_bytes</span>))
+        <span class="prelude-val">Ok</span>((<span class="kw-2">*</span>file_offset, <span class="kw-2">*</span>compressed_bytes))
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">chunk_dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">chunk_type</span> {
-            <span class="ident">ChunkType::Strip</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">strip_attrs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strip_decoder</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>();
-                <span class="prelude-val">Ok</span>((<span class="self">self</span>.<span class="ident">width</span>, <span class="ident">strip_attrs</span>.<span class="ident">rows_per_strip</span>))
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>chunk_dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TiffResult&lt;(u32, u32)&gt; {
+        <span class="kw">match </span><span class="self">self</span>.chunk_type {
+            ChunkType::Strip =&gt; {
+                <span class="kw">let </span>strip_attrs = <span class="self">self</span>.strip_decoder.as_ref().unwrap();
+                <span class="prelude-val">Ok</span>((<span class="self">self</span>.width, strip_attrs.rows_per_strip))
             }
-            <span class="ident">ChunkType::Tile</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">tile_attrs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tile_attributes</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>();
+            ChunkType::Tile =&gt; {
+                <span class="kw">let </span>tile_attrs = <span class="self">self</span>.tile_attributes.as_ref().unwrap();
                 <span class="prelude-val">Ok</span>((
-                    <span class="ident">u32::try_from</span>(<span class="ident">tile_attrs</span>.<span class="ident">tile_width</span>)<span class="question-mark">?</span>,
-                    <span class="ident">u32::try_from</span>(<span class="ident">tile_attrs</span>.<span class="ident">tile_length</span>)<span class="question-mark">?</span>,
+                    u32::try_from(tile_attrs.tile_width)<span class="question-mark">?</span>,
+                    u32::try_from(tile_attrs.tile_length)<span class="question-mark">?</span>,
                 ))
             }
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">chunk_data_dimensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">chunk_index</span>: <span class="ident">u32</span>) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dims</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chunk_dimensions</span>()<span class="question-mark">?</span>;
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>chunk_data_dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>, chunk_index: u32) -&gt; TiffResult&lt;(u32, u32)&gt; {
+        <span class="kw">let </span>dims = <span class="self">self</span>.chunk_dimensions()<span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">chunk_type</span> {
-            <span class="ident">ChunkType::Strip</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">strip_height_without_padding</span> <span class="op">=</span> <span class="ident">chunk_index</span>
-                    .<span class="ident">checked_mul</span>(<span class="ident">dims</span>.<span class="number">1</span>)
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">height</span>.<span class="ident">checked_sub</span>(<span class="ident">x</span>))
-                    .<span class="ident">ok_or</span>(<span class="ident">TiffError::UsageError</span>(<span class="ident">UsageError::InvalidChunkIndex</span>(
-                        <span class="ident">chunk_index</span>,
+        <span class="kw">match </span><span class="self">self</span>.chunk_type {
+            ChunkType::Strip =&gt; {
+                <span class="kw">let </span>strip_height_without_padding = chunk_index
+                    .checked_mul(dims.<span class="number">1</span>)
+                    .and_then(|x| <span class="self">self</span>.height.checked_sub(x))
+                    .ok_or(TiffError::UsageError(UsageError::InvalidChunkIndex(
+                        chunk_index,
                     )))<span class="question-mark">?</span>;
 
-                <span class="comment">// Ignore potential vertical padding on the bottommost strip</span>
-                <span class="kw">let</span> <span class="ident">strip_height</span> <span class="op">=</span> <span class="ident">dims</span>.<span class="number">1</span>.<span class="ident">min</span>(<span class="ident">strip_height_without_padding</span>);
+                <span class="comment">// Ignore potential vertical padding on the bottommost strip
+                </span><span class="kw">let </span>strip_height = dims.<span class="number">1</span>.min(strip_height_without_padding);
 
-                <span class="prelude-val">Ok</span>((<span class="ident">dims</span>.<span class="number">0</span>, <span class="ident">strip_height</span>))
+                <span class="prelude-val">Ok</span>((dims.<span class="number">0</span>, strip_height))
             }
-            <span class="ident">ChunkType::Tile</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">tile_attrs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tile_attributes</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>();
-                <span class="kw">let</span> (<span class="ident">padding_right</span>, <span class="ident">padding_down</span>) <span class="op">=</span> <span class="ident">tile_attrs</span>.<span class="ident">get_padding</span>(<span class="ident">chunk_index</span> <span class="kw">as</span> <span class="ident">usize</span>);
+            ChunkType::Tile =&gt; {
+                <span class="kw">let </span>tile_attrs = <span class="self">self</span>.tile_attributes.as_ref().unwrap();
+                <span class="kw">let </span>(padding_right, padding_down) = tile_attrs.get_padding(chunk_index <span class="kw">as </span>usize);
 
-                <span class="kw">let</span> <span class="ident">tile_width</span> <span class="op">=</span> <span class="ident">tile_attrs</span>.<span class="ident">tile_width</span> <span class="op">-</span> <span class="ident">padding_right</span>;
-                <span class="kw">let</span> <span class="ident">tile_length</span> <span class="op">=</span> <span class="ident">tile_attrs</span>.<span class="ident">tile_length</span> <span class="op">-</span> <span class="ident">padding_down</span>;
+                <span class="kw">let </span>tile_width = tile_attrs.tile_width - padding_right;
+                <span class="kw">let </span>tile_length = tile_attrs.tile_length - padding_down;
 
-                <span class="prelude-val">Ok</span>((<span class="ident">u32::try_from</span>(<span class="ident">tile_width</span>)<span class="question-mark">?</span>, <span class="ident">u32::try_from</span>(<span class="ident">tile_length</span>)<span class="question-mark">?</span>))
+                <span class="prelude-val">Ok</span>((u32::try_from(tile_width)<span class="question-mark">?</span>, u32::try_from(tile_length)<span class="question-mark">?</span>))
             }
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">expand_chunk</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>expand_chunk(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">reader</span>: <span class="kw">impl</span> <span class="ident">Read</span>,
-        <span class="kw-2">mut</span> <span class="ident">buffer</span>: <span class="ident">DecodingBuffer</span>,
-        <span class="ident">output_width</span>: <span class="ident">usize</span>,
-        <span class="ident">byte_order</span>: <span class="ident">ByteOrder</span>,
-        <span class="ident">chunk_index</span>: <span class="ident">u32</span>,
-    ) -&gt; <span class="ident">TiffResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="comment">// Validate that the provided buffer is of the expected type.</span>
-        <span class="kw">let</span> <span class="ident">color_type</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">colortype</span>()<span class="question-mark">?</span>;
-        <span class="kw">match</span> (<span class="ident">color_type</span>, <span class="kw-2">&amp;</span><span class="ident">buffer</span>) {
-            (<span class="ident">ColorType::RGB</span>(<span class="ident">n</span>), <span class="kw">_</span>)
-            <span class="op">|</span> (<span class="ident">ColorType::RGBA</span>(<span class="ident">n</span>), <span class="kw">_</span>)
-            <span class="op">|</span> (<span class="ident">ColorType::CMYK</span>(<span class="ident">n</span>), <span class="kw">_</span>)
-            <span class="op">|</span> (<span class="ident">ColorType::Gray</span>(<span class="ident">n</span>), <span class="kw">_</span>)
-                <span class="kw">if</span> <span class="ident">usize::from</span>(<span class="ident">n</span>) <span class="op">==</span> <span class="ident">buffer</span>.<span class="ident">byte_len</span>() <span class="op">*</span> <span class="number">8</span> =&gt; {}
-            (<span class="ident">ColorType::Gray</span>(<span class="ident">n</span>), <span class="ident">DecodingBuffer::U8</span>(<span class="kw">_</span>)) <span class="kw">if</span> <span class="ident">n</span> <span class="op">&lt;</span> <span class="number">8</span> =&gt; <span class="kw">match</span> <span class="self">self</span>.<span class="ident">predictor</span> {
-                <span class="ident">Predictor::None</span> =&gt; {}
-                <span class="ident">Predictor::Horizontal</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                        <span class="ident">TiffUnsupportedError::HorizontalPredictor</span>(<span class="ident">color_type</span>),
+        reader: <span class="kw">impl </span>Read,
+        <span class="kw-2">mut </span>buffer: DecodingBuffer,
+        output_width: usize,
+        byte_order: ByteOrder,
+        chunk_index: u32,
+    ) -&gt; TiffResult&lt;()&gt; {
+        <span class="comment">// Validate that the provided buffer is of the expected type.
+        </span><span class="kw">let </span>color_type = <span class="self">self</span>.colortype()<span class="question-mark">?</span>;
+        <span class="kw">match </span>(color_type, <span class="kw-2">&amp;</span>buffer) {
+            (ColorType::RGB(n), <span class="kw">_</span>)
+            | (ColorType::RGBA(n), <span class="kw">_</span>)
+            | (ColorType::CMYK(n), <span class="kw">_</span>)
+            | (ColorType::Gray(n), <span class="kw">_</span>)
+                <span class="kw">if </span>usize::from(n) == buffer.byte_len() * <span class="number">8 </span>=&gt; {}
+            (ColorType::Gray(n), DecodingBuffer::U8(<span class="kw">_</span>)) <span class="kw">if </span>n &lt; <span class="number">8 </span>=&gt; <span class="kw">match </span><span class="self">self</span>.predictor {
+                Predictor::None =&gt; {}
+                Predictor::Horizontal =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                        TiffUnsupportedError::HorizontalPredictor(color_type),
                     ))
                 }
-                <span class="ident">Predictor::FloatingPoint</span> =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                        <span class="ident">TiffUnsupportedError::FloatingPointPredictor</span>(<span class="ident">color_type</span>),
+                Predictor::FloatingPoint =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                        TiffUnsupportedError::FloatingPointPredictor(color_type),
                     ));
                 }
-                <span class="ident">Predictor::__NonExhaustive</span> =&gt; <span class="macro">unreachable!</span>(),
+                Predictor::__NonExhaustive =&gt; <span class="macro">unreachable!</span>(),
             },
-            (<span class="ident">type_</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                    <span class="ident">TiffUnsupportedError::UnsupportedColorType</span>(<span class="ident">type_</span>),
+            (type_, <span class="kw">_</span>) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                    TiffUnsupportedError::UnsupportedColorType(type_),
                 ))
             }
         }
 
-        <span class="comment">// Validate that the predictor is supported for the sample type.</span>
-        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">predictor</span>, <span class="kw-2">&amp;</span><span class="ident">buffer</span>) {
-            (<span class="ident">Predictor::Horizontal</span>, <span class="ident">DecodingBuffer::F32</span>(<span class="kw">_</span>))
-            <span class="op">|</span> (<span class="ident">Predictor::Horizontal</span>, <span class="ident">DecodingBuffer::F64</span>(<span class="kw">_</span>)) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                    <span class="ident">TiffUnsupportedError::HorizontalPredictor</span>(<span class="ident">color_type</span>),
+        <span class="comment">// Validate that the predictor is supported for the sample type.
+        </span><span class="kw">match </span>(<span class="self">self</span>.predictor, <span class="kw-2">&amp;</span>buffer) {
+            (Predictor::Horizontal, DecodingBuffer::F32(<span class="kw">_</span>))
+            | (Predictor::Horizontal, DecodingBuffer::F64(<span class="kw">_</span>)) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                    TiffUnsupportedError::HorizontalPredictor(color_type),
                 ));
             }
-            (<span class="ident">Predictor::FloatingPoint</span>, <span class="ident">DecodingBuffer::F32</span>(<span class="kw">_</span>))
-            <span class="op">|</span> (<span class="ident">Predictor::FloatingPoint</span>, <span class="ident">DecodingBuffer::F64</span>(<span class="kw">_</span>)) =&gt; {}
-            (<span class="ident">Predictor::FloatingPoint</span>, <span class="kw">_</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TiffError::UnsupportedError</span>(
-                    <span class="ident">TiffUnsupportedError::FloatingPointPredictor</span>(<span class="ident">color_type</span>),
+            (Predictor::FloatingPoint, DecodingBuffer::F32(<span class="kw">_</span>))
+            | (Predictor::FloatingPoint, DecodingBuffer::F64(<span class="kw">_</span>)) =&gt; {}
+            (Predictor::FloatingPoint, <span class="kw">_</span>) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(TiffError::UnsupportedError(
+                    TiffUnsupportedError::FloatingPointPredictor(color_type),
                 ));
             }
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         }
 
-        <span class="kw">let</span> <span class="ident">compressed_bytes</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">chunk_bytes</span>
-                .<span class="ident">get</span>(<span class="ident">chunk_index</span> <span class="kw">as</span> <span class="ident">usize</span>)
-                .<span class="ident">ok_or</span>(<span class="ident">TiffError::FormatError</span>(
-                    <span class="ident">TiffFormatError::InconsistentSizesEncountered</span>,
+        <span class="kw">let </span>compressed_bytes =
+            <span class="self">self</span>.chunk_bytes
+                .get(chunk_index <span class="kw">as </span>usize)
+                .ok_or(TiffError::FormatError(
+                    TiffFormatError::InconsistentSizesEncountered,
                 ))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">byte_len</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">byte_len</span>();
-        <span class="kw">let</span> <span class="ident">compression_method</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compression_method</span>;
-        <span class="kw">let</span> <span class="ident">photometric_interpretation</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">photometric_interpretation</span>;
-        <span class="kw">let</span> <span class="ident">predictor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">predictor</span>;
-        <span class="kw">let</span> <span class="ident">samples</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">bits_per_sample</span>.<span class="ident">len</span>();
+        <span class="kw">let </span>byte_len = buffer.byte_len();
+        <span class="kw">let </span>compression_method = <span class="self">self</span>.compression_method;
+        <span class="kw">let </span>photometric_interpretation = <span class="self">self</span>.photometric_interpretation;
+        <span class="kw">let </span>predictor = <span class="self">self</span>.predictor;
+        <span class="kw">let </span>samples = <span class="self">self</span>.bits_per_sample.len();
 
-        <span class="kw">let</span> <span class="ident">chunk_dims</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chunk_dimensions</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">data_dims</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chunk_data_dimensions</span>(<span class="ident">chunk_index</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>chunk_dims = <span class="self">self</span>.chunk_dimensions()<span class="question-mark">?</span>;
+        <span class="kw">let </span>data_dims = <span class="self">self</span>.chunk_data_dimensions(chunk_index)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">padding_right</span> <span class="op">=</span> <span class="ident">chunk_dims</span>.<span class="number">0</span> <span class="op">-</span> <span class="ident">data_dims</span>.<span class="number">0</span>;
+        <span class="kw">let </span>padding_right = chunk_dims.<span class="number">0 </span>- data_dims.<span class="number">0</span>;
 
-        <span class="kw">let</span> <span class="ident">jpeg_tables</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">jpeg_tables</span>.<span class="ident">clone</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reader</span> <span class="op">=</span>
-            <span class="ident"><span class="self">Self</span>::create_reader</span>(<span class="ident">reader</span>, <span class="ident">compression_method</span>, <span class="kw-2">*</span><span class="ident">compressed_bytes</span>, <span class="ident">jpeg_tables</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>jpeg_tables = <span class="self">self</span>.jpeg_tables.clone();
+        <span class="kw">let </span><span class="kw-2">mut </span>reader =
+            <span class="self">Self</span>::create_reader(reader, compression_method, <span class="kw-2">*</span>compressed_bytes, jpeg_tables)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">output_width</span> <span class="op">==</span> <span class="ident">data_dims</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">&amp;&amp;</span> <span class="ident">padding_right</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">let</span> <span class="ident">total_samples</span> <span class="op">=</span> <span class="ident">data_dims</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">data_dims</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
-            <span class="kw">let</span> <span class="ident">tile</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>.<span class="ident">as_bytes_mut</span>()[..<span class="ident">total_samples</span> <span class="op">*</span> <span class="ident">byte_len</span>];
-            <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="ident">tile</span>)<span class="question-mark">?</span>;
+        <span class="kw">if </span>output_width == data_dims.<span class="number">0 </span><span class="kw">as </span>usize &amp;&amp; padding_right == <span class="number">0 </span>{
+            <span class="kw">let </span>total_samples = data_dims.<span class="number">0 </span><span class="kw">as </span>usize * data_dims.<span class="number">1 </span><span class="kw">as </span>usize * samples;
+            <span class="kw">let </span>tile = <span class="kw-2">&amp;mut </span>buffer.as_bytes_mut()[..total_samples * byte_len];
+            reader.read_exact(tile)<span class="question-mark">?</span>;
 
-            <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">data_dims</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span> {
-                <span class="kw">let</span> <span class="ident">row_start</span> <span class="op">=</span> <span class="ident">row</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">output_width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
-                <span class="kw">let</span> <span class="ident">row_end</span> <span class="op">=</span> (<span class="ident">row</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">*</span> <span class="ident">output_width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
-                <span class="kw">let</span> <span class="ident">row</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">subrange</span>(<span class="ident">row_start</span>..<span class="ident">row_end</span>);
-                <span class="ident"><span class="kw">super</span>::fix_endianness_and_predict</span>(<span class="ident">row</span>, <span class="ident">samples</span>, <span class="ident">byte_order</span>, <span class="ident">predictor</span>);
+            <span class="kw">for </span>row <span class="kw">in </span><span class="number">0</span>..data_dims.<span class="number">1 </span><span class="kw">as </span>usize {
+                <span class="kw">let </span>row_start = row <span class="kw">as </span>usize * output_width <span class="kw">as </span>usize * samples;
+                <span class="kw">let </span>row_end = (row + <span class="number">1</span>) * output_width <span class="kw">as </span>usize * samples;
+                <span class="kw">let </span>row = buffer.subrange(row_start..row_end);
+                <span class="kw">super</span>::fix_endianness_and_predict(row, samples, byte_order, predictor);
             }
-            <span class="kw">if</span> <span class="ident">photometric_interpretation</span> <span class="op">==</span> <span class="ident">PhotometricInterpretation::WhiteIsZero</span> {
-                <span class="ident"><span class="kw">super</span>::invert_colors</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>.<span class="ident">subrange</span>(<span class="number">0</span>..<span class="ident">total_samples</span>), <span class="ident">color_type</span>);
+            <span class="kw">if </span>photometric_interpretation == PhotometricInterpretation::WhiteIsZero {
+                <span class="kw">super</span>::invert_colors(<span class="kw-2">&amp;mut </span>buffer.subrange(<span class="number">0</span>..total_samples), color_type);
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">padding_right</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">predictor</span> <span class="op">==</span> <span class="ident">Predictor::FloatingPoint</span> {
-            <span class="comment">// The floating point predictor shuffles the padding bytes into the encoded output, so</span>
-            <span class="comment">// this case is handled specially when needed.</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">chunk_dims</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span> <span class="op">*</span> <span class="ident">byte_len</span>];
+        } <span class="kw">else if </span>padding_right &gt; <span class="number">0 </span>&amp;&amp; <span class="self">self</span>.predictor == Predictor::FloatingPoint {
+            <span class="comment">// The floating point predictor shuffles the padding bytes into the encoded output, so
+            // this case is handled specially when needed.
+            </span><span class="kw">let </span><span class="kw-2">mut </span>encoded = <span class="macro">vec!</span>[<span class="number">0u8</span>; chunk_dims.<span class="number">0 </span><span class="kw">as </span>usize * samples * byte_len];
 
-            <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">data_dims</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span> {
-                <span class="kw">let</span> <span class="ident">row_start</span> <span class="op">=</span> <span class="ident">row</span> <span class="op">*</span> <span class="ident">output_width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
-                <span class="kw">let</span> <span class="ident">row_end</span> <span class="op">=</span> <span class="ident">row_start</span> <span class="op">+</span> <span class="ident">data_dims</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
+            <span class="kw">for </span>row <span class="kw">in </span><span class="number">0</span>..data_dims.<span class="number">1 </span><span class="kw">as </span>usize {
+                <span class="kw">let </span>row_start = row * output_width <span class="kw">as </span>usize * samples;
+                <span class="kw">let </span>row_end = row_start + data_dims.<span class="number">0 </span><span class="kw">as </span>usize * samples;
 
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded</span>)<span class="question-mark">?</span>;
-                <span class="kw">match</span> <span class="ident">buffer</span>.<span class="ident">subrange</span>(<span class="ident">row_start</span>..<span class="ident">row_end</span>) {
-                    <span class="ident">DecodingBuffer::F32</span>(<span class="ident">buf</span>) =&gt; <span class="ident">fp_predict_f32</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded</span>, <span class="ident">buf</span>, <span class="ident">samples</span>),
-                    <span class="ident">DecodingBuffer::F64</span>(<span class="ident">buf</span>) =&gt; <span class="ident">fp_predict_f64</span>(<span class="kw-2">&amp;mut</span> <span class="ident">encoded</span>, <span class="ident">buf</span>, <span class="ident">samples</span>),
-                    <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
+                reader.read_exact(<span class="kw-2">&amp;mut </span>encoded)<span class="question-mark">?</span>;
+                <span class="kw">match </span>buffer.subrange(row_start..row_end) {
+                    DecodingBuffer::F32(buf) =&gt; fp_predict_f32(<span class="kw-2">&amp;mut </span>encoded, buf, samples),
+                    DecodingBuffer::F64(buf) =&gt; fp_predict_f64(<span class="kw-2">&amp;mut </span>encoded, buf, samples),
+                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 }
-                <span class="kw">if</span> <span class="ident">photometric_interpretation</span> <span class="op">==</span> <span class="ident">PhotometricInterpretation::WhiteIsZero</span> {
-                    <span class="ident"><span class="kw">super</span>::invert_colors</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>.<span class="ident">subrange</span>(<span class="ident">row_start</span>..<span class="ident">row_end</span>), <span class="ident">color_type</span>);
+                <span class="kw">if </span>photometric_interpretation == PhotometricInterpretation::WhiteIsZero {
+                    <span class="kw">super</span>::invert_colors(<span class="kw-2">&amp;mut </span>buffer.subrange(row_start..row_end), color_type);
                 }
             }
-        } <span class="kw">else</span> {
-            <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">data_dims</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span> {
-                <span class="kw">let</span> <span class="ident">row_start</span> <span class="op">=</span> <span class="ident">row</span> <span class="op">*</span> <span class="ident">output_width</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
-                <span class="kw">let</span> <span class="ident">row_end</span> <span class="op">=</span> <span class="ident">row_start</span> <span class="op">+</span> <span class="ident">data_dims</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">for </span>row <span class="kw">in </span><span class="number">0</span>..data_dims.<span class="number">1 </span><span class="kw">as </span>usize {
+                <span class="kw">let </span>row_start = row * output_width <span class="kw">as </span>usize * samples;
+                <span class="kw">let </span>row_end = row_start + data_dims.<span class="number">0 </span><span class="kw">as </span>usize * samples;
 
-                <span class="kw">let</span> <span class="ident">row</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>.<span class="ident">as_bytes_mut</span>()[(<span class="ident">row_start</span> <span class="op">*</span> <span class="ident">byte_len</span>)..(<span class="ident">row_end</span> <span class="op">*</span> <span class="ident">byte_len</span>)];
-                <span class="ident">reader</span>.<span class="ident">read_exact</span>(<span class="ident">row</span>)<span class="question-mark">?</span>;
+                <span class="kw">let </span>row = <span class="kw-2">&amp;mut </span>buffer.as_bytes_mut()[(row_start * byte_len)..(row_end * byte_len)];
+                reader.read_exact(row)<span class="question-mark">?</span>;
 
-                <span class="comment">// Skip horizontal padding</span>
-                <span class="kw">if</span> <span class="ident">padding_right</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">u64::try_from</span>(<span class="ident">padding_right</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">samples</span> <span class="op">*</span> <span class="ident">byte_len</span>)<span class="question-mark">?</span>;
-                    <span class="ident">io::copy</span>(<span class="kw-2">&amp;mut</span> <span class="ident">reader</span>.<span class="ident">by_ref</span>().<span class="ident">take</span>(<span class="ident">len</span>), <span class="kw-2">&amp;mut</span> <span class="ident">io::sink</span>())<span class="question-mark">?</span>;
+                <span class="comment">// Skip horizontal padding
+                </span><span class="kw">if </span>padding_right &gt; <span class="number">0 </span>{
+                    <span class="kw">let </span>len = u64::try_from(padding_right <span class="kw">as </span>usize * samples * byte_len)<span class="question-mark">?</span>;
+                    io::copy(<span class="kw-2">&amp;mut </span>reader.by_ref().take(len), <span class="kw-2">&amp;mut </span>io::sink())<span class="question-mark">?</span>;
                 }
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">subrange</span>(<span class="ident">row_start</span>..<span class="ident">row_end</span>);
-                <span class="ident"><span class="kw">super</span>::fix_endianness_and_predict</span>(<span class="ident">row</span>.<span class="ident">copy</span>(), <span class="ident">samples</span>, <span class="ident">byte_order</span>, <span class="ident">predictor</span>);
-                <span class="kw">if</span> <span class="ident">photometric_interpretation</span> <span class="op">==</span> <span class="ident">PhotometricInterpretation::WhiteIsZero</span> {
-                    <span class="ident"><span class="kw">super</span>::invert_colors</span>(<span class="kw-2">&amp;mut</span> <span class="ident">row</span>, <span class="ident">color_type</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>row = buffer.subrange(row_start..row_end);
+                <span class="kw">super</span>::fix_endianness_and_predict(row.copy(), samples, byte_order, predictor);
+                <span class="kw">if </span>photometric_interpretation == PhotometricInterpretation::WhiteIsZero {
+                    <span class="kw">super</span>::invert_colors(<span class="kw-2">&amp;mut </span>row, color_type);
                 }
             }
         }
@@ -1119,5 +1113,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tiff" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

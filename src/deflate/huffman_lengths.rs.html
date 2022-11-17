@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/huffman_lengths.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman_lengths.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/deflate-1.0.0/src/huffman_lengths.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman_lengths.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../deflate/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../deflate/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -389,391 +383,390 @@
 <span id="383">383</span>
 <span id="384">384</span>
 <span id="385">385</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::bitstream::LsbWriter</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::deflate_state::LengthBuffers</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::huffman_table</span>::{
-    <span class="ident">create_codes_in_place</span>, <span class="ident">num_extra_bits_for_distance_code</span>, <span class="ident">num_extra_bits_for_length_code</span>,
-    <span class="ident">HuffmanTable</span>, <span class="ident">FIXED_CODE_LENGTHS</span>, <span class="ident">LENGTH_BITS_START</span>, <span class="ident">MAX_CODE_LENGTH</span>, <span class="ident">NUM_DISTANCE_CODES</span>,
-    <span class="ident">NUM_LITERALS_AND_LENGTHS</span>,
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::bitstream::LsbWriter;
+<span class="kw">use </span><span class="kw">crate</span>::deflate_state::LengthBuffers;
+<span class="kw">use </span><span class="kw">crate</span>::huffman_table::{
+    create_codes_in_place, num_extra_bits_for_distance_code, num_extra_bits_for_length_code,
+    HuffmanTable, FIXED_CODE_LENGTHS, LENGTH_BITS_START, MAX_CODE_LENGTH, NUM_DISTANCE_CODES,
+    NUM_LITERALS_AND_LENGTHS,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::length_encode</span>::{
-    <span class="ident">encode_lengths_m</span>, <span class="ident">huffman_lengths_from_frequency_m</span>, <span class="ident">EncodedLength</span>, <span class="ident">COPY_PREVIOUS</span>,
-    <span class="ident">REPEAT_ZERO_3_BITS</span>, <span class="ident">REPEAT_ZERO_7_BITS</span>,
+<span class="kw">use </span><span class="kw">crate</span>::length_encode::{
+    encode_lengths_m, huffman_lengths_from_frequency_m, EncodedLength, COPY_PREVIOUS,
+    REPEAT_ZERO_3_BITS, REPEAT_ZERO_7_BITS,
 };
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::output_writer::FrequencyType</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::stored_block::MAX_STORED_BLOCK_LENGTH</span>;
+<span class="kw">use </span><span class="kw">crate</span>::output_writer::FrequencyType;
+<span class="kw">use </span><span class="kw">crate</span>::stored_block::MAX_STORED_BLOCK_LENGTH;
 
-<span class="kw">use</span> <span class="ident">std::cmp</span>;
+<span class="kw">use </span>std::cmp;
 
-<span class="doccomment">/// The minimum number of literal/length values</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MIN_NUM_LITERALS_AND_LENGTHS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">257</span>;
-<span class="doccomment">/// The minimum number of distances</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MIN_NUM_DISTANCES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>;
+<span class="doccomment">/// The minimum number of literal/length values
+</span><span class="kw">pub const </span>MIN_NUM_LITERALS_AND_LENGTHS: usize = <span class="number">257</span>;
+<span class="doccomment">/// The minimum number of distances
+</span><span class="kw">pub const </span>MIN_NUM_DISTANCES: usize = <span class="number">1</span>;
 
-<span class="kw">const</span> <span class="ident">NUM_HUFFMAN_LENGTHS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">19</span>;
+<span class="kw">const </span>NUM_HUFFMAN_LENGTHS: usize = <span class="number">19</span>;
 
-<span class="doccomment">/// The output ordering of the lengths for the Huffman codes used to encode the lengths</span>
-<span class="doccomment">/// used to build the full Huffman tree for length/literal codes.</span>
-<span class="doccomment">/// http://www.gzip.org/zlib/rfc-deflate.html#dyn</span>
-<span class="kw">const</span> <span class="ident">HUFFMAN_LENGTH_ORDER</span>: [<span class="ident">u8</span>; <span class="ident">NUM_HUFFMAN_LENGTHS</span>] <span class="op">=</span> [
+<span class="doccomment">/// The output ordering of the lengths for the Huffman codes used to encode the lengths
+/// used to build the full Huffman tree for length/literal codes.
+/// http://www.gzip.org/zlib/rfc-deflate.html#dyn
+</span><span class="kw">const </span>HUFFMAN_LENGTH_ORDER: [u8; NUM_HUFFMAN_LENGTHS] = [
     <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">4</span>, <span class="number">12</span>, <span class="number">3</span>, <span class="number">13</span>, <span class="number">2</span>, <span class="number">14</span>, <span class="number">1</span>, <span class="number">15</span>,
 ];
 
-<span class="comment">// Number of bits used for the values specifying the number of codes</span>
-<span class="kw">const</span> <span class="ident">HLIT_BITS</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">5</span>;
-<span class="kw">const</span> <span class="ident">HDIST_BITS</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">5</span>;
-<span class="kw">const</span> <span class="ident">HCLEN_BITS</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">4</span>;
+<span class="comment">// Number of bits used for the values specifying the number of codes
+</span><span class="kw">const </span>HLIT_BITS: u8 = <span class="number">5</span>;
+<span class="kw">const </span>HDIST_BITS: u8 = <span class="number">5</span>;
+<span class="kw">const </span>HCLEN_BITS: u8 = <span class="number">4</span>;
 
-<span class="doccomment">/// The longest a Huffman code describing another Huffman length can be</span>
-<span class="kw">const</span> <span class="ident">MAX_HUFFMAN_CODE_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">7</span>;
+<span class="doccomment">/// The longest a Huffman code describing another Huffman length can be
+</span><span class="kw">const </span>MAX_HUFFMAN_CODE_LENGTH: usize = <span class="number">7</span>;
 
-<span class="comment">// How many bytes (not including padding and the 3-bit block type) the stored block header takes up.</span>
-<span class="kw">const</span> <span class="ident">STORED_BLOCK_HEADER_LENGTH</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">4</span>;
-<span class="kw">const</span> <span class="ident">BLOCK_MARKER_LENGTH</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">3</span>;
+<span class="comment">// How many bytes (not including padding and the 3-bit block type) the stored block header takes up.
+</span><span class="kw">const </span>STORED_BLOCK_HEADER_LENGTH: u64 = <span class="number">4</span>;
+<span class="kw">const </span>BLOCK_MARKER_LENGTH: u8 = <span class="number">3</span>;
 
-<span class="doccomment">/// Creates a new slice from the input slice that stops at the final non-zero value</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_trailing_zeroes</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">PartialEq</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">min_length</span>: <span class="ident">usize</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">T</span>] {
-    <span class="kw">let</span> <span class="ident">num_zeroes</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">iter</span>().<span class="ident">rev</span>().<span class="ident">take_while</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">==</span> <span class="ident">T::from</span>(<span class="number">0</span>)).<span class="ident">count</span>();
-    <span class="kw-2">&amp;</span><span class="ident">input</span>[<span class="number">0</span>..<span class="ident">cmp::max</span>(<span class="ident">input</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">num_zeroes</span>, <span class="ident">min_length</span>)]
+<span class="doccomment">/// Creates a new slice from the input slice that stops at the final non-zero value
+</span><span class="kw">pub fn </span>remove_trailing_zeroes&lt;T: From&lt;u8&gt; + PartialEq&gt;(input: <span class="kw-2">&amp;</span>[T], min_length: usize) -&gt; <span class="kw-2">&amp;</span>[T] {
+    <span class="kw">let </span>num_zeroes = input.iter().rev().take_while(|<span class="kw-2">&amp;</span>a| <span class="kw-2">*</span>a == T::from(<span class="number">0</span>)).count();
+    <span class="kw-2">&amp;</span>input[<span class="number">0</span>..cmp::max(input.len() - num_zeroes, min_length)]
 }
 
-<span class="doccomment">/// How many extra bits the Huffman length code uses to represent a value.</span>
-<span class="kw">fn</span> <span class="ident">extra_bits_for_huffman_length_code</span>(<span class="ident">code</span>: <span class="ident">u8</span>) -&gt; <span class="ident">u8</span> {
-    <span class="kw">match</span> <span class="ident">code</span> {
-        <span class="number">16</span>..<span class="op">=</span><span class="number">17</span> =&gt; <span class="number">3</span>,
-        <span class="number">18</span> =&gt; <span class="number">7</span>,
-        <span class="kw">_</span> =&gt; <span class="number">0</span>,
+<span class="doccomment">/// How many extra bits the Huffman length code uses to represent a value.
+</span><span class="kw">fn </span>extra_bits_for_huffman_length_code(code: u8) -&gt; u8 {
+    <span class="kw">match </span>code {
+        <span class="number">16</span>..=<span class="number">17 </span>=&gt; <span class="number">3</span>,
+        <span class="number">18 </span>=&gt; <span class="number">7</span>,
+        <span class="kw">_ </span>=&gt; <span class="number">0</span>,
     }
 }
 
-<span class="doccomment">/// Calculate how many bits the Huffman-encoded Huffman lengths will use.</span>
-<span class="kw">fn</span> <span class="ident">calculate_huffman_length</span>(<span class="ident">frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">FrequencyType</span>], <span class="ident">code_lengths</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">u64</span> {
-    <span class="ident">frequencies</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">zip</span>(<span class="ident">code_lengths</span>)
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">fold</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">acc</span>, (<span class="ident">n</span>, (<span class="kw-2">&amp;</span><span class="ident">f</span>, <span class="kw-2">&amp;</span><span class="ident">l</span>))<span class="op">|</span> {
-            <span class="ident">acc</span> <span class="op">+</span> (<span class="ident">u64::from</span>(<span class="ident">f</span>)
-                <span class="op">*</span> (<span class="ident">u64::from</span>(<span class="ident">l</span>) <span class="op">+</span> <span class="ident">u64::from</span>(<span class="ident">extra_bits_for_huffman_length_code</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u8</span>))))
+<span class="doccomment">/// Calculate how many bits the Huffman-encoded Huffman lengths will use.
+</span><span class="kw">fn </span>calculate_huffman_length(frequencies: <span class="kw-2">&amp;</span>[FrequencyType], code_lengths: <span class="kw-2">&amp;</span>[u8]) -&gt; u64 {
+    frequencies
+        .iter()
+        .zip(code_lengths)
+        .enumerate()
+        .fold(<span class="number">0</span>, |acc, (n, (<span class="kw-2">&amp;</span>f, <span class="kw-2">&amp;</span>l))| {
+            acc + (u64::from(f)
+                * (u64::from(l) + u64::from(extra_bits_for_huffman_length_code(n <span class="kw">as </span>u8))))
         })
 }
 
-<span class="doccomment">/// Calculate how many bits data with the given frequencies will use when compressed with dynamic</span>
-<span class="doccomment">/// code lengths (first return value) and static code lengths (second return value).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Parameters:</span>
-<span class="doccomment">/// Frequencies, length of dynamic codes, and a function to get how many extra bits in addition</span>
-<span class="doccomment">/// to the length of the Huffman code the symbol will use.</span>
-<span class="kw">fn</span> <span class="ident">calculate_block_length</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-    <span class="ident">frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">FrequencyType</span>],
-    <span class="ident">dyn_code_lengths</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    <span class="ident">get_num_extra_bits</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>,
-) -&gt; (<span class="ident">u64</span>, <span class="ident">u64</span>)
-<span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">usize</span>) -&gt; <span class="ident">u64</span>,
+<span class="doccomment">/// Calculate how many bits data with the given frequencies will use when compressed with dynamic
+/// code lengths (first return value) and static code lengths (second return value).
+///
+/// Parameters:
+/// Frequencies, length of dynamic codes, and a function to get how many extra bits in addition
+/// to the length of the Huffman code the symbol will use.
+</span><span class="kw">fn </span>calculate_block_length&lt;F&gt;(
+    frequencies: <span class="kw-2">&amp;</span>[FrequencyType],
+    dyn_code_lengths: <span class="kw-2">&amp;</span>[u8],
+    get_num_extra_bits: <span class="kw-2">&amp;</span>F,
+) -&gt; (u64, u64)
+<span class="kw">where
+    </span>F: Fn(usize) -&gt; u64,
 {
-    <span class="comment">// Length of data represented by dynamic codes.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d_ll_length</span> <span class="op">=</span> <span class="number">0u64</span>;
-    <span class="comment">// length of data represented by static codes.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s_ll_length</span> <span class="op">=</span> <span class="number">0u64</span>;
+    <span class="comment">// Length of data represented by dynamic codes.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>d_ll_length = <span class="number">0u64</span>;
+    <span class="comment">// length of data represented by static codes.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>s_ll_length = <span class="number">0u64</span>;
 
-    <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">frequencies</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">zip</span>(<span class="ident">dyn_code_lengths</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">FIXED_CODE_LENGTHS</span>.<span class="ident">iter</span>()))
-        .<span class="ident">enumerate</span>();
+    <span class="kw">let </span>iter = frequencies
+        .iter()
+        .zip(dyn_code_lengths.iter().zip(FIXED_CODE_LENGTHS.iter()))
+        .enumerate();
 
-    <span class="comment">// This could maybe be optimised a bit by splitting the iteration of codes using extra bits and</span>
-    <span class="comment">// codes not using extra bits, but the extra complexity may not be worth it.</span>
-    <span class="kw">for</span> (<span class="ident">c</span>, (<span class="kw-2">&amp;</span><span class="ident">f</span>, (<span class="kw-2">&amp;</span><span class="ident">l</span>, <span class="kw-2">&amp;</span><span class="ident">fl</span>))) <span class="kw">in</span> <span class="ident">iter</span> {
-        <span class="comment">// Frequency</span>
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">u64::from</span>(<span class="ident">f</span>);
-        <span class="comment">// How many extra bits the current code number needs.</span>
-        <span class="kw">let</span> <span class="ident">extra_bits_for_code</span> <span class="op">=</span> <span class="ident">get_num_extra_bits</span>(<span class="ident">c</span>);
+    <span class="comment">// This could maybe be optimised a bit by splitting the iteration of codes using extra bits and
+    // codes not using extra bits, but the extra complexity may not be worth it.
+    </span><span class="kw">for </span>(c, (<span class="kw-2">&amp;</span>f, (<span class="kw-2">&amp;</span>l, <span class="kw-2">&amp;</span>fl))) <span class="kw">in </span>iter {
+        <span class="comment">// Frequency
+        </span><span class="kw">let </span>f = u64::from(f);
+        <span class="comment">// How many extra bits the current code number needs.
+        </span><span class="kw">let </span>extra_bits_for_code = get_num_extra_bits(c);
 
-        <span class="ident">d_ll_length</span> <span class="op">+</span><span class="op">=</span> <span class="ident">f</span> <span class="op">*</span> (<span class="ident">u64::from</span>(<span class="ident">l</span>) <span class="op">+</span> <span class="ident">extra_bits_for_code</span>);
-        <span class="ident">s_ll_length</span> <span class="op">+</span><span class="op">=</span> <span class="ident">f</span> <span class="op">*</span> (<span class="ident">u64::from</span>(<span class="ident">fl</span>) <span class="op">+</span> <span class="ident">extra_bits_for_code</span>);
+        d_ll_length += f * (u64::from(l) + extra_bits_for_code);
+        s_ll_length += f * (u64::from(fl) + extra_bits_for_code);
     }
 
-    (<span class="ident">d_ll_length</span>, <span class="ident">s_ll_length</span>)
+    (d_ll_length, s_ll_length)
 }
 
-<span class="doccomment">/// Get how extra padding bits after a block start header a stored block would use.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Panics</span>
-<span class="doccomment">/// Panics if `pending_bits &gt; 8`</span>
-<span class="kw">fn</span> <span class="ident">stored_padding</span>(<span class="ident">pending_bits</span>: <span class="ident">u8</span>) -&gt; <span class="ident">u64</span> {
-    <span class="macro">assert!</span>(<span class="ident">pending_bits</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">8</span>);
-    <span class="kw">let</span> <span class="ident">free_space</span> <span class="op">=</span> <span class="number">8</span> <span class="op">-</span> <span class="ident">pending_bits</span>;
-    <span class="kw">if</span> <span class="ident">free_space</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">BLOCK_MARKER_LENGTH</span> {
-        <span class="comment">// There is space in the current byte for the header.</span>
-        <span class="ident">free_space</span> <span class="op">-</span> <span class="ident">BLOCK_MARKER_LENGTH</span>
-    } <span class="kw">else</span> {
-        <span class="comment">// The header will require an extra byte.</span>
-        <span class="number">8</span> <span class="op">-</span> (<span class="ident">BLOCK_MARKER_LENGTH</span> <span class="op">-</span> <span class="ident">free_space</span>)
+<span class="doccomment">/// Get how extra padding bits after a block start header a stored block would use.
+///
+/// # Panics
+/// Panics if `pending_bits &gt; 8`
+</span><span class="kw">fn </span>stored_padding(pending_bits: u8) -&gt; u64 {
+    <span class="macro">assert!</span>(pending_bits &lt;= <span class="number">8</span>);
+    <span class="kw">let </span>free_space = <span class="number">8 </span>- pending_bits;
+    <span class="kw">if </span>free_space &gt;= BLOCK_MARKER_LENGTH {
+        <span class="comment">// There is space in the current byte for the header.
+        </span>free_space - BLOCK_MARKER_LENGTH
+    } <span class="kw">else </span>{
+        <span class="comment">// The header will require an extra byte.
+        </span><span class="number">8 </span>- (BLOCK_MARKER_LENGTH - free_space)
     }
-    .<span class="ident">into</span>()
+    .into()
 }
 
-<span class="doccomment">/// Calculate the number of bits storing the data in stored blocks will take up, excluding the</span>
-<span class="doccomment">/// first block start code and potential padding bits. As stored blocks have a maximum length,</span>
-<span class="doccomment">/// (as opposed to fixed and dynamic ones), multiple blocks may have to be utilised.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Panics</span>
-<span class="doccomment">/// Panics if `input_bytes` is 0.</span>
-<span class="kw">fn</span> <span class="ident">stored_length</span>(<span class="ident">input_bytes</span>: <span class="ident">u64</span>) -&gt; <span class="ident">u64</span> {
-    <span class="comment">// Check how many stored blocks these bytes would take up.</span>
-    <span class="comment">// (Integer divison rounding up.)</span>
-    <span class="kw">let</span> <span class="ident">num_blocks</span> <span class="op">=</span> (<span class="ident">input_bytes</span>
-        .<span class="ident">checked_sub</span>(<span class="number">1</span>)
-        .<span class="ident">expect</span>(<span class="string">&quot;Underflow calculating stored block length!&quot;</span>)
-        <span class="op">/</span> <span class="ident">MAX_STORED_BLOCK_LENGTH</span> <span class="kw">as</span> <span class="ident">u64</span>)
-        <span class="op">+</span> <span class="number">1</span>;
-    <span class="comment">// The length will be the input length and the headers for each block. (Excluding the start</span>
-    <span class="comment">// of block code for the first one)</span>
-    (<span class="ident">input_bytes</span> <span class="op">+</span> (<span class="ident">STORED_BLOCK_HEADER_LENGTH</span> <span class="kw">as</span> <span class="ident">u64</span> <span class="op">*</span> <span class="ident">num_blocks</span>) <span class="op">+</span> (<span class="ident">num_blocks</span> <span class="op">-</span> <span class="number">1</span>)) <span class="op">*</span> <span class="number">8</span>
+<span class="doccomment">/// Calculate the number of bits storing the data in stored blocks will take up, excluding the
+/// first block start code and potential padding bits. As stored blocks have a maximum length,
+/// (as opposed to fixed and dynamic ones), multiple blocks may have to be utilised.
+///
+/// # Panics
+/// Panics if `input_bytes` is 0.
+</span><span class="kw">fn </span>stored_length(input_bytes: u64) -&gt; u64 {
+    <span class="comment">// Check how many stored blocks these bytes would take up.
+    // (Integer divison rounding up.)
+    </span><span class="kw">let </span>num_blocks = (input_bytes
+        .checked_sub(<span class="number">1</span>)
+        .expect(<span class="string">&quot;Underflow calculating stored block length!&quot;</span>)
+        / MAX_STORED_BLOCK_LENGTH <span class="kw">as </span>u64)
+        + <span class="number">1</span>;
+    <span class="comment">// The length will be the input length and the headers for each block. (Excluding the start
+    // of block code for the first one)
+    </span>(input_bytes + (STORED_BLOCK_HEADER_LENGTH <span class="kw">as </span>u64 * num_blocks) + (num_blocks - <span class="number">1</span>)) * <span class="number">8
+</span>}
+
+<span class="kw">pub enum </span>BlockType {
+    Stored,
+    Fixed,
+    Dynamic(DynamicBlockHeader),
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BlockType</span> {
-    <span class="ident">Stored</span>,
-    <span class="ident">Fixed</span>,
-    <span class="ident">Dynamic</span>(<span class="ident">DynamicBlockHeader</span>),
+<span class="doccomment">/// A struct containing the different data needed to write the header for a dynamic block.
+///
+/// The code lengths are stored directly in the `HuffmanTable` struct.
+/// TODO: Do the same for other things here.
+</span><span class="kw">pub struct </span>DynamicBlockHeader {
+    <span class="doccomment">/// Length of the run-length encoding symbols.
+    </span><span class="kw">pub </span>huffman_table_lengths: Vec&lt;u8&gt;,
+    <span class="doccomment">/// Number of lengths for values describing the Huffman table that encodes the length values
+    /// of the main Huffman tables.
+    </span><span class="kw">pub </span>used_hclens: usize,
 }
 
-<span class="doccomment">/// A struct containing the different data needed to write the header for a dynamic block.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The code lengths are stored directly in the `HuffmanTable` struct.</span>
-<span class="doccomment">/// TODO: Do the same for other things here.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DynamicBlockHeader</span> {
-    <span class="doccomment">/// Length of the run-length encoding symbols.</span>
-    <span class="kw">pub</span> <span class="ident">huffman_table_lengths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Number of lengths for values describing the Huffman table that encodes the length values</span>
-    <span class="doccomment">/// of the main Huffman tables.</span>
-    <span class="kw">pub</span> <span class="ident">used_hclens</span>: <span class="ident">usize</span>,
-}
-
-<span class="doccomment">/// Generate the lengths of the Huffman codes we will be using, using the</span>
-<span class="doccomment">/// frequency of the different symbols/lengths/distances, and determine what block type will give</span>
-<span class="doccomment">/// the shortest representation.</span>
-<span class="doccomment">/// TODO: This needs a test</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_huffman_lengths</span>(
-    <span class="ident">l_freqs</span>: <span class="kw-2">&amp;</span>[<span class="ident">FrequencyType</span>],
-    <span class="ident">d_freqs</span>: <span class="kw-2">&amp;</span>[<span class="ident">FrequencyType</span>],
-    <span class="ident">num_input_bytes</span>: <span class="ident">u64</span>,
-    <span class="ident">pending_bits</span>: <span class="ident">u8</span>,
-    <span class="ident">l_lengths</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>; <span class="number">288</span>],
-    <span class="ident">d_lengths</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>; <span class="number">32</span>],
-    <span class="ident">length_buffers</span>: <span class="kw-2">&amp;mut</span> <span class="ident">LengthBuffers</span>,
-) -&gt; <span class="ident">BlockType</span> {
-    <span class="comment">// Avoid corner cases and issues if this is called for an empty block.</span>
-    <span class="comment">// For blocks this short, a fixed block will be the shortest.</span>
-    <span class="comment">// TODO: Find the minimum value it&#39;s worth doing calculations for.</span>
-    <span class="kw">if</span> <span class="ident">num_input_bytes</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">4</span> {
-        <span class="kw">return</span> <span class="ident">BlockType::Fixed</span>;
+<span class="doccomment">/// Generate the lengths of the Huffman codes we will be using, using the
+/// frequency of the different symbols/lengths/distances, and determine what block type will give
+/// the shortest representation.
+/// TODO: This needs a test
+</span><span class="kw">pub fn </span>gen_huffman_lengths(
+    l_freqs: <span class="kw-2">&amp;</span>[FrequencyType],
+    d_freqs: <span class="kw-2">&amp;</span>[FrequencyType],
+    num_input_bytes: u64,
+    pending_bits: u8,
+    l_lengths: <span class="kw-2">&amp;mut </span>[u8; <span class="number">288</span>],
+    d_lengths: <span class="kw-2">&amp;mut </span>[u8; <span class="number">32</span>],
+    length_buffers: <span class="kw-2">&amp;mut </span>LengthBuffers,
+) -&gt; BlockType {
+    <span class="comment">// Avoid corner cases and issues if this is called for an empty block.
+    // For blocks this short, a fixed block will be the shortest.
+    // TODO: Find the minimum value it&#39;s worth doing calculations for.
+    </span><span class="kw">if </span>num_input_bytes &lt;= <span class="number">4 </span>{
+        <span class="kw">return </span>BlockType::Fixed;
     };
 
-    <span class="kw">let</span> <span class="ident">l_freqs</span> <span class="op">=</span> <span class="ident">remove_trailing_zeroes</span>(<span class="ident">l_freqs</span>, <span class="ident">MIN_NUM_LITERALS_AND_LENGTHS</span>);
-    <span class="kw">let</span> <span class="ident">d_freqs</span> <span class="op">=</span> <span class="ident">remove_trailing_zeroes</span>(<span class="ident">d_freqs</span>, <span class="ident">MIN_NUM_DISTANCES</span>);
+    <span class="kw">let </span>l_freqs = remove_trailing_zeroes(l_freqs, MIN_NUM_LITERALS_AND_LENGTHS);
+    <span class="kw">let </span>d_freqs = remove_trailing_zeroes(d_freqs, MIN_NUM_DISTANCES);
 
-    <span class="comment">// The huffman spec allows us to exclude zeroes at the end of the</span>
-    <span class="comment">// table of huffman lengths.</span>
-    <span class="comment">// Since a frequency of 0 will give an huffman</span>
-    <span class="comment">// length of 0. We strip off the trailing zeroes before even</span>
-    <span class="comment">// generating the lengths to save some work.</span>
-    <span class="comment">// There is however a minimum number of values we have to keep</span>
-    <span class="comment">// according to the deflate spec.</span>
-    <span class="comment">// TODO: We could probably compute some of this in parallel.</span>
-    <span class="ident">huffman_lengths_from_frequency_m</span>(
-        <span class="ident">l_freqs</span>,
-        <span class="ident">MAX_CODE_LENGTH</span>,
-        <span class="kw-2">&amp;mut</span> <span class="ident">length_buffers</span>.<span class="ident">leaf_buf</span>,
-        <span class="ident">l_lengths</span>,
+    <span class="comment">// The huffman spec allows us to exclude zeroes at the end of the
+    // table of huffman lengths.
+    // Since a frequency of 0 will give an huffman
+    // length of 0. We strip off the trailing zeroes before even
+    // generating the lengths to save some work.
+    // There is however a minimum number of values we have to keep
+    // according to the deflate spec.
+    // TODO: We could probably compute some of this in parallel.
+    </span>huffman_lengths_from_frequency_m(
+        l_freqs,
+        MAX_CODE_LENGTH,
+        <span class="kw-2">&amp;mut </span>length_buffers.leaf_buf,
+        l_lengths,
     );
-    <span class="ident">huffman_lengths_from_frequency_m</span>(
-        <span class="ident">d_freqs</span>,
-        <span class="ident">MAX_CODE_LENGTH</span>,
-        <span class="kw-2">&amp;mut</span> <span class="ident">length_buffers</span>.<span class="ident">leaf_buf</span>,
-        <span class="ident">d_lengths</span>,
-    );
-
-    <span class="kw">let</span> <span class="ident">used_lengths</span> <span class="op">=</span> <span class="ident">l_freqs</span>.<span class="ident">len</span>();
-    <span class="kw">let</span> <span class="ident">used_distances</span> <span class="op">=</span> <span class="ident">d_freqs</span>.<span class="ident">len</span>();
-
-    <span class="comment">// Encode length values</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">freqs</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="number">19</span>];
-    <span class="ident">encode_lengths_m</span>(
-        <span class="ident">l_lengths</span>[..<span class="ident">used_lengths</span>]
-            .<span class="ident">iter</span>()
-            .<span class="ident">chain</span>(<span class="kw-2">&amp;</span><span class="ident">d_lengths</span>[..<span class="ident">used_distances</span>]),
-        <span class="kw-2">&amp;mut</span> <span class="ident">length_buffers</span>.<span class="ident">length_buf</span>,
-        <span class="kw-2">&amp;mut</span> <span class="ident">freqs</span>,
+    huffman_lengths_from_frequency_m(
+        d_freqs,
+        MAX_CODE_LENGTH,
+        <span class="kw-2">&amp;mut </span>length_buffers.leaf_buf,
+        d_lengths,
     );
 
-    <span class="comment">// Create huffman lengths for the length/distance code lengths</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">huffman_table_lengths</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">freqs</span>.<span class="ident">len</span>()];
-    <span class="ident">huffman_lengths_from_frequency_m</span>(
-        <span class="kw-2">&amp;</span><span class="ident">freqs</span>,
-        <span class="ident">MAX_HUFFMAN_CODE_LENGTH</span>,
-        <span class="kw-2">&amp;mut</span> <span class="ident">length_buffers</span>.<span class="ident">leaf_buf</span>,
-        <span class="ident">huffman_table_lengths</span>.<span class="ident">as_mut_slice</span>(),
+    <span class="kw">let </span>used_lengths = l_freqs.len();
+    <span class="kw">let </span>used_distances = d_freqs.len();
+
+    <span class="comment">// Encode length values
+    </span><span class="kw">let </span><span class="kw-2">mut </span>freqs = [<span class="number">0u16</span>; <span class="number">19</span>];
+    encode_lengths_m(
+        l_lengths[..used_lengths]
+            .iter()
+            .chain(<span class="kw-2">&amp;</span>d_lengths[..used_distances]),
+        <span class="kw-2">&amp;mut </span>length_buffers.length_buf,
+        <span class="kw-2">&amp;mut </span>freqs,
     );
 
-    <span class="comment">// Count how many of these lengths we use.</span>
-    <span class="kw">let</span> <span class="ident">used_hclens</span> <span class="op">=</span> <span class="ident">HUFFMAN_LENGTH_ORDER</span>.<span class="ident">len</span>()
-        <span class="op">-</span> <span class="ident">HUFFMAN_LENGTH_ORDER</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">rev</span>()
-            .<span class="ident">take_while</span>(<span class="op">|</span><span class="op">&amp;&amp;</span><span class="ident">n</span><span class="op">|</span> <span class="ident">huffman_table_lengths</span>[<span class="ident">n</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">==</span> <span class="number">0</span>)
-            .<span class="ident">count</span>();
+    <span class="comment">// Create huffman lengths for the length/distance code lengths
+    </span><span class="kw">let </span><span class="kw-2">mut </span>huffman_table_lengths = <span class="macro">vec!</span>[<span class="number">0</span>; freqs.len()];
+    huffman_lengths_from_frequency_m(
+        <span class="kw-2">&amp;</span>freqs,
+        MAX_HUFFMAN_CODE_LENGTH,
+        <span class="kw-2">&amp;mut </span>length_buffers.leaf_buf,
+        huffman_table_lengths.as_mut_slice(),
+    );
 
-    <span class="comment">// There has to be at least 4 hclens, so if there isn&#39;t, something went wrong.</span>
-    <span class="macro">debug_assert!</span>(<span class="ident">used_hclens</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">4</span>);
+    <span class="comment">// Count how many of these lengths we use.
+    </span><span class="kw">let </span>used_hclens = HUFFMAN_LENGTH_ORDER.len()
+        - HUFFMAN_LENGTH_ORDER
+            .iter()
+            .rev()
+            .take_while(|&amp;&amp;n| huffman_table_lengths[n <span class="kw">as </span>usize] == <span class="number">0</span>)
+            .count();
 
-    <span class="comment">// Calculate how many bytes of space this block will take up with the different block types</span>
-    <span class="comment">// (excluding the 3-bit block header since it&#39;s used in all block types).</span>
+    <span class="comment">// There has to be at least 4 hclens, so if there isn&#39;t, something went wrong.
+    </span><span class="macro">debug_assert!</span>(used_hclens &gt;= <span class="number">4</span>);
 
-    <span class="comment">// Total length of the compressed literals/lengths.</span>
-    <span class="kw">let</span> (<span class="ident">d_ll_length</span>, <span class="ident">s_ll_length</span>) <span class="op">=</span> <span class="ident">calculate_block_length</span>(<span class="ident">l_freqs</span>, <span class="ident">l_lengths</span>, <span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
-        <span class="ident">num_extra_bits_for_length_code</span>(<span class="ident">c</span>.<span class="ident">saturating_sub</span>(<span class="ident">LENGTH_BITS_START</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">into</span>()
+    <span class="comment">// Calculate how many bytes of space this block will take up with the different block types
+    // (excluding the 3-bit block header since it&#39;s used in all block types).
+
+    // Total length of the compressed literals/lengths.
+    </span><span class="kw">let </span>(d_ll_length, s_ll_length) = calculate_block_length(l_freqs, l_lengths, <span class="kw-2">&amp;</span>|c| {
+        num_extra_bits_for_length_code(c.saturating_sub(LENGTH_BITS_START <span class="kw">as </span>usize) <span class="kw">as </span>u8).into()
     });
 
-    <span class="comment">// Total length of the compressed distances.</span>
-    <span class="kw">let</span> (<span class="ident">d_dist_length</span>, <span class="ident">s_dist_length</span>) <span class="op">=</span> <span class="ident">calculate_block_length</span>(<span class="ident">d_freqs</span>, <span class="ident">d_lengths</span>, <span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
-        <span class="ident">num_extra_bits_for_distance_code</span>(<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">into</span>()
+    <span class="comment">// Total length of the compressed distances.
+    </span><span class="kw">let </span>(d_dist_length, s_dist_length) = calculate_block_length(d_freqs, d_lengths, <span class="kw-2">&amp;</span>|c| {
+        num_extra_bits_for_distance_code(c <span class="kw">as </span>u8).into()
     });
 
-    <span class="comment">// Total length of the compressed huffman code lengths.</span>
-    <span class="kw">let</span> <span class="ident">huff_table_length</span> <span class="op">=</span> <span class="ident">calculate_huffman_length</span>(<span class="kw-2">&amp;</span><span class="ident">freqs</span>, <span class="kw-2">&amp;</span><span class="ident">huffman_table_lengths</span>);
+    <span class="comment">// Total length of the compressed huffman code lengths.
+    </span><span class="kw">let </span>huff_table_length = calculate_huffman_length(<span class="kw-2">&amp;</span>freqs, <span class="kw-2">&amp;</span>huffman_table_lengths);
 
-    <span class="comment">// For dynamic blocks the huffman tables takes up some extra space.</span>
-    <span class="kw">let</span> <span class="ident">dynamic_length</span> <span class="op">=</span> <span class="ident">d_ll_length</span>
-        <span class="op">+</span> <span class="ident">d_dist_length</span>
-        <span class="op">+</span> <span class="ident">huff_table_length</span>
-        <span class="op">+</span> (<span class="ident">used_hclens</span> <span class="kw">as</span> <span class="ident">u64</span> <span class="op">*</span> <span class="number">3</span>)
-        <span class="op">+</span> <span class="ident">u64::from</span>(<span class="ident">HLIT_BITS</span>)
-        <span class="op">+</span> <span class="ident">u64::from</span>(<span class="ident">HDIST_BITS</span>)
-        <span class="op">+</span> <span class="ident">u64::from</span>(<span class="ident">HCLEN_BITS</span>);
+    <span class="comment">// For dynamic blocks the huffman tables takes up some extra space.
+    </span><span class="kw">let </span>dynamic_length = d_ll_length
+        + d_dist_length
+        + huff_table_length
+        + (used_hclens <span class="kw">as </span>u64 * <span class="number">3</span>)
+        + u64::from(HLIT_BITS)
+        + u64::from(HDIST_BITS)
+        + u64::from(HCLEN_BITS);
 
-    <span class="comment">// Static blocks don&#39;t have any extra header data.</span>
-    <span class="kw">let</span> <span class="ident">static_length</span> <span class="op">=</span> <span class="ident">s_ll_length</span> <span class="op">+</span> <span class="ident">s_dist_length</span>;
+    <span class="comment">// Static blocks don&#39;t have any extra header data.
+    </span><span class="kw">let </span>static_length = s_ll_length + s_dist_length;
 
-    <span class="comment">// Calculate how many bits it will take to store the data in uncompressed (stored) block(s).</span>
-    <span class="kw">let</span> <span class="ident">stored_length</span> <span class="op">=</span> <span class="ident">stored_length</span>(<span class="ident">num_input_bytes</span>) <span class="op">+</span> <span class="ident">stored_padding</span>(<span class="ident">pending_bits</span> <span class="op">%</span> <span class="number">8</span>);
+    <span class="comment">// Calculate how many bits it will take to store the data in uncompressed (stored) block(s).
+    </span><span class="kw">let </span>stored_length = stored_length(num_input_bytes) + stored_padding(pending_bits % <span class="number">8</span>);
 
-    <span class="kw">let</span> <span class="ident">used_length</span> <span class="op">=</span> <span class="ident">cmp::min</span>(<span class="ident">cmp::min</span>(<span class="ident">dynamic_length</span>, <span class="ident">static_length</span>), <span class="ident">stored_length</span>);
+    <span class="kw">let </span>used_length = cmp::min(cmp::min(dynamic_length, static_length), stored_length);
 
-    <span class="comment">// Check if the block is actually compressed. If using a dynamic block</span>
-    <span class="comment">// increases the length of the block (for instance if the input data is mostly random or</span>
-    <span class="comment">// already compressed), we want to output a stored(uncompressed) block instead to avoid wasting</span>
-    <span class="comment">// space.</span>
-    <span class="kw">if</span> <span class="ident">used_length</span> <span class="op">==</span> <span class="ident">static_length</span> {
-        <span class="ident">BlockType::Fixed</span>
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">used_length</span> <span class="op">==</span> <span class="ident">stored_length</span> {
-        <span class="ident">BlockType::Stored</span>
-    } <span class="kw">else</span> {
-        <span class="ident">BlockType::Dynamic</span>(<span class="ident">DynamicBlockHeader</span> {
-            <span class="ident">huffman_table_lengths</span>,
-            <span class="ident">used_hclens</span>,
+    <span class="comment">// Check if the block is actually compressed. If using a dynamic block
+    // increases the length of the block (for instance if the input data is mostly random or
+    // already compressed), we want to output a stored(uncompressed) block instead to avoid wasting
+    // space.
+    </span><span class="kw">if </span>used_length == static_length {
+        BlockType::Fixed
+    } <span class="kw">else if </span>used_length == stored_length {
+        BlockType::Stored
+    } <span class="kw">else </span>{
+        BlockType::Dynamic(DynamicBlockHeader {
+            huffman_table_lengths,
+            used_hclens,
         })
     }
 }
 
-<span class="doccomment">/// Write the specified Huffman lengths to the bit writer</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_huffman_lengths</span>(
-    <span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">DynamicBlockHeader</span>,
-    <span class="ident">huffman_table</span>: <span class="kw-2">&amp;</span><span class="ident">HuffmanTable</span>,
-    <span class="ident">encoded_lengths</span>: <span class="kw-2">&amp;</span>[<span class="ident">EncodedLength</span>],
-    <span class="ident">writer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">LsbWriter</span>,
+<span class="doccomment">/// Write the specified Huffman lengths to the bit writer
+</span><span class="kw">pub fn </span>write_huffman_lengths(
+    header: <span class="kw-2">&amp;</span>DynamicBlockHeader,
+    huffman_table: <span class="kw-2">&amp;</span>HuffmanTable,
+    encoded_lengths: <span class="kw-2">&amp;</span>[EncodedLength],
+    writer: <span class="kw-2">&amp;mut </span>LsbWriter,
 ) {
-    <span class="comment">// Ignore trailing zero lengths as allowed by the deflate spec.</span>
-    <span class="kw">let</span> (<span class="ident">literal_len_lengths</span>, <span class="ident">distance_lengths</span>) <span class="op">=</span> <span class="ident">huffman_table</span>.<span class="ident">get_lengths</span>();
-    <span class="kw">let</span> <span class="ident">literal_len_lengths</span> <span class="op">=</span>
-        <span class="ident">remove_trailing_zeroes</span>(<span class="ident">literal_len_lengths</span>, <span class="ident">MIN_NUM_LITERALS_AND_LENGTHS</span>);
-    <span class="kw">let</span> <span class="ident">distance_lengths</span> <span class="op">=</span> <span class="ident">remove_trailing_zeroes</span>(<span class="ident">distance_lengths</span>, <span class="ident">MIN_NUM_DISTANCES</span>);
-    <span class="kw">let</span> <span class="ident">huffman_table_lengths</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">huffman_table_lengths</span>;
-    <span class="kw">let</span> <span class="ident">used_hclens</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">used_hclens</span>;
+    <span class="comment">// Ignore trailing zero lengths as allowed by the deflate spec.
+    </span><span class="kw">let </span>(literal_len_lengths, distance_lengths) = huffman_table.get_lengths();
+    <span class="kw">let </span>literal_len_lengths =
+        remove_trailing_zeroes(literal_len_lengths, MIN_NUM_LITERALS_AND_LENGTHS);
+    <span class="kw">let </span>distance_lengths = remove_trailing_zeroes(distance_lengths, MIN_NUM_DISTANCES);
+    <span class="kw">let </span>huffman_table_lengths = <span class="kw-2">&amp;</span>header.huffman_table_lengths;
+    <span class="kw">let </span>used_hclens = header.used_hclens;
 
-    <span class="macro">assert!</span>(<span class="ident">literal_len_lengths</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">NUM_LITERALS_AND_LENGTHS</span>);
-    <span class="macro">assert!</span>(<span class="ident">literal_len_lengths</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">MIN_NUM_LITERALS_AND_LENGTHS</span>);
-    <span class="macro">assert!</span>(<span class="ident">distance_lengths</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">NUM_DISTANCE_CODES</span>);
-    <span class="macro">assert!</span>(<span class="ident">distance_lengths</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">MIN_NUM_DISTANCES</span>);
+    <span class="macro">assert!</span>(literal_len_lengths.len() &lt;= NUM_LITERALS_AND_LENGTHS);
+    <span class="macro">assert!</span>(literal_len_lengths.len() &gt;= MIN_NUM_LITERALS_AND_LENGTHS);
+    <span class="macro">assert!</span>(distance_lengths.len() &lt;= NUM_DISTANCE_CODES);
+    <span class="macro">assert!</span>(distance_lengths.len() &gt;= MIN_NUM_DISTANCES);
 
-    <span class="comment">// Number of length codes - 257.</span>
-    <span class="kw">let</span> <span class="ident">hlit</span> <span class="op">=</span> (<span class="ident">literal_len_lengths</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">MIN_NUM_LITERALS_AND_LENGTHS</span>) <span class="kw">as</span> <span class="ident">u16</span>;
-    <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">hlit</span>, <span class="ident">HLIT_BITS</span>);
-    <span class="comment">// Number of distance codes - 1.</span>
-    <span class="kw">let</span> <span class="ident">hdist</span> <span class="op">=</span> (<span class="ident">distance_lengths</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">MIN_NUM_DISTANCES</span>) <span class="kw">as</span> <span class="ident">u16</span>;
-    <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">hdist</span>, <span class="ident">HDIST_BITS</span>);
+    <span class="comment">// Number of length codes - 257.
+    </span><span class="kw">let </span>hlit = (literal_len_lengths.len() - MIN_NUM_LITERALS_AND_LENGTHS) <span class="kw">as </span>u16;
+    writer.write_bits(hlit, HLIT_BITS);
+    <span class="comment">// Number of distance codes - 1.
+    </span><span class="kw">let </span>hdist = (distance_lengths.len() - MIN_NUM_DISTANCES) <span class="kw">as </span>u16;
+    writer.write_bits(hdist, HDIST_BITS);
 
-    <span class="comment">// Number of huffman table lengths - 4.</span>
-    <span class="kw">let</span> <span class="ident">hclen</span> <span class="op">=</span> <span class="ident">used_hclens</span>.<span class="ident">saturating_sub</span>(<span class="number">4</span>);
+    <span class="comment">// Number of huffman table lengths - 4.
+    </span><span class="kw">let </span>hclen = used_hclens.saturating_sub(<span class="number">4</span>);
 
-    <span class="comment">// Write HCLEN.</span>
-    <span class="comment">// Casting to u16 is safe since the length can never be more than the length of</span>
-    <span class="comment">// `HUFFMAN_LENGTH_ORDER` anyhow.</span>
-    <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">hclen</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">HCLEN_BITS</span>);
+    <span class="comment">// Write HCLEN.
+    // Casting to u16 is safe since the length can never be more than the length of
+    // `HUFFMAN_LENGTH_ORDER` anyhow.
+    </span>writer.write_bits(hclen <span class="kw">as </span>u16, HCLEN_BITS);
 
-    <span class="comment">// Write the lengths for the huffman table describing the huffman table</span>
-    <span class="comment">// Each length is 3 bits</span>
-    <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">HUFFMAN_LENGTH_ORDER</span>[..<span class="ident">used_hclens</span>] {
-        <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">u16::from</span>(<span class="ident">huffman_table_lengths</span>[<span class="ident">usize::from</span>(<span class="kw-2">*</span><span class="ident">n</span>)]), <span class="number">3</span>);
+    <span class="comment">// Write the lengths for the huffman table describing the huffman table
+    // Each length is 3 bits
+    </span><span class="kw">for </span>n <span class="kw">in </span><span class="kw-2">&amp;</span>HUFFMAN_LENGTH_ORDER[..used_hclens] {
+        writer.write_bits(u16::from(huffman_table_lengths[usize::from(<span class="kw-2">*</span>n)]), <span class="number">3</span>);
     }
 
-    <span class="comment">// Generate codes for the main huffman table using the lengths we just wrote</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">codes</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="ident">NUM_HUFFMAN_LENGTHS</span>];
-    <span class="ident">create_codes_in_place</span>(<span class="kw-2">&amp;mut</span> <span class="ident">codes</span>[..], <span class="ident">huffman_table_lengths</span>);
+    <span class="comment">// Generate codes for the main huffman table using the lengths we just wrote
+    </span><span class="kw">let </span><span class="kw-2">mut </span>codes = [<span class="number">0u16</span>; NUM_HUFFMAN_LENGTHS];
+    create_codes_in_place(<span class="kw-2">&amp;mut </span>codes[..], huffman_table_lengths);
 
-    <span class="comment">// Write the actual huffman lengths</span>
-    <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">encoded_lengths</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">v</span> {
-            <span class="ident">EncodedLength::Length</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">c</span>, <span class="ident">l</span>) <span class="op">=</span> (<span class="ident">codes</span>[<span class="ident">usize::from</span>(<span class="ident">n</span>)], <span class="ident">huffman_table_lengths</span>[<span class="ident">usize::from</span>(<span class="ident">n</span>)]);
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">c</span>, <span class="ident">l</span>);
+    <span class="comment">// Write the actual huffman lengths
+    </span><span class="kw">for </span>v <span class="kw">in </span>encoded_lengths {
+        <span class="kw">match </span><span class="kw-2">*</span>v {
+            EncodedLength::Length(n) =&gt; {
+                <span class="kw">let </span>(c, l) = (codes[usize::from(n)], huffman_table_lengths[usize::from(n)]);
+                writer.write_bits(c, l);
             }
-            <span class="ident">EncodedLength::CopyPrevious</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">c</span>, <span class="ident">l</span>) <span class="op">=</span> (<span class="ident">codes</span>[<span class="ident">COPY_PREVIOUS</span>], <span class="ident">huffman_table_lengths</span>[<span class="ident">COPY_PREVIOUS</span>]);
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">c</span>, <span class="ident">l</span>);
-                <span class="macro">debug_assert!</span>(<span class="ident">n</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span>);
-                <span class="macro">debug_assert!</span>(<span class="ident">n</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">6</span>);
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>((<span class="ident">n</span> <span class="op">-</span> <span class="number">3</span>).<span class="ident">into</span>(), <span class="number">2</span>);
+            EncodedLength::CopyPrevious(n) =&gt; {
+                <span class="kw">let </span>(c, l) = (codes[COPY_PREVIOUS], huffman_table_lengths[COPY_PREVIOUS]);
+                writer.write_bits(c, l);
+                <span class="macro">debug_assert!</span>(n &gt;= <span class="number">3</span>);
+                <span class="macro">debug_assert!</span>(n &lt;= <span class="number">6</span>);
+                writer.write_bits((n - <span class="number">3</span>).into(), <span class="number">2</span>);
             }
-            <span class="ident">EncodedLength::RepeatZero3Bits</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">c</span>, <span class="ident">l</span>) <span class="op">=</span> (
-                    <span class="ident">codes</span>[<span class="ident">REPEAT_ZERO_3_BITS</span>],
-                    <span class="ident">huffman_table_lengths</span>[<span class="ident">REPEAT_ZERO_3_BITS</span>],
+            EncodedLength::RepeatZero3Bits(n) =&gt; {
+                <span class="kw">let </span>(c, l) = (
+                    codes[REPEAT_ZERO_3_BITS],
+                    huffman_table_lengths[REPEAT_ZERO_3_BITS],
                 );
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">c</span>, <span class="ident">l</span>);
-                <span class="macro">debug_assert!</span>(<span class="ident">n</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span>);
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>((<span class="ident">n</span> <span class="op">-</span> <span class="number">3</span>).<span class="ident">into</span>(), <span class="number">3</span>);
+                writer.write_bits(c, l);
+                <span class="macro">debug_assert!</span>(n &gt;= <span class="number">3</span>);
+                writer.write_bits((n - <span class="number">3</span>).into(), <span class="number">3</span>);
             }
-            <span class="ident">EncodedLength::RepeatZero7Bits</span>(<span class="ident">n</span>) =&gt; {
-                <span class="kw">let</span> (<span class="ident">c</span>, <span class="ident">l</span>) <span class="op">=</span> (
-                    <span class="ident">codes</span>[<span class="ident">REPEAT_ZERO_7_BITS</span>],
-                    <span class="ident">huffman_table_lengths</span>[<span class="ident">REPEAT_ZERO_7_BITS</span>],
+            EncodedLength::RepeatZero7Bits(n) =&gt; {
+                <span class="kw">let </span>(c, l) = (
+                    codes[REPEAT_ZERO_7_BITS],
+                    huffman_table_lengths[REPEAT_ZERO_7_BITS],
                 );
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>(<span class="ident">c</span>, <span class="ident">l</span>);
-                <span class="macro">debug_assert!</span>(<span class="ident">n</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">11</span>);
-                <span class="macro">debug_assert!</span>(<span class="ident">n</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">138</span>);
-                <span class="ident">writer</span>.<span class="ident">write_bits</span>((<span class="ident">n</span> <span class="op">-</span> <span class="number">11</span>).<span class="ident">into</span>(), <span class="number">7</span>);
+                writer.write_bits(c, l);
+                <span class="macro">debug_assert!</span>(n &gt;= <span class="number">11</span>);
+                <span class="macro">debug_assert!</span>(n &lt;= <span class="number">138</span>);
+                writer.write_bits((n - <span class="number">11</span>).into(), <span class="number">7</span>);
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::stored_padding</span>;
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">padding</span>() {
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">0</span>), <span class="number">5</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">1</span>), <span class="number">4</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">2</span>), <span class="number">3</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">3</span>), <span class="number">2</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">4</span>), <span class="number">1</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">5</span>), <span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">6</span>), <span class="number">7</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">stored_padding</span>(<span class="number">7</span>), <span class="number">6</span>);
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="kw">use </span><span class="kw">super</span>::stored_padding;
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>padding() {
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">0</span>), <span class="number">5</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">1</span>), <span class="number">4</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">2</span>), <span class="number">3</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">3</span>), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">4</span>), <span class="number">1</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">5</span>), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">6</span>), <span class="number">7</span>);
+        <span class="macro">assert_eq!</span>(stored_padding(<span class="number">7</span>), <span class="number">6</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="deflate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>

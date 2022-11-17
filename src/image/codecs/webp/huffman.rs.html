@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/webp/huffman.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/image-0.24.3/./src/codecs/webp/huffman.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../image/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../image/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -206,208 +200,207 @@
 <span id="200">200</span>
 <span id="201">201</span>
 <span id="202">202</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::convert::TryInto</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::convert::TryInto;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::lossless::BitReader</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::lossless::DecoderError</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ImageResult</span>;
+<span class="kw">use </span><span class="kw">super</span>::lossless::BitReader;
+<span class="kw">use </span><span class="kw">super</span>::lossless::DecoderError;
+<span class="kw">use </span><span class="kw">crate</span>::ImageResult;
 
-<span class="doccomment">/// Rudimentary utility for reading Canonical Huffman Codes.</span>
-<span class="doccomment">/// Based off https://github.com/webmproject/libwebp/blob/7f8472a610b61ec780ef0a8873cd954ac512a505/src/utils/huffman.c</span>
-<span class="doccomment">///</span>
+<span class="doccomment">/// Rudimentary utility for reading Canonical Huffman Codes.
+/// Based off https://github.com/webmproject/libwebp/blob/7f8472a610b61ec780ef0a8873cd954ac512a505/src/utils/huffman.c
+///
 
-<span class="kw">const</span> <span class="ident">MAX_ALLOWED_CODE_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">15</span>;
+</span><span class="kw">const </span>MAX_ALLOWED_CODE_LENGTH: usize = <span class="number">15</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">enum</span> <span class="ident">HuffmanTreeNode</span> {
-    <span class="ident">Branch</span>(<span class="ident">usize</span>), <span class="comment">//offset in vector to children</span>
-    <span class="ident">Leaf</span>(<span class="ident">u16</span>),     <span class="comment">//symbol stored in leaf</span>
-    <span class="ident">Empty</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+</span><span class="kw">enum </span>HuffmanTreeNode {
+    Branch(usize), <span class="comment">//offset in vector to children
+    </span>Leaf(u16),     <span class="comment">//symbol stored in leaf
+    </span>Empty,
 }
 
-<span class="doccomment">/// Huffman tree</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">HuffmanTree</span> {
-    <span class="ident">tree</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">HuffmanTreeNode</span><span class="op">&gt;</span>,
-    <span class="ident">max_nodes</span>: <span class="ident">usize</span>,
-    <span class="ident">num_nodes</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// Huffman tree
+</span><span class="attribute">#[derive(Clone, Debug, Default)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>HuffmanTree {
+    tree: Vec&lt;HuffmanTreeNode&gt;,
+    max_nodes: usize,
+    num_nodes: usize,
 }
 
-<span class="kw">impl</span> <span class="ident">HuffmanTree</span> {
-    <span class="kw">fn</span> <span class="ident">is_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">num_nodes</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">max_nodes</span>
+<span class="kw">impl </span>HuffmanTree {
+    <span class="kw">fn </span>is_full(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.num_nodes == <span class="self">self</span>.max_nodes
     }
 
-    <span class="doccomment">/// Turns a node from empty into a branch and assigns its children</span>
-    <span class="kw">fn</span> <span class="ident">assign_children</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">node_index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">usize</span> {
-        <span class="kw">let</span> <span class="ident">offset_index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">num_nodes</span> <span class="op">-</span> <span class="ident">node_index</span>;
-        <span class="self">self</span>.<span class="ident">tree</span>[<span class="ident">node_index</span>] <span class="op">=</span> <span class="ident">HuffmanTreeNode::Branch</span>(<span class="ident">offset_index</span>);
-        <span class="self">self</span>.<span class="ident">num_nodes</span> <span class="op">+</span><span class="op">=</span> <span class="number">2</span>;
+    <span class="doccomment">/// Turns a node from empty into a branch and assigns its children
+    </span><span class="kw">fn </span>assign_children(<span class="kw-2">&amp;mut </span><span class="self">self</span>, node_index: usize) -&gt; usize {
+        <span class="kw">let </span>offset_index = <span class="self">self</span>.num_nodes - node_index;
+        <span class="self">self</span>.tree[node_index] = HuffmanTreeNode::Branch(offset_index);
+        <span class="self">self</span>.num_nodes += <span class="number">2</span>;
 
-        <span class="ident">offset_index</span>
+        offset_index
     }
 
-    <span class="doccomment">/// Init a huffman tree</span>
-    <span class="kw">fn</span> <span class="ident">init</span>(<span class="ident">num_leaves</span>: <span class="ident">usize</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">HuffmanTree</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">num_leaves</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>());
+    <span class="doccomment">/// Init a huffman tree
+    </span><span class="kw">fn </span>init(num_leaves: usize) -&gt; ImageResult&lt;HuffmanTree&gt; {
+        <span class="kw">if </span>num_leaves == <span class="number">0 </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into());
         }
 
-        <span class="kw">let</span> <span class="ident">max_nodes</span> <span class="op">=</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">num_leaves</span> <span class="op">-</span> <span class="number">1</span>;
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">HuffmanTreeNode::Empty</span>; <span class="ident">max_nodes</span>];
-        <span class="kw">let</span> <span class="ident">num_nodes</span> <span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">let </span>max_nodes = <span class="number">2 </span>* num_leaves - <span class="number">1</span>;
+        <span class="kw">let </span>tree = <span class="macro">vec!</span>[HuffmanTreeNode::Empty; max_nodes];
+        <span class="kw">let </span>num_nodes = <span class="number">1</span>;
 
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">HuffmanTree</span> {
-            <span class="ident">tree</span>,
-            <span class="ident">max_nodes</span>,
-            <span class="ident">num_nodes</span>,
+        <span class="kw">let </span>tree = HuffmanTree {
+            tree,
+            max_nodes,
+            num_nodes,
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">tree</span>)
+        <span class="prelude-val">Ok</span>(tree)
     }
 
-    <span class="doccomment">/// Converts code lengths to codes</span>
-    <span class="kw">fn</span> <span class="ident">code_lengths_to_codes</span>(<span class="ident">code_lengths</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>]) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">max_code_length</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">code_lengths</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">reduce</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">a</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">b</span> { <span class="ident">a</span> } <span class="kw">else</span> { <span class="ident">b</span> })
-            .<span class="ident">unwrap</span>();
+    <span class="doccomment">/// Converts code lengths to codes
+    </span><span class="kw">fn </span>code_lengths_to_codes(code_lengths: <span class="kw-2">&amp;</span>[u16]) -&gt; ImageResult&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;u16&gt;&gt;&gt; {
+        <span class="kw">let </span>max_code_length = <span class="kw-2">*</span>code_lengths
+            .iter()
+            .reduce(|a, b| <span class="kw">if </span>a &gt;= b { a } <span class="kw">else </span>{ b })
+            .unwrap();
 
-        <span class="kw">if</span> <span class="ident">max_code_length</span> <span class="op">&gt;</span> <span class="ident">MAX_ALLOWED_CODE_LENGTH</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>());
+        <span class="kw">if </span>max_code_length &gt; MAX_ALLOWED_CODE_LENGTH.try_into().unwrap() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into());
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">code_length_hist</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">MAX_ALLOWED_CODE_LENGTH</span> <span class="op">+</span> <span class="number">1</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>code_length_hist = <span class="macro">vec!</span>[<span class="number">0</span>; MAX_ALLOWED_CODE_LENGTH + <span class="number">1</span>];
 
-        <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">length</span> <span class="kw">in</span> <span class="ident">code_lengths</span>.<span class="ident">iter</span>() {
-            <span class="ident">code_length_hist</span>[<span class="ident">usize::from</span>(<span class="ident">length</span>)] <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">for </span><span class="kw-2">&amp;</span>length <span class="kw">in </span>code_lengths.iter() {
+            code_length_hist[usize::from(length)] += <span class="number">1</span>;
         }
 
-        <span class="ident">code_length_hist</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">0</span>;
+        code_length_hist[<span class="number">0</span>] = <span class="number">0</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">curr_code</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_codes</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="prelude-val">None</span>; <span class="ident">MAX_ALLOWED_CODE_LENGTH</span> <span class="op">+</span> <span class="number">1</span>];
+        <span class="kw">let </span><span class="kw-2">mut </span>curr_code = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>next_codes = <span class="macro">vec!</span>[<span class="prelude-val">None</span>; MAX_ALLOWED_CODE_LENGTH + <span class="number">1</span>];
 
-        <span class="kw">for</span> <span class="ident">code_len</span> <span class="kw">in</span> <span class="number">1</span>..<span class="op">=</span><span class="ident">usize::from</span>(<span class="ident">max_code_length</span>) {
-            <span class="ident">curr_code</span> <span class="op">=</span> (<span class="ident">curr_code</span> <span class="op">+</span> <span class="ident">code_length_hist</span>[<span class="ident">code_len</span> <span class="op">-</span> <span class="number">1</span>]) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">1</span>;
-            <span class="ident">next_codes</span>[<span class="ident">code_len</span>] <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">curr_code</span>);
+        <span class="kw">for </span>code_len <span class="kw">in </span><span class="number">1</span>..=usize::from(max_code_length) {
+            curr_code = (curr_code + code_length_hist[code_len - <span class="number">1</span>]) &lt;&lt; <span class="number">1</span>;
+            next_codes[code_len] = <span class="prelude-val">Some</span>(curr_code);
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">huff_codes</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="prelude-val">None</span>; <span class="ident">code_lengths</span>.<span class="ident">len</span>()];
+        <span class="kw">let </span><span class="kw-2">mut </span>huff_codes = <span class="macro">vec!</span>[<span class="prelude-val">None</span>; code_lengths.len()];
 
-        <span class="kw">for</span> (<span class="ident">symbol</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>) <span class="kw">in</span> <span class="ident">code_lengths</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">length</span>);
-            <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                <span class="ident">huff_codes</span>[<span class="ident">symbol</span>] <span class="op">=</span> <span class="ident">next_codes</span>[<span class="ident">length</span>];
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">next_codes</span>[<span class="ident">length</span>].<span class="ident">as_mut</span>() {
-                    <span class="kw-2">*</span><span class="ident">value</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">for </span>(symbol, <span class="kw-2">&amp;</span>length) <span class="kw">in </span>code_lengths.iter().enumerate() {
+            <span class="kw">let </span>length = usize::from(length);
+            <span class="kw">if </span>length &gt; <span class="number">0 </span>{
+                huff_codes[symbol] = next_codes[length];
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = next_codes[length].as_mut() {
+                    <span class="kw-2">*</span>value += <span class="number">1</span>;
                 }
-            } <span class="kw">else</span> {
-                <span class="ident">huff_codes</span>[<span class="ident">symbol</span>] <span class="op">=</span> <span class="prelude-val">None</span>;
+            } <span class="kw">else </span>{
+                huff_codes[symbol] = <span class="prelude-val">None</span>;
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">huff_codes</span>)
+        <span class="prelude-val">Ok</span>(huff_codes)
     }
 
-    <span class="doccomment">/// Adds a symbol to a huffman tree</span>
-    <span class="kw">fn</span> <span class="ident">add_symbol</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">u16</span>, <span class="ident">code_length</span>: <span class="ident">u16</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node_index</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">usize::from</span>(<span class="ident">code</span>);
+    <span class="doccomment">/// Adds a symbol to a huffman tree
+    </span><span class="kw">fn </span>add_symbol(<span class="kw-2">&amp;mut </span><span class="self">self</span>, symbol: u16, code: u16, code_length: u16) -&gt; ImageResult&lt;()&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>node_index = <span class="number">0</span>;
+        <span class="kw">let </span>code = usize::from(code);
 
-        <span class="kw">for</span> <span class="ident">length</span> <span class="kw">in</span> (<span class="number">0</span>..<span class="ident">code_length</span>).<span class="ident">rev</span>() {
-            <span class="kw">if</span> <span class="ident">node_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">max_nodes</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>());
+        <span class="kw">for </span>length <span class="kw">in </span>(<span class="number">0</span>..code_length).rev() {
+            <span class="kw">if </span>node_index &gt;= <span class="self">self</span>.max_nodes {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into());
             }
 
-            <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tree</span>[<span class="ident">node_index</span>];
+            <span class="kw">let </span>node = <span class="self">self</span>.tree[node_index];
 
-            <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span> {
-                <span class="ident">HuffmanTreeNode::Empty</span> =&gt; {
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_full</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>());
+            <span class="kw">let </span>offset = <span class="kw">match </span>node {
+                HuffmanTreeNode::Empty =&gt; {
+                    <span class="kw">if </span><span class="self">self</span>.is_full() {
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into());
                     }
-                    <span class="self">self</span>.<span class="ident">assign_children</span>(<span class="ident">node_index</span>)
+                    <span class="self">self</span>.assign_children(node_index)
                 }
-                <span class="ident">HuffmanTreeNode::Leaf</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>()),
-                <span class="ident">HuffmanTreeNode::Branch</span>(<span class="ident">offset</span>) =&gt; <span class="ident">offset</span>,
+                HuffmanTreeNode::Leaf(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into()),
+                HuffmanTreeNode::Branch(offset) =&gt; offset,
             };
 
-            <span class="ident">node_index</span> <span class="op">+</span><span class="op">=</span> <span class="ident">offset</span> <span class="op">+</span> ((<span class="ident">code</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">length</span>) <span class="op">&amp;</span> <span class="number">1</span>);
+            node_index += offset + ((code &gt;&gt; length) &amp; <span class="number">1</span>);
         }
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tree</span>[<span class="ident">node_index</span>] {
-            <span class="ident">HuffmanTreeNode::Empty</span> =&gt; <span class="self">self</span>.<span class="ident">tree</span>[<span class="ident">node_index</span>] <span class="op">=</span> <span class="ident">HuffmanTreeNode::Leaf</span>(<span class="ident">symbol</span>),
-            <span class="ident">HuffmanTreeNode::Leaf</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>()),
-            <span class="ident">HuffmanTreeNode::Branch</span>(<span class="ident">_offset</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>()),
+        <span class="kw">match </span><span class="self">self</span>.tree[node_index] {
+            HuffmanTreeNode::Empty =&gt; <span class="self">self</span>.tree[node_index] = HuffmanTreeNode::Leaf(symbol),
+            HuffmanTreeNode::Leaf(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into()),
+            HuffmanTreeNode::Branch(_offset) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into()),
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Builds a tree implicitly, just from code lengths</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">build_implicit</span>(<span class="ident">code_lengths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">HuffmanTree</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">num_symbols</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root_symbol</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="doccomment">/// Builds a tree implicitly, just from code lengths
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>build_implicit(code_lengths: Vec&lt;u16&gt;) -&gt; ImageResult&lt;HuffmanTree&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>num_symbols = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>root_symbol = <span class="number">0</span>;
 
-        <span class="kw">for</span> <span class="ident">symbol</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">code_lengths</span>.<span class="ident">len</span>() {
-            <span class="kw">if</span> <span class="ident">code_lengths</span>[<span class="ident">symbol</span>] <span class="op">&gt;</span> <span class="number">0</span> {
-                <span class="ident">num_symbols</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-                <span class="ident">root_symbol</span> <span class="op">=</span> <span class="ident">symbol</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>();
+        <span class="kw">for </span>symbol <span class="kw">in </span><span class="number">0</span>..code_lengths.len() {
+            <span class="kw">if </span>code_lengths[symbol] &gt; <span class="number">0 </span>{
+                num_symbols += <span class="number">1</span>;
+                root_symbol = symbol.try_into().unwrap();
             }
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">HuffmanTree::init</span>(<span class="ident">num_symbols</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>tree = HuffmanTree::init(num_symbols)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">num_symbols</span> <span class="op">==</span> <span class="number">1</span> {
-            <span class="ident">tree</span>.<span class="ident">add_symbol</span>(<span class="ident">root_symbol</span>, <span class="number">0</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">codes</span> <span class="op">=</span> <span class="ident">HuffmanTree::code_lengths_to_codes</span>(<span class="kw-2">&amp;</span><span class="ident">code_lengths</span>)<span class="question-mark">?</span>;
+        <span class="kw">if </span>num_symbols == <span class="number">1 </span>{
+            tree.add_symbol(root_symbol, <span class="number">0</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>codes = HuffmanTree::code_lengths_to_codes(<span class="kw-2">&amp;</span>code_lengths)<span class="question-mark">?</span>;
 
-            <span class="kw">for</span> (<span class="ident">symbol</span>, <span class="kw-2">&amp;</span><span class="ident">length</span>) <span class="kw">in</span> <span class="ident">code_lengths</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="ident">length</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">codes</span>[<span class="ident">symbol</span>].<span class="ident">is_some</span>() {
-                    <span class="ident">tree</span>.<span class="ident">add_symbol</span>(<span class="ident">symbol</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(), <span class="ident">codes</span>[<span class="ident">symbol</span>].<span class="ident">unwrap</span>(), <span class="ident">length</span>)<span class="question-mark">?</span>;
+            <span class="kw">for </span>(symbol, <span class="kw-2">&amp;</span>length) <span class="kw">in </span>code_lengths.iter().enumerate() {
+                <span class="kw">if </span>length &gt; <span class="number">0 </span>&amp;&amp; codes[symbol].is_some() {
+                    tree.add_symbol(symbol.try_into().unwrap(), codes[symbol].unwrap(), length)<span class="question-mark">?</span>;
                 }
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">tree</span>)
+        <span class="prelude-val">Ok</span>(tree)
     }
 
-    <span class="doccomment">/// Builds a tree explicitly from lengths, codes and symbols</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">build_explicit</span>(
-        <span class="ident">code_lengths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-        <span class="ident">codes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-        <span class="ident">symbols</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">HuffmanTree</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">HuffmanTree::init</span>(<span class="ident">symbols</span>.<span class="ident">len</span>())<span class="question-mark">?</span>;
+    <span class="doccomment">/// Builds a tree explicitly from lengths, codes and symbols
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>build_explicit(
+        code_lengths: Vec&lt;u16&gt;,
+        codes: Vec&lt;u16&gt;,
+        symbols: Vec&lt;u16&gt;,
+    ) -&gt; ImageResult&lt;HuffmanTree&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>tree = HuffmanTree::init(symbols.len())<span class="question-mark">?</span>;
 
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">symbols</span>.<span class="ident">len</span>() {
-            <span class="ident">tree</span>.<span class="ident">add_symbol</span>(<span class="ident">symbols</span>[<span class="ident">i</span>], <span class="ident">codes</span>[<span class="ident">i</span>], <span class="ident">code_lengths</span>[<span class="ident">i</span>])<span class="question-mark">?</span>;
+        <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..symbols.len() {
+            tree.add_symbol(symbols[i], codes[i], code_lengths[i])<span class="question-mark">?</span>;
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">tree</span>)
+        <span class="prelude-val">Ok</span>(tree)
     }
 
-    <span class="doccomment">/// Reads a symbol using the bitstream</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">read_symbol</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">bit_reader</span>: <span class="kw-2">&amp;mut</span> <span class="ident">BitReader</span>) -&gt; <span class="ident">ImageResult</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tree</span>[<span class="ident">index</span>];
+    <span class="doccomment">/// Reads a symbol using the bitstream
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>read_symbol(<span class="kw-2">&amp;</span><span class="self">self</span>, bit_reader: <span class="kw-2">&amp;mut </span>BitReader) -&gt; ImageResult&lt;u16&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>index = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>node = <span class="self">self</span>.tree[index];
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="ident">HuffmanTreeNode::Branch</span>(<span class="ident">children_offset</span>) <span class="op">=</span> <span class="ident">node</span> {
-            <span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="ident">children_offset</span> <span class="op">+</span> <span class="ident">bit_reader</span>.<span class="ident">read_bits</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(<span class="number">1</span>)<span class="question-mark">?</span>;
-            <span class="ident">node</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tree</span>[<span class="ident">index</span>];
+        <span class="kw">while let </span>HuffmanTreeNode::Branch(children_offset) = node {
+            index += children_offset + bit_reader.read_bits::&lt;usize&gt;(<span class="number">1</span>)<span class="question-mark">?</span>;
+            node = <span class="self">self</span>.tree[index];
         }
 
-        <span class="kw">let</span> <span class="ident">symbol</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span> {
-            <span class="ident">HuffmanTreeNode::Branch</span>(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
-            <span class="ident">HuffmanTreeNode::Empty</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DecoderError::HuffmanError</span>.<span class="ident">into</span>()),
-            <span class="ident">HuffmanTreeNode::Leaf</span>(<span class="ident">symbol</span>) =&gt; <span class="ident">symbol</span>,
+        <span class="kw">let </span>symbol = <span class="kw">match </span>node {
+            HuffmanTreeNode::Branch(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+            HuffmanTreeNode::Empty =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HuffmanError.into()),
+            HuffmanTreeNode::Leaf(symbol) =&gt; symbol,
         };
 
-        <span class="prelude-val">Ok</span>(<span class="ident">symbol</span>)
+        <span class="prelude-val">Ok</span>(symbol)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0 (4b91a6ea7 2022-08-08)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="image" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>
