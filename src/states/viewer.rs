@@ -25,6 +25,12 @@ pub struct Viewer {
 
     #[by(
         wait(timeout_ms = 8000, interval_ms = 300),
+        css = "a[class^=ViewerFooter_footer__orient__]"
+    )]
+    orient_button: ElementResolver<WebElement>,
+
+    #[by(
+        wait(timeout_ms = 8000, interval_ms = 300),
         css = "[class^=ViewerFooter_footer__tableOfContents__]"
     )]
     toc_button: ElementResolver<WebElement>,
@@ -74,6 +80,8 @@ impl Viewer {
         let mut downloaded_image_paths = vec![];
         let tempdir = spawn_blocking(|| TempDir::new()).await??;
 
+        self.toggle_horizontal().await?;
+
         let number_of_pages = self.number_of_pages().await?;
         update_progress(Progress {
             done: 0,
@@ -112,6 +120,11 @@ impl Viewer {
             tempdir,
             image_paths: downloaded_image_paths,
         })
+    }
+
+    async fn toggle_horizontal(&self) -> Result<()> {
+        let orient_button = self.orient_button.resolve().await?;
+        orient_button.click().await.map_err(Into::into)
     }
 
     pub async fn fetch_toc_entries(&self) -> Result<Vec<TocEntry>> {

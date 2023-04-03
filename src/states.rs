@@ -89,7 +89,51 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_viewer_download() -> Result<()> {
+    async fn test_viewer_download_double() -> Result<()> {
+        const NORMAL_PAGE_COUNT_RANGE: std::ops::RangeInclusive<usize> = 7..=10;
+
+        let download_output = with_driver(|driver| async move {
+            let viewer = Viewer::new_from_driver(&driver, ViewerLocation::new_manga(30445)).await?;
+            let _download_output = viewer.download_imgs(&driver, |_| {}).await?;
+
+            let viewer = Viewer::new_from_driver(&driver, ViewerLocation::new_manga(30445)).await?;
+            let download_output = viewer.download_imgs(&driver, |_| {}).await?;
+            Result::<DownloadOutput>::Ok(download_output)
+        })
+        .await?
+        .context("Driver early cacnel")??;
+
+        assert!(
+            NORMAL_PAGE_COUNT_RANGE.contains(&download_output.image_paths().len()),
+            "The number of downloaded files is abnormal"
+        );
+
+        let entries: std::io::Result<Vec<_>> =
+            fs::read_dir(download_output.tempdir.path())?.collect();
+        let entries = entries?;
+
+        assert!(
+            NORMAL_PAGE_COUNT_RANGE.contains(&entries.len()),
+            "The number of downloaded files is abnormal"
+        );
+
+        // check that downloaded images are valid jpegs
+        for entry in entries {
+            let image_bytes = fs::read(entry.path())?;
+            assert_ne!(image_bytes.len(), 0, "Downloaded image has length 0");
+            let guessed_format = image::guess_format(&image_bytes)?;
+            assert_eq!(
+                guessed_format,
+                image::ImageFormat::Jpeg,
+                "Downloaded image is not guessed as Jpeg by image::guess_format"
+            );
+        }
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_viewer_download_single() -> Result<()> {
         const NORMAL_PAGE_COUNT_RANGE: std::ops::RangeInclusive<usize> = 7..=10;
 
         let download_output = with_driver(|driver| async move {
