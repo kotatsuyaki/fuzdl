@@ -104,10 +104,10 @@ async fn create_driver() -> Result<WebDriver> {
         .await
         .context("Failed to create WebDriver")?;
 
-    // The width 1920/2 (which is small enough)
-    // prevents Fuz from showing two manga pages at once
+    // The width 1920/3 (which is small enough)
+    // prevents Fuz from showing two manga pages at once.
     driver
-        .set_window_rect(0, 0, 1920 / 2, 1080)
+        .set_window_rect(0, 0, 1920 / 3, 1080)
         .await
         .context("Failed to set window rect")?;
 

@@ -94,7 +94,7 @@ impl Viewer {
             let img = self
                 .body
                 .query(By::Css(&img_css_selector))
-                .wait(Duration::from_secs(1), Duration::from_millis(100))
+                .wait(Duration::from_secs(10), Duration::from_millis(100))
                 .single()
                 .await?;
 
@@ -123,7 +123,9 @@ impl Viewer {
     }
 
     async fn toggle_horizontal(&self) -> Result<()> {
-        let orient_button = self.orient_button.resolve().await?;
+        let Ok(orient_button) = self.orient_button.resolve().await else {
+            return Ok(())
+        };
         orient_button.click().await.map_err(Into::into)
     }
 
