@@ -14,7 +14,7 @@
       {
         defaultPackage = naersk-lib.buildPackage {
           src = ./.;
-          buildInputs = [ pkgs.chromedriver ];
+          buildInputs = [ pkgs.chromedriver pkgs.chromium ];
         };
 
         defaultApp = utils.lib.mkApp {
@@ -32,6 +32,7 @@
             rnix-lsp
             taplo-cli
             chromedriver
+            chromium
           ];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };
