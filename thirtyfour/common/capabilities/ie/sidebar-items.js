@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["InternetExplorerCapabilities",""]]};
+window.SIDEBAR_ITEMS = {"struct":["InternetExplorerCapabilities"]};

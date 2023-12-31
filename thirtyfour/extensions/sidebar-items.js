@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["addons","Extensions for working with Firefox Addons."],["cdp","Extensions for Chrome Devtools Protocol"],["query","Advanced query interface featuring powerful filtering and polling options."]]};
+window.SIDEBAR_ITEMS = {"mod":["addons","cdp","query"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["OCGList",""],["OCGRef",""]]};
+window.SIDEBAR_ITEMS = {"struct":["OCGList","OCGRef"]};

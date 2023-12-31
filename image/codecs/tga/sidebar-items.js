@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["TgaDecoder","A decoder for TGA images"],["TgaEncoder","TGA encoder."]]};
+window.SIDEBAR_ITEMS = {"struct":["TgaDecoder","TgaEncoder"]};

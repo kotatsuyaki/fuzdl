@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Manga",""],["MangaBook",""],["MangaChapter",""],["MangaChapterElement",""],["MangaPointConsumption",""]]};
+window.SIDEBAR_ITEMS = {"struct":["Manga","MangaBook","MangaChapter","MangaChapterElement","MangaPointConsumption"]};

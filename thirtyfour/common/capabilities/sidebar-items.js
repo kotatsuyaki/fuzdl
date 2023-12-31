@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["chrome",""],["desiredcapabilities",""],["edge",""],["firefox",""],["ie",""],["opera",""],["safari",""]]};
+window.SIDEBAR_ITEMS = {"mod":["chrome","desiredcapabilities","edge","firefox","ie","opera","safari"]};

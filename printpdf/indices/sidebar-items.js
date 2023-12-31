@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["FontIndex","Index of a font"],["PdfContentIndex","Index of the arbitrary content data"],["PdfLayerIndex","Index of the layer on the nth page"],["PdfPageIndex","Index of the page (0-based)"],["SvgIndex","Index of a svg file"]]};
+window.SIDEBAR_ITEMS = {"struct":["FontIndex","PdfContentIndex","PdfLayerIndex","PdfPageIndex","SvgIndex"]};

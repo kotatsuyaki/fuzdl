@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["LegacyNewSessionParameters",""],["SpecNewSessionParameters",""]],"trait":[["BrowserCapabilities","Trait for objects that can be used to inspect browser capabilities"],["CapabilitiesMatching","Trait to abstract over various version of the new session parameters"]],"type":[["Capabilities",""]]};
+window.SIDEBAR_ITEMS = {"struct":["LegacyNewSessionParameters","SpecNewSessionParameters"],"trait":["BrowserCapabilities","CapabilitiesMatching"],"type":["Capabilities"]};

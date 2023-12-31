@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":[["resolve_all","Concurrently run `.resolve()` on all input [`ElementResolver`]s, returning a `Result<(WebElement, WebElement, ...)>`."]],"mod":[["book",""],["magazine",""],["manga",""],["purchased",""],["signin",""],["viewer",""]],"trait":[["BodyQueryable",""]]};
+window.SIDEBAR_ITEMS = {"macro":["resolve_all"],"mod":["book","magazine","manga","purchased","signin","viewer"],"trait":["BodyQueryable"]};

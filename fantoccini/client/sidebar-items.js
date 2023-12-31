@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Client","A WebDriver client tied to a single browser session."],["NewWindowResponse","Response returned by [`Client::new_window()`] method."]]};
+window.SIDEBAR_ITEMS = {"struct":["Client","NewWindowResponse"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["StringMatchLength",""]],"struct":[["StringMatch",""]],"trait":[["Needle",""],["NeedleIter",""],["StringMatchable",""]]};
+window.SIDEBAR_ITEMS = {"enum":["StringMatchLength"],"struct":["StringMatch"],"trait":["Needle","NeedleIter","StringMatchable"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["FirefoxCommand",""]],"struct":[["FirefoxTools",""]]};
+window.SIDEBAR_ITEMS = {"enum":["FirefoxCommand"],"struct":["FirefoxTools"]};

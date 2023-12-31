@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Alert","Struct for managing alerts."]]};
+window.SIDEBAR_ITEMS = {"struct":["Alert"]};

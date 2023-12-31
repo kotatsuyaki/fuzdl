@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["PdfDocument","PDF document"],["PdfDocumentReference","Marker struct for a document. Used to make the API a bit nicer. It simply calls `PdfDocument` functions."]]};
+window.SIDEBAR_ITEMS = {"struct":["PdfDocument","PdfDocumentReference"]};

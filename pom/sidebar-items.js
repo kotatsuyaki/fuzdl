@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Error","Parser error."]],"mod":[["char_class","Utility functions to recognize char class of byte value."],["parser","Constains predefined parsers and combinators."],["range",""],["set",""]],"type":[["Parser","Parser type, `Parser<I, O>` is alias of `parser::Parser<'static, I, O>`."],["Result","Parser result, `Result<O>` ia alias of `Result<O, pom::Error>`."]]};
+window.SIDEBAR_ITEMS = {"enum":["Error"],"mod":["char_class","parser","range","set"],"type":["Parser","Result"]};

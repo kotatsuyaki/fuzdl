@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["XmpMetadata","Initial struct for Xmp metatdata. This should be expanded later for XML handling, etc. Right now it just fills out the necessary fields"]]};
+window.SIDEBAR_ITEMS = {"struct":["XmpMetadata"]};

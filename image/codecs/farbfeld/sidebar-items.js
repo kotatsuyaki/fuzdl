@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["FarbfeldDecoder","farbfeld decoder"],["FarbfeldEncoder","farbfeld encoder"],["FarbfeldReader","farbfeld Reader"]]};
+window.SIDEBAR_ITEMS = {"struct":["FarbfeldDecoder","FarbfeldEncoder","FarbfeldReader"]};

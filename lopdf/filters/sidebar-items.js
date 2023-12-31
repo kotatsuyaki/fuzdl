@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["png",""]]};
+window.SIDEBAR_ITEMS = {"mod":["png"]};

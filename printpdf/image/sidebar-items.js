@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Image","Image - wrapper around an `ImageXObject` to allow for more control within the library"],["ImageRotation",""],["ImageTransform","Transform that is applied immediately before the image gets painted. Does not affect anything other than the image."]]};
+window.SIDEBAR_ITEMS = {"struct":["Image","ImageRotation","ImageTransform"]};

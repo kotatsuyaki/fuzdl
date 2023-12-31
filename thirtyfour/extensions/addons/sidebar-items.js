@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["firefox",""]]};
+window.SIDEBAR_ITEMS = {"mod":["firefox"]};

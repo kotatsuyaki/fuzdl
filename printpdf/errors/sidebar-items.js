@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Error",""],["IndexError",""],["PdfError",""]]};
+window.SIDEBAR_ITEMS = {"enum":["Error","IndexError","PdfError"]};

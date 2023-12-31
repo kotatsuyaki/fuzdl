@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["ChromeCapabilities",""]]};
+window.SIDEBAR_ITEMS = {"struct":["ChromeCapabilities"]};

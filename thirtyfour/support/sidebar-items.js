@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["block_on",""],["sleep",""]]};
+window.SIDEBAR_ITEMS = {"fn":["block_on","sleep"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["IcoDecoder","An ico decoder"],["IcoEncoder","ICO encoder"],["IcoFrame","An ICO image entry"]]};
+window.SIDEBAR_ITEMS = {"struct":["IcoDecoder","IcoEncoder","IcoFrame"]};

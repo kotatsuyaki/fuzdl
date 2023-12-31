@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["WebDriverResponse",""]],"struct":[["CloseWindowResponse",""],["CookieResponse",""],["CookiesResponse",""],["ElementRectResponse",""],["NewSessionResponse",""],["NewWindowResponse",""],["TimeoutsResponse",""],["ValueResponse",""],["WindowRectResponse",""]]};
+window.SIDEBAR_ITEMS = {"enum":["WebDriverResponse"],"struct":["CloseWindowResponse","CookieResponse","CookiesResponse","ElementRectResponse","NewSessionResponse","NewWindowResponse","TimeoutsResponse","ValueResponse","WindowRectResponse"]};

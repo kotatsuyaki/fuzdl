@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["tls_rng","Fetch a thread-local [`WyRand`]"]]};
+window.SIDEBAR_ITEMS = {"fn":["tls_rng"]};

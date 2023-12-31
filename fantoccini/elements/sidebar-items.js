@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Element","A single DOM element on the current page."],["ElementRef","Web element reference."],["Form","An HTML form on the current page."]]};
+window.SIDEBAR_ITEMS = {"struct":["Element","ElementRef","Form"]};

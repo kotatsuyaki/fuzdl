@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["IccProfileType","Type of the icc profile"]],"struct":[["IccProfile","Icc profile"],["IccProfileList",""],["IccProfileRef","Named reference for an ICC profile"]]};
+window.SIDEBAR_ITEMS = {"enum":["IccProfileType"],"struct":["IccProfile","IccProfileList","IccProfileRef"]};

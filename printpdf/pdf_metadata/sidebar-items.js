@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["PdfMetadata","This is a wrapper in order to keep shared data between the documents XMP metadata and the “Info” dictionary in sync"]]};
+window.SIDEBAR_ITEMS = {"struct":["PdfMetadata"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["PdfLayer","One layer of PDF data"],["PdfLayerReference","A “reference” to the current layer, allows for inner mutability but only inside this library"]]};
+window.SIDEBAR_ITEMS = {"struct":["PdfLayer","PdfLayerReference"]};

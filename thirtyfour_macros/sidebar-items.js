@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"derive":[["Component","Derive macro for a wrapped `Component`."]]};
+window.SIDEBAR_ITEMS = {"derive":["Component"]};

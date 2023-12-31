@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["BySelector",""]],"fn":[["locator_to_string",""]],"struct":[["By",""]]};
+window.SIDEBAR_ITEMS = {"enum":["BySelector"],"fn":["locator_to_string"],"struct":["By"]};

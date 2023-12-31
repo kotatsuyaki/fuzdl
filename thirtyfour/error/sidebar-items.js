@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["WebDriverError",""]],"type":[["WebDriverResult",""]]};
+window.SIDEBAR_ITEMS = {"enum":["WebDriverError"],"type":["WebDriverResult"]};

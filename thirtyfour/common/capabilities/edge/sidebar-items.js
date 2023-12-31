@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["EdgeCapabilities",""]]};
+window.SIDEBAR_ITEMS = {"struct":["EdgeCapabilities"]};

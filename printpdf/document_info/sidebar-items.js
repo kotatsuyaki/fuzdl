@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["DocumentInfo","“Info” dictionary of a PDF document. Actual data is contained in `DocumentMetadata`, to keep it in sync with the `XmpMetadata` (if the timestamps / settings are not in sync, Preflight will complain)"]]};
+window.SIDEBAR_ITEMS = {"struct":["DocumentInfo"]};

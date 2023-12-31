@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Wait","Used for setting up a wait operation on the client."]]};
+window.SIDEBAR_ITEMS = {"struct":["Wait"]};

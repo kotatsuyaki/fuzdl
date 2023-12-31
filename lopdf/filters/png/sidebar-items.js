@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["FilterType",""]],"fn":[["decode_frame",""],["decode_row",""],["encode_row",""]]};
+window.SIDEBAR_ITEMS = {"enum":["FilterType"],"fn":["decode_frame","decode_row","encode_row"]};

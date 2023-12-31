@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["Pattern","STUB"],["PatternList",""],["PatternRef","Named reference to a pattern"]]};
+window.SIDEBAR_ITEMS = {"struct":["Pattern","PatternList","PatternRef"]};

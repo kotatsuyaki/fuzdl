@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["ScriptRet","Helper struct for getting return values from scripts."]]};
+window.SIDEBAR_ITEMS = {"struct":["ScriptRet"]};
