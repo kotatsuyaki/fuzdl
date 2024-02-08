@@ -4,6 +4,8 @@
 use std::{future::Future, process::Stdio, time::Duration};
 
 use anyhow::{Context, Result};
+use serde_json::json;
+use thirtyfour::extensions::cdp::ChromeDevTools;
 use thirtyfour::{DesiredCapabilities, WebDriver};
 use tokio::process::{Child, Command};
 use tokio::{select, time};
@@ -110,6 +112,17 @@ async fn create_driver() -> Result<WebDriver> {
         .set_window_rect(0, 0, 1920 / 3, 1080)
         .await
         .context("Failed to set window rect")?;
+
+    let dev_tools = ChromeDevTools::new(driver.handle.clone());
+    dev_tools
+        .execute_cdp_with_params(
+            "Page.addScriptToEvaluateOnNewDocument",
+            json!({
+                "source": include_str!("../assets/nopify_revoke_object_url.js")
+            }),
+        )
+        .await
+        .context("Failed to nop-ify the URL.revokeObjectURL function")?;
 
     Ok(driver)
 }
