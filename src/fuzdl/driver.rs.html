@@ -113,12 +113,27 @@
 <a href="#113" id="113">113</a>
 <a href="#114" id="114">114</a>
 <a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Utilities to ensure that driver resources (e.g. driver and browser child processes) are cleaned
 //! up.
 
 </span><span class="kw">use </span>std::{future::Future, process::Stdio, time::Duration};
 
 <span class="kw">use </span>anyhow::{Context, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span>serde_json::json;
+<span class="kw">use </span>thirtyfour::extensions::cdp::ChromeDevTools;
 <span class="kw">use </span>thirtyfour::{DesiredCapabilities, WebDriver};
 <span class="kw">use </span>tokio::process::{Child, Command};
 <span class="kw">use </span>tokio::{select, time};
@@ -225,6 +240,17 @@
         .set_window_rect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1920 </span>/ <span class="number">3</span>, <span class="number">1080</span>)
         .<span class="kw">await
         </span>.context(<span class="string">&quot;Failed to set window rect&quot;</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>dev_tools = ChromeDevTools::new(driver.handle.clone());
+    dev_tools
+        .execute_cdp_with_params(
+            <span class="string">&quot;Page.addScriptToEvaluateOnNewDocument&quot;</span>,
+            <span class="macro">json!</span>({
+                <span class="string">&quot;source&quot;</span>: <span class="macro">include_str!</span>(<span class="string">&quot;../assets/nopify_revoke_object_url.js&quot;</span>)
+            }),
+        )
+        .<span class="kw">await
+        </span>.context(<span class="string">&quot;Failed to nop-ify the URL.revokeObjectURL function&quot;</span>)<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(driver)
 }
