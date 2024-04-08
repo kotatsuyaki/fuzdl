@@ -29,7 +29,6 @@
             pre-commit
             rustPackages.clippy
             rust-analyzer
-            rnix-lsp
             taplo-cli
             chromedriver
             chromium
