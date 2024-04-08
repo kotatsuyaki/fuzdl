@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/document.rs`."><title>document.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/document.rs`."><title>document.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../lopdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -501,7 +503,7 @@
     <span class="doccomment">/// Create new PDF document.
     </span><span class="kw">pub fn </span>new() -&gt; Document {
         Document {
-            version: <span class="string">&quot;1.4&quot;</span>.to_string(),
+            version: <span class="string">"1.4"</span>.to_string(),
             trailer: Dictionary::new(),
             reference_table: Xref::new(<span class="number">0</span>),
             objects: BTreeMap::new(),
@@ -558,7 +560,7 @@
     /// The object id will be None if the object was not a
     /// reference. Otherwise, it will be the last object id in the
     /// reference chain.
-    </span><span class="kw">pub fn </span>dereference&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, <span class="kw-2">mut </span>object: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Object) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="prelude-ty">Option</span>&lt;ObjectId&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Object)&gt; {
+    </span><span class="kw">pub fn </span>dereference&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, <span class="kw-2">mut </span>object: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Object) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="prelude-ty">Option</span>&lt;ObjectId&gt;, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Object)&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>nb_deref = <span class="number">0</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>id = <span class="prelude-val">None</span>;
 
@@ -593,7 +595,7 @@
     </span><span class="kw">pub fn </span>get_object_page(<span class="kw-2">&amp;</span><span class="self">self</span>, id: ObjectId) -&gt; <span class="prelude-ty">Result</span>&lt;ObjectId&gt; {
         <span class="kw">for </span>(<span class="kw">_</span>, object_id) <span class="kw">in </span><span class="self">self</span>.get_pages() {
             <span class="kw">let </span>page = <span class="self">self</span>.get_object(object_id)<span class="question-mark">?</span>.as_dict()<span class="question-mark">?</span>;
-            <span class="kw">let </span>annots = page.get(<span class="string">b&quot;Annots&quot;</span>)<span class="question-mark">?</span>.as_array()<span class="question-mark">?</span>;
+            <span class="kw">let </span>annots = page.get(<span class="string">b"Annots"</span>)<span class="question-mark">?</span>.as_array()<span class="question-mark">?</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>objects_ids = annots.iter().map(Object::as_reference);
 
             <span class="kw">let </span>contains = objects_ids.any(|object_id| {
@@ -656,7 +658,7 @@
     <span class="doccomment">/// Get catalog dictionary.
     </span><span class="kw">pub fn </span>catalog(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Dictionary&gt; {
         <span class="self">self</span>.trailer
-            .get(<span class="string">b&quot;Root&quot;</span>)
+            .get(<span class="string">b"Root"</span>)
             .and_then(Object::as_reference)
             .and_then(|id| <span class="self">self</span>.get_dictionary(id))
     }
@@ -666,7 +668,7 @@
         <span class="self">self</span>.page_iter().enumerate().map(|(i, p)| ((i + <span class="number">1</span>) <span class="kw">as </span>u32, p)).collect()
     }
 
-    <span class="kw">pub fn </span>page_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ObjectId&gt; + <span class="lifetime">&#39;_ </span>{
+    <span class="kw">pub fn </span>page_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ObjectId&gt; + <span class="lifetime">'_ </span>{
         PageTreeIter::new(<span class="self">self</span>)
     }
 
@@ -674,7 +676,7 @@
     </span><span class="kw">pub fn </span>get_page_contents(<span class="kw-2">&amp;</span><span class="self">self</span>, page_id: ObjectId) -&gt; Vec&lt;ObjectId&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>streams = <span class="macro">vec!</span>[];
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(page) = <span class="self">self</span>.get_dictionary(page_id) {
-            <span class="kw">if let </span><span class="prelude-val">Ok</span>(contents) = page.get(<span class="string">b&quot;Contents&quot;</span>) {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(contents) = page.get(<span class="string">b"Contents"</span>) {
                 <span class="kw">match </span><span class="kw-2">*</span>contents {
                     Object::Reference(<span class="kw-2">ref </span>id) =&gt; {
                         streams.push(<span class="kw-2">*</span>id);
@@ -711,11 +713,11 @@
     <span class="doccomment">/// Get resources used by a page.
     </span><span class="kw">pub fn </span>get_page_resources(<span class="kw-2">&amp;</span><span class="self">self</span>, page_id: ObjectId) -&gt; (<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Dictionary&gt;, Vec&lt;ObjectId&gt;) {
         <span class="kw">fn </span>collect_resources(page_node: <span class="kw-2">&amp;</span>Dictionary, resource_ids: <span class="kw-2">&amp;mut </span>Vec&lt;ObjectId&gt;, doc: <span class="kw-2">&amp;</span>Document) {
-            <span class="kw">if let </span><span class="prelude-val">Ok</span>(resources_id) = page_node.get(<span class="string">b&quot;Resources&quot;</span>).and_then(Object::as_reference) {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(resources_id) = page_node.get(<span class="string">b"Resources"</span>).and_then(Object::as_reference) {
                 resource_ids.push(resources_id);
             }
             <span class="kw">if let </span><span class="prelude-val">Ok</span>(page_tree) = page_node
-                .get(<span class="string">b&quot;Parent&quot;</span>)
+                .get(<span class="string">b"Parent"</span>)
                 .and_then(Object::as_reference)
                 .and_then(|id| doc.get_dictionary(id))
             {
@@ -726,7 +728,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>resource_dict = <span class="prelude-val">None</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>resource_ids = Vec::new();
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(page) = <span class="self">self</span>.get_dictionary(page_id) {
-            resource_dict = page.get(<span class="string">b&quot;Resources&quot;</span>).and_then(Object::as_dict).ok();
+            resource_dict = page.get(<span class="string">b"Resources"</span>).and_then(Object::as_dict).ok();
             collect_resources(page, <span class="kw-2">&amp;mut </span>resource_ids, <span class="self">self</span>);
         }
         (resource_dict, resource_ids)
@@ -734,10 +736,10 @@
 
     <span class="doccomment">/// Get fonts used by a page.
     </span><span class="kw">pub fn </span>get_page_fonts(<span class="kw-2">&amp;</span><span class="self">self</span>, page_id: ObjectId) -&gt; BTreeMap&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span>Dictionary&gt; {
-        <span class="kw">fn </span>collect_fonts_from_resources&lt;<span class="lifetime">&#39;a</span>&gt;(
-            resources: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Dictionary, fonts: <span class="kw-2">&amp;mut </span>BTreeMap&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Dictionary&gt;, doc: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Document,
+        <span class="kw">fn </span>collect_fonts_from_resources&lt;<span class="lifetime">'a</span>&gt;(
+            resources: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Dictionary, fonts: <span class="kw-2">&amp;mut </span>BTreeMap&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Dictionary&gt;, doc: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Document,
         ) {
-            <span class="kw">if let </span><span class="prelude-val">Ok</span>(font_dict) = resources.get(<span class="string">b&quot;Font&quot;</span>).and_then(Object::as_dict) {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(font_dict) = resources.get(<span class="string">b"Font"</span>).and_then(Object::as_dict) {
                 <span class="kw">for </span>(name, value) <span class="kw">in </span>font_dict.iter() {
                     <span class="kw">let </span>font = <span class="kw">match </span><span class="kw-2">*</span>value {
                         Object::Reference(id) =&gt; doc.get_dictionary(id).ok(),
@@ -766,14 +768,14 @@
 
     <span class="kw">pub fn </span>decode_text(encoding: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; String {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(encoding) = encoding {
-            <span class="macro">info!</span>(<span class="string">&quot;{}&quot;</span>, encoding);
+            <span class="macro">info!</span>(<span class="string">"{}"</span>, encoding);
             <span class="kw">match </span>encoding {
-                <span class="string">&quot;StandardEncoding&quot; </span>=&gt; bytes_to_string(encodings::STANDARD_ENCODING, bytes),
-                <span class="string">&quot;MacRomanEncoding&quot; </span>=&gt; bytes_to_string(encodings::MAC_ROMAN_ENCODING, bytes),
-                <span class="string">&quot;MacExpertEncoding&quot; </span>=&gt; bytes_to_string(encodings::MAC_EXPERT_ENCODING, bytes),
-                <span class="string">&quot;WinAnsiEncoding&quot; </span>=&gt; bytes_to_string(encodings::WIN_ANSI_ENCODING, bytes),
-                <span class="string">&quot;UniGB-UCS2-H&quot; </span>| <span class="string">&quot;UniGB−UTF16−H&quot; </span>=&gt; UTF_16BE.decode(bytes, DecoderTrap::Ignore).unwrap(),
-                <span class="string">&quot;Identity-H&quot; </span>=&gt; <span class="string">&quot;?Identity-H Unimplemented?&quot;</span>.to_string(), <span class="comment">// Unimplemented
+                <span class="string">"StandardEncoding" </span>=&gt; bytes_to_string(encodings::STANDARD_ENCODING, bytes),
+                <span class="string">"MacRomanEncoding" </span>=&gt; bytes_to_string(encodings::MAC_ROMAN_ENCODING, bytes),
+                <span class="string">"MacExpertEncoding" </span>=&gt; bytes_to_string(encodings::MAC_EXPERT_ENCODING, bytes),
+                <span class="string">"WinAnsiEncoding" </span>=&gt; bytes_to_string(encodings::WIN_ANSI_ENCODING, bytes),
+                <span class="string">"UniGB-UCS2-H" </span>| <span class="string">"UniGB−UTF16−H" </span>=&gt; UTF_16BE.decode(bytes, DecoderTrap::Ignore).unwrap(),
+                <span class="string">"Identity-H" </span>=&gt; <span class="string">"?Identity-H Unimplemented?"</span>.to_string(), <span class="comment">// Unimplemented
                 </span><span class="kw">_ </span>=&gt; String::from_utf8_lossy(bytes).to_string(),
             }
         } <span class="kw">else </span>{
@@ -784,12 +786,12 @@
     <span class="kw">pub fn </span>encode_text(encoding: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, text: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;u8&gt; {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(encoding) = encoding {
             <span class="kw">match </span>encoding {
-                <span class="string">&quot;StandardEncoding&quot; </span>=&gt; string_to_bytes(encodings::STANDARD_ENCODING, text),
-                <span class="string">&quot;MacRomanEncoding&quot; </span>=&gt; string_to_bytes(encodings::MAC_ROMAN_ENCODING, text),
-                <span class="string">&quot;MacExpertEncoding&quot; </span>=&gt; string_to_bytes(encodings::MAC_EXPERT_ENCODING, text),
-                <span class="string">&quot;WinAnsiEncoding&quot; </span>=&gt; string_to_bytes(encodings::WIN_ANSI_ENCODING, text),
-                <span class="string">&quot;UniGB-UCS2-H&quot; </span>| <span class="string">&quot;UniGB−UTF16−H&quot; </span>=&gt; UTF_16BE.encode(text, EncoderTrap::Ignore).unwrap(),
-                <span class="string">&quot;Identity-H&quot; </span>=&gt; <span class="macro">vec!</span>[], <span class="comment">// Unimplemented
+                <span class="string">"StandardEncoding" </span>=&gt; string_to_bytes(encodings::STANDARD_ENCODING, text),
+                <span class="string">"MacRomanEncoding" </span>=&gt; string_to_bytes(encodings::MAC_ROMAN_ENCODING, text),
+                <span class="string">"MacExpertEncoding" </span>=&gt; string_to_bytes(encodings::MAC_EXPERT_ENCODING, text),
+                <span class="string">"WinAnsiEncoding" </span>=&gt; string_to_bytes(encodings::WIN_ANSI_ENCODING, text),
+                <span class="string">"UniGB-UCS2-H" </span>| <span class="string">"UniGB−UTF16−H" </span>=&gt; UTF_16BE.encode(text, EncoderTrap::Ignore).unwrap(),
+                <span class="string">"Identity-H" </span>=&gt; <span class="macro">vec!</span>[], <span class="comment">// Unimplemented
                 </span><span class="kw">_ </span>=&gt; text.as_bytes().to_vec(),
             }
         } <span class="kw">else </span>{
@@ -804,20 +806,20 @@
     }
 }
 
-<span class="kw">struct </span>PageTreeIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    doc: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Document,
-    stack: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Object]&gt;,
-    kids: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Object]&gt;,
+<span class="kw">struct </span>PageTreeIter&lt;<span class="lifetime">'a</span>&gt; {
+    doc: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Document,
+    stack: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[Object]&gt;,
+    kids: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[Object]&gt;,
     iter_limit: usize,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; PageTreeIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; PageTreeIter&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">const </span>PAGE_TREE_DEPTH_LIMIT: usize = <span class="number">256</span>;
 
-    <span class="kw">fn </span>new(doc: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Document) -&gt; <span class="self">Self </span>{
+    <span class="kw">fn </span>new(doc: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Document) -&gt; <span class="self">Self </span>{
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(page_tree_id) = doc
             .catalog()
-            .and_then(|cat| cat.get(<span class="string">b&quot;Pages&quot;</span>))
+            .and_then(|cat| cat.get(<span class="string">b"Pages"</span>))
             .and_then(Object::as_reference)
         {
             <span class="self">Self </span>{
@@ -838,14 +840,14 @@
 
     <span class="kw">fn </span>kids(doc: <span class="kw-2">&amp;</span>Document, page_tree_id: ObjectId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[Object]&gt; {
         doc.get_dictionary(page_tree_id)
-            .and_then(|page_tree| page_tree.get(<span class="string">b&quot;Kids&quot;</span>))
+            .and_then(|page_tree| page_tree.get(<span class="string">b"Kids"</span>))
             .and_then(Object::as_array)
             .map(|k| k.as_slice())
             .ok()
     }
 }
 
-<span class="kw">impl </span>Iterator <span class="kw">for </span>PageTreeIter&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>Iterator <span class="kw">for </span>PageTreeIter&lt;<span class="lifetime">'_</span>&gt; {
     <span class="kw">type </span>Item = ObjectId;
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
@@ -861,10 +863,10 @@
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(kid_id) = kid.as_reference() {
                     <span class="kw">if let </span><span class="prelude-val">Ok</span>(type_name) = <span class="self">self</span>.doc.get_dictionary(kid_id).and_then(Dictionary::type_name) {
                         <span class="kw">match </span>type_name {
-                            <span class="string">&quot;Page&quot; </span>=&gt; {
+                            <span class="string">"Page" </span>=&gt; {
                                 <span class="kw">return </span><span class="prelude-val">Some</span>(kid_id);
                             }
-                            <span class="string">&quot;Pages&quot; </span>=&gt; {
+                            <span class="string">"Pages" </span>=&gt; {
                                 <span class="kw">if </span><span class="self">self</span>.stack.len() &lt; <span class="self">Self</span>::PAGE_TREE_DEPTH_LIMIT {
                                     <span class="kw">let </span>kids = <span class="self">self</span>.kids.unwrap();
                                     <span class="kw">if </span>!kids.is_empty() {
@@ -896,9 +898,9 @@
             .chain(<span class="self">self</span>.stack.iter().flat_map(|k| k.iter()))
             .map(|kid| {
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(dict) = kid.as_reference().and_then(|id| <span class="self">self</span>.doc.get_dictionary(id)) {
-                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="string">&quot;Pages&quot;</span>) = dict.type_name() {
-                        <span class="kw">let </span>count = dict.get_deref(<span class="string">b&quot;Count&quot;</span>, <span class="self">self</span>.doc).and_then(Object::as_i64).unwrap_or(<span class="number">0</span>);
-                        <span class="comment">// Don&#39;t let page count go backwards in case of an invalid document.
+                    <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="string">"Pages"</span>) = dict.type_name() {
+                        <span class="kw">let </span>count = dict.get_deref(<span class="string">b"Count"</span>, <span class="self">self</span>.doc).and_then(Object::as_i64).unwrap_or(<span class="number">0</span>);
+                        <span class="comment">// Don't let page count go backwards in case of an invalid document.
                         </span>max(<span class="number">0</span>, count) <span class="kw">as </span>usize
                     } <span class="kw">else </span>{
                         <span class="number">1
@@ -913,5 +915,5 @@
     }
 }
 
-<span class="kw">impl </span>std::iter::FusedIterator <span class="kw">for </span>PageTreeIter&lt;<span class="lifetime">&#39;_</span>&gt; {}
+<span class="kw">impl </span>std::iter::FusedIterator <span class="kw">for </span>PageTreeIter&lt;<span class="lifetime">'_</span>&gt; {}
 </code></pre></div></section></main></body></html>

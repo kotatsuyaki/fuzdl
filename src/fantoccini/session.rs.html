@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fantoccini-0.19.3/src/session.rs`."><title>session.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="fantoccini" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/fantoccini-0.19.3/src/session.rs`."><title>session.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="fantoccini" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../fantoccini/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -999,98 +1001,98 @@
         session_id: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;url::Url, url::ParseError&gt; {
         <span class="kw">if let </span>WebDriverCommand::NewSession(..) = <span class="self">self </span>{
-            <span class="kw">return </span>base_url.join(<span class="string">&quot;session&quot;</span>);
+            <span class="kw">return </span>base_url.join(<span class="string">"session"</span>);
         }
 
         <span class="kw">if let </span>WebDriverCommand::Status = <span class="self">self </span>{
-            <span class="kw">return </span>base_url.join(<span class="string">&quot;status&quot;</span>);
+            <span class="kw">return </span>base_url.join(<span class="string">"status"</span>);
         }
 
-        <span class="kw">let </span>base = { base_url.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;session/{}/&quot;</span>, session_id.as_ref().unwrap()))<span class="question-mark">? </span>};
+        <span class="kw">let </span>base = { base_url.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"session/{}/"</span>, session_id.as_ref().unwrap()))<span class="question-mark">? </span>};
         <span class="kw">match </span><span class="self">self </span>{
             WebDriverCommand::NewSession(..) =&gt; <span class="macro">unreachable!</span>(),
             WebDriverCommand::DeleteSession =&gt; <span class="macro">unreachable!</span>(),
-            WebDriverCommand::Get(..) | WebDriverCommand::GetCurrentUrl =&gt; base.join(<span class="string">&quot;url&quot;</span>),
-            WebDriverCommand::GoBack =&gt; base.join(<span class="string">&quot;back&quot;</span>),
-            WebDriverCommand::GoForward =&gt; base.join(<span class="string">&quot;forward&quot;</span>),
-            WebDriverCommand::Refresh =&gt; base.join(<span class="string">&quot;refresh&quot;</span>),
-            WebDriverCommand::GetTitle =&gt; base.join(<span class="string">&quot;title&quot;</span>),
-            WebDriverCommand::GetPageSource =&gt; base.join(<span class="string">&quot;source&quot;</span>),
-            WebDriverCommand::GetWindowHandle =&gt; base.join(<span class="string">&quot;window&quot;</span>),
-            WebDriverCommand::GetWindowHandles =&gt; base.join(<span class="string">&quot;window/handles&quot;</span>),
-            WebDriverCommand::NewWindow(..) =&gt; base.join(<span class="string">&quot;window/new&quot;</span>),
-            WebDriverCommand::CloseWindow =&gt; base.join(<span class="string">&quot;window&quot;</span>),
-            WebDriverCommand::GetWindowRect =&gt; base.join(<span class="string">&quot;window/rect&quot;</span>),
-            WebDriverCommand::SetWindowRect(..) =&gt; base.join(<span class="string">&quot;window/rect&quot;</span>),
-            WebDriverCommand::MinimizeWindow =&gt; base.join(<span class="string">&quot;window/minimize&quot;</span>),
-            WebDriverCommand::MaximizeWindow =&gt; base.join(<span class="string">&quot;window/maximize&quot;</span>),
-            WebDriverCommand::FullscreenWindow =&gt; base.join(<span class="string">&quot;window/fullscreen&quot;</span>),
-            WebDriverCommand::SwitchToWindow(..) =&gt; base.join(<span class="string">&quot;window&quot;</span>),
-            WebDriverCommand::SwitchToFrame(<span class="kw">_</span>) =&gt; base.join(<span class="string">&quot;frame&quot;</span>),
-            WebDriverCommand::SwitchToParentFrame =&gt; base.join(<span class="string">&quot;frame/parent&quot;</span>),
-            WebDriverCommand::FindElement(..) =&gt; base.join(<span class="string">&quot;element&quot;</span>),
-            WebDriverCommand::FindElements(..) =&gt; base.join(<span class="string">&quot;elements&quot;</span>),
+            WebDriverCommand::Get(..) | WebDriverCommand::GetCurrentUrl =&gt; base.join(<span class="string">"url"</span>),
+            WebDriverCommand::GoBack =&gt; base.join(<span class="string">"back"</span>),
+            WebDriverCommand::GoForward =&gt; base.join(<span class="string">"forward"</span>),
+            WebDriverCommand::Refresh =&gt; base.join(<span class="string">"refresh"</span>),
+            WebDriverCommand::GetTitle =&gt; base.join(<span class="string">"title"</span>),
+            WebDriverCommand::GetPageSource =&gt; base.join(<span class="string">"source"</span>),
+            WebDriverCommand::GetWindowHandle =&gt; base.join(<span class="string">"window"</span>),
+            WebDriverCommand::GetWindowHandles =&gt; base.join(<span class="string">"window/handles"</span>),
+            WebDriverCommand::NewWindow(..) =&gt; base.join(<span class="string">"window/new"</span>),
+            WebDriverCommand::CloseWindow =&gt; base.join(<span class="string">"window"</span>),
+            WebDriverCommand::GetWindowRect =&gt; base.join(<span class="string">"window/rect"</span>),
+            WebDriverCommand::SetWindowRect(..) =&gt; base.join(<span class="string">"window/rect"</span>),
+            WebDriverCommand::MinimizeWindow =&gt; base.join(<span class="string">"window/minimize"</span>),
+            WebDriverCommand::MaximizeWindow =&gt; base.join(<span class="string">"window/maximize"</span>),
+            WebDriverCommand::FullscreenWindow =&gt; base.join(<span class="string">"window/fullscreen"</span>),
+            WebDriverCommand::SwitchToWindow(..) =&gt; base.join(<span class="string">"window"</span>),
+            WebDriverCommand::SwitchToFrame(<span class="kw">_</span>) =&gt; base.join(<span class="string">"frame"</span>),
+            WebDriverCommand::SwitchToParentFrame =&gt; base.join(<span class="string">"frame/parent"</span>),
+            WebDriverCommand::FindElement(..) =&gt; base.join(<span class="string">"element"</span>),
+            WebDriverCommand::FindElements(..) =&gt; base.join(<span class="string">"elements"</span>),
             WebDriverCommand::FindElementElement(<span class="kw-2">ref </span>p, <span class="kw">_</span>) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/element&quot;</span>, p.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/element"</span>, p.<span class="number">0</span>))
             }
             WebDriverCommand::FindElementElements(<span class="kw-2">ref </span>p, <span class="kw">_</span>) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/elements&quot;</span>, p.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/elements"</span>, p.<span class="number">0</span>))
             }
-            WebDriverCommand::GetActiveElement =&gt; base.join(<span class="string">&quot;element/active&quot;</span>),
+            WebDriverCommand::GetActiveElement =&gt; base.join(<span class="string">"element/active"</span>),
             WebDriverCommand::IsDisplayed(<span class="kw-2">ref </span>we) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/displayed&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/displayed"</span>, we.<span class="number">0</span>))
             }
             WebDriverCommand::IsSelected(<span class="kw-2">ref </span>we) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/selected&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/selected"</span>, we.<span class="number">0</span>))
             }
             WebDriverCommand::GetElementAttribute(<span class="kw-2">ref </span>we, <span class="kw-2">ref </span>attr) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/attribute/{}&quot;</span>, we.<span class="number">0</span>, attr))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/attribute/{}"</span>, we.<span class="number">0</span>, attr))
             }
             WebDriverCommand::GetElementProperty(<span class="kw-2">ref </span>we, <span class="kw-2">ref </span>prop) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/property/{}&quot;</span>, we.<span class="number">0</span>, prop))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/property/{}"</span>, we.<span class="number">0</span>, prop))
             }
             WebDriverCommand::GetCSSValue(<span class="kw-2">ref </span>we, <span class="kw-2">ref </span>attr) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/css/{}&quot;</span>, we.<span class="number">0</span>, attr))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/css/{}"</span>, we.<span class="number">0</span>, attr))
             }
             WebDriverCommand::GetElementText(<span class="kw-2">ref </span>we) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/text&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/text"</span>, we.<span class="number">0</span>))
             }
             WebDriverCommand::GetElementTagName(<span class="kw-2">ref </span>we) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/name&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/name"</span>, we.<span class="number">0</span>))
             }
             WebDriverCommand::GetElementRect(<span class="kw-2">ref </span>we) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/rect&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/rect"</span>, we.<span class="number">0</span>))
             }
-            WebDriverCommand::IsEnabled(<span class="kw-2">ref </span>we) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/enabled&quot;</span>, we.<span class="number">0</span>)),
-            WebDriverCommand::ExecuteScript(..) <span class="kw">if </span><span class="self">self</span>.is_legacy() =&gt; base.join(<span class="string">&quot;execute&quot;</span>),
-            WebDriverCommand::ExecuteScript(..) =&gt; base.join(<span class="string">&quot;execute/sync&quot;</span>),
-            WebDriverCommand::ExecuteAsyncScript(..) =&gt; base.join(<span class="string">&quot;execute/async&quot;</span>),
+            WebDriverCommand::IsEnabled(<span class="kw-2">ref </span>we) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/enabled"</span>, we.<span class="number">0</span>)),
+            WebDriverCommand::ExecuteScript(..) <span class="kw">if </span><span class="self">self</span>.is_legacy() =&gt; base.join(<span class="string">"execute"</span>),
+            WebDriverCommand::ExecuteScript(..) =&gt; base.join(<span class="string">"execute/sync"</span>),
+            WebDriverCommand::ExecuteAsyncScript(..) =&gt; base.join(<span class="string">"execute/async"</span>),
             WebDriverCommand::GetCookies
             | WebDriverCommand::AddCookie(<span class="kw">_</span>)
-            | WebDriverCommand::DeleteCookies =&gt; base.join(<span class="string">&quot;cookie&quot;</span>),
+            | WebDriverCommand::DeleteCookies =&gt; base.join(<span class="string">"cookie"</span>),
             WebDriverCommand::GetNamedCookie(<span class="kw-2">ref </span>name)
-            | WebDriverCommand::DeleteCookie(<span class="kw-2">ref </span>name) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;cookie/{}&quot;</span>, name)),
+            | WebDriverCommand::DeleteCookie(<span class="kw-2">ref </span>name) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"cookie/{}"</span>, name)),
             WebDriverCommand::GetTimeouts | WebDriverCommand::SetTimeouts(..) =&gt; {
-                base.join(<span class="string">&quot;timeouts&quot;</span>)
+                base.join(<span class="string">"timeouts"</span>)
             }
-            WebDriverCommand::ElementClick(<span class="kw-2">ref </span>we) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/click&quot;</span>, we.<span class="number">0</span>)),
-            WebDriverCommand::ElementClear(<span class="kw-2">ref </span>we) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/clear&quot;</span>, we.<span class="number">0</span>)),
+            WebDriverCommand::ElementClick(<span class="kw-2">ref </span>we) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/click"</span>, we.<span class="number">0</span>)),
+            WebDriverCommand::ElementClear(<span class="kw-2">ref </span>we) =&gt; base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/clear"</span>, we.<span class="number">0</span>)),
             WebDriverCommand::ElementSendKeys(<span class="kw-2">ref </span>we, <span class="kw">_</span>) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/value&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/value"</span>, we.<span class="number">0</span>))
             }
             WebDriverCommand::PerformActions(..) | WebDriverCommand::ReleaseActions =&gt; {
-                base.join(<span class="string">&quot;actions&quot;</span>)
+                base.join(<span class="string">"actions"</span>)
             }
-            WebDriverCommand::DismissAlert =&gt; base.join(<span class="string">&quot;alert/dismiss&quot;</span>),
-            WebDriverCommand::AcceptAlert =&gt; base.join(<span class="string">&quot;alert/accept&quot;</span>),
+            WebDriverCommand::DismissAlert =&gt; base.join(<span class="string">"alert/dismiss"</span>),
+            WebDriverCommand::AcceptAlert =&gt; base.join(<span class="string">"alert/accept"</span>),
             WebDriverCommand::GetAlertText | WebDriverCommand::SendAlertText(..) =&gt; {
-                base.join(<span class="string">&quot;alert/text&quot;</span>)
+                base.join(<span class="string">"alert/text"</span>)
             }
-            WebDriverCommand::TakeScreenshot =&gt; base.join(<span class="string">&quot;screenshot&quot;</span>),
+            WebDriverCommand::TakeScreenshot =&gt; base.join(<span class="string">"screenshot"</span>),
             WebDriverCommand::TakeElementScreenshot(<span class="kw-2">ref </span>we) =&gt; {
-                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;element/{}/screenshot&quot;</span>, we.<span class="number">0</span>))
+                base.join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"element/{}/screenshot"</span>, we.<span class="number">0</span>))
             }
-            WebDriverCommand::Print(..) =&gt; base.join(<span class="string">&quot;print&quot;</span>),
+            WebDriverCommand::Print(..) =&gt; base.join(<span class="string">"print"</span>),
             WebDriverCommand::Status =&gt; <span class="macro">unreachable!</span>(),
             <span class="kw">_ </span>=&gt; <span class="macro">unimplemented!</span>(),
         }
@@ -1111,18 +1113,18 @@
                 </span><span class="kw">let </span><span class="kw-2">mut </span>also = String::new();
                 <span class="kw">if </span>!request_url.username().is_empty() {
                     also.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                        <span class="string">r#&quot;, &quot;user&quot;: {}&quot;#</span>,
+                        <span class="string">r#", "user": {}"#</span>,
                         serde_json::to_string(request_url.username()).unwrap()
                     ));
                 }
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(pwd) = request_url.password() {
                     also.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                        <span class="string">r#&quot;, &quot;password&quot;: {}&quot;#</span>,
+                        <span class="string">r#", "password": {}"#</span>,
                         serde_json::to_string(pwd).unwrap()
                     ));
                 }
                 body = <span class="prelude-val">Some</span>(<span class="macro">format!</span>(
-                    <span class="string">r#&quot;{{&quot;capabilities&quot;: {}{}}}&quot;#</span>,
+                    <span class="string">r#"{{"capabilities": {}{}}}"#</span>,
                     serde_json::to_string(conf).unwrap(),
                     also
                 ));
@@ -1167,7 +1169,7 @@
             | WebDriverCommand::FullscreenWindow
             | WebDriverCommand::DismissAlert
             | WebDriverCommand::AcceptAlert =&gt; {
-                body = <span class="prelude-val">Some</span>(<span class="string">&quot;{}&quot;</span>.to_string());
+                body = <span class="prelude-val">Some</span>(<span class="string">"{}"</span>.to_string());
                 method = Method::POST;
             }
             WebDriverCommand::NewWindow(<span class="kw-2">ref </span>params) =&gt; {
@@ -1190,7 +1192,7 @@
                 method = Method::POST;
             }
             WebDriverCommand::SwitchToParentFrame =&gt; {
-                body = <span class="prelude-val">Some</span>(<span class="string">&quot;{}&quot;</span>.to_string());
+                body = <span class="prelude-val">Some</span>(<span class="string">"{}"</span>.to_string());
                 method = Method::POST;
             }
             WebDriverCommand::AddCookie(<span class="kw-2">ref </span>params) =&gt; {
@@ -1261,7 +1263,7 @@
         <span class="kw">if </span>r.is_err() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(error::CmdError::Lost(io::Error::new(
                 io::ErrorKind::BrokenPipe,
-                <span class="string">&quot;WebDriver session has been closed&quot;</span>,
+                <span class="string">"WebDriver session has been closed"</span>,
             )));
         }
 
@@ -1269,7 +1271,7 @@
         r.unwrap_or_else(|<span class="kw">_</span>| {
             <span class="prelude-val">Err</span>(error::CmdError::Lost(io::Error::new(
                 io::ErrorKind::BrokenPipe,
-                <span class="string">&quot;WebDriver session was closed while waiting&quot;</span>,
+                <span class="string">"WebDriver session was closed while waiting"</span>,
             )))
         })
     }
@@ -1277,7 +1279,7 @@
     <span class="doccomment">/// Issue the specified [`WebDriverCompatibleCommand`] to the WebDriver instance.
     </span><span class="kw">pub async fn </span>issue_cmd(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        cmd: <span class="kw">impl </span>WebDriverCompatibleCommand + Send + <span class="lifetime">&#39;static</span>,
+        cmd: <span class="kw">impl </span>WebDriverCompatibleCommand + Send + <span class="lifetime">'static</span>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Json, error::CmdError&gt; {
         <span class="self">self</span>.issue(Cmd::WebDriver(Box::new(cmd))).<span class="kw">await
     </span>}
@@ -1317,7 +1319,7 @@
     }
 
     <span class="comment">// returns true if outer loop should break
-    </span><span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>, try_extract_session: bool, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;OngoingResult&gt; {
+    </span><span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>, try_extract_session: bool, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;OngoingResult&gt; {
         <span class="kw">let </span>rt = <span class="kw">match </span>mem::replace(<span class="self">self</span>, Ongoing::None) {
             Ongoing::None =&gt; OngoingResult::Continue,
             Ongoing::Break =&gt; OngoingResult::Break,
@@ -1342,12 +1344,12 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>rt = OngoingResult::Continue;
                 <span class="kw">if </span>try_extract_session {
                     <span class="comment">// we can safely assume that this supposed to be a response to NewSession
-                    // pick out the session id, because we&#39;ll need it later
+                    // pick out the session id, because we'll need it later
                     </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(Json::Object(<span class="kw-2">ref </span>v)) = rsp {
                         <span class="comment">// TODO: not all impls are w3c compatible
                         // See https://github.com/SeleniumHQ/selenium/blob/242d64ca4cd3523489ac1e58703fd7acd4f10c5a/py/selenium/webdriver/remote/webdriver.py#L189
                         // and https://github.com/SeleniumHQ/selenium/blob/242d64ca4cd3523489ac1e58703fd7acd4f10c5a/py/selenium/webdriver/remote/webdriver.py#L200
-                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(session_id) = v.get(<span class="string">&quot;sessionId&quot;</span>) {
+                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(session_id) = v.get(<span class="string">"sessionId"</span>) {
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(session_id) = session_id.as_str() {
                                 rt = OngoingResult::SessionId(session_id.to_string());
                             }
@@ -1390,11 +1392,11 @@
 
 <span class="kw">impl</span>&lt;C&gt; Future <span class="kw">for </span>Session&lt;C&gt;
 <span class="kw">where
-    </span>C: connect::Connect + Unpin + <span class="lifetime">&#39;static </span>+ Clone + Sync + Send,
+    </span>C: connect::Connect + Unpin + <span class="lifetime">'static </span>+ Clone + Sync + Send,
 {
     <span class="kw">type </span>Output = ();
 
-    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
         <span class="kw">loop </span>{
             <span class="kw">if </span><span class="self">self</span>.ongoing.is_some() {
                 <span class="kw">let </span>has_session = <span class="self">self</span>.session.is_none();
@@ -1456,7 +1458,7 @@
                     }
                 };
             } <span class="kw">else </span>{
-                <span class="comment">// we&#39;re shutting down!
+                <span class="comment">// we're shutting down!
                 </span><span class="kw">if </span><span class="self">self</span>.persist {
                     <span class="self">self</span>.ongoing = Ongoing::Break;
                 } <span class="kw">else </span>{
@@ -1471,7 +1473,7 @@
 
 <span class="kw">impl</span>&lt;C&gt; Session&lt;C&gt;
 <span class="kw">where
-    </span>C: connect::Connect + Unpin + <span class="lifetime">&#39;static </span>+ Clone + Send + Sync,
+    </span>C: connect::Connect + Unpin + <span class="lifetime">'static </span>+ Clone + Send + Sync,
 {
     <span class="kw">fn </span>shutdown(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ack: <span class="prelude-ty">Option</span>&lt;Ack&gt;) {
         <span class="comment">// session was not created
@@ -1482,7 +1484,7 @@
 
         <span class="kw">let </span>url = {
             <span class="self">self</span>.wdb
-                .join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;session/{}&quot;</span>, <span class="self">self</span>.session.as_ref().unwrap()))
+                .join(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"session/{}"</span>, <span class="self">self</span>.session.as_ref().unwrap()))
                 .unwrap()
         };
 
@@ -1504,12 +1506,12 @@
                 <span class="comment">// TODO: not all impls are w3c compatible
                 // See https://github.com/SeleniumHQ/selenium/blob/242d64ca4cd3523489ac1e58703fd7acd4f10c5a/py/selenium/webdriver/remote/webdriver.py#L189
                 // and https://github.com/SeleniumHQ/selenium/blob/242d64ca4cd3523489ac1e58703fd7acd4f10c5a/py/selenium/webdriver/remote/webdriver.py#L200
-                // NOTE: remove so we can re-insert and return if something&#39;s wrong
-                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(session_id) = v.remove(<span class="string">&quot;sessionId&quot;</span>) {
+                // NOTE: remove so we can re-insert and return if something's wrong
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(session_id) = v.remove(<span class="string">"sessionId"</span>) {
                     <span class="kw">if </span>session_id.is_string() {
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(());
                     }
-                    v.insert(<span class="string">&quot;sessionId&quot;</span>.to_string(), session_id);
+                    v.insert(<span class="string">"sessionId"</span>.to_string(), session_id);
                 }
                 <span class="prelude-val">Err</span>(error::NewSessionError::NotW3C(Json::Object(v)))
             }
@@ -1532,10 +1534,10 @@
                 },
             )) =&gt; <span class="prelude-val">Err</span>(error::NewSessionError::NotW3C(
                 serde_json::to_value(e)
-                    .expect(<span class="string">&quot;error::WebDriver should always be serializeable to JSON&quot;</span>),
+                    .expect(<span class="string">"error::WebDriver should always be serializeable to JSON"</span>),
             )),
             <span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;unexpected webdriver error; {}&quot;</span>, e);
+                <span class="macro">panic!</span>(<span class="string">"unexpected webdriver error; {}"</span>, e);
             }
         }
     }
@@ -1552,7 +1554,7 @@
         </span><span class="kw">let </span>client = hyper::Client::builder().build::&lt;<span class="kw">_</span>, hyper::Body&gt;(connector);
 
         <span class="kw">let </span><span class="kw-2">mut </span>cap = cap.to_owned();
-        <span class="comment">// We&#39;re going to need a channel for sending requests to the WebDriver host
+        <span class="comment">// We're going to need a channel for sending requests to the WebDriver host
         </span><span class="kw">let </span>(tx, rx) = mpsc::unbounded_channel();
 
         <span class="comment">// Set up our WebDriver session.
@@ -1567,7 +1569,7 @@
             persist: <span class="bool-val">false</span>,
         });
 
-        <span class="comment">// now that the session is running, let&#39;s do the handshake
+        <span class="comment">// now that the session is running, let's do the handshake
         </span><span class="kw">let </span>client = Client {
             tx: tx.clone(),
             is_legacy: <span class="bool-val">false</span>,
@@ -1577,16 +1579,16 @@
         // https://www.w3.org/TR/webdriver/#dfn-new-session
         // https://www.w3.org/TR/webdriver/#capabilities
         //  - we want the browser to wait for the page to load
-        </span><span class="kw">if </span>!cap.contains_key(<span class="string">&quot;pageLoadStrategy&quot;</span>) {
-            cap.insert(<span class="string">&quot;pageLoadStrategy&quot;</span>.to_string(), Json::from(<span class="string">&quot;normal&quot;</span>));
+        </span><span class="kw">if </span>!cap.contains_key(<span class="string">"pageLoadStrategy"</span>) {
+            cap.insert(<span class="string">"pageLoadStrategy"</span>.to_string(), Json::from(<span class="string">"normal"</span>));
         }
 
         <span class="comment">// make chrome comply with w3c
-        </span>cap.entry(<span class="string">&quot;goog:chromeOptions&quot;</span>.to_string())
+        </span>cap.entry(<span class="string">"goog:chromeOptions"</span>.to_string())
             .or_insert_with(|| Json::Object(serde_json::Map::new()))
             .as_object_mut()
-            .expect(<span class="string">&quot;goog:chromeOptions wasn&#39;t a JSON object&quot;</span>)
-            .insert(<span class="string">&quot;w3c&quot;</span>.to_string(), Json::from(<span class="bool-val">true</span>));
+            .expect(<span class="string">"goog:chromeOptions wasn't a JSON object"</span>)
+            .insert(<span class="string">"w3c"</span>.to_string(), Json::from(<span class="bool-val">true</span>));
 
         <span class="kw">let </span>session_config = webdriver::capabilities::SpecNewSessionParameters {
             alwaysMatch: cap.clone(),
@@ -1607,19 +1609,19 @@
                 <span class="comment">// maybe try legacy mode?
                 </span><span class="kw">let </span><span class="kw-2">mut </span>legacy = <span class="bool-val">false</span>;
                 <span class="kw">match </span>json {
-                    Json::String(<span class="kw-2">ref </span>err) <span class="kw">if </span>err.starts_with(<span class="string">&quot;Missing Command Parameter&quot;</span>) =&gt; {
+                    Json::String(<span class="kw-2">ref </span>err) <span class="kw">if </span>err.starts_with(<span class="string">"Missing Command Parameter"</span>) =&gt; {
                         <span class="comment">// ghostdriver
                         </span>legacy = <span class="bool-val">true</span>;
                     }
                     Json::Object(<span class="kw-2">ref </span>err) =&gt; {
                         legacy = err
-                            .get(<span class="string">&quot;message&quot;</span>)
+                            .get(<span class="string">"message"</span>)
                             .and_then(|m| m.as_str())
                             .map(|s| {
                                 <span class="comment">// chromedriver &lt; 2.29 || chromedriver == 2.29 || saucelabs
-                                </span>s.contains(<span class="string">&quot;cannot find dict &#39;desiredCapabilities&#39;&quot;</span>)
-                                    || s.contains(<span class="string">&quot;Missing or invalid capabilities&quot;</span>)
-                                    || s.contains(<span class="string">&quot;Unexpected server error.&quot;</span>)
+                                </span>s.contains(<span class="string">"cannot find dict 'desiredCapabilities'"</span>)
+                                    || s.contains(<span class="string">"Missing or invalid capabilities"</span>)
+                                    || s.contains(<span class="string">"Unexpected server error."</span>)
                             })
                             .unwrap_or(<span class="bool-val">false</span>);
                     }
@@ -1630,7 +1632,7 @@
                     <span class="kw">return </span><span class="prelude-val">Err</span>(error::NewSessionError::NotW3C(json));
                 }
 
-                <span class="comment">// we&#39;re dealing with an implementation that only supports the legacy
+                <span class="comment">// we're dealing with an implementation that only supports the legacy
                 // WebDriver protocol:
                 // https://www.selenium.dev/documentation/legacy/json_wire_protocol/
                 </span><span class="kw">let </span>session_config = webdriver::capabilities::LegacyNewSessionParameters {
@@ -1663,7 +1665,7 @@
     /// [the spec]: https://www.w3.org/TR/webdriver/#list-of-endpoints
     </span><span class="kw">fn </span>issue_wd_cmd(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        cmd: Box&lt;<span class="kw">impl </span>WebDriverCompatibleCommand + Send + <span class="lifetime">&#39;static </span>+ <span class="question-mark">?</span>Sized&gt;,
+        cmd: Box&lt;<span class="kw">impl </span>WebDriverCompatibleCommand + Send + <span class="lifetime">'static </span>+ <span class="question-mark">?</span>Sized&gt;,
     ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Json, error::CmdError&gt;&gt; {
         <span class="comment">// TODO: make this an async fn
         // will take some doing as returned future must be independent of self
@@ -1685,17 +1687,17 @@
             req = req.header(
                 hyper::header::AUTHORIZATION,
                 <span class="macro">format!</span>(
-                    <span class="string">&quot;Basic {}&quot;</span>,
+                    <span class="string">"Basic {}"</span>,
                     base64::encode(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                        <span class="string">&quot;{}:{}&quot;</span>,
+                        <span class="string">"{}:{}"</span>,
                         url.username(),
-                        url.password().unwrap_or(<span class="string">&quot;&quot;</span>)
+                        url.password().unwrap_or(<span class="string">""</span>)
                     ))
                 ),
             );
         }
 
-        <span class="kw">let </span>json_mime: mime::Mime = <span class="string">&quot;application/json; charset=utf-8&quot;
+        <span class="kw">let </span>json_mime: mime::Mime = <span class="string">"application/json; charset=utf-8"
             </span>.parse::&lt;mime::Mime&gt;()
             .unwrap_or(mime::APPLICATION_JSON);
 
@@ -1728,9 +1730,9 @@
             .map(|r| {
                 <span class="kw">let </span>(body, ctype, status) = r<span class="question-mark">?</span>;
 
-                <span class="comment">// Too bad we can&#39;t stream into a String :(
+                <span class="comment">// Too bad we can't stream into a String :(
                 </span><span class="kw">let </span>body =
-                    String::from_utf8(body.to_vec()).expect(<span class="string">&quot;non utf-8 response from webdriver&quot;</span>);
+                    String::from_utf8(body.to_vec()).expect(<span class="string">"non utf-8 response from webdriver"</span>);
 
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(ctype) = ctype {
                     <span class="kw">if </span>ctype.type_() == mime::APPLICATION_JSON.type_()
@@ -1754,19 +1756,19 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>legacy_status = <span class="number">0</span>;
 
                 <span class="comment">// https://www.w3.org/TR/webdriver/#dfn-send-a-response
-                // NOTE: the standard specifies that even errors use the &quot;Send a Reponse&quot; steps
+                // NOTE: the standard specifies that even errors use the "Send a Reponse" steps
                 </span><span class="kw">let </span>body = <span class="kw">match </span>serde_json::from_str(<span class="kw-2">&amp;*</span>body)<span class="question-mark">? </span>{
                     Json::Object(<span class="kw-2">mut </span>v) =&gt; {
                         <span class="kw">if </span>legacy {
-                            legacy_status = v[<span class="string">&quot;status&quot;</span>].as_u64().unwrap();
+                            legacy_status = v[<span class="string">"status"</span>].as_u64().unwrap();
                             is_success = legacy_status == <span class="number">0</span>;
                         }
 
                         <span class="kw">if </span>legacy &amp;&amp; is_new_session {
-                            <span class="comment">// legacy implementations do not wrap sessionId inside &quot;value&quot;
+                            <span class="comment">// legacy implementations do not wrap sessionId inside "value"
                             </span><span class="prelude-val">Ok</span>(Json::Object(v))
                         } <span class="kw">else </span>{
-                            v.remove(<span class="string">&quot;value&quot;</span>)
+                            v.remove(<span class="string">"value"</span>)
                                 .ok_or(error::CmdError::NotW3C(Json::Object(v)))
                         }
                     }
@@ -1785,12 +1787,12 @@
                 };
 
                 <span class="comment">// phantomjs injects a *huge* field with the entire screen contents -- remove that
-                </span>body.remove(<span class="string">&quot;screen&quot;</span>);
+                </span>body.remove(<span class="string">"screen"</span>);
 
                 <span class="kw">let </span>es = <span class="kw">if </span>legacy {
-                    <span class="comment">// old clients use status codes instead of &quot;error&quot;, and we now have to map them
+                    <span class="comment">// old clients use status codes instead of "error", and we now have to map them
                     // https://github.com/SeleniumHQ/selenium/wiki/JsonWireProtocol#response-status-codes
-                    </span><span class="kw">if </span>!body.contains_key(<span class="string">&quot;message&quot;</span>) || !body[<span class="string">&quot;message&quot;</span>].is_string() {
+                    </span><span class="kw">if </span>!body.contains_key(<span class="string">"message"</span>) || !body[<span class="string">"message"</span>].is_string() {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(error::CmdError::NotW3C(Json::Object(body)));
                     }
                     <span class="kw">match </span>legacy_status {
@@ -1817,85 +1819,85 @@
                         <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(error::CmdError::NotW3C(Json::Object(body))),
                     }
                 } <span class="kw">else </span>{
-                    <span class="kw">if </span>!body.contains_key(<span class="string">&quot;error&quot;</span>)
-                        || !body.contains_key(<span class="string">&quot;message&quot;</span>)
-                        || !body[<span class="string">&quot;error&quot;</span>].is_string()
-                        || !body[<span class="string">&quot;message&quot;</span>].is_string()
+                    <span class="kw">if </span>!body.contains_key(<span class="string">"error"</span>)
+                        || !body.contains_key(<span class="string">"message"</span>)
+                        || !body[<span class="string">"error"</span>].is_string()
+                        || !body[<span class="string">"message"</span>].is_string()
                     {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(error::CmdError::NotW3C(Json::Object(body)));
                     }
 
                     <span class="kw">use </span>hyper::StatusCode;
-                    <span class="kw">let </span>error = body[<span class="string">&quot;error&quot;</span>].as_str().unwrap();
+                    <span class="kw">let </span>error = body[<span class="string">"error"</span>].as_str().unwrap();
                     <span class="kw">match </span>status {
                         StatusCode::BAD_REQUEST =&gt; <span class="kw">match </span>error {
-                            <span class="string">&quot;element click intercepted&quot; </span>=&gt; ErrorStatus::ElementClickIntercepted,
-                            <span class="string">&quot;element not selectable&quot; </span>=&gt; ErrorStatus::ElementNotSelectable,
-                            <span class="string">&quot;element not interactable&quot; </span>=&gt; ErrorStatus::ElementNotInteractable,
-                            <span class="string">&quot;insecure certificate&quot; </span>=&gt; ErrorStatus::InsecureCertificate,
-                            <span class="string">&quot;invalid argument&quot; </span>=&gt; ErrorStatus::InvalidArgument,
-                            <span class="string">&quot;invalid cookie domain&quot; </span>=&gt; ErrorStatus::InvalidCookieDomain,
-                            <span class="string">&quot;invalid coordinates&quot; </span>=&gt; ErrorStatus::InvalidCoordinates,
-                            <span class="string">&quot;invalid element state&quot; </span>=&gt; ErrorStatus::InvalidElementState,
-                            <span class="string">&quot;invalid selector&quot; </span>=&gt; ErrorStatus::InvalidSelector,
-                            <span class="string">&quot;no such alert&quot; </span>=&gt; ErrorStatus::NoSuchAlert,
-                            <span class="string">&quot;no such frame&quot; </span>=&gt; ErrorStatus::NoSuchFrame,
-                            <span class="string">&quot;no such window&quot; </span>=&gt; ErrorStatus::NoSuchWindow,
-                            <span class="string">&quot;stale element reference&quot; </span>=&gt; ErrorStatus::StaleElementReference,
+                            <span class="string">"element click intercepted" </span>=&gt; ErrorStatus::ElementClickIntercepted,
+                            <span class="string">"element not selectable" </span>=&gt; ErrorStatus::ElementNotSelectable,
+                            <span class="string">"element not interactable" </span>=&gt; ErrorStatus::ElementNotInteractable,
+                            <span class="string">"insecure certificate" </span>=&gt; ErrorStatus::InsecureCertificate,
+                            <span class="string">"invalid argument" </span>=&gt; ErrorStatus::InvalidArgument,
+                            <span class="string">"invalid cookie domain" </span>=&gt; ErrorStatus::InvalidCookieDomain,
+                            <span class="string">"invalid coordinates" </span>=&gt; ErrorStatus::InvalidCoordinates,
+                            <span class="string">"invalid element state" </span>=&gt; ErrorStatus::InvalidElementState,
+                            <span class="string">"invalid selector" </span>=&gt; ErrorStatus::InvalidSelector,
+                            <span class="string">"no such alert" </span>=&gt; ErrorStatus::NoSuchAlert,
+                            <span class="string">"no such frame" </span>=&gt; ErrorStatus::NoSuchFrame,
+                            <span class="string">"no such window" </span>=&gt; ErrorStatus::NoSuchWindow,
+                            <span class="string">"stale element reference" </span>=&gt; ErrorStatus::StaleElementReference,
                             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
-                                <span class="string">&quot;received unknown error ({}) for BAD_REQUEST status code&quot;</span>,
+                                <span class="string">"received unknown error ({}) for BAD_REQUEST status code"</span>,
                                 error
                             ),
                         },
                         StatusCode::NOT_FOUND =&gt; <span class="kw">match </span>error {
-                            <span class="string">&quot;unknown command&quot; </span>=&gt; ErrorStatus::UnknownCommand,
-                            <span class="string">&quot;no such cookie&quot; </span>=&gt; ErrorStatus::NoSuchCookie,
-                            <span class="string">&quot;invalid session id&quot; </span>=&gt; ErrorStatus::InvalidSessionId,
-                            <span class="string">&quot;no such element&quot; </span>=&gt; ErrorStatus::NoSuchElement,
-                            <span class="string">&quot;no such window&quot; </span>=&gt; ErrorStatus::NoSuchWindow,
-                            <span class="string">&quot;no such alert&quot; </span>=&gt; ErrorStatus::NoSuchAlert,
-                            <span class="string">&quot;stale element reference&quot; </span>=&gt; ErrorStatus::NoSuchElement,
+                            <span class="string">"unknown command" </span>=&gt; ErrorStatus::UnknownCommand,
+                            <span class="string">"no such cookie" </span>=&gt; ErrorStatus::NoSuchCookie,
+                            <span class="string">"invalid session id" </span>=&gt; ErrorStatus::InvalidSessionId,
+                            <span class="string">"no such element" </span>=&gt; ErrorStatus::NoSuchElement,
+                            <span class="string">"no such window" </span>=&gt; ErrorStatus::NoSuchWindow,
+                            <span class="string">"no such alert" </span>=&gt; ErrorStatus::NoSuchAlert,
+                            <span class="string">"stale element reference" </span>=&gt; ErrorStatus::NoSuchElement,
                             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
-                                <span class="string">&quot;received unknown error ({}) for NOT_FOUND status code&quot;</span>,
+                                <span class="string">"received unknown error ({}) for NOT_FOUND status code"</span>,
                                 error
                             ),
                         },
                         StatusCode::INTERNAL_SERVER_ERROR =&gt; <span class="kw">match </span>error {
-                            <span class="string">&quot;javascript error&quot; </span>=&gt; ErrorStatus::JavascriptError,
-                            <span class="string">&quot;move target out of bounds&quot; </span>=&gt; ErrorStatus::MoveTargetOutOfBounds,
-                            <span class="string">&quot;session not created&quot; </span>=&gt; ErrorStatus::SessionNotCreated,
-                            <span class="string">&quot;unable to set cookie&quot; </span>=&gt; ErrorStatus::UnableToSetCookie,
-                            <span class="string">&quot;unable to capture screen&quot; </span>=&gt; ErrorStatus::UnableToCaptureScreen,
-                            <span class="string">&quot;unexpected alert open&quot; </span>=&gt; ErrorStatus::UnexpectedAlertOpen,
-                            <span class="string">&quot;unknown error&quot; </span>=&gt; ErrorStatus::UnknownError,
-                            <span class="string">&quot;script timeout&quot; </span>=&gt; ErrorStatus::ScriptTimeout,
-                            <span class="string">&quot;unsupported operation&quot; </span>=&gt; ErrorStatus::UnsupportedOperation,
-                            <span class="string">&quot;timeout&quot; </span>=&gt; ErrorStatus::Timeout,
+                            <span class="string">"javascript error" </span>=&gt; ErrorStatus::JavascriptError,
+                            <span class="string">"move target out of bounds" </span>=&gt; ErrorStatus::MoveTargetOutOfBounds,
+                            <span class="string">"session not created" </span>=&gt; ErrorStatus::SessionNotCreated,
+                            <span class="string">"unable to set cookie" </span>=&gt; ErrorStatus::UnableToSetCookie,
+                            <span class="string">"unable to capture screen" </span>=&gt; ErrorStatus::UnableToCaptureScreen,
+                            <span class="string">"unexpected alert open" </span>=&gt; ErrorStatus::UnexpectedAlertOpen,
+                            <span class="string">"unknown error" </span>=&gt; ErrorStatus::UnknownError,
+                            <span class="string">"script timeout" </span>=&gt; ErrorStatus::ScriptTimeout,
+                            <span class="string">"unsupported operation" </span>=&gt; ErrorStatus::UnsupportedOperation,
+                            <span class="string">"timeout" </span>=&gt; ErrorStatus::Timeout,
                             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
-                                <span class="string">&quot;received unknown error ({}) for INTERNAL_SERVER_ERROR status code&quot;</span>,
+                                <span class="string">"received unknown error ({}) for INTERNAL_SERVER_ERROR status code"</span>,
                                 error
                             ),
                         },
                         StatusCode::REQUEST_TIMEOUT =&gt; <span class="kw">match </span>error {
-                            <span class="string">&quot;timeout&quot; </span>=&gt; ErrorStatus::Timeout,
-                            <span class="string">&quot;script timeout&quot; </span>=&gt; ErrorStatus::ScriptTimeout,
+                            <span class="string">"timeout" </span>=&gt; ErrorStatus::Timeout,
+                            <span class="string">"script timeout" </span>=&gt; ErrorStatus::ScriptTimeout,
                             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
-                                <span class="string">&quot;received unknown error ({}) for REQUEST_TIMEOUT status code&quot;</span>,
+                                <span class="string">"received unknown error ({}) for REQUEST_TIMEOUT status code"</span>,
                                 error
                             ),
                         },
                         StatusCode::METHOD_NOT_ALLOWED =&gt; <span class="kw">match </span>error {
-                            <span class="string">&quot;unknown method&quot; </span>=&gt; ErrorStatus::UnknownMethod,
+                            <span class="string">"unknown method" </span>=&gt; ErrorStatus::UnknownMethod,
                             <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(
-                                <span class="string">&quot;received unknown error ({}) for METHOD_NOT_ALLOWED status code&quot;</span>,
+                                <span class="string">"received unknown error ({}) for METHOD_NOT_ALLOWED status code"</span>,
                                 error
                             ),
                         },
-                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;received unknown status code: {}&quot;</span>, status),
+                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"received unknown status code: {}"</span>, status),
                     }
                 };
 
-                <span class="kw">let </span>message = body[<span class="string">&quot;message&quot;</span>].as_str().unwrap().to_string();
+                <span class="kw">let </span>message = body[<span class="string">"message"</span>].as_str().unwrap().to_string();
                 <span class="prelude-val">Err</span>(error::CmdError::from_webdriver_error(WebDriverError::new(
                     es, message,
                 )))

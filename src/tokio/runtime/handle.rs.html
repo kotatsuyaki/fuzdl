@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/runtime/handle.rs`."><title>handle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/runtime/handle.rs`."><title>handle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../tokio/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -507,12 +509,12 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) spawner: Spawner,
 }
 
-<span class="doccomment">/// All internal handles that are *not* the scheduler&#39;s spawner.
+<span class="doccomment">/// All internal handles that are *not* the scheduler's spawner.
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>HandleInner {
     <span class="doccomment">/// Handles to the I/O drivers
     </span><span class="attr">#[cfg_attr(
-        not(any(feature = <span class="string">&quot;net&quot;</span>, feature = <span class="string">&quot;process&quot;</span>, all(unix, feature = <span class="string">&quot;signal&quot;</span>))),
+        not(any(feature = <span class="string">"net"</span>, feature = <span class="string">"process"</span>, all(unix, feature = <span class="string">"signal"</span>))),
         allow(dead_code)
     )]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) io_handle: driver::IoHandle,
@@ -521,19 +523,19 @@
     </span><span class="attr">#[cfg_attr(
         any(
             loom,
-            not(all(unix, feature = <span class="string">&quot;signal&quot;</span>)),
-            not(all(unix, feature = <span class="string">&quot;process&quot;</span>)),
+            not(all(unix, feature = <span class="string">"signal"</span>)),
+            not(all(unix, feature = <span class="string">"process"</span>)),
         ),
         allow(dead_code)
     )]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) signal_handle: driver::SignalHandle,
 
     <span class="doccomment">/// Handles to the time drivers
-    </span><span class="attr">#[cfg_attr(not(feature = <span class="string">&quot;time&quot;</span>), allow(dead_code))]
+    </span><span class="attr">#[cfg_attr(not(feature = <span class="string">"time"</span>), allow(dead_code))]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) time_handle: driver::TimeHandle,
 
     <span class="doccomment">/// Source of `Instant::now()`
-    </span><span class="attr">#[cfg_attr(not(all(feature = <span class="string">&quot;time&quot;</span>, feature = <span class="string">&quot;test-util&quot;</span>)), allow(dead_code))]
+    </span><span class="attr">#[cfg_attr(not(all(feature = <span class="string">"time"</span>, feature = <span class="string">"test-util"</span>)), allow(dead_code))]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) clock: driver::Clock,
 
     <span class="doccomment">/// Blocking pool spawner
@@ -552,10 +554,10 @@
 ///
 /// [`Runtime::enter`]: fn@crate::runtime::Runtime::enter
 </span><span class="attr">#[derive(Debug)]
-#[must_use = <span class="string">&quot;Creating and dropping a guard does nothing&quot;</span>]
-</span><span class="kw">pub struct </span>EnterGuard&lt;<span class="lifetime">&#39;a</span>&gt; {
+#[must_use = <span class="string">"Creating and dropping a guard does nothing"</span>]
+</span><span class="kw">pub struct </span>EnterGuard&lt;<span class="lifetime">'a</span>&gt; {
     _guard: context::EnterGuard,
-    _handle_lifetime: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Handle&gt;,
+    _handle_lifetime: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Handle&gt;,
 }
 
 <span class="kw">impl </span>Handle {
@@ -567,7 +569,7 @@
     /// [`Sleep`]: struct@crate::time::Sleep
     /// [`TcpStream`]: struct@crate::net::TcpStream
     /// [`tokio::spawn`]: fn@crate::spawn
-    </span><span class="kw">pub fn </span>enter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; EnterGuard&lt;<span class="lifetime">&#39;_</span>&gt; {
+    </span><span class="kw">pub fn </span>enter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; EnterGuard&lt;<span class="lifetime">'_</span>&gt; {
         EnterGuard {
             _guard: context::enter(<span class="self">self</span>.clone()),
             _handle_lifetime: PhantomData,
@@ -599,14 +601,14 @@
     /// // Inside an async block or function.
     /// let handle = Handle::current();
     /// handle.spawn(async {
-    ///     println!(&quot;now running in the existing Runtime&quot;);
+    ///     println!("now running in the existing Runtime");
     /// });
     ///
     /// # let handle =
     /// thread::spawn(move || {
     ///     // Notice that the handle is created outside of this thread and then moved in
     ///     handle.spawn(async { /* ... */ });
-    ///     // This next line would cause a panic because we haven&#39;t entered the runtime
+    ///     // This next line would cause a panic because we haven't entered the runtime
     ///     // and created an EnterGuard
     ///     // let handle2 = Handle::current(); // panic
     ///     // So we create a guard here with Handle::enter();
@@ -634,7 +636,7 @@
 
     <span class="doccomment">/// Spawns a future onto the Tokio runtime.
     ///
-    /// This spawns the given future onto the runtime&#39;s executor, usually a
+    /// This spawns the given future onto the runtime's executor, usually a
     /// thread pool. The thread pool is then responsible for polling the future
     /// until it completes.
     ///
@@ -655,15 +657,15 @@
     ///
     /// // Spawn a future onto the runtime using the handle
     /// handle.spawn(async {
-    ///     println!(&quot;now running on a worker thread&quot;);
+    ///     println!("now running on a worker thread");
     /// });
     /// # }
     /// ```
     </span><span class="attr">#[track_caller]
     </span><span class="kw">pub fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, future: F) -&gt; JoinHandle&lt;F::Output&gt;
     <span class="kw">where
-        </span>F: Future + Send + <span class="lifetime">&#39;static</span>,
-        F::Output: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: Future + Send + <span class="lifetime">'static</span>,
+        F::Output: Send + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.spawn_named(future, <span class="prelude-val">None</span>)
     }
@@ -684,14 +686,14 @@
     ///
     /// // Spawn a blocking function onto the runtime using the handle
     /// handle.spawn_blocking(|| {
-    ///     println!(&quot;now running on a worker thread&quot;);
+    ///     println!("now running on a worker thread");
     /// });
     /// # }
     </span><span class="attr">#[track_caller]
     </span><span class="kw">pub fn </span>spawn_blocking&lt;F, R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F) -&gt; JoinHandle&lt;R&gt;
     <span class="kw">where
-        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">&#39;static</span>,
-        R: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">'static</span>,
+        R: Send + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.as_inner().spawn_blocking(<span class="self">self</span>, func)
     }
@@ -700,7 +702,7 @@
         <span class="self">self</span>.spawner.as_handle_inner()
     }
 
-    <span class="doccomment">/// Runs a future to completion on this `Handle`&#39;s associated `Runtime`.
+    <span class="doccomment">/// Runs a future to completion on this `Handle`'s associated `Runtime`.
     ///
     /// This runs the given future on the current thread, blocking until it is
     /// complete, and yielding its resolved result. Any tasks or timers which
@@ -715,7 +717,7 @@
     ///
     /// # If the runtime has been shut down
     ///
-    /// If the `Handle`&#39;s associated `Runtime` has been shut down (through
+    /// If the `Handle`'s associated `Runtime` has been shut down (through
     /// [`Runtime::shutdown_background`], [`Runtime::shutdown_timeout`], or by
     /// dropping it) and `Handle::block_on` is used it might return an error or
     /// panic. Specifically IO resources will return an error and timers will
@@ -740,7 +742,7 @@
     ///
     /// // Execute the future, blocking the current thread until completion
     /// handle.block_on(async {
-    ///     println!(&quot;hello&quot;);
+    ///     println!("hello");
     /// });
     /// ```
     ///
@@ -755,7 +757,7 @@
     ///     std::thread::spawn(move || {
     ///         // Using Handle::block_on to run async code in the new thread.
     ///         handle.block_on(async {
-    ///             println!(&quot;hello&quot;);
+    ///             println!("hello");
     ///         });
     ///     });
     /// }
@@ -772,9 +774,9 @@
     /// [`tokio::time`]: crate::time
     </span><span class="attr">#[track_caller]
     </span><span class="kw">pub fn </span>block_on&lt;F: Future&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, future: F) -&gt; F::Output {
-        <span class="attr">#[cfg(all(tokio_unstable, feature = <span class="string">&quot;tracing&quot;</span>))]
+        <span class="attr">#[cfg(all(tokio_unstable, feature = <span class="string">"tracing"</span>))]
         </span><span class="kw">let </span>future =
-            <span class="kw">crate</span>::util::trace::task(future, <span class="string">&quot;block_on&quot;</span>, <span class="prelude-val">None</span>, <span class="kw">super</span>::task::Id::next().as_u64());
+            <span class="kw">crate</span>::util::trace::task(future, <span class="string">"block_on"</span>, <span class="prelude-val">None</span>, <span class="kw">super</span>::task::Id::next().as_u64());
 
         <span class="comment">// Enter the **runtime** context. This configures spawning, the current I/O driver, ...
         </span><span class="kw">let </span>_rt_enter = <span class="self">self</span>.enter();
@@ -785,18 +787,18 @@
         <span class="comment">// Block on the future
         </span>blocking_enter
             .block_on(future)
-            .expect(<span class="string">&quot;failed to park thread&quot;</span>)
+            .expect(<span class="string">"failed to park thread"</span>)
     }
 
     <span class="attr">#[track_caller]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>spawn_named&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, future: F, _name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; JoinHandle&lt;F::Output&gt;
     <span class="kw">where
-        </span>F: Future + Send + <span class="lifetime">&#39;static</span>,
-        F::Output: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: Future + Send + <span class="lifetime">'static</span>,
+        F::Output: Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span>id = <span class="kw">crate</span>::runtime::task::Id::next();
-        <span class="attr">#[cfg(all(tokio_unstable, feature = <span class="string">&quot;tracing&quot;</span>))]
-        </span><span class="kw">let </span>future = <span class="kw">crate</span>::util::trace::task(future, <span class="string">&quot;task&quot;</span>, _name, id.as_u64());
+        <span class="attr">#[cfg(all(tokio_unstable, feature = <span class="string">"tracing"</span>))]
+        </span><span class="kw">let </span>future = <span class="kw">crate</span>::util::trace::task(future, <span class="string">"task"</span>, _name, id.as_u64());
         <span class="self">self</span>.spawner.spawn(future, id)
     }
 
@@ -827,8 +829,8 @@
     <span class="attr">#[track_caller]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>spawn_blocking&lt;F, R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, rt: <span class="kw-2">&amp;</span><span class="kw">dyn </span>ToHandle, func: F) -&gt; JoinHandle&lt;R&gt;
     <span class="kw">where
-        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">&#39;static</span>,
-        R: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">'static</span>,
+        R: Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span>(join_handle, _was_spawned) = <span class="kw">if </span><span class="macro">cfg!</span>(debug_assertions)
             &amp;&amp; std::mem::size_of::&lt;F&gt;() &gt; <span class="number">2048
@@ -849,8 +851,8 @@
         ), allow(dead_code))]
         </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>spawn_mandatory_blocking&lt;F, R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, rt: <span class="kw-2">&amp;</span><span class="kw">dyn </span>ToHandle, func: F) -&gt; <span class="prelude-ty">Option</span>&lt;JoinHandle&lt;R&gt;&gt;
         <span class="kw">where
-            </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">&#39;static</span>,
-            R: Send + <span class="lifetime">&#39;static</span>,
+            </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">'static</span>,
+            R: Send + <span class="lifetime">'static</span>,
         {
             <span class="kw">let </span>(join_handle, was_spawned) = <span class="kw">if </span><span class="macro">cfg!</span>(debug_assertions) &amp;&amp; std::mem::size_of::&lt;F&gt;() &gt; <span class="number">2048 </span>{
                 <span class="self">self</span>.spawn_blocking_inner(
@@ -885,28 +887,28 @@
         rt: <span class="kw-2">&amp;</span><span class="kw">dyn </span>ToHandle,
     ) -&gt; (JoinHandle&lt;R&gt;, bool)
     <span class="kw">where
-        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">&#39;static</span>,
-        R: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">'static</span>,
+        R: Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span>fut = BlockingTask::new(func);
         <span class="kw">let </span>id = <span class="kw">super</span>::task::Id::next();
-        <span class="attr">#[cfg(all(tokio_unstable, feature = <span class="string">&quot;tracing&quot;</span>))]
+        <span class="attr">#[cfg(all(tokio_unstable, feature = <span class="string">"tracing"</span>))]
         </span><span class="kw">let </span>fut = {
             <span class="kw">use </span>tracing::Instrument;
             <span class="kw">let </span>location = std::panic::Location::caller();
             <span class="kw">let </span>span = <span class="macro">tracing::trace_span!</span>(
-                target: <span class="string">&quot;tokio::task::blocking&quot;</span>,
-                <span class="string">&quot;runtime.spawn&quot;</span>,
-                kind = %<span class="string">&quot;blocking&quot;</span>,
+                target: <span class="string">"tokio::task::blocking"</span>,
+                <span class="string">"runtime.spawn"</span>,
+                kind = %<span class="string">"blocking"</span>,
                 task.name = %name.unwrap_or_default(),
                 task.id = id.as_u64(),
-                <span class="string">&quot;fn&quot; </span>= %std::any::type_name::&lt;F&gt;(),
-                spawn.location = %<span class="macro">format_args!</span>(<span class="string">&quot;{}:{}:{}&quot;</span>, location.file(), location.line(), location.column()),
+                <span class="string">"fn" </span>= %std::any::type_name::&lt;F&gt;(),
+                spawn.location = %<span class="macro">format_args!</span>(<span class="string">"{}:{}:{}"</span>, location.file(), location.line(), location.column()),
             );
             fut.instrument(span)
         };
 
-        <span class="attr">#[cfg(not(all(tokio_unstable, feature = <span class="string">&quot;tracing&quot;</span>)))]
+        <span class="attr">#[cfg(not(all(tokio_unstable, feature = <span class="string">"tracing"</span>)))]
         </span><span class="kw">let _ </span>= name;
 
         <span class="kw">let </span>(task, handle) = task::unowned(fut, NoopSchedule, id);
@@ -956,17 +958,17 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>TryCurrentErrorKind {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">use </span>TryCurrentErrorKind::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self </span>{
-            NoContext =&gt; f.write_str(<span class="string">&quot;NoContext&quot;</span>),
-            ThreadLocalDestroyed =&gt; f.write_str(<span class="string">&quot;ThreadLocalDestroyed&quot;</span>),
+            NoContext =&gt; f.write_str(<span class="string">"NoContext"</span>),
+            ThreadLocalDestroyed =&gt; f.write_str(<span class="string">"ThreadLocalDestroyed"</span>),
         }
     }
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>TryCurrentError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">use </span>TryCurrentErrorKind::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self</span>.kind {
             NoContext =&gt; f.write_str(CONTEXT_MISSING_ERROR),

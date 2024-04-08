@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/runtime/basic_scheduler.rs`."><title>basic_scheduler.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/runtime/basic_scheduler.rs`."><title>basic_scheduler.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../tokio/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -664,9 +666,9 @@
     </span>spawner: Spawner,
 
     <span class="doccomment">/// This is usually None, but right before dropping the BasicScheduler, it
-    /// is changed to `Some` with the context being the runtime&#39;s own context.
+    /// is changed to `Some` with the context being the runtime's own context.
     /// This ensures that any tasks dropped in the `BasicScheduler`s destructor
-    /// run in that runtime&#39;s context.
+    /// run in that runtime's context.
     </span>context_guard: <span class="prelude-ty">Option</span>&lt;EnterGuard&gt;,
 }
 
@@ -827,7 +829,7 @@
 
                         Pending
                     }))
-                    .expect(<span class="string">&quot;Failed to `Enter::block_on`&quot;</span>)
+                    .expect(<span class="string">"Failed to `Enter::block_on`"</span>)
                 {
                     <span class="kw">return </span>out;
                 }
@@ -835,7 +837,7 @@
         }
     }
 
-    <span class="kw">fn </span>take_core(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;CoreGuard&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+    <span class="kw">fn </span>take_core(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;CoreGuard&lt;<span class="lifetime">'_</span>&gt;&gt; {
         <span class="kw">let </span>core = <span class="self">self</span>.core.take()<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(CoreGuard {
@@ -860,7 +862,7 @@
         </span><span class="kw">let </span>core = <span class="kw">match </span><span class="self">self</span>.take_core() {
             <span class="prelude-val">Some</span>(core) =&gt; core,
             <span class="prelude-val">None </span><span class="kw">if </span>std::thread::panicking() =&gt; <span class="kw">return</span>,
-            <span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Oh no! We never placed the Core back, this is a bug!&quot;</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Oh no! We never placed the Core back, this is a bug!"</span>),
         };
 
         core.enter(|<span class="kw-2">mut </span>core, context| {
@@ -897,8 +899,8 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>BasicScheduler {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        fmt.debug_struct(<span class="string">&quot;BasicScheduler&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        fmt.debug_struct(<span class="string">"BasicScheduler"</span>).finish()
     }
 }
 
@@ -937,7 +939,7 @@
     <span class="doccomment">/// Blocks the current thread until an event is received by the driver,
     /// including I/O events, timer events, ...
     </span><span class="kw">fn </span>park(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>core: Box&lt;Core&gt;) -&gt; Box&lt;Core&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>driver = core.driver.take().expect(<span class="string">&quot;driver missing&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>driver = core.driver.take().expect(<span class="string">"driver missing"</span>);
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = <span class="kw-2">&amp;</span><span class="self">self</span>.spawner.shared.config.before_park {
             <span class="comment">// Incorrect lint, the closures are actually different types so `f`
@@ -955,7 +957,7 @@
             core.metrics.submit(<span class="kw-2">&amp;</span>core.spawner.shared.worker_metrics);
 
             <span class="kw">let </span>(c, <span class="kw">_</span>) = <span class="self">self</span>.enter(core, || {
-                driver.park().expect(<span class="string">&quot;failed to park&quot;</span>);
+                driver.park().expect(<span class="string">"failed to park"</span>);
             });
 
             core = c;
@@ -976,13 +978,13 @@
 
     <span class="doccomment">/// Checks the driver for new events without blocking the thread.
     </span><span class="kw">fn </span>park_yield(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>core: Box&lt;Core&gt;) -&gt; Box&lt;Core&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>driver = core.driver.take().expect(<span class="string">&quot;driver missing&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>driver = core.driver.take().expect(<span class="string">"driver missing"</span>);
 
         core.metrics.submit(<span class="kw-2">&amp;</span>core.spawner.shared.worker_metrics);
         <span class="kw">let </span>(<span class="kw-2">mut </span>core, <span class="kw">_</span>) = <span class="self">self</span>.enter(core, || {
             driver
                 .park_timeout(Duration::from_millis(<span class="number">0</span>))
-                .expect(<span class="string">&quot;failed to park&quot;</span>);
+                .expect(<span class="string">"failed to park"</span>);
         });
 
         core.driver = <span class="prelude-val">Some</span>(driver);
@@ -999,7 +1001,7 @@
         </span><span class="kw">let </span>ret = f();
 
         <span class="comment">// Take the scheduler core back
-        </span><span class="kw">let </span>core = <span class="self">self</span>.core.borrow_mut().take().expect(<span class="string">&quot;core missing&quot;</span>);
+        </span><span class="kw">let </span>core = <span class="self">self</span>.core.borrow_mut().take().expect(<span class="string">"core missing"</span>);
         (core, ret)
     }
 }
@@ -1010,8 +1012,8 @@
     <span class="doccomment">/// Spawns a future onto the basic scheduler
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>spawn&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, future: F, id: <span class="kw">super</span>::task::Id) -&gt; JoinHandle&lt;F::Output&gt;
     <span class="kw">where
-        </span>F: <span class="kw">crate</span>::future::Future + Send + <span class="lifetime">&#39;static</span>,
-        F::Output: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: <span class="kw">crate</span>::future::Future + Send + <span class="lifetime">'static</span>,
+        F::Output: Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span>(handle, notified) = <span class="self">self</span>.shared.owned.bind(future, <span class="self">self</span>.shared.clone(), id);
 
@@ -1029,7 +1031,7 @@
         }
     }
 
-    <span class="kw">fn </span>waker_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WakerRef&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>waker_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WakerRef&lt;<span class="lifetime">'_</span>&gt; {
         <span class="comment">// Set woken to true when enter block_on, ensure outer future
         // be polled for the first time when enter loop
         </span><span class="self">self</span>.shared.woken.store(<span class="bool-val">true</span>, Release);
@@ -1069,8 +1071,8 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Spawner {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        fmt.debug_struct(<span class="string">&quot;Spawner&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        fmt.debug_struct(<span class="string">"Spawner"</span>).finish()
     }
 }
 
@@ -1097,7 +1099,7 @@
                 </span><span class="self">self</span>.scheduler_metrics.inc_remote_schedule_count();
 
                 <span class="comment">// If the queue is None, then the runtime has shut down. We
-                // don&#39;t need to do anything with the notification in that case.
+                // don't need to do anything with the notification in that case.
                 </span><span class="kw">let </span><span class="kw-2">mut </span>guard = <span class="self">self</span>.queue.lock();
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(queue) = guard.as_mut() {
                     queue.push_back(task);
@@ -1130,7 +1132,7 @@
                                 <span class="self">self</span>.owned.close_and_shutdown_all();
                             }
                         }
-                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;runtime core not set in CURRENT thread-local&quot;</span>),
+                        <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"runtime core not set in CURRENT thread-local"</span>),
                     })
                 }
             }
@@ -1154,12 +1156,12 @@
 
 </span><span class="doccomment">/// Used to ensure we always place the `Core` value back into its slot in
 /// `BasicScheduler`, even if the future panics.
-</span><span class="kw">struct </span>CoreGuard&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">struct </span>CoreGuard&lt;<span class="lifetime">'a</span>&gt; {
     context: Context,
-    basic_scheduler: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>BasicScheduler,
+    basic_scheduler: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>BasicScheduler,
 }
 
-<span class="kw">impl </span>CoreGuard&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>CoreGuard&lt;<span class="lifetime">'_</span>&gt; {
     <span class="attr">#[track_caller]
     </span><span class="kw">fn </span>block_on&lt;F: Future&gt;(<span class="self">self</span>, future: F) -&gt; F::Output {
         <span class="kw">let </span>ret = <span class="self">self</span>.enter(|<span class="kw-2">mut </span>core, context| {
@@ -1169,7 +1171,7 @@
 
             <span class="macro">pin!</span>(future);
 
-            <span class="lifetime">&#39;outer</span>: <span class="kw">loop </span>{
+            <span class="lifetime">'outer</span>: <span class="kw">loop </span>{
                 <span class="kw">if </span>core.spawner.reset_woken() {
                     <span class="kw">let </span>(c, res) = context.enter(core, || {
                         <span class="kw">crate</span>::coop::budget(|| future.as_mut().poll(<span class="kw-2">&amp;mut </span>cx))
@@ -1183,7 +1185,7 @@
                 }
 
                 <span class="kw">for _ in </span><span class="number">0</span>..core.spawner.shared.config.event_interval {
-                    <span class="comment">// Make sure we didn&#39;t hit an unhandled_panic
+                    <span class="comment">// Make sure we didn't hit an unhandled_panic
                     </span><span class="kw">if </span>core.unhandled_panic {
                         <span class="kw">return </span>(core, <span class="prelude-val">None</span>);
                     }
@@ -1204,7 +1206,7 @@
                             core = context.park(core);
 
                             <span class="comment">// Try polling the `block_on` future next
-                            </span><span class="kw">continue </span><span class="lifetime">&#39;outer</span>;
+                            </span><span class="kw">continue </span><span class="lifetime">'outer</span>;
                         }
                     };
 
@@ -1227,7 +1229,7 @@
             <span class="prelude-val">Some</span>(ret) =&gt; ret,
             <span class="prelude-val">None </span>=&gt; {
                 <span class="comment">// `block_on` panicked.
-                </span><span class="macro">panic!</span>(<span class="string">&quot;a spawned task panicked and the runtime is configured to shut down on unhandled panic&quot;</span>);
+                </span><span class="macro">panic!</span>(<span class="string">"a spawned task panicked and the runtime is configured to shut down on unhandled panic"</span>);
             }
         }
     }
@@ -1239,7 +1241,7 @@
         </span>F: FnOnce(Box&lt;Core&gt;, <span class="kw-2">&amp;</span>Context) -&gt; (Box&lt;Core&gt;, R),
     {
         <span class="comment">// Remove `core` from `context` to pass into the closure.
-        </span><span class="kw">let </span>core = <span class="self">self</span>.context.core.borrow_mut().take().expect(<span class="string">&quot;core missing&quot;</span>);
+        </span><span class="kw">let </span>core = <span class="self">self</span>.context.core.borrow_mut().take().expect(<span class="string">"core missing"</span>);
 
         <span class="comment">// Call the closure and place `core` back
         </span><span class="kw">let </span>(core, ret) = CURRENT.set(<span class="kw-2">&amp;</span><span class="self">self</span>.context, || f(core, <span class="kw-2">&amp;</span><span class="self">self</span>.context));
@@ -1250,7 +1252,7 @@
     }
 }
 
-<span class="kw">impl </span>Drop <span class="kw">for </span>CoreGuard&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>Drop <span class="kw">for </span>CoreGuard&lt;<span class="lifetime">'_</span>&gt; {
     <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(core) = <span class="self">self</span>.context.core.borrow_mut().take() {
             <span class="comment">// Replace old scheduler back into the state to allow

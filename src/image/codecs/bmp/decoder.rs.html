@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/bmp/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/bmp/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1725,20 +1727,20 @@
     Format888,
 }
 
-<span class="kw">enum </span>Chunker&lt;<span class="lifetime">&#39;a</span>&gt; {
-    FromTop(ChunksMut&lt;<span class="lifetime">&#39;a</span>, u8&gt;),
-    FromBottom(Rev&lt;ChunksMut&lt;<span class="lifetime">&#39;a</span>, u8&gt;&gt;),
+<span class="kw">enum </span>Chunker&lt;<span class="lifetime">'a</span>&gt; {
+    FromTop(ChunksMut&lt;<span class="lifetime">'a</span>, u8&gt;),
+    FromBottom(Rev&lt;ChunksMut&lt;<span class="lifetime">'a</span>, u8&gt;&gt;),
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RowIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    chunks: Chunker&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RowIterator&lt;<span class="lifetime">'a</span>&gt; {
+    chunks: Chunker&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>RowIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u8];
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>RowIterator&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u8];
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u8]&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u8]&gt; {
         <span class="kw">match </span><span class="self">self</span>.chunks {
             Chunker::FromTop(<span class="kw-2">ref mut </span>chunks) =&gt; chunks.next(),
             Chunker::FromBottom(<span class="kw-2">ref mut </span>chunks) =&gt; chunks.next(),
@@ -1761,7 +1763,7 @@
     <span class="doccomment">/// Bitfield (of the specified width – 16- or 32-bit) masks not present
     </span>BitfieldMasksMissing(u32),
 
-    <span class="doccomment">/// BMP&#39;s &quot;BM&quot; signature wrong or missing
+    <span class="doccomment">/// BMP's "BM" signature wrong or missing
     </span>BmpSignatureInvalid,
     <span class="doccomment">/// More than the exactly one allowed plane specified by the format
     </span>MoreThanOnePlane,
@@ -1793,43 +1795,43 @@
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
-            DecoderError::RleDataTooShort =&gt; f.write_str(<span class="string">&quot;Not enough RLE data&quot;</span>),
-            DecoderError::BitfieldMaskNonContiguous =&gt; f.write_str(<span class="string">&quot;Non-contiguous bitfield mask&quot;</span>),
-            DecoderError::BitfieldMaskInvalid =&gt; f.write_str(<span class="string">&quot;Invalid bitfield mask&quot;</span>),
+            DecoderError::RleDataTooShort =&gt; f.write_str(<span class="string">"Not enough RLE data"</span>),
+            DecoderError::BitfieldMaskNonContiguous =&gt; f.write_str(<span class="string">"Non-contiguous bitfield mask"</span>),
+            DecoderError::BitfieldMaskInvalid =&gt; f.write_str(<span class="string">"Invalid bitfield mask"</span>),
             DecoderError::BitfieldMaskMissing(bb) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Missing {}-bit bitfield mask&quot;</span>, bb))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Missing {}-bit bitfield mask"</span>, bb))
             }
             DecoderError::BitfieldMasksMissing(bb) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Missing {}-bit bitfield masks&quot;</span>, bb))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Missing {}-bit bitfield masks"</span>, bb))
             }
-            DecoderError::BmpSignatureInvalid =&gt; f.write_str(<span class="string">&quot;BMP signature not found&quot;</span>),
-            DecoderError::MoreThanOnePlane =&gt; f.write_str(<span class="string">&quot;More than one plane&quot;</span>),
+            DecoderError::BmpSignatureInvalid =&gt; f.write_str(<span class="string">"BMP signature not found"</span>),
+            DecoderError::MoreThanOnePlane =&gt; f.write_str(<span class="string">"More than one plane"</span>),
             DecoderError::InvalidChannelWidth(tp, n) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid channel bit count for {}: {}&quot;</span>, tp, n))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid channel bit count for {}: {}"</span>, tp, n))
             }
-            DecoderError::NegativeWidth(w) =&gt; f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Negative width ({})&quot;</span>, w)),
+            DecoderError::NegativeWidth(w) =&gt; f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Negative width ({})"</span>, w)),
             DecoderError::ImageTooLarge(w, h) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Image too large (one of ({}, {}) &gt; soft limit of {})&quot;</span>,
+                <span class="string">"Image too large (one of ({}, {}) &gt; soft limit of {})"</span>,
                 w, h, MAX_WIDTH_HEIGHT
             )),
-            DecoderError::InvalidHeight =&gt; f.write_str(<span class="string">&quot;Invalid height&quot;</span>),
+            DecoderError::InvalidHeight =&gt; f.write_str(<span class="string">"Invalid height"</span>),
             DecoderError::ImageTypeInvalidForTopDown(tp) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Invalid image type {} for top-down image.&quot;</span>,
+                <span class="string">"Invalid image type {} for top-down image."</span>,
                 tp
             )),
             DecoderError::ImageTypeUnknown(tp) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Unknown image compression type {}&quot;</span>, tp))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Unknown image compression type {}"</span>, tp))
             }
             DecoderError::HeaderTooSmall(s) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Bitmap header too small ({} bytes)&quot;</span>, s))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Bitmap header too small ({} bytes)"</span>, s))
             }
             DecoderError::PaletteSizeExceeded {
                 colors_used,
                 bit_count,
             } =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Palette size {} exceeds maximum size for BMP with bit count of {}&quot;</span>,
+                <span class="string">"Palette size {} exceeds maximum size for BMP with bit count of {}"</span>,
                 colors_used, bit_count
             )),
         }
@@ -1858,12 +1860,12 @@
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>ChannelWidthError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         f.write_str(<span class="kw">match </span><span class="self">self </span>{
-            ChannelWidthError::Rgb =&gt; <span class="string">&quot;RGB&quot;</span>,
-            ChannelWidthError::Rle8 =&gt; <span class="string">&quot;RLE8&quot;</span>,
-            ChannelWidthError::Rle4 =&gt; <span class="string">&quot;RLE4&quot;</span>,
-            ChannelWidthError::Bitfields =&gt; <span class="string">&quot;bitfields&quot;</span>,
+            ChannelWidthError::Rgb =&gt; <span class="string">"RGB"</span>,
+            ChannelWidthError::Rle8 =&gt; <span class="string">"RLE8"</span>,
+            ChannelWidthError::Rle4 =&gt; <span class="string">"RLE4"</span>,
+            ChannelWidthError::Bitfields =&gt; <span class="string">"bitfields"</span>,
         })
     }
 }
@@ -1877,7 +1879,7 @@
             ImageError::Unsupported(UnsupportedError::from_format_and_kind(
                 ImageFormat::Bmp.into(),
                 UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                    <span class="string">&quot;Image dimensions ({}x{} w/{} channels) are too large&quot;</span>,
+                    <span class="string">"Image dimensions ({}x{} w/{} channels) are too large"</span>,
                     width, length, channels
                 )),
             ))
@@ -1899,10 +1901,10 @@
 
 <span class="doccomment">/// The maximum starting number of pixels in the pixel buffer, might want to tweak this.
 ///
-/// For images that specify large sizes, we don&#39;t allocate the full buffer right away
+/// For images that specify large sizes, we don't allocate the full buffer right away
 /// to somewhat mitigate trying to make the decoder run out of memory by sending a bogus image.
 /// This is somewhat of a workaroud as ideally we would check against the expected file size
-/// but that&#39;s not possible through the Read and Seek traits alone and would require the encoder
+/// but that's not possible through the Read and Seek traits alone and would require the encoder
 /// to provided with it from the caller.
 ///
 /// NOTE: This is multiplied by 3 or 4 depending on the number of channels to get the maximum
@@ -1910,7 +1912,7 @@
 </span><span class="kw">const </span>MAX_INITIAL_PIXELS: usize = <span class="number">8192 </span>* <span class="number">4096</span>;
 
 <span class="doccomment">/// Sets all bytes in an mutable iterator over slices of bytes to 0.
-</span><span class="kw">fn </span>blank_bytes&lt;<span class="lifetime">&#39;a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u8]&gt;&gt;(iterator: T) {
+</span><span class="kw">fn </span>blank_bytes&lt;<span class="lifetime">'a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u8]&gt;&gt;(iterator: T) {
     <span class="kw">for </span>chunk <span class="kw">in </span>iterator {
         <span class="kw">for </span>b <span class="kw">in </span>chunk {
             <span class="kw-2">*</span>b = <span class="number">0</span>;
@@ -1950,7 +1952,7 @@
 }
 
 <span class="doccomment">/// Call the provided function on each row of the provided buffer, returning Err if the provided
-/// function returns an error, extends the buffer if it&#39;s not large enough.
+/// function returns an error, extends the buffer if it's not large enough.
 </span><span class="kw">fn </span>with_rows&lt;F&gt;(
     buffer: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;,
     width: i32,
@@ -1996,7 +1998,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">fn </span>set_8bit_pixel_run&lt;<span class="lifetime">&#39;a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt;&gt;(
+<span class="kw">fn </span>set_8bit_pixel_run&lt;<span class="lifetime">'a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>u8&gt;&gt;(
     pixel_iter: <span class="kw-2">&amp;mut </span>ChunksMut&lt;u8&gt;,
     palette: <span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]],
     indices: T,
@@ -2015,7 +2017,7 @@
     <span class="bool-val">true
 </span>}
 
-<span class="kw">fn </span>set_4bit_pixel_run&lt;<span class="lifetime">&#39;a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt;&gt;(
+<span class="kw">fn </span>set_4bit_pixel_run&lt;<span class="lifetime">'a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>u8&gt;&gt;(
     pixel_iter: <span class="kw-2">&amp;mut </span>ChunksMut&lt;u8&gt;,
     palette: <span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]],
     indices: T,
@@ -2045,7 +2047,7 @@
 </span>}
 
 <span class="attr">#[rustfmt::skip]
-</span><span class="kw">fn </span>set_2bit_pixel_run&lt;<span class="lifetime">&#39;a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt;&gt;(
+</span><span class="kw">fn </span>set_2bit_pixel_run&lt;<span class="lifetime">'a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>u8&gt;&gt;(
     pixel_iter: <span class="kw-2">&amp;mut </span>ChunksMut&lt;u8&gt;,
     palette: <span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]],
     indices: T,
@@ -2076,7 +2078,7 @@
     <span class="bool-val">true
 </span>}
 
-<span class="kw">fn </span>set_1bit_pixel_run&lt;<span class="lifetime">&#39;a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt;&gt;(
+<span class="kw">fn </span>set_1bit_pixel_run&lt;<span class="lifetime">'a</span>, T: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>u8&gt;&gt;(
     pixel_iter: <span class="kw-2">&amp;mut </span>ChunksMut&lt;u8&gt;,
     palette: <span class="kw-2">&amp;</span>[[u8; <span class="number">3</span>]],
     indices: T,
@@ -2202,12 +2204,12 @@
     PixelRun(u8, u8),
 }
 
-<span class="kw">struct </span>RLEInsnIterator&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; {
-    r: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>R,
+<span class="kw">struct </span>RLEInsnIterator&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; {
+    r: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>R,
     image_type: ImageType,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: Read&gt; Iterator <span class="kw">for </span>RLEInsnIterator&lt;<span class="lifetime">&#39;a</span>, R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: Read&gt; Iterator <span class="kw">for </span>RLEInsnIterator&lt;<span class="lifetime">'a</span>, R&gt; {
     <span class="kw">type </span>Item = RLEInsn;
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;RLEInsn&gt; {
@@ -2287,7 +2289,7 @@
         <span class="prelude-val">Ok</span>(decoder)
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;ico&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"ico"</span>)]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new_with_ico_format(reader: R) -&gt; ImageResult&lt;BmpDecoder&lt;R&gt;&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = BmpDecoder {
             reader,
@@ -2320,7 +2322,7 @@
         <span class="self">self</span>.indexed_color = indexed_color;
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;ico&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"ico"</span>)]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>reader(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>R {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.reader
     }
@@ -2332,12 +2334,12 @@
         <span class="kw">let </span><span class="kw-2">mut </span>signature = [<span class="number">0</span>; <span class="number">2</span>];
         <span class="self">self</span>.reader.read_exact(<span class="kw-2">&amp;mut </span>signature)<span class="question-mark">?</span>;
 
-        <span class="kw">if </span>signature != <span class="string">b&quot;BM&quot;</span>[..] {
+        <span class="kw">if </span>signature != <span class="string">b"BM"</span>[..] {
             <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::BmpSignatureInvalid.into());
         }
 
         <span class="comment">// The next 8 bytes represent file size, followed the 4 reserved bytes
-        // We&#39;re not interesting these values
+        // We're not interesting these values
         </span><span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
         <span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
 
@@ -2351,7 +2353,7 @@
     /// returns Err if any of the values are invalid.
     </span><span class="kw">fn </span>read_bitmap_core_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
         <span class="comment">// As height/width values in BMP files with core headers are only 16 bits long,
-        // they won&#39;t be larger than `MAX_WIDTH_HEIGHT`.
+        // they won't be larger than `MAX_WIDTH_HEIGHT`.
         </span><span class="self">self</span>.width = i32::from(<span class="self">self</span>.reader.read_u16::&lt;LittleEndian&gt;()<span class="question-mark">?</span>);
         <span class="self">self</span>.height = i32::from(<span class="self">self</span>.reader.read_u16::&lt;LittleEndian&gt;()<span class="question-mark">?</span>);
 
@@ -2470,7 +2472,7 @@
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
                     UnsupportedError::from_format_and_kind(
                         ImageFormat::Bmp.into(),
-                        UnsupportedErrorKind::GenericFeature(<span class="string">&quot;JPEG compression&quot;</span>.to_owned()),
+                        UnsupportedErrorKind::GenericFeature(<span class="string">"JPEG compression"</span>.to_owned()),
                     ),
                 ));
             }
@@ -2479,7 +2481,7 @@
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
                     UnsupportedError::from_format_and_kind(
                         ImageFormat::Bmp.into(),
-                        UnsupportedErrorKind::GenericFeature(<span class="string">&quot;PNG compression&quot;</span>.to_owned()),
+                        UnsupportedErrorKind::GenericFeature(<span class="string">"PNG compression"</span>.to_owned()),
                     ),
                 ));
             }
@@ -2488,7 +2490,7 @@
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
                     UnsupportedError::from_format_and_kind(
                         ImageFormat::Bmp.into(),
-                        UnsupportedErrorKind::GenericFeature(<span class="string">&quot;CMYK format&quot;</span>.to_owned()),
+                        UnsupportedErrorKind::GenericFeature(<span class="string">"CMYK format"</span>.to_owned()),
                     ),
                 ));
             }
@@ -2501,15 +2503,15 @@
         <span class="comment">// The next 12 bytes represent data array size in bytes,
         // followed the horizontal and vertical printing resolutions
         // We will calculate the pixel array size using width &amp; height of image
-        // We&#39;re not interesting the horz or vert printing resolutions
+        // We're not interesting the horz or vert printing resolutions
         </span><span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
         <span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
         <span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
 
         <span class="self">self</span>.colors_used = <span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
 
-        <span class="comment">// The next 4 bytes represent number of &quot;important&quot; colors
-        // We&#39;re not interested in this value, so we&#39;ll skip it
+        <span class="comment">// The next 4 bytes represent number of "important" colors
+        // We're not interested in this value, so we'll skip it
         </span><span class="self">self</span>.reader.read_u32::&lt;LittleEndian&gt;()<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
@@ -2559,7 +2561,7 @@
                 BITMAPV4HEADER_SIZE =&gt; BMPHeaderType::V4,
                 BITMAPV5HEADER_SIZE =&gt; BMPHeaderType::V5,
                 <span class="kw">_ if </span>bmp_header_size &lt; BITMAPCOREHEADER_SIZE =&gt; {
-                    <span class="comment">// Size of any valid header types won&#39;t be smaller than core header type.
+                    <span class="comment">// Size of any valid header types won't be smaller than core header type.
                     </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::HeaderTooSmall(bmp_header_size).into());
                 }
                 <span class="kw">_ </span>=&gt; {
@@ -2567,7 +2569,7 @@
                         UnsupportedError::from_format_and_kind(
                             ImageFormat::Bmp.into(),
                             UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                                <span class="string">&quot;Unknown bitmap header type (size={})&quot;</span>,
+                                <span class="string">"Unknown bitmap header type (size={})"</span>,
                                 bmp_header_size
                             )),
                         ),
@@ -2610,7 +2612,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;ico&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"ico"</span>)]
     #[doc(hidden)]
     </span><span class="kw">pub fn </span>read_metadata_in_ico_format(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;()&gt; {
         <span class="self">self</span>.no_file_header = <span class="bool-val">true</span>;
@@ -2658,7 +2660,7 @@
 
         <span class="comment">// Resize and read the palette entries to the buffer.
         // We limit the buffer to at most 256 colours to avoid any oom issues as
-        // 8-bit images can&#39;t reference more than 256 indexes anyhow.
+        // 8-bit images can't reference more than 256 indexes anyhow.
         </span>buf.resize(cmp::min(length, max_length), <span class="number">0</span>);
         <span class="self">self</span>.reader.by_ref().read_exact(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
 
@@ -2716,7 +2718,7 @@
         </span><span class="macro">vec!</span>[<span class="number">0xFF</span>; cmp::min(row_width * <span class="self">self</span>.height <span class="kw">as </span>usize, max_starting_size)]
     }
 
-    <span class="kw">fn </span>rows&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, pixel_data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u8]) -&gt; RowIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>rows&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, pixel_data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u8]) -&gt; RowIterator&lt;<span class="lifetime">'a</span>&gt; {
         <span class="kw">let </span>stride = <span class="self">self</span>.width <span class="kw">as </span>usize * <span class="self">self</span>.num_channels();
         <span class="kw">if </span><span class="self">self</span>.top_down {
             RowIterator {
@@ -2905,7 +2907,7 @@
                 ImageError::Unsupported(UnsupportedError::from_format_and_kind(
                     ImageFormat::Bmp.into(),
                     UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                        <span class="string">&quot;Image dimensions ({}x{} w/{} channels) are too large&quot;</span>,
+                        <span class="string">"Image dimensions ({}x{} w/{} channels) are too large"</span>,
                         <span class="self">self</span>.width,
                         <span class="self">self</span>.height,
                         <span class="self">self</span>.num_channels()
@@ -2917,7 +2919,7 @@
             <span class="self">self</span>.read_rle_data_step(<span class="kw-2">&amp;mut </span>pixel_data, image_type, <span class="number">0</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
         <span class="comment">// Extend the buffer if there is still data left.
         // If eof_hit is true, it means that we hit an end-of-file marker in the last step and
-        // we won&#39;t extend the buffer further to avoid small files with a large specified size causing memory issues.
+        // we won't extend the buffer further to avoid small files with a large specified size causing memory issues.
         // This is only a rudimentary check, a file could still create a large buffer, but the
         // file would now have to at least have some data in it.
         </span><span class="kw">if </span>pixel_data.len() &lt; full_image_size &amp;&amp; !eof_hit {
@@ -2947,8 +2949,8 @@
         <span class="comment">// Scope the borrowing of pixel_data by the row iterator.
         </span>{
             <span class="comment">// Handling deltas in the RLE scheme means that we need to manually
-            // iterate through rows and pixels.  Even if we didn&#39;t have to handle
-            // deltas, we have to ensure that a single runlength doesn&#39;t straddle
+            // iterate through rows and pixels.  Even if we didn't have to handle
+            // deltas, we have to ensure that a single runlength doesn't straddle
             // two rows.
             </span><span class="kw">let </span><span class="kw-2">mut </span>row_iter = <span class="self">self</span>.rows(<span class="kw-2">&amp;mut </span>pixel_data);
             <span class="comment">// If we have previously hit a delta value,
@@ -2960,30 +2962,30 @@
             };
             <span class="kw">let </span>p = <span class="self">self</span>.palette.as_ref().unwrap();
 
-            <span class="lifetime">&#39;row_loop</span>: <span class="kw">while let </span><span class="prelude-val">Some</span>(row) = row_iter.next() {
+            <span class="lifetime">'row_loop</span>: <span class="kw">while let </span><span class="prelude-val">Some</span>(row) = row_iter.next() {
                 <span class="kw">let </span><span class="kw-2">mut </span>pixel_iter = row.chunks_mut(num_channels);
                 <span class="comment">// Blank delta skipped pixels if any.
                 </span>blank_bytes((<span class="kw-2">&amp;mut </span>pixel_iter).take(delta_pixels_left.into()));
                 delta_pixels_left = <span class="number">0</span>;
 
-                <span class="lifetime">&#39;rle_loop</span>: <span class="kw">loop </span>{
+                <span class="lifetime">'rle_loop</span>: <span class="kw">loop </span>{
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(insn) = insns_iter.next() {
                         <span class="kw">match </span>insn {
                             RLEInsn::EndOfFile =&gt; {
                                 blank_bytes(pixel_iter);
                                 blank_bytes(row_iter);
                                 eof_hit = <span class="bool-val">true</span>;
-                                <span class="kw">break </span><span class="lifetime">&#39;row_loop</span>;
+                                <span class="kw">break </span><span class="lifetime">'row_loop</span>;
                             }
                             RLEInsn::EndOfRow =&gt; {
                                 blank_bytes(pixel_iter);
-                                <span class="kw">break </span><span class="lifetime">&#39;rle_loop</span>;
+                                <span class="kw">break </span><span class="lifetime">'rle_loop</span>;
                             }
                             RLEInsn::Delta(x_delta, y_delta) =&gt; {
                                 <span class="kw">if </span>y_delta &gt; <span class="number">0 </span>{
                                     <span class="kw">for </span>n <span class="kw">in </span><span class="number">1</span>..y_delta {
                                         <span class="kw">if let </span><span class="prelude-val">Some</span>(row) = row_iter.next() {
-                                            <span class="comment">// The msdn site on bitmap compression doesn&#39;t specify
+                                            <span class="comment">// The msdn site on bitmap compression doesn't specify
                                             // what happens to the values skipped when encountering
                                             // a delta code, however IE and the windows image
                                             // preview seems to replace them with black pixels,
@@ -2993,9 +2995,9 @@
                                             }
                                         } <span class="kw">else </span>{
                                             delta_pixels_left = x_delta;
-                                            <span class="comment">// We&#39;ve reached the end of the buffer.
+                                            <span class="comment">// We've reached the end of the buffer.
                                             </span>delta_rows_left = y_delta - n;
-                                            <span class="kw">break </span><span class="lifetime">&#39;row_loop</span>;
+                                            <span class="kw">break </span><span class="lifetime">'row_loop</span>;
                                         }
                                     }
                                 }
@@ -3006,7 +3008,7 @@
                                             <span class="kw-2">*</span>b = <span class="number">0</span>;
                                         }
                                     } <span class="kw">else </span>{
-                                        <span class="comment">// We can&#39;t go any further in this row.
+                                        <span class="comment">// We can't go any further in this row.
                                         </span><span class="kw">break</span>;
                                     }
                                 }
@@ -3023,7 +3025,7 @@
                                             indices.iter(),
                                             length <span class="kw">as </span>usize,
                                         ) {
-                                            <span class="kw">break </span><span class="lifetime">&#39;row_loop</span>;
+                                            <span class="kw">break </span><span class="lifetime">'row_loop</span>;
                                         }
                                     }
                                     ImageType::RLE4 =&gt; {
@@ -3033,14 +3035,14 @@
                                             indices.iter(),
                                             length <span class="kw">as </span>usize,
                                         ) {
-                                            <span class="kw">break </span><span class="lifetime">&#39;row_loop</span>;
+                                            <span class="kw">break </span><span class="lifetime">'row_loop</span>;
                                         }
                                     }
                                     <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
                                 }
                             }
                             RLEInsn::PixelRun(n_pixels, palette_index) =&gt; {
-                                <span class="comment">// A pixel run isn&#39;t allowed to span rows, but we
+                                <span class="comment">// A pixel run isn't allowed to span rows, but we
                                 // simply continue on to the next row if we run
                                 // out of pixels to set.
                                 </span><span class="kw">match </span>image_type {
@@ -3051,7 +3053,7 @@
                                             repeat(<span class="kw-2">&amp;</span>palette_index),
                                             n_pixels <span class="kw">as </span>usize,
                                         ) {
-                                            <span class="kw">break </span><span class="lifetime">&#39;rle_loop</span>;
+                                            <span class="kw">break </span><span class="lifetime">'rle_loop</span>;
                                         }
                                     }
                                     ImageType::RLE4 =&gt; {
@@ -3061,7 +3063,7 @@
                                             repeat(<span class="kw-2">&amp;</span>palette_index),
                                             n_pixels <span class="kw">as </span>usize,
                                         ) {
-                                            <span class="kw">break </span><span class="lifetime">&#39;rle_loop</span>;
+                                            <span class="kw">break </span><span class="lifetime">'rle_loop</span>;
                                         }
                                     }
                                     <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(),
@@ -3126,7 +3128,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>BmpDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>BmpDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = BmpReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -3156,7 +3158,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoderRect&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>BmpDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read + Seek&gt; ImageDecoderRect&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>BmpDecoder&lt;R&gt; {
     <span class="kw">fn </span>read_rect_with_progress&lt;F: Fn(Progress)&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: u32,
@@ -3195,7 +3197,7 @@
                 <span class="kw">let </span>read = bitfield.read(i);
                 <span class="kw">let </span>calc = (i <span class="kw">as </span>f64 / ((<span class="number">1 </span>&lt;&lt; len) - <span class="number">1</span>) <span class="kw">as </span>f64 * <span class="number">255f64</span>).round() <span class="kw">as </span>u8;
                 <span class="kw">if </span>read != calc {
-                    <span class="macro">println!</span>(<span class="string">&quot;len:{} i:{} read:{} calc:{}&quot;</span>, len, i, read, calc);
+                    <span class="macro">println!</span>(<span class="string">"len:{} i:{} read:{} calc:{}"</span>, len, i, read, calc);
                 }
                 <span class="macro">assert_eq!</span>(read, calc);
             }
@@ -3204,7 +3206,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>read_rect() {
-        <span class="kw">let </span>f = std::fs::File::open(<span class="string">&quot;tests/images/bmp/images/Core_8_Bit.bmp&quot;</span>).unwrap();
+        <span class="kw">let </span>f = std::fs::File::open(<span class="string">"tests/images/bmp/images/Core_8_Bit.bmp"</span>).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>decoder = <span class="kw">super</span>::BmpDecoder::new(f).unwrap();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf: Vec&lt;u8&gt; = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">8 </span>* <span class="number">8 </span>* <span class="number">3</span>];

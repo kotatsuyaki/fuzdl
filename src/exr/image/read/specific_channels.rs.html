@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/image/read/specific_channels.rs`."><title>specific_channels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/image/read/specific_channels.rs`."><title>specific_channels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -402,7 +404,7 @@
     /// The generic parameter can usually be inferred from the closure in `collect_pixels`.
     </span><span class="kw">fn </span>required&lt;Sample&gt;(<span class="self">self</span>, channel_name: <span class="kw">impl </span>Into&lt;Text&gt;) -&gt; ReadRequiredChannel&lt;<span class="self">Self</span>, Sample&gt; {
         <span class="kw">let </span>channel_name = channel_name.into();
-        <span class="macro">assert!</span>(<span class="self">self</span>.already_contains(<span class="kw-2">&amp;</span>channel_name).not(), <span class="string">&quot;a channel with the name `{}` is already defined&quot;</span>, channel_name);
+        <span class="macro">assert!</span>(<span class="self">self</span>.already_contains(<span class="kw-2">&amp;</span>channel_name).not(), <span class="string">"a channel with the name `{}` is already defined"</span>, channel_name);
         ReadRequiredChannel { channel_name, previous_channels: <span class="self">self</span>, px: Default::default() }
     }
 
@@ -415,7 +417,7 @@
         -&gt; ReadOptionalChannel&lt;<span class="self">Self</span>, Sample&gt;
     {
         <span class="kw">let </span>channel_name = channel_name.into();
-        <span class="macro">assert!</span>(<span class="self">self</span>.already_contains(<span class="kw-2">&amp;</span>channel_name).not(), <span class="string">&quot;a channel with the name `{}` is already defined&quot;</span>, channel_name);
+        <span class="macro">assert!</span>(<span class="self">self</span>.already_contains(<span class="kw-2">&amp;</span>channel_name).not(), <span class="string">"a channel with the name `{}` is already defined"</span>, channel_name);
         ReadOptionalChannel { channel_name, previous_channels: <span class="self">self</span>, default_sample }
     }
 
@@ -451,11 +453,11 @@
     </span><span class="kw">fn </span>get_descriptions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::RecursiveChannelDescriptions;
 
     <span class="doccomment">/// The pixel type. Will be converted to a tuple at the end of the process.
-    </span><span class="kw">type </span>RecursivePixel: Copy + Default + <span class="lifetime">&#39;static</span>;
+    </span><span class="kw">type </span>RecursivePixel: Copy + Default + <span class="lifetime">'static</span>;
 
     <span class="doccomment">/// Read the line of pixels.
-    </span><span class="kw">fn </span>read_pixels&lt;<span class="lifetime">&#39;s</span>, FullPixel&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
+    </span><span class="kw">fn </span>read_pixels&lt;<span class="lifetime">'s</span>, FullPixel&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">'s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
         get_pixel: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>FullPixel) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::RecursivePixel
     );
 }
@@ -501,8 +503,8 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, InnerChannels, Pixel, PixelStorage, CreatePixels, SetPixel: <span class="lifetime">&#39;s</span>&gt;
-ReadChannels&lt;<span class="lifetime">&#39;s</span>&gt; <span class="kw">for </span>CollectPixels&lt;InnerChannels, Pixel, PixelStorage, CreatePixels, SetPixel&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'s</span>, InnerChannels, Pixel, PixelStorage, CreatePixels, SetPixel: <span class="lifetime">'s</span>&gt;
+ReadChannels&lt;<span class="lifetime">'s</span>&gt; <span class="kw">for </span>CollectPixels&lt;InnerChannels, Pixel, PixelStorage, CreatePixels, SetPixel&gt;
     <span class="kw">where
         </span>InnerChannels: ReadSpecificChannel,
         &lt;InnerChannels::RecursivePixelReader <span class="kw">as </span>RecursivePixelReader&gt;::RecursivePixel: IntoTuple&lt;Pixel&gt;,
@@ -511,13 +513,13 @@ ReadChannels&lt;<span class="lifetime">&#39;s</span>&gt; <span class="kw">for </
         SetPixel: Fn(<span class="kw-2">&amp;mut </span>PixelStorage, Vec2&lt;usize&gt;, Pixel),
 {
     <span class="kw">type </span>Reader = SpecificChannelsReader&lt;
-        PixelStorage, <span class="kw-2">&amp;</span><span class="lifetime">&#39;s </span>SetPixel,
+        PixelStorage, <span class="kw-2">&amp;</span><span class="lifetime">'s </span>SetPixel,
         InnerChannels::RecursivePixelReader,
         Pixel,
     &gt;;
 
-    <span class="kw">fn </span>create_channels_reader(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Reader&gt; {
-        <span class="kw">if </span>header.deep { <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;`SpecificChannels` does not support deep data yet&quot;</span>)) }
+    <span class="kw">fn </span>create_channels_reader(<span class="kw-2">&amp;</span><span class="lifetime">'s </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Reader&gt; {
+        <span class="kw">if </span>header.deep { <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"`SpecificChannels` does not support deep data yet"</span>)) }
 
         <span class="kw">let </span>pixel_reader = <span class="self">self</span>.read_channels.create_recursive_reader(<span class="kw-2">&amp;</span>header.channels)<span class="question-mark">?</span>;
         <span class="kw">let </span>channel_descriptions = pixel_reader.get_descriptions().into_non_recursive();<span class="comment">// TODO not call this twice
@@ -558,7 +560,7 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
         <span class="kw">let </span><span class="kw-2">mut </span>pixels = <span class="macro">vec!</span>[PxReader::RecursivePixel::default(); block.index.pixel_size.width()]; <span class="comment">// TODO allocate once in self
 
         </span><span class="kw">let </span>byte_lines = block.data.chunks_exact(header.channels.bytes_per_pixel * block.index.pixel_size.width());
-        <span class="macro">debug_assert_eq!</span>(byte_lines.len(), block.index.pixel_size.height(), <span class="string">&quot;invalid block lines split&quot;</span>);
+        <span class="macro">debug_assert_eq!</span>(byte_lines.len(), block.index.pixel_size.height(), <span class="string">"invalid block lines split"</span>);
 
         <span class="kw">for </span>(y_offset, line_bytes) <span class="kw">in </span>byte_lines.enumerate() { <span class="comment">// TODO sampling
             // this two-step copy method should be very cache friendly in theory, and also reduce sample_type lookup count
@@ -589,12 +591,12 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
 }
 
 <span class="kw">impl</span>&lt;DefaultSample, ReadChannels&gt; ReadSpecificChannel <span class="kw">for </span>ReadOptionalChannel&lt;ReadChannels, DefaultSample&gt;
-    <span class="kw">where </span>ReadChannels: ReadSpecificChannel, DefaultSample: FromNativeSample + <span class="lifetime">&#39;static</span>,
+    <span class="kw">where </span>ReadChannels: ReadSpecificChannel, DefaultSample: FromNativeSample + <span class="lifetime">'static</span>,
 {
     <span class="kw">type </span>RecursivePixelReader = Recursive&lt;ReadChannels::RecursivePixelReader, OptionalSampleReader&lt;DefaultSample&gt;&gt;;
 
     <span class="kw">fn </span>create_recursive_reader(<span class="kw-2">&amp;</span><span class="self">self</span>, channels: <span class="kw-2">&amp;</span>ChannelList) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::RecursivePixelReader&gt; {
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.previous_channels.already_contains(<span class="kw-2">&amp;</span><span class="self">self</span>.channel_name).not(), <span class="string">&quot;duplicate channel name: {}&quot;</span>, <span class="self">self</span>.channel_name);
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.previous_channels.already_contains(<span class="kw-2">&amp;</span><span class="self">self</span>.channel_name).not(), <span class="string">"duplicate channel name: {}"</span>, <span class="self">self</span>.channel_name);
 
         <span class="kw">let </span>inner_samples_reader = <span class="self">self</span>.previous_channels.create_recursive_reader(channels)<span class="question-mark">?</span>;
         <span class="kw">let </span>reader = channels.channels_with_byte_offset()
@@ -611,7 +613,7 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
 }
 
 <span class="kw">impl</span>&lt;Sample, ReadChannels&gt; ReadSpecificChannel <span class="kw">for </span>ReadRequiredChannel&lt;ReadChannels, Sample&gt;
-    <span class="kw">where </span>ReadChannels: ReadSpecificChannel, Sample: FromNativeSample + <span class="lifetime">&#39;static
+    <span class="kw">where </span>ReadChannels: ReadSpecificChannel, Sample: FromNativeSample + <span class="lifetime">'static
 </span>{
     <span class="kw">type </span>RecursivePixelReader = Recursive&lt;ReadChannels::RecursivePixelReader, SampleReader&lt;Sample&gt;&gt;;
 
@@ -620,7 +622,7 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
         <span class="kw">let </span>(channel_byte_offset, channel) = channels.channels_with_byte_offset()
                 .find(|(<span class="kw">_</span>, channel)| channel.name == <span class="self">self</span>.channel_name)
                 .ok_or_else(|| Error::invalid(<span class="macro">format!</span>(
-                    <span class="string">&quot;layer does not contain all of your specified channels (`{}` is missing)&quot;</span>,
+                    <span class="string">"layer does not contain all of your specified channels (`{}` is missing)"</span>,
                     <span class="self">self</span>.channel_name
                 )))<span class="question-mark">?</span>;
 
@@ -648,15 +650,15 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
 }
 
 <span class="kw">impl</span>&lt;Sample: FromNativeSample&gt; SampleReader&lt;Sample&gt; {
-    <span class="kw">fn </span>read_own_samples&lt;<span class="lifetime">&#39;s</span>, FullPixel&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
+    <span class="kw">fn </span>read_own_samples&lt;<span class="lifetime">'s</span>, FullPixel&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">'s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
         get_pixel: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>FullPixel) -&gt; <span class="kw-2">&amp;mut </span>Sample
     ){
         <span class="kw">let </span>start_index = pixels.len() * <span class="self">self</span>.channel_byte_offset;
         <span class="kw">let </span>byte_count = pixels.len() * <span class="self">self</span>.channel.sample_type.bytes_per_sample();
         <span class="kw">let </span><span class="kw-2">mut </span>own_bytes_reader = <span class="kw-2">&amp;</span>bytes[start_index .. start_index + byte_count]; <span class="comment">// TODO check block size somewhere
 
-        </span><span class="kw">let </span>error_msg = <span class="string">&quot;error when reading from in-memory slice&quot;</span>;
+        </span><span class="kw">let </span>error_msg = <span class="string">"error when reading from in-memory slice"</span>;
 
         <span class="comment">// match outside the loop to avoid matching on every single sample
         </span><span class="kw">match </span><span class="self">self</span>.channel.sample_type {
@@ -673,7 +675,7 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
             },
         }
 
-        <span class="macro">debug_assert!</span>(own_bytes_reader.is_empty(), <span class="string">&quot;bytes left after reading all samples&quot;</span>);
+        <span class="macro">debug_assert!</span>(own_bytes_reader.is_empty(), <span class="string">"bytes left after reading all samples"</span>);
     }
 }
 
@@ -684,8 +686,8 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
 
     <span class="kw">type </span>RecursivePixel = NoneMore;
 
-    <span class="kw">fn </span>read_pixels&lt;<span class="lifetime">&#39;s</span>, FullPixel&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span>[u8], <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>[FullPixel],
+    <span class="kw">fn </span>read_pixels&lt;<span class="lifetime">'s</span>, FullPixel&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'s</span>[u8], <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>[FullPixel],
         <span class="kw">_</span>: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>FullPixel) -&gt; <span class="kw-2">&amp;mut </span>NoneMore
     ){}
 }
@@ -693,15 +695,15 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
 <span class="kw">impl</span>&lt;Sample, InnerReader: RecursivePixelReader&gt;
     RecursivePixelReader
     <span class="kw">for </span>Recursive&lt;InnerReader, SampleReader&lt;Sample&gt;&gt;
-    <span class="kw">where </span>Sample: FromNativeSample + <span class="lifetime">&#39;static
+    <span class="kw">where </span>Sample: FromNativeSample + <span class="lifetime">'static
 </span>{
     <span class="kw">type </span>RecursiveChannelDescriptions = Recursive&lt;InnerReader::RecursiveChannelDescriptions, ChannelDescription&gt;;
     <span class="kw">fn </span>get_descriptions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::RecursiveChannelDescriptions { Recursive::new(<span class="self">self</span>.inner.get_descriptions(), <span class="self">self</span>.value.channel.clone()) }
 
     <span class="kw">type </span>RecursivePixel = Recursive&lt;InnerReader::RecursivePixel, Sample&gt;;
 
-    <span class="kw">fn </span>read_pixels&lt;<span class="lifetime">&#39;s</span>, FullPixel&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
+    <span class="kw">fn </span>read_pixels&lt;<span class="lifetime">'s</span>, FullPixel&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">'s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
         get_pixel: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>FullPixel) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::RecursivePixel
     ) {
         <span class="self">self</span>.value.read_own_samples(bytes, pixels, |px| <span class="kw-2">&amp;mut </span>get_pixel(px).value);
@@ -712,7 +714,7 @@ ChannelsReader <span class="kw">for </span>SpecificChannelsReader&lt;PixelStorag
 <span class="kw">impl</span>&lt;Sample, InnerReader: RecursivePixelReader&gt;
 RecursivePixelReader
 <span class="kw">for </span>Recursive&lt;InnerReader, OptionalSampleReader&lt;Sample&gt;&gt;
-    <span class="kw">where </span>Sample: FromNativeSample + <span class="lifetime">&#39;static
+    <span class="kw">where </span>Sample: FromNativeSample + <span class="lifetime">'static
 </span>{
     <span class="kw">type </span>RecursiveChannelDescriptions = Recursive&lt;InnerReader::RecursiveChannelDescriptions, <span class="prelude-ty">Option</span>&lt;ChannelDescription&gt;&gt;;
     <span class="kw">fn </span>get_descriptions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::RecursiveChannelDescriptions { Recursive::new(
@@ -721,8 +723,8 @@ RecursivePixelReader
 
     <span class="kw">type </span>RecursivePixel = Recursive&lt;InnerReader::RecursivePixel, Sample&gt;;
 
-    <span class="kw">fn </span>read_pixels&lt;<span class="lifetime">&#39;s</span>, FullPixel&gt;(
-        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
+    <span class="kw">fn </span>read_pixels&lt;<span class="lifetime">'s</span>, FullPixel&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span><span class="lifetime">'s</span>[u8], pixels: <span class="kw-2">&amp;mut </span>[FullPixel],
         get_pixel: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;mut </span>FullPixel) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::RecursivePixel
     ) {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(reader) = <span class="kw-2">&amp;</span><span class="self">self</span>.value.reader {

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/buffer.rs`."><title>buffer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/buffer.rs`."><title>buffer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1665,45 +1667,45 @@
 <span class="kw">use </span><span class="kw">crate</span>::utils::expand_packed;
 
 <span class="doccomment">/// Iterate over pixel refs.
-</span><span class="kw">pub struct </span>Pixels&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>Pixels&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    chunks: ChunksExact&lt;<span class="lifetime">&#39;a</span>, P::Subpixel&gt;,
+    chunks: ChunksExact&lt;<span class="lifetime">'a</span>, P::Subpixel&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>Pixels&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>P;
+    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>P;
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>P&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>P&gt; {
         <span class="self">self</span>.chunks.next().map(|v| &lt;P <span class="kw">as </span>Pixel&gt;::from_slice(v))
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>Pixels&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.chunks.len()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; DoubleEndedIterator <span class="kw">for </span>Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; DoubleEndedIterator <span class="kw">for </span>Pixels&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>P&gt; {
+    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>P&gt; {
         <span class="self">self</span>.chunks.next_back().map(|v| &lt;P <span class="kw">as </span>Pixel&gt;::from_slice(v))
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>Pixels&lt;<span class="lifetime">&#39;_</span>, P&gt; {
+<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>Pixels&lt;<span class="lifetime">'_</span>, P&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         Pixels {
             chunks: <span class="self">self</span>.chunks.clone(),
@@ -1711,65 +1713,65 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>Pixels&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>Pixels&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;Pixels&quot;</span>)
-            .field(<span class="string">&quot;chunks&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.chunks)
+        f.debug_struct(<span class="string">"Pixels"</span>)
+            .field(<span class="string">"chunks"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.chunks)
             .finish()
     }
 }
 
 <span class="doccomment">/// Iterate over mutable pixel refs.
-</span><span class="kw">pub struct </span>PixelsMut&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>PixelsMut&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    chunks: ChunksExactMut&lt;<span class="lifetime">&#39;a</span>, P::Subpixel&gt;,
+    chunks: ChunksExactMut&lt;<span class="lifetime">'a</span>, P::Subpixel&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>P;
+    <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>P;
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>P&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>P&gt; {
         <span class="self">self</span>.chunks.next().map(|v| &lt;P <span class="kw">as </span>Pixel&gt;::from_slice_mut(v))
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.chunks.len()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; DoubleEndedIterator <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; DoubleEndedIterator <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>P&gt; {
+    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>P&gt; {
         <span class="self">self</span>.chunks
             .next_back()
             .map(|v| &lt;P <span class="kw">as </span>Pixel&gt;::from_slice_mut(v))
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>PixelsMut&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;PixelsMut&quot;</span>)
-            .field(<span class="string">&quot;chunks&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.chunks)
+        f.debug_struct(<span class="string">"PixelsMut"</span>)
+            .field(<span class="string">"chunks"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.chunks)
             .finish()
     }
 }
@@ -1779,17 +1781,17 @@
 /// This iterator is created with [`ImageBuffer::rows`]. See its document for details.
 ///
 /// [`ImageBuffer::rows`]: ../struct.ImageBuffer.html#method.rows
-</span><span class="kw">pub struct </span>Rows&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>Rows&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">'a</span>,
 {
-    pixels: ChunksExact&lt;<span class="lifetime">&#39;a</span>, P::Subpixel&gt;,
+    pixels: ChunksExact&lt;<span class="lifetime">'a</span>, P::Subpixel&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Rows&lt;<span class="lifetime">&#39;a</span>, P&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Rows&lt;<span class="lifetime">'a</span>, P&gt; {
     <span class="doccomment">/// Construct the iterator from image pixels. This is not public since it has a (hidden) panic
     /// condition. The `pixels` slice must be large enough so that all pixels are addressable.
-    </span><span class="kw">fn </span>with_image(pixels: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[P::Subpixel], width: u32, height: u32) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">fn </span>with_image(pixels: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[P::Subpixel], width: u32, height: u32) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>row_len = (width <span class="kw">as </span>usize) * usize::from(&lt;P <span class="kw">as </span>Pixel&gt;::CHANNEL_COUNT);
         <span class="kw">if </span>row_len == <span class="number">0 </span>{
             Rows {
@@ -1798,7 +1800,7 @@
         } <span class="kw">else </span>{
             <span class="kw">let </span>pixels = pixels
                 .get(..row_len * height <span class="kw">as </span>usize)
-                .expect(<span class="string">&quot;Pixel buffer has too few subpixels&quot;</span>);
+                .expect(<span class="string">"Pixel buffer has too few subpixels"</span>);
             <span class="comment">// Rows are physically present. In particular, height is smaller than `usize::MAX` as
             // all subpixels can be indexed.
             </span>Rows {
@@ -1808,14 +1810,14 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>Rows&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>Rows&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;;
+    <span class="kw">type </span>Item = Pixels&lt;<span class="lifetime">'a</span>, P&gt;;
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pixels&lt;<span class="lifetime">'a</span>, P&gt;&gt; {
         <span class="kw">let </span>row = <span class="self">self</span>.pixels.next()<span class="question-mark">?</span>;
         <span class="prelude-val">Some</span>(Pixels {
             <span class="comment">// Note: this is not reached when CHANNEL_COUNT is 0.
@@ -1824,21 +1826,21 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>Rows&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>Rows&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.pixels.len()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; DoubleEndedIterator <span class="kw">for </span>Rows&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; DoubleEndedIterator <span class="kw">for </span>Rows&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;&gt; {
+    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pixels&lt;<span class="lifetime">'a</span>, P&gt;&gt; {
         <span class="kw">let </span>row = <span class="self">self</span>.pixels.next_back()<span class="question-mark">?</span>;
         <span class="prelude-val">Some</span>(Pixels {
             <span class="comment">// Note: this is not reached when CHANNEL_COUNT is 0.
@@ -1847,7 +1849,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>Rows&lt;<span class="lifetime">&#39;_</span>, P&gt; {
+<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>Rows&lt;<span class="lifetime">'_</span>, P&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         Rows {
             pixels: <span class="self">self</span>.pixels.clone(),
@@ -1855,13 +1857,13 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>Rows&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>Rows&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;Rows&quot;</span>)
-            .field(<span class="string">&quot;pixels&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
+        f.debug_struct(<span class="string">"Rows"</span>)
+            .field(<span class="string">"pixels"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
             .finish()
     }
 }
@@ -1871,17 +1873,17 @@
 /// This iterator is created with [`ImageBuffer::rows_mut`]. See its document for details.
 ///
 /// [`ImageBuffer::rows_mut`]: ../struct.ImageBuffer.html#method.rows_mut
-</span><span class="kw">pub struct </span>RowsMut&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>RowsMut&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">'a</span>,
 {
-    pixels: ChunksExactMut&lt;<span class="lifetime">&#39;a</span>, P::Subpixel&gt;,
+    pixels: ChunksExactMut&lt;<span class="lifetime">'a</span>, P::Subpixel&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; RowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; RowsMut&lt;<span class="lifetime">'a</span>, P&gt; {
     <span class="doccomment">/// Construct the iterator from image pixels. This is not public since it has a (hidden) panic
     /// condition. The `pixels` slice must be large enough so that all pixels are addressable.
-    </span><span class="kw">fn </span>with_image(pixels: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[P::Subpixel], width: u32, height: u32) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">fn </span>with_image(pixels: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[P::Subpixel], width: u32, height: u32) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>row_len = (width <span class="kw">as </span>usize) * usize::from(&lt;P <span class="kw">as </span>Pixel&gt;::CHANNEL_COUNT);
         <span class="kw">if </span>row_len == <span class="number">0 </span>{
             RowsMut {
@@ -1890,7 +1892,7 @@
         } <span class="kw">else </span>{
             <span class="kw">let </span>pixels = pixels
                 .get_mut(..row_len * height <span class="kw">as </span>usize)
-                .expect(<span class="string">&quot;Pixel buffer has too few subpixels&quot;</span>);
+                .expect(<span class="string">"Pixel buffer has too few subpixels"</span>);
             <span class="comment">// Rows are physically present. In particular, height is smaller than `usize::MAX` as
             // all subpixels can be indexed.
             </span>RowsMut {
@@ -1900,14 +1902,14 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>RowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>RowsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;;
+    <span class="kw">type </span>Item = PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;;
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;&gt; {
         <span class="kw">let </span>row = <span class="self">self</span>.pixels.next()<span class="question-mark">?</span>;
         <span class="prelude-val">Some</span>(PixelsMut {
             <span class="comment">// Note: this is not reached when CHANNEL_COUNT is 0.
@@ -1916,21 +1918,21 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>RowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>RowsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.pixels.len()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; DoubleEndedIterator <span class="kw">for </span>RowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; DoubleEndedIterator <span class="kw">for </span>RowsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;&gt; {
+    </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;&gt; {
         <span class="kw">let </span>row = <span class="self">self</span>.pixels.next_back()<span class="question-mark">?</span>;
         <span class="prelude-val">Some</span>(PixelsMut {
             <span class="comment">// Note: this is not reached when CHANNEL_COUNT is 0.
@@ -1939,36 +1941,36 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>RowsMut&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>RowsMut&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;RowsMut&quot;</span>)
-            .field(<span class="string">&quot;pixels&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
+        f.debug_struct(<span class="string">"RowsMut"</span>)
+            .field(<span class="string">"pixels"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
             .finish()
     }
 }
 
 <span class="doccomment">/// Enumerate the pixels of an image.
-</span><span class="kw">pub struct </span>EnumeratePixels&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>EnumeratePixels&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">'a</span>,
 {
-    pixels: Pixels&lt;<span class="lifetime">&#39;a</span>, P&gt;,
+    pixels: Pixels&lt;<span class="lifetime">'a</span>, P&gt;,
     x: u32,
     y: u32,
     width: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = (u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>P);
+    <span class="kw">type </span>Item = (u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>P);
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>P)&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>P)&gt; {
         <span class="kw">if </span><span class="self">self</span>.x &gt;= <span class="self">self</span>.width {
             <span class="self">self</span>.x = <span class="number">0</span>;
             <span class="self">self</span>.y += <span class="number">1</span>;
@@ -1979,16 +1981,16 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.pixels.len()
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">&#39;_</span>, P&gt; {
+<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">'_</span>, P&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         EnumeratePixels {
             pixels: <span class="self">self</span>.pixels.clone(),
@@ -1997,38 +1999,38 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumeratePixels&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;EnumeratePixels&quot;</span>)
-            .field(<span class="string">&quot;pixels&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
-            .field(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.x)
-            .field(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
-            .field(<span class="string">&quot;width&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
+        f.debug_struct(<span class="string">"EnumeratePixels"</span>)
+            .field(<span class="string">"pixels"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
+            .field(<span class="string">"x"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.x)
+            .field(<span class="string">"y"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
+            .field(<span class="string">"width"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
             .finish()
     }
 }
 
 <span class="doccomment">/// Enumerate the rows of an image.
-</span><span class="kw">pub struct </span>EnumerateRows&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>EnumerateRows&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">'a</span>,
 {
-    rows: Rows&lt;<span class="lifetime">&#39;a</span>, P&gt;,
+    rows: Rows&lt;<span class="lifetime">'a</span>, P&gt;,
     y: u32,
     width: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = (u32, EnumeratePixels&lt;<span class="lifetime">&#39;a</span>, P&gt;);
+    <span class="kw">type </span>Item = (u32, EnumeratePixels&lt;<span class="lifetime">'a</span>, P&gt;);
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, EnumeratePixels&lt;<span class="lifetime">&#39;a</span>, P&gt;)&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, EnumeratePixels&lt;<span class="lifetime">'a</span>, P&gt;)&gt; {
         <span class="kw">let </span>y = <span class="self">self</span>.y;
         <span class="self">self</span>.y += <span class="number">1</span>;
         <span class="self">self</span>.rows.next().map(|r| {
@@ -2045,16 +2047,16 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.rows.len()
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">&#39;_</span>, P&gt; {
+<span class="kw">impl</span>&lt;P: Pixel&gt; Clone <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">'_</span>, P&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         EnumerateRows {
             rows: <span class="self">self</span>.rows.clone(),
@@ -2063,38 +2065,38 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumerateRows&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;EnumerateRows&quot;</span>)
-            .field(<span class="string">&quot;rows&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.rows)
-            .field(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
-            .field(<span class="string">&quot;width&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
+        f.debug_struct(<span class="string">"EnumerateRows"</span>)
+            .field(<span class="string">"rows"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.rows)
+            .field(<span class="string">"y"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
+            .field(<span class="string">"width"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
             .finish()
     }
 }
 
 <span class="doccomment">/// Enumerate the pixels of an image.
-</span><span class="kw">pub struct </span>EnumeratePixelsMut&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>EnumeratePixelsMut&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">'a</span>,
 {
-    pixels: PixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;,
+    pixels: PixelsMut&lt;<span class="lifetime">'a</span>, P&gt;,
     x: u32,
     y: u32,
     width: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>EnumeratePixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>EnumeratePixelsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = (u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>P);
+    <span class="kw">type </span>Item = (u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>P);
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>P)&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, u32, <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>P)&gt; {
         <span class="kw">if </span><span class="self">self</span>.x &gt;= <span class="self">self</span>.width {
             <span class="self">self</span>.x = <span class="number">0</span>;
             <span class="self">self</span>.y += <span class="number">1</span>;
@@ -2105,47 +2107,47 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumeratePixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumeratePixelsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.pixels.len()
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumeratePixelsMut&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumeratePixelsMut&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;EnumeratePixelsMut&quot;</span>)
-            .field(<span class="string">&quot;pixels&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
-            .field(<span class="string">&quot;x&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.x)
-            .field(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
-            .field(<span class="string">&quot;width&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
+        f.debug_struct(<span class="string">"EnumeratePixelsMut"</span>)
+            .field(<span class="string">"pixels"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pixels)
+            .field(<span class="string">"x"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.x)
+            .field(<span class="string">"y"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
+            .field(<span class="string">"width"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
             .finish()
     }
 }
 
 <span class="doccomment">/// Enumerate the rows of an image.
-</span><span class="kw">pub struct </span>EnumerateRowsMut&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt;
+</span><span class="kw">pub struct </span>EnumerateRowsMut&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt;
 <span class="kw">where
-    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>&lt;P <span class="kw">as </span>Pixel&gt;::Subpixel: <span class="lifetime">'a</span>,
 {
-    rows: RowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;,
+    rows: RowsMut&lt;<span class="lifetime">'a</span>, P&gt;,
     y: u32,
     width: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>EnumerateRowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>EnumerateRowsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
-    <span class="kw">type </span>Item = (u32, EnumeratePixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;);
+    <span class="kw">type </span>Item = (u32, EnumeratePixelsMut&lt;<span class="lifetime">'a</span>, P&gt;);
 
     <span class="attr">#[inline(always)]
-    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, EnumeratePixelsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;)&gt; {
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(u32, EnumeratePixelsMut&lt;<span class="lifetime">'a</span>, P&gt;)&gt; {
         <span class="kw">let </span>y = <span class="self">self</span>.y;
         <span class="self">self</span>.y += <span class="number">1</span>;
         <span class="self">self</span>.rows.next().map(|r| {
@@ -2162,24 +2164,24 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, P: Pixel + <span class="lifetime">&#39;a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumerateRowsMut&lt;<span class="lifetime">&#39;a</span>, P&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, P: Pixel + <span class="lifetime">'a</span>&gt; ExactSizeIterator <span class="kw">for </span>EnumerateRowsMut&lt;<span class="lifetime">'a</span>, P&gt;
 <span class="kw">where
-    </span>P::Subpixel: <span class="lifetime">&#39;a</span>,
+    </span>P::Subpixel: <span class="lifetime">'a</span>,
 {
     <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.rows.len()
     }
 }
 
-<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumerateRowsMut&lt;<span class="lifetime">&#39;_</span>, P&gt;
+<span class="kw">impl</span>&lt;P: Pixel&gt; fmt::Debug <span class="kw">for </span>EnumerateRowsMut&lt;<span class="lifetime">'_</span>, P&gt;
 <span class="kw">where
     </span>P::Subpixel: fmt::Debug,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;EnumerateRowsMut&quot;</span>)
-            .field(<span class="string">&quot;rows&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.rows)
-            .field(<span class="string">&quot;y&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
-            .field(<span class="string">&quot;width&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
+        f.debug_struct(<span class="string">"EnumerateRowsMut"</span>)
+            .field(<span class="string">"rows"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.rows)
+            .field(<span class="string">"y"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.y)
+            .field(<span class="string">"width"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.width)
             .finish()
     }
 }
@@ -2202,7 +2204,7 @@
 ///
 /// To convert between images of different Pixel types use [`DynamicImage`].
 ///
-/// You can retrieve a complete description of the buffer&#39;s layout and contents through
+/// You can retrieve a complete description of the buffer's layout and contents through
 /// [`as_flat_samples`] and [`as_flat_samples_mut`]. This can be handy to also use the contents in
 /// a foreign language, map it as a GPU host buffer or other similar tasks.
 ///
@@ -2232,7 +2234,7 @@
 /// ```no_run
 /// use image::{GenericImage, GenericImageView, ImageBuffer, open};
 ///
-/// let on_top = open(&quot;path/to/some.png&quot;).unwrap().into_rgb8();
+/// let on_top = open("path/to/some.png").unwrap().into_rgb8();
 /// let mut img = ImageBuffer::from_fn(512, 512, |x, y| {
 ///     if (x + y) % 2 == 0 {
 ///         image::Rgb([0, 0, 0])
@@ -2249,7 +2251,7 @@
 /// ```no_run
 /// use image::{open, DynamicImage};
 ///
-/// let rgba = open(&quot;path/to/some.png&quot;).unwrap().into_rgba8();
+/// let rgba = open("path/to/some.png").unwrap().into_rgba8();
 /// let gray = DynamicImage::ImageRgba8(rgba).into_luma8();
 /// ```
 </span><span class="attr">#[derive(Debug, Hash, PartialEq, Eq)]
@@ -2367,7 +2369,7 @@
     </span><span class="kw">pub fn </span>get_pixel(<span class="kw-2">&amp;</span><span class="self">self</span>, x: u32, y: u32) -&gt; <span class="kw-2">&amp;</span>P {
         <span class="kw">match </span><span class="self">self</span>.pixel_indices(x, y) {
             <span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(
-                <span class="string">&quot;Image index {:?} out of bounds {:?}&quot;</span>,
+                <span class="string">"Image index {:?} out of bounds {:?}"</span>,
                 (x, y),
                 (<span class="self">self</span>.width, <span class="self">self</span>.height)
             ),
@@ -2420,7 +2422,7 @@
     <span class="attr">#[inline(always)]
     </span><span class="kw">fn </span>pixel_indices_unchecked(<span class="kw-2">&amp;</span><span class="self">self</span>, x: u32, y: u32) -&gt; Range&lt;usize&gt; {
         <span class="kw">let </span>no_channels = &lt;P <span class="kw">as </span>Pixel&gt;::CHANNEL_COUNT <span class="kw">as </span>usize;
-        <span class="comment">// If in bounds, this can&#39;t overflow as we have tested that at construction!
+        <span class="comment">// If in bounds, this can't overflow as we have tested that at construction!
         </span><span class="kw">let </span>min_index = (y <span class="kw">as </span>usize * <span class="self">self</span>.width <span class="kw">as </span>usize + x <span class="kw">as </span>usize) * no_channels;
         min_index..min_index + no_channels
     }
@@ -2543,7 +2545,7 @@
     </span><span class="kw">pub fn </span>get_pixel_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, x: u32, y: u32) -&gt; <span class="kw-2">&amp;mut </span>P {
         <span class="kw">match </span><span class="self">self</span>.pixel_indices(x, y) {
             <span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(
-                <span class="string">&quot;Image index {:?} out of bounds {:?}&quot;</span>,
+                <span class="string">"Image index {:?} out of bounds {:?}"</span>,
                 (x, y),
                 (<span class="self">self</span>.width, <span class="self">self</span>.height)
             ),
@@ -2829,7 +2831,7 @@
 }
 
 <span class="comment">// concrete implementation for `Vec`-backed buffers
-// TODO: I think that rustc does not &quot;see&quot; this impl any more: the impl with
+// TODO: I think that rustc does not "see" this impl any more: the impl with
 // Container meets the same requirements. At least, I got compile errors that
 // there is no such function as `into_vec`, whereas `into_raw` did work, and
 // `into_vec` is redundant anyway, because `into_raw` will give you the vector,
@@ -2842,7 +2844,7 @@
     /// Panics when the resulting image is larger the the maximum size of a vector.
     </span><span class="kw">pub fn </span>new(width: u32, height: u32) -&gt; ImageBuffer&lt;P, Vec&lt;P::Subpixel&gt;&gt; {
         <span class="kw">let </span>size = <span class="self">Self</span>::image_buffer_len(width, height)
-            .expect(<span class="string">&quot;Buffer length in `ImageBuffer::new` overflows usize&quot;</span>);
+            .expect(<span class="string">"Buffer length in `ImageBuffer::new` overflows usize"</span>);
         ImageBuffer {
             data: <span class="macro">vec!</span>[Zero::zero(); size],
             width,
@@ -2866,7 +2868,7 @@
 
     <span class="doccomment">/// Constructs a new ImageBuffer by repeated application of the supplied function.
     ///
-    /// The arguments to the function are the pixel&#39;s x and y coordinates.
+    /// The arguments to the function are the pixel's x and y coordinates.
     ///
     /// # Panics
     ///
@@ -2912,7 +2914,7 @@
 </span><span class="kw">impl </span>GrayImage {
     <span class="doccomment">/// Expands a color palette by re-using the existing buffer.
     /// Assumes 8 bit per pixel. Uses an optionally transparent index to
-    /// adjust it&#39;s alpha value accordingly.
+    /// adjust it's alpha value accordingly.
     </span><span class="kw">pub fn </span>expand_palette(
         <span class="self">self</span>,
         palette: <span class="kw-2">&amp;</span>[(u8, u8, u8)],
@@ -2946,7 +2948,7 @@
 <span class="comment">// TODO: Equality constraints are not yet supported in where clauses, when they
 // are, the T parameter should be removed in favor of ToType::Subpixel, which
 // will then be FromType::Subpixel.
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, Container, FromType: Pixel, ToType: Pixel&gt;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, Container, FromType: Pixel, ToType: Pixel&gt;
     ConvertBuffer&lt;ImageBuffer&lt;ToType, Vec&lt;ToType::Subpixel&gt;&gt;&gt; <span class="kw">for </span>ImageBuffer&lt;FromType, Container&gt;
 <span class="kw">where
     </span>Container: Deref&lt;Target = [FromType::Subpixel]&gt;,
@@ -2958,9 +2960,9 @@
     /// use image::buffer::ConvertBuffer;
     /// use image::GrayImage;
     ///
-    /// let image_path = &quot;examples/fractal.png&quot;;
+    /// let image_path = "examples/fractal.png";
     /// let image = image::open(&amp;image_path)
-    ///     .expect(&quot;Open file failed&quot;)
+    ///     .expect("Open file failed")
     ///     .to_rgba8();
     ///
     /// let gray_image: GrayImage = image.convert();
@@ -3207,7 +3209,7 @@
     }
 
     <span class="attr">#[test]
-    #[cfg(feature = <span class="string">&quot;png&quot;</span>)]
+    #[cfg(feature = <span class="string">"png"</span>)]
     </span><span class="kw">fn </span>write_to_with_large_buffer() {
         <span class="comment">// A buffer of 1 pixel, padded to 4 bytes as would be common in, e.g. BMP.
         </span><span class="kw">let </span>img: GrayImage = ImageBuffer::from_raw(<span class="number">1</span>, <span class="number">1</span>, <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="number">4</span>]).unwrap();
@@ -3217,7 +3219,7 @@
 }
 
 <span class="attr">#[cfg(test)]
-#[cfg(feature = <span class="string">&quot;benchmarks&quot;</span>)]
+#[cfg(feature = <span class="string">"benchmarks"</span>)]
 </span><span class="kw">mod </span>benchmarks {
     <span class="kw">use super</span>::{ConvertBuffer, GrayImage, ImageBuffer, Pixel, RgbImage};
     <span class="kw">use </span><span class="kw">crate</span>::GenericImage;

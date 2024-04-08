@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pom-3.2.0/src/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pom" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pom-3.2.0/src/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pom" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../pom/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -779,18 +781,18 @@
 <span class="kw">use </span>std::fmt::{Debug, Display};
 <span class="kw">use </span>std::ops::{Add, BitOr, Mul, Neg, Not, Shr, Sub};
 
-<span class="kw">type </span>Parse&lt;<span class="lifetime">&#39;a</span>, I, O&gt; = <span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], usize) -&gt; <span class="prelude-ty">Result</span>&lt;(O, usize)&gt; + <span class="lifetime">&#39;a</span>;
+<span class="kw">type </span>Parse&lt;<span class="lifetime">'a</span>, I, O&gt; = <span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], usize) -&gt; <span class="prelude-ty">Result</span>&lt;(O, usize)&gt; + <span class="lifetime">'a</span>;
 
 <span class="doccomment">/// Parser combinator.
-</span><span class="kw">pub struct </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">pub </span>method: Box&lt;Parse&lt;<span class="lifetime">&#39;a</span>, I, O&gt;&gt;,
+</span><span class="kw">pub struct </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">pub </span>method: Box&lt;Parse&lt;<span class="lifetime">'a</span>, I, O&gt;&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
 	<span class="doccomment">/// Create new parser.
-	</span><span class="kw">pub fn </span>new&lt;P&gt;(parse: P) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;
+	</span><span class="kw">pub fn </span>new&lt;P&gt;(parse: P) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt;
 	<span class="kw">where
-		</span>P: Fn(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], usize) -&gt; <span class="prelude-ty">Result</span>&lt;(O, usize)&gt; + <span class="lifetime">&#39;a</span>,
+		</span>P: Fn(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], usize) -&gt; <span class="prelude-ty">Result</span>&lt;(O, usize)&gt; + <span class="lifetime">'a</span>,
 	{
 		Parser {
 			method: Box::new(parse),
@@ -798,41 +800,41 @@
 	}
 
 	<span class="doccomment">/// Apply the parser to parse input.
-	</span><span class="kw">pub fn </span>parse(<span class="kw-2">&amp;</span><span class="self">self</span>, input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I]) -&gt; <span class="prelude-ty">Result</span>&lt;O&gt; {
+	</span><span class="kw">pub fn </span>parse(<span class="kw-2">&amp;</span><span class="self">self</span>, input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I]) -&gt; <span class="prelude-ty">Result</span>&lt;O&gt; {
 		(<span class="self">self</span>.method)(input, <span class="number">0</span>).map(|(out, <span class="kw">_</span>)| out)
 	}
 
 	<span class="doccomment">/// Parse input at specified position.
-	</span><span class="kw">pub fn </span>parse_at(<span class="kw-2">&amp;</span><span class="self">self</span>, input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(O, usize)&gt; {
+	</span><span class="kw">pub fn </span>parse_at(<span class="kw-2">&amp;</span><span class="self">self</span>, input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(O, usize)&gt; {
 		(<span class="self">self</span>.method)(input, start)
 	}
 
 	<span class="doccomment">/// Convert parser result to desired value.
-	</span><span class="kw">pub fn </span>map&lt;U, F&gt;(<span class="self">self</span>, f: F) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;
+	</span><span class="kw">pub fn </span>map&lt;U, F&gt;(<span class="self">self</span>, f: F) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, U&gt;
 	<span class="kw">where
-		</span>F: Fn(O) -&gt; U + <span class="lifetime">&#39;a</span>,
-		I: <span class="lifetime">&#39;a</span>,
-		O: <span class="lifetime">&#39;a</span>,
-		U: <span class="lifetime">&#39;a</span>,
+		</span>F: Fn(O) -&gt; U + <span class="lifetime">'a</span>,
+		I: <span class="lifetime">'a</span>,
+		O: <span class="lifetime">'a</span>,
+		U: <span class="lifetime">'a</span>,
 	{
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).map(|(out, pos)| (f(out), pos))
 		})
 	}
 
 	<span class="doccomment">/// Convert parser result to desired value, fail in case of conversion error.
-	</span><span class="kw">pub fn </span>convert&lt;U, E, F&gt;(<span class="self">self</span>, f: F) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;
+	</span><span class="kw">pub fn </span>convert&lt;U, E, F&gt;(<span class="self">self</span>, f: F) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, U&gt;
 	<span class="kw">where
-		</span>F: Fn(O) -&gt; ::std::result::Result&lt;U, E&gt; + <span class="lifetime">&#39;a</span>,
+		</span>F: Fn(O) -&gt; ::std::result::Result&lt;U, E&gt; + <span class="lifetime">'a</span>,
 		E: Debug,
-		O: <span class="lifetime">&#39;a</span>,
-		U: <span class="lifetime">&#39;a</span>,
+		O: <span class="lifetime">'a</span>,
+		U: <span class="lifetime">'a</span>,
 	{
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).and_then(|(res, pos)| <span class="kw">match </span>f(res) {
 				<span class="prelude-val">Ok</span>(out) =&gt; <span class="prelude-val">Ok</span>((out, pos)),
 				<span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Err</span>(Error::Conversion {
-					message: <span class="macro">format!</span>(<span class="string">&quot;Conversion error: {:?}&quot;</span>, err),
+					message: <span class="macro">format!</span>(<span class="string">"Conversion error: {:?}"</span>, err),
 					position: start,
 				}),
 			})
@@ -840,15 +842,15 @@
 	}
 
 	<span class="doccomment">/// Cache parser output result to speed up backtracking.
-	</span><span class="kw">pub fn </span>cache(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;
+	</span><span class="kw">pub fn </span>cache(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt;
 	<span class="kw">where
-		</span>O: Clone + <span class="lifetime">&#39;a</span>,
+		</span>O: Clone + <span class="lifetime">'a</span>,
 	{
 		<span class="kw">use </span>std::cell::RefCell;
 		<span class="kw">use </span>std::collections::HashMap;
 		<span class="kw">let </span>results = RefCell::new(HashMap::new());
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
-			<span class="kw">let </span>key = (start, <span class="macro">format!</span>(<span class="string">&quot;{:p}&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.method));
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
+			<span class="kw">let </span>key = (start, <span class="macro">format!</span>(<span class="string">"{:p}"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.method));
 			results
 				.borrow_mut()
 				.entry(key)
@@ -858,42 +860,42 @@
 	}
 
 	<span class="doccomment">/// Get input position after matching parser.
-	</span><span class="kw">pub fn </span>pos(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, usize&gt;
+	</span><span class="kw">pub fn </span>pos(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, usize&gt;
 	<span class="kw">where
-		</span>O: <span class="lifetime">&#39;a</span>,
+		</span>O: <span class="lifetime">'a</span>,
 	{
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).map(|(<span class="kw">_</span>, pos)| (pos, pos))
 		})
 	}
 
 	<span class="doccomment">/// Collect all matched input symbols.
-	</span><span class="kw">pub fn </span>collect(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I]&gt;
+	</span><span class="kw">pub fn </span>collect(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I]&gt;
 	<span class="kw">where
-		</span>O: <span class="lifetime">&#39;a</span>,
+		</span>O: <span class="lifetime">'a</span>,
 	{
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).map(|(<span class="kw">_</span>, end)| (<span class="kw-2">&amp;</span>input[start..end], end))
 		})
 	}
 
 	<span class="doccomment">/// Discard parser output.
-	</span><span class="kw">pub fn </span>discard(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, ()&gt;
+	</span><span class="kw">pub fn </span>discard(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, ()&gt;
 	<span class="kw">where
-		</span>O: <span class="lifetime">&#39;a</span>,
+		</span>O: <span class="lifetime">'a</span>,
 	{
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).map(|(<span class="kw">_</span>, end)| ((), end))
 		})
 	}
 
 	<span class="doccomment">/// Make parser optional.
-	</span><span class="kw">pub fn </span>opt(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, <span class="prelude-ty">Option</span>&lt;O&gt;&gt;
+	</span><span class="kw">pub fn </span>opt(<span class="self">self</span>) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, <span class="prelude-ty">Option</span>&lt;O&gt;&gt;
 	<span class="kw">where
-		</span>O: <span class="lifetime">&#39;a</span>,
+		</span>O: <span class="lifetime">'a</span>,
 	{
 		Parser::new(
-			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
+			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
 				<span class="prelude-val">Ok</span>((out, pos)) =&gt; <span class="prelude-val">Ok</span>((<span class="prelude-val">Some</span>(out), pos)),
 				<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>((<span class="prelude-val">None</span>, start)),
 			},
@@ -904,12 +906,12 @@
 	/// `p.repeat(0..)` repeat p zero or more times
 	/// `p.repeat(1..)` repeat p one or more times
 	/// `p.repeat(1..4)` match p at least 1 and at most 3 times
-	</span><span class="kw">pub fn </span>repeat&lt;R&gt;(<span class="self">self</span>, range: R) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, Vec&lt;O&gt;&gt;
+	</span><span class="kw">pub fn </span>repeat&lt;R&gt;(<span class="self">self</span>, range: R) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, Vec&lt;O&gt;&gt;
 	<span class="kw">where
-		</span>R: RangeArgument&lt;usize&gt; + Debug + <span class="lifetime">&#39;a</span>,
-		O: <span class="lifetime">&#39;a</span>,
+		</span>R: RangeArgument&lt;usize&gt; + Debug + <span class="lifetime">'a</span>,
+		O: <span class="lifetime">'a</span>,
 	{
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			<span class="kw">let </span><span class="kw-2">mut </span>items = <span class="macro">vec!</span>[];
 			<span class="kw">let </span><span class="kw-2">mut </span>pos = start;
 			<span class="kw">loop </span>{
@@ -938,7 +940,7 @@
 				<span class="kw">if </span>items.len() &lt; min_count {
 					<span class="kw">return </span><span class="prelude-val">Err</span>(Error::Mismatch {
 						message: <span class="macro">format!</span>(
-							<span class="string">&quot;expect repeat at least {} times, found {} times&quot;</span>,
+							<span class="string">"expect repeat at least {} times, found {} times"</span>,
 							min_count,
 							items.len()
 						),
@@ -951,17 +953,17 @@
 	}
 
 	<span class="doccomment">/// Give parser a name to identify parsing errors.
-	</span><span class="kw">pub fn </span>name(<span class="self">self</span>, name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;
+	</span><span class="kw">pub fn </span>name(<span class="self">self</span>, name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt;
 	<span class="kw">where
-		</span>O: <span class="lifetime">&#39;a</span>,
+		</span>O: <span class="lifetime">'a</span>,
 	{
 		Parser::new(
-			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
+			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
 				res @ <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; res,
 				<span class="prelude-val">Err</span>(err) =&gt; <span class="kw">match </span>err {
 					Error::Custom { .. } =&gt; <span class="prelude-val">Err</span>(err),
 					<span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(Error::Custom {
-						message: <span class="macro">format!</span>(<span class="string">&quot;failed to parse {}&quot;</span>, name),
+						message: <span class="macro">format!</span>(<span class="string">"failed to parse {}"</span>, name),
 						position: start,
 						inner: <span class="prelude-val">Some</span>(Box::new(err)),
 					}),
@@ -971,15 +973,15 @@
 	}
 
 	<span class="doccomment">/// Mark parser as expected, abort early when failed in ordered choice.
-	</span><span class="kw">pub fn </span>expect(<span class="self">self</span>, name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;
+	</span><span class="kw">pub fn </span>expect(<span class="self">self</span>, name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt;
 	<span class="kw">where
-		</span>O: <span class="lifetime">&#39;a</span>,
+		</span>O: <span class="lifetime">'a</span>,
 	{
 		Parser::new(
-			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
+			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
 				res @ <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; res,
 				<span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Err</span>(Error::Expect {
-					message: <span class="macro">format!</span>(<span class="string">&quot;Expect {}&quot;</span>, name),
+					message: <span class="macro">format!</span>(<span class="string">"Expect {}"</span>, name),
 					position: start,
 					inner: Box::new(err),
 				}),
@@ -989,12 +991,12 @@
 }
 
 <span class="doccomment">/// Always succeeds, consume no input.
-</span><span class="kw">pub fn </span>empty&lt;<span class="lifetime">&#39;a</span>, I&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, ()&gt; {
+</span><span class="kw">pub fn </span>empty&lt;<span class="lifetime">'a</span>, I&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, I, ()&gt; {
 	Parser::new(|<span class="kw">_</span>: <span class="kw-2">&amp;</span>[I], start: usize| <span class="prelude-val">Ok</span>(((), start)))
 }
 
 <span class="doccomment">/// Match any symbol.
-</span><span class="kw">pub fn </span>any&lt;<span class="lifetime">&#39;a</span>, I&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, I&gt;
+</span><span class="kw">pub fn </span>any&lt;<span class="lifetime">'a</span>, I&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, I, I&gt;
 <span class="kw">where
 	</span>I: Clone,
 {
@@ -1003,7 +1005,7 @@
 			<span class="prelude-val">Ok</span>((s.clone(), start + <span class="number">1</span>))
 		} <span class="kw">else </span>{
 			<span class="prelude-val">Err</span>(Error::Mismatch {
-				message: <span class="string">&quot;end of input reached&quot;</span>.to_owned(),
+				message: <span class="string">"end of input reached"</span>.to_owned(),
 				position: start,
 			})
 		}
@@ -1011,17 +1013,17 @@
 }
 
 <span class="doccomment">/// Success when current input symbol equals `t`.
-</span><span class="kw">pub fn </span>sym&lt;<span class="lifetime">&#39;a</span>, I&gt;(t: I) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, I&gt;
+</span><span class="kw">pub fn </span>sym&lt;<span class="lifetime">'a</span>, I&gt;(t: I) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, I&gt;
 <span class="kw">where
 	</span>I: Clone + PartialEq + Display,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(start) {
 			<span class="kw">if </span>t == <span class="kw-2">*</span>s {
 				<span class="prelude-val">Ok</span>((s.clone(), start + <span class="number">1</span>))
 			} <span class="kw">else </span>{
 				<span class="prelude-val">Err</span>(Error::Mismatch {
-					message: <span class="macro">format!</span>(<span class="string">&quot;expect: {}, found: {}&quot;</span>, t, s),
+					message: <span class="macro">format!</span>(<span class="string">"expect: {}, found: {}"</span>, t, s),
 					position: start,
 				})
 			}
@@ -1032,11 +1034,11 @@
 }
 
 <span class="doccomment">/// Success when sequence of symbols matches current input.
-</span><span class="kw">pub fn </span>seq&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>: <span class="lifetime">&#39;a</span>, I&gt;(tag: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>[I]) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I]&gt;
+</span><span class="kw">pub fn </span>seq&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>: <span class="lifetime">'a</span>, I&gt;(tag: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>[I]) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I]&gt;
 <span class="kw">where
 	</span>I: PartialEq + Debug,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">let </span><span class="kw-2">mut </span>index = <span class="number">0</span>;
 		<span class="kw">loop </span>{
 			<span class="kw">let </span>pos = start + index;
@@ -1046,7 +1048,7 @@
 			<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(pos) {
 				<span class="kw">if </span>tag[index] != <span class="kw-2">*</span>s {
 					<span class="kw">return </span><span class="prelude-val">Err</span>(Error::Mismatch {
-						message: <span class="macro">format!</span>(<span class="string">&quot;seq {:?} expect: {:?}, found: {:?}&quot;</span>, tag, tag[index], s),
+						message: <span class="macro">format!</span>(<span class="string">"seq {:?} expect: {:?}, found: {:?}"</span>, tag, tag[index], s),
 						position: pos,
 					});
 				}
@@ -1059,14 +1061,14 @@
 }
 
 <span class="doccomment">/// Success when tag matches current input.
-</span><span class="kw">pub fn </span>tag&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>: <span class="lifetime">&#39;a</span>&gt;(tag: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>str) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, char, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[char], start: usize| {
+</span><span class="kw">pub fn </span>tag&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>: <span class="lifetime">'a</span>&gt;(tag: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>str) -&gt; Parser&lt;<span class="lifetime">'a</span>, char, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[char], start: usize| {
 		<span class="kw">let </span><span class="kw-2">mut </span>pos = start;
 		<span class="kw">for </span>c <span class="kw">in </span>tag.chars() {
 			<span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>s) = input.get(pos) {
 				<span class="kw">if </span>c != s {
 					<span class="kw">return </span><span class="prelude-val">Err</span>(Error::Mismatch {
-						message: <span class="macro">format!</span>(<span class="string">&quot;tag {:?} expect: {:?}, found: {}&quot;</span>, tag, c, s),
+						message: <span class="macro">format!</span>(<span class="string">"tag {:?} expect: {:?}, found: {}"</span>, tag, c, s),
 						position: pos,
 					});
 				}
@@ -1080,15 +1082,15 @@
 }
 
 <span class="doccomment">/// Parse separated list.
-</span><span class="kw">pub fn </span>list&lt;<span class="lifetime">&#39;a</span>, I, O, U&gt;(
-	parser: Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;,
-	separator: Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;,
-) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, Vec&lt;O&gt;&gt;
+</span><span class="kw">pub fn </span>list&lt;<span class="lifetime">'a</span>, I, O, U&gt;(
+	parser: Parser&lt;<span class="lifetime">'a</span>, I, O&gt;,
+	separator: Parser&lt;<span class="lifetime">'a</span>, I, U&gt;,
+) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, Vec&lt;O&gt;&gt;
 <span class="kw">where
-	</span>O: <span class="lifetime">&#39;a</span>,
-	U: <span class="lifetime">&#39;a</span>,
+	</span>O: <span class="lifetime">'a</span>,
+	U: <span class="lifetime">'a</span>,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">let </span><span class="kw-2">mut </span>items = <span class="macro">vec!</span>[];
 		<span class="kw">let </span><span class="kw-2">mut </span>pos = start;
 		<span class="kw">if let </span><span class="prelude-val">Ok</span>((first_item, first_pos)) = (parser.method)(input, pos) {
@@ -1109,18 +1111,18 @@
 }
 
 <span class="doccomment">/// Success when current input symbol is one of the set.
-</span><span class="kw">pub fn </span>one_of&lt;<span class="lifetime">&#39;a</span>, I, S&gt;(set: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>S) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, I&gt;
+</span><span class="kw">pub fn </span>one_of&lt;<span class="lifetime">'a</span>, I, S&gt;(set: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>S) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, I&gt;
 <span class="kw">where
 	</span>I: Clone + PartialEq + Display + Debug,
 	S: Set&lt;I&gt; + <span class="question-mark">?</span>Sized,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(start) {
 			<span class="kw">if </span>set.contains(s) {
 				<span class="prelude-val">Ok</span>((s.clone(), start + <span class="number">1</span>))
 			} <span class="kw">else </span>{
 				<span class="prelude-val">Err</span>(Error::Mismatch {
-					message: <span class="macro">format!</span>(<span class="string">&quot;expect one of: {}, found: {}&quot;</span>, set.to_str(), s),
+					message: <span class="macro">format!</span>(<span class="string">"expect one of: {}, found: {}"</span>, set.to_str(), s),
 					position: start,
 				})
 			}
@@ -1131,16 +1133,16 @@
 }
 
 <span class="doccomment">/// Success when current input symbol is none of the set.
-</span><span class="kw">pub fn </span>none_of&lt;<span class="lifetime">&#39;a</span>, I, S&gt;(set: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>S) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, I&gt;
+</span><span class="kw">pub fn </span>none_of&lt;<span class="lifetime">'a</span>, I, S&gt;(set: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>S) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, I&gt;
 <span class="kw">where
 	</span>I: Clone + PartialEq + Display + Debug,
 	S: Set&lt;I&gt; + <span class="question-mark">?</span>Sized,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(start) {
 			<span class="kw">if </span>set.contains(s) {
 				<span class="prelude-val">Err</span>(Error::Mismatch {
-					message: <span class="macro">format!</span>(<span class="string">&quot;expect none of: {}, found: {}&quot;</span>, set.to_str(), s),
+					message: <span class="macro">format!</span>(<span class="string">"expect none of: {}, found: {}"</span>, set.to_str(), s),
 					position: start,
 				})
 			} <span class="kw">else </span>{
@@ -1153,18 +1155,18 @@
 }
 
 <span class="doccomment">/// Success when predicate returns true on current input symbol.
-</span><span class="kw">pub fn </span>is_a&lt;<span class="lifetime">&#39;a</span>, I, F&gt;(predicate: F) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, I&gt;
+</span><span class="kw">pub fn </span>is_a&lt;<span class="lifetime">'a</span>, I, F&gt;(predicate: F) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, I&gt;
 <span class="kw">where
 	</span>I: Clone + PartialEq + Display + Debug,
-	F: Fn(I) -&gt; bool + <span class="lifetime">&#39;a</span>,
+	F: Fn(I) -&gt; bool + <span class="lifetime">'a</span>,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(start) {
 			<span class="kw">if </span>predicate(s.clone()) {
 				<span class="prelude-val">Ok</span>((s.clone(), start + <span class="number">1</span>))
 			} <span class="kw">else </span>{
 				<span class="prelude-val">Err</span>(Error::Mismatch {
-					message: <span class="macro">format!</span>(<span class="string">&quot;is_a predicate failed on: {}&quot;</span>, s),
+					message: <span class="macro">format!</span>(<span class="string">"is_a predicate failed on: {}"</span>, s),
 					position: start,
 				})
 			}
@@ -1175,16 +1177,16 @@
 }
 
 <span class="doccomment">/// Success when predicate returns false on current input symbol.
-</span><span class="kw">pub fn </span>not_a&lt;<span class="lifetime">&#39;a</span>, I, F&gt;(predicate: F) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, I&gt;
+</span><span class="kw">pub fn </span>not_a&lt;<span class="lifetime">'a</span>, I, F&gt;(predicate: F) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, I&gt;
 <span class="kw">where
 	</span>I: Clone + PartialEq + Display + Debug,
-	F: Fn(I) -&gt; bool + <span class="lifetime">&#39;a</span>,
+	F: Fn(I) -&gt; bool + <span class="lifetime">'a</span>,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(start) {
 			<span class="kw">if </span>predicate(s.clone()) {
 				<span class="prelude-val">Err</span>(Error::Mismatch {
-					message: <span class="macro">format!</span>(<span class="string">&quot;not_a predicate failed on: {}&quot;</span>, s),
+					message: <span class="macro">format!</span>(<span class="string">"not_a predicate failed on: {}"</span>, s),
 					position: start,
 				})
 			} <span class="kw">else </span>{
@@ -1197,8 +1199,8 @@
 }
 
 <span class="doccomment">/// Read n symbols.
-</span><span class="kw">pub fn </span>take&lt;<span class="lifetime">&#39;a</span>, I&gt;(n: usize) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I]&gt; {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+</span><span class="kw">pub fn </span>take&lt;<span class="lifetime">'a</span>, I&gt;(n: usize) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I]&gt; {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">let </span>pos = start + n;
 		<span class="kw">if </span>input.len() &gt;= pos {
 			<span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span>input[start..pos], pos))
@@ -1209,8 +1211,8 @@
 }
 
 <span class="doccomment">/// Skip n symbols.
-</span><span class="kw">pub fn </span>skip&lt;<span class="lifetime">&#39;a</span>, I&gt;(n: usize) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, ()&gt; {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+</span><span class="kw">pub fn </span>skip&lt;<span class="lifetime">'a</span>, I&gt;(n: usize) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, ()&gt; {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">let </span>pos = start + n;
 		<span class="kw">if </span>input.len() &gt;= pos {
 			<span class="prelude-val">Ok</span>(((), pos))
@@ -1221,26 +1223,26 @@
 }
 
 <span class="doccomment">/// Call a parser factory, can be used to create recursive parsers.
-</span><span class="kw">pub fn </span>call&lt;<span class="lifetime">&#39;a</span>, I, O, F&gt;(parser_factory: F) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;
+</span><span class="kw">pub fn </span>call&lt;<span class="lifetime">'a</span>, I, O, F&gt;(parser_factory: F) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt;
 <span class="kw">where
-	</span>O: <span class="lifetime">&#39;a</span>,
-	F: Fn() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; + <span class="lifetime">&#39;a</span>,
+	</span>O: <span class="lifetime">'a</span>,
+	F: Fn() -&gt; Parser&lt;<span class="lifetime">'a</span>, I, O&gt; + <span class="lifetime">'a</span>,
 {
-	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">let </span>parser = parser_factory();
 		(parser.method)(input, start)
 	})
 }
 
 <span class="doccomment">/// Success when end of input is reached.
-</span><span class="kw">pub fn </span>end&lt;<span class="lifetime">&#39;a</span>, I&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, ()&gt;
+</span><span class="kw">pub fn </span>end&lt;<span class="lifetime">'a</span>, I&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, I, ()&gt;
 <span class="kw">where
 	</span>I: Display,
 {
-	Parser::new(|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	Parser::new(|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(s) = input.get(start) {
 			<span class="prelude-val">Err</span>(Error::Mismatch {
-				message: <span class="macro">format!</span>(<span class="string">&quot;expect end of input, found: {}&quot;</span>, s),
+				message: <span class="macro">format!</span>(<span class="string">"expect end of input, found: {}"</span>, s),
 				position: start,
 			})
 		} <span class="kw">else </span>{
@@ -1250,11 +1252,11 @@
 }
 
 <span class="doccomment">/// Sequence reserve value
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O: <span class="lifetime">&#39;a</span>, U: <span class="lifetime">&#39;a</span>&gt; Add&lt;Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, (O, U)&gt;;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O: <span class="lifetime">'a</span>, U: <span class="lifetime">'a</span>&gt; Add&lt;Parser&lt;<span class="lifetime">'a</span>, I, U&gt;&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, (O, U)&gt;;
 
-	<span class="kw">fn </span>add(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;) -&gt; <span class="self">Self</span>::Output {
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	<span class="kw">fn </span>add(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">'a</span>, I, U&gt;) -&gt; <span class="self">Self</span>::Output {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).and_then(|(out1, pos1)| {
 				(other.method)(input, pos1).map(|(out2, pos2)| ((out1, out2), pos2))
 			})
@@ -1263,11 +1265,11 @@
 }
 
 <span class="doccomment">/// Sequence discard second value
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O: <span class="lifetime">&#39;a</span>, U: <span class="lifetime">&#39;a</span>&gt; Sub&lt;Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O: <span class="lifetime">'a</span>, U: <span class="lifetime">'a</span>&gt; Sub&lt;Parser&lt;<span class="lifetime">'a</span>, I, U&gt;&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, O&gt;;
 
-	<span class="kw">fn </span>sub(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;) -&gt; <span class="self">Self</span>::Output {
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	<span class="kw">fn </span>sub(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">'a</span>, I, U&gt;) -&gt; <span class="self">Self</span>::Output {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start)
 				.and_then(|(out1, pos1)| (other.method)(input, pos1).map(|(<span class="kw">_</span>, pos2)| (out1, pos2)))
 		})
@@ -1275,35 +1277,35 @@
 }
 
 <span class="doccomment">/// Sequence discard first value
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I: <span class="lifetime">&#39;a</span>, O: <span class="lifetime">&#39;a</span>, U: <span class="lifetime">&#39;a</span>&gt; Mul&lt;Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I: <span class="lifetime">'a</span>, O: <span class="lifetime">'a</span>, U: <span class="lifetime">'a</span>&gt; Mul&lt;Parser&lt;<span class="lifetime">'a</span>, I, U&gt;&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, U&gt;;
 
-	<span class="kw">fn </span>mul(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;) -&gt; <span class="self">Self</span>::Output {
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+	<span class="kw">fn </span>mul(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">'a</span>, I, U&gt;) -&gt; <span class="self">Self</span>::Output {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start)
 				.and_then(|(<span class="kw">_</span>, pos1)| (other.method)(input, pos1).map(|(out2, pos2)| (out2, pos2)))
 		})
 	}
 }
 
-<span class="doccomment">/// Chain two parsers where the second parser depends on the first&#39;s result.
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O: <span class="lifetime">&#39;a</span>, U: <span class="lifetime">&#39;a</span>, F: Fn(O) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt; + <span class="lifetime">&#39;a</span>&gt; Shr&lt;F&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, U&gt;;
+<span class="doccomment">/// Chain two parsers where the second parser depends on the first's result.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O: <span class="lifetime">'a</span>, U: <span class="lifetime">'a</span>, F: Fn(O) -&gt; Parser&lt;<span class="lifetime">'a</span>, I, U&gt; + <span class="lifetime">'a</span>&gt; Shr&lt;F&gt; <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, U&gt;;
 
 	<span class="kw">fn </span>shr(<span class="self">self</span>, other: F) -&gt; <span class="self">Self</span>::Output {
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).and_then(|(out, pos)| (other(out).method)(input, pos))
 		})
 	}
 }
 
 <span class="doccomment">/// Ordered choice
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O: <span class="lifetime">&#39;a</span>&gt; BitOr <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O: <span class="lifetime">'a</span>&gt; BitOr <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, O&gt;;
 
-	<span class="kw">fn </span>bitor(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt;) -&gt; <span class="self">Self</span>::Output {
+	<span class="kw">fn </span>bitor(<span class="self">self</span>, other: Parser&lt;<span class="lifetime">'a</span>, I, O&gt;) -&gt; <span class="self">Self</span>::Output {
 		Parser::new(
-			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
+			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
 				<span class="prelude-val">Ok</span>(out) =&gt; <span class="prelude-val">Ok</span>(out),
 				<span class="prelude-val">Err</span>(err) =&gt; <span class="kw">match </span>err {
 					Error::Expect { .. } =&gt; <span class="prelude-val">Err</span>(err),
@@ -1315,25 +1317,25 @@
 }
 
 <span class="doccomment">/// And predicate
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O: <span class="lifetime">&#39;a</span>&gt; Neg <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, bool&gt;;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O: <span class="lifetime">'a</span>&gt; Neg <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, bool&gt;;
 
 	<span class="kw">fn </span>neg(<span class="self">self</span>) -&gt; <span class="self">Self</span>::Output {
-		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| {
+		Parser::new(<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| {
 			(<span class="self">self</span>.method)(input, start).map(|<span class="kw">_</span>| (<span class="bool-val">true</span>, start))
 		})
 	}
 }
 
 <span class="doccomment">/// Not predicate
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I, O: <span class="lifetime">&#39;a</span>&gt; Not <span class="kw">for </span>Parser&lt;<span class="lifetime">&#39;a</span>, I, O&gt; {
-	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">&#39;a</span>, I, bool&gt;;
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I, O: <span class="lifetime">'a</span>&gt; Not <span class="kw">for </span>Parser&lt;<span class="lifetime">'a</span>, I, O&gt; {
+	<span class="kw">type </span>Output = Parser&lt;<span class="lifetime">'a</span>, I, bool&gt;;
 
 	<span class="kw">fn </span>not(<span class="self">self</span>) -&gt; <span class="self">Self</span>::Output {
 		Parser::new(
-			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
+			<span class="kw">move </span>|input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[I], start: usize| <span class="kw">match </span>(<span class="self">self</span>.method)(input, start) {
 				<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(Error::Mismatch {
-					message: <span class="string">&quot;not predicate failed&quot;</span>.to_string(),
+					message: <span class="string">"not predicate failed"</span>.to_string(),
 					position: start,
 				}),
 				<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>((<span class="bool-val">true</span>, start)),
@@ -1349,31 +1351,31 @@
 
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>byte_works() {
-		<span class="kw">let </span>input = <span class="string">b&quot;abcde&quot;</span>;
-		<span class="kw">let </span>parser = sym(<span class="string">b&#39;a&#39;</span>) + one_of(<span class="string">b&quot;ab&quot;</span>) - sym(<span class="string">b&#39;C&#39;</span>);
+		<span class="kw">let </span>input = <span class="string">b"abcde"</span>;
+		<span class="kw">let </span>parser = sym(<span class="string">b'a'</span>) + one_of(<span class="string">b"ab"</span>) - sym(<span class="string">b'C'</span>);
 		<span class="kw">let </span>output = parser.parse(input);
 		<span class="macro">assert_eq!</span>(
 			output,
 			<span class="prelude-val">Err</span>(Error::Mismatch {
-				message: <span class="string">&quot;expect: 67, found: 99&quot;</span>.to_string(),
+				message: <span class="string">"expect: 67, found: 99"</span>.to_string(),
 				position: <span class="number">2
 			</span>})
 		);
 
-		<span class="kw">let </span>parser = sym(<span class="string">b&#39;a&#39;</span>) * none_of(<span class="string">b&quot;AB&quot;</span>) - sym(<span class="string">b&#39;c&#39;</span>) + seq(<span class="string">b&quot;de&quot;</span>);
+		<span class="kw">let </span>parser = sym(<span class="string">b'a'</span>) * none_of(<span class="string">b"AB"</span>) - sym(<span class="string">b'c'</span>) + seq(<span class="string">b"de"</span>);
 		<span class="kw">let </span>output = parser.parse(input);
-		<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>((<span class="string">b&#39;b&#39;</span>, <span class="kw-2">&amp;</span><span class="string">b&quot;de&quot;</span>[..])));
+		<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>((<span class="string">b'b'</span>, <span class="kw-2">&amp;</span><span class="string">b"de"</span>[..])));
 		<span class="macro">assert_eq!</span>(parser.pos().parse(input), <span class="prelude-val">Ok</span>(<span class="number">5</span>));
 
-		<span class="kw">let </span>parser = sym(<span class="string">b&#39;e&#39;</span>) | sym(<span class="string">b&#39;d&#39;</span>).expect(<span class="string">&quot;d&quot;</span>) | empty().map(|<span class="kw">_</span>| <span class="string">b&#39;0&#39;</span>);
+		<span class="kw">let </span>parser = sym(<span class="string">b'e'</span>) | sym(<span class="string">b'd'</span>).expect(<span class="string">"d"</span>) | empty().map(|<span class="kw">_</span>| <span class="string">b'0'</span>);
 		<span class="kw">let </span>output = parser.parse(input);
 		<span class="macro">assert_eq!</span>(
 			output,
 			<span class="prelude-val">Err</span>(Error::Expect {
-				message: <span class="string">&quot;Expect d&quot;</span>.to_owned(),
+				message: <span class="string">"Expect d"</span>.to_owned(),
 				position: <span class="number">0</span>,
 				inner: Box::new(Error::Mismatch {
-					message: <span class="string">&quot;expect: 100, found: 97&quot;</span>.to_string(),
+					message: <span class="string">"expect: 100, found: 97"</span>.to_string(),
 					position: <span class="number">0
 				</span>})
 			})
@@ -1382,10 +1384,10 @@
 
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>char_works() {
-		<span class="kw">let </span>input = <span class="string">&quot;abcd&quot;</span>.chars().collect::&lt;Vec&lt;char&gt;&gt;();
-		<span class="kw">let </span>parser = tag(<span class="string">&quot;ab&quot;</span>) + sym(<span class="string">&#39;c&#39;</span>) | sym(<span class="string">&#39;d&#39;</span>).map(|<span class="kw">_</span>| (<span class="string">&quot;&quot;</span>, <span class="string">&#39;0&#39;</span>));
+		<span class="kw">let </span>input = <span class="string">"abcd"</span>.chars().collect::&lt;Vec&lt;char&gt;&gt;();
+		<span class="kw">let </span>parser = tag(<span class="string">"ab"</span>) + sym(<span class="string">'c'</span>) | sym(<span class="string">'d'</span>).map(|<span class="kw">_</span>| (<span class="string">""</span>, <span class="string">'0'</span>));
 		<span class="kw">let </span>output = parser.parse(<span class="kw-2">&amp;</span>input);
-		<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>((<span class="string">&quot;ab&quot;</span>, <span class="string">&#39;c&#39;</span>)));
+		<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>((<span class="string">"ab"</span>, <span class="string">'c'</span>)));
 	}
 
 	<span class="attr">#[test]
@@ -1395,11 +1397,11 @@
 			Empty,
 			Group(Box&lt;Expr&gt;),
 		}
-		<span class="kw">fn </span>expr() -&gt; Parser&lt;<span class="lifetime">&#39;static</span>, u8, Expr&gt; {
-			(sym(<span class="string">b&#39;(&#39;</span>) + call(expr) - sym(<span class="string">b&#39;)&#39;</span>)).map(|(<span class="kw">_</span>, e)| Expr::Group(Box::new(e)))
+		<span class="kw">fn </span>expr() -&gt; Parser&lt;<span class="lifetime">'static</span>, u8, Expr&gt; {
+			(sym(<span class="string">b'('</span>) + call(expr) - sym(<span class="string">b')'</span>)).map(|(<span class="kw">_</span>, e)| Expr::Group(Box::new(e)))
 				| empty().map(|<span class="kw">_</span>| Expr::Empty)
 		}
-		<span class="kw">let </span>input = <span class="string">b&quot;(())&quot;</span>;
+		<span class="kw">let </span>input = <span class="string">b"(())"</span>;
 		<span class="kw">let </span>parser = expr();
 		<span class="kw">let </span>output = parser.parse(input);
 		<span class="macro">assert_eq!</span>(
@@ -1410,16 +1412,16 @@
 
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>chain_parser() {
-		<span class="kw">let </span>input = <span class="string">b&quot;5oooooooo&quot;</span>;
+		<span class="kw">let </span>input = <span class="string">b"5oooooooo"</span>;
 		{
-			<span class="kw">let </span>parser = one_of(<span class="string">b&quot;0123456789&quot;</span>).map(|c| c - <span class="string">b&#39;0&#39;</span>)
-				&gt;&gt; |n| take(n <span class="kw">as </span>usize) + sym(<span class="string">b&#39;o&#39;</span>).repeat(<span class="number">0</span>..);
-			<span class="macro">assert_eq!</span>(parser.parse(input), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span><span class="string">b&quot;ooooo&quot;</span>[..], <span class="macro">vec!</span>[<span class="string">b&#39;o&#39;</span>; <span class="number">3</span>])));
+			<span class="kw">let </span>parser = one_of(<span class="string">b"0123456789"</span>).map(|c| c - <span class="string">b'0'</span>)
+				&gt;&gt; |n| take(n <span class="kw">as </span>usize) + sym(<span class="string">b'o'</span>).repeat(<span class="number">0</span>..);
+			<span class="macro">assert_eq!</span>(parser.parse(input), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span><span class="string">b"ooooo"</span>[..], <span class="macro">vec!</span>[<span class="string">b'o'</span>; <span class="number">3</span>])));
 		}
 		{
 			<span class="kw">let </span>parser =
-				skip(<span class="number">1</span>) * take(<span class="number">3</span>) &gt;&gt; |v: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8]| take(v.len() + <span class="number">2</span>).map(<span class="kw">move </span>|u| (u, v));
-			<span class="macro">assert_eq!</span>(parser.parse(input), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span><span class="string">b&quot;ooooo&quot;</span>[..], <span class="kw-2">&amp;</span><span class="string">b&quot;ooo&quot;</span>[..])));
+				skip(<span class="number">1</span>) * take(<span class="number">3</span>) &gt;&gt; |v: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>[u8]| take(v.len() + <span class="number">2</span>).map(<span class="kw">move </span>|u| (u, v));
+			<span class="macro">assert_eq!</span>(parser.parse(input), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span><span class="string">b"ooooo"</span>[..], <span class="kw-2">&amp;</span><span class="string">b"ooo"</span>[..])));
 		}
 		{
 			<span class="kw">let </span>parser = Parser::new(<span class="kw">move </span>|input, start| {
@@ -1431,46 +1433,46 @@
 							.map(|(u, end)| ((u, v), end))
 					})
 			});
-			<span class="macro">assert_eq!</span>(parser.parse(input), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span><span class="string">b&quot;ooooo&quot;</span>[..], <span class="kw-2">&amp;</span><span class="string">b&quot;ooo&quot;</span>[..])));
+			<span class="macro">assert_eq!</span>(parser.parse(input), <span class="prelude-val">Ok</span>((<span class="kw-2">&amp;</span><span class="string">b"ooooo"</span>[..], <span class="kw-2">&amp;</span><span class="string">b"ooo"</span>[..])));
 		}
 	}
 
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>repeat_at_least() {
-		<span class="kw">let </span>input = <span class="string">b&quot;xxxooo&quot;</span>;
+		<span class="kw">let </span>input = <span class="string">b"xxxooo"</span>;
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">1</span>..<span class="number">2</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">1</span>..<span class="number">2</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">1</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">1</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">1</span>..);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">1</span>..);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">3</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">3</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">0</span>..);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">0</span>..);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">3</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">3</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;y&#39;</span>).repeat(<span class="number">0</span>..);
+			<span class="kw">let </span>parser = sym(<span class="string">b'y'</span>).repeat(<span class="number">0</span>..);
 			<span class="kw">let </span>output = parser.parse(input);
 			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;y&#39;</span>).repeat(<span class="number">1</span>..);
+			<span class="kw">let </span>parser = sym(<span class="string">b'y'</span>).repeat(<span class="number">1</span>..);
 			<span class="kw">let </span>output = parser.parse(input);
 			<span class="macro">assert!</span>(output.is_err());
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">10</span>..);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">10</span>..);
 			<span class="kw">let </span>output = parser.parse(input);
 			<span class="macro">assert!</span>(output.is_err());
 		}
@@ -1478,69 +1480,69 @@
 
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>repeat_up_to() {
-		<span class="kw">let </span>input = <span class="string">b&quot;xxxooo&quot;</span>;
+		<span class="kw">let </span>input = <span class="string">b"xxxooo"</span>;
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(..<span class="number">2</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(..<span class="number">2</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">1</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">1</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(..<span class="number">4</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(..<span class="number">4</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">3</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">3</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(..);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(..);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">3</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">3</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(..<span class="number">0</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(..<span class="number">0</span>);
 			<span class="kw">let </span>output = parser.parse(input);
 			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(..<span class="number">10</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(..<span class="number">10</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">3</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">3</span>]))
 		}
 	}
 
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>repeat_exactly() {
-		<span class="kw">let </span>input = <span class="string">b&quot;xxxooo&quot;</span>;
+		<span class="kw">let </span>input = <span class="string">b"xxxooo"</span>;
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">0</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">0</span>);
 			<span class="kw">let </span>output = parser.parse(input);
 			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">1</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">1</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">1</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">1</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">2</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">2</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">2</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">2</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">3</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">3</span>);
 			<span class="kw">let </span>output = parser.parse(input);
-			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b&#39;x&#39;</span>; <span class="number">3</span>]))
+			<span class="macro">assert_eq!</span>(output, <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">b'x'</span>; <span class="number">3</span>]))
 		}
 
 		{
-			<span class="kw">let </span>parser = sym(<span class="string">b&#39;x&#39;</span>).repeat(<span class="number">4</span>);
+			<span class="kw">let </span>parser = sym(<span class="string">b'x'</span>).repeat(<span class="number">4</span>);
 			<span class="kw">let </span>output = parser.parse(input);
 			<span class="macro">assert!</span>(output.is_err())
 		}

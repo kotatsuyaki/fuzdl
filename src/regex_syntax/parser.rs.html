@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/regex-syntax-0.6.27/src/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="regex_syntax" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/regex-syntax-0.6.27/src/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="regex_syntax" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../regex_syntax/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -265,12 +267,12 @@
     /// `\141` are all equivalent regular expressions, where the last example
     /// shows octal syntax.
     ///
-    /// While supporting octal syntax isn&#39;t in and of itself a problem, it does
+    /// While supporting octal syntax isn't in and of itself a problem, it does
     /// make good error messages harder. That is, in PCRE based regex engines,
     /// syntax like `\0` invokes a backreference, which is explicitly
-    /// unsupported in Rust&#39;s regex engine. However, many users expect it to
+    /// unsupported in Rust's regex engine. However, many users expect it to
     /// be supported. Therefore, when octal support is disabled, the error
-    /// message will explicitly mention that backreferences aren&#39;t supported.
+    /// message will explicitly mention that backreferences aren't supported.
     ///
     /// Octal syntax is disabled by default.
     </span><span class="kw">pub fn </span>octal(<span class="kw-2">&amp;mut </span><span class="self">self</span>, yes: bool) -&gt; <span class="kw-2">&amp;mut </span>ParserBuilder {
@@ -285,10 +287,10 @@
     /// an expression that will only ever match valid UTF-8 (otherwise, the
     /// parser will return an error).
     ///
-    /// Perhaps surprisingly, when invalid UTF-8 isn&#39;t allowed, a negated ASCII
+    /// Perhaps surprisingly, when invalid UTF-8 isn't allowed, a negated ASCII
     /// word boundary (uttered as `(?-u:\B)` in the concrete syntax) will cause
     /// the parser to return an error. Namely, a negated ASCII word boundary
-    /// can result in matching positions that aren&#39;t valid UTF-8 boundaries.
+    /// can result in matching positions that aren't valid UTF-8 boundaries.
     </span><span class="kw">pub fn </span>allow_invalid_utf8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, yes: bool) -&gt; <span class="kw-2">&amp;mut </span>ParserBuilder {
         <span class="self">self</span>.hir.allow_invalid_utf8(yes);
         <span class="self">self
@@ -325,7 +327,7 @@
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Enable or disable the &quot;dot matches any character&quot; flag by default.
+    <span class="doccomment">/// Enable or disable the "dot matches any character" flag by default.
     ///
     /// By default this is disabled. It may alternatively be selectively
     /// enabled in the regular expression itself via the `s` flag.
@@ -334,7 +336,7 @@
         <span class="self">self
     </span>}
 
-    <span class="doccomment">/// Enable or disable the &quot;swap greed&quot; flag by default.
+    <span class="doccomment">/// Enable or disable the "swap greed" flag by default.
     ///
     /// By default this is disabled. It may alternatively be selectively
     /// enabled in the regular expression itself via the `U` flag.
@@ -348,7 +350,7 @@
     /// By default this is **enabled**. It may alternatively be selectively
     /// disabled in the regular expression itself via the `u` flag.
     ///
-    /// Note that unless `allow_invalid_utf8` is enabled (it&#39;s disabled by
+    /// Note that unless `allow_invalid_utf8` is enabled (it's disabled by
     /// default), a regular expression will fail to parse if Unicode mode is
     /// disabled and a sub-expression could possibly match invalid UTF-8.
     </span><span class="kw">pub fn </span>unicode(<span class="kw-2">&amp;mut </span><span class="self">self</span>, yes: bool) -&gt; <span class="kw-2">&amp;mut </span>ParserBuilder {
@@ -360,9 +362,9 @@
 <span class="doccomment">/// A convenience parser for regular expressions.
 ///
 /// This parser takes as input a regular expression pattern string (the
-/// &quot;concrete syntax&quot;) and returns a high-level intermediate representation
+/// "concrete syntax") and returns a high-level intermediate representation
 /// (the HIR) suitable for most types of analysis. In particular, this parser
-/// hides the intermediate state of producing an AST (the &quot;abstract syntax&quot;).
+/// hides the intermediate state of producing an AST (the "abstract syntax").
 /// The AST is itself far more complex than the HIR, so this parser serves as a
 /// convenience for never having to deal with it at all.
 ///

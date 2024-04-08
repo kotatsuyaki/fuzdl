@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/ico/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/ico/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -503,7 +505,7 @@
 
     <span class="doccomment">/// The dimensions specified by the entry does not match the dimensions in the header of the enclosed image.
     </span>ImageEntryDimensionMismatch {
-        <span class="doccomment">/// The mismatched subimage&#39;s type
+        <span class="doccomment">/// The mismatched subimage's type
         </span>format: IcoEntryImageFormat,
         <span class="doccomment">/// The dimensions specified by the entry
         </span>entry: (u16, u16),
@@ -513,28 +515,28 @@
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
-            DecoderError::NoEntries =&gt; f.write_str(<span class="string">&quot;ICO directory contains no image&quot;</span>),
+            DecoderError::NoEntries =&gt; f.write_str(<span class="string">"ICO directory contains no image"</span>),
             DecoderError::IcoEntryTooManyPlanesOrHotspot =&gt; {
-                f.write_str(<span class="string">&quot;ICO image entry has too many color planes or too large hotspot value&quot;</span>)
+                f.write_str(<span class="string">"ICO image entry has too many color planes or too large hotspot value"</span>)
             }
             DecoderError::IcoEntryTooManyBitsPerPixelOrHotspot =&gt; f.write_str(
-                <span class="string">&quot;ICO image entry has too many bits per pixel or too large hotspot value&quot;</span>,
+                <span class="string">"ICO image entry has too many bits per pixel or too large hotspot value"</span>,
             ),
             DecoderError::PngShorterThanHeader =&gt; {
-                f.write_str(<span class="string">&quot;Entry specified a length that is shorter than PNG header!&quot;</span>)
+                f.write_str(<span class="string">"Entry specified a length that is shorter than PNG header!"</span>)
             }
-            DecoderError::PngNotRgba =&gt; f.write_str(<span class="string">&quot;The PNG is not in RGBA format!&quot;</span>),
+            DecoderError::PngNotRgba =&gt; f.write_str(<span class="string">"The PNG is not in RGBA format!"</span>),
             DecoderError::InvalidDataSize =&gt; {
-                f.write_str(<span class="string">&quot;ICO image data size did not match expected size&quot;</span>)
+                f.write_str(<span class="string">"ICO image data size did not match expected size"</span>)
             }
             DecoderError::ImageEntryDimensionMismatch {
                 format,
                 entry,
                 image,
             } =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Entry{:?} and {}{:?} dimensions do not match!&quot;</span>,
+                <span class="string">"Entry{:?} and {}{:?} dimensions do not match!"</span>,
                 entry, format, image
             )),
         }
@@ -559,10 +561,10 @@
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>IcoEntryImageFormat {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         f.write_str(<span class="kw">match </span><span class="self">self </span>{
-            IcoEntryImageFormat::Png =&gt; <span class="string">&quot;PNG&quot;</span>,
-            IcoEntryImageFormat::Bmp =&gt; <span class="string">&quot;BMP&quot;</span>,
+            IcoEntryImageFormat::Png =&gt; <span class="string">"PNG"</span>,
+            IcoEntryImageFormat::Bmp =&gt; <span class="string">"BMP"</span>,
         })
     }
 }
@@ -596,7 +598,7 @@
     </span><span class="attr">#[allow(unused)]
     </span>color_count: u8,
     <span class="comment">// Wikipedia has this to say:
-    // Although Microsoft&#39;s technical documentation states that this value must be zero, the icon
+    // Although Microsoft's technical documentation states that this value must be zero, the icon
     // encoder built into .NET (System.Drawing.Icon.Save) sets this value to 255. It appears that
     // the operating system ignores this value altogether.
     </span><span class="attr">#[allow(unused)]
@@ -746,7 +748,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>IcoDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read + Seek&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>IcoDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = IcoReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -840,9 +842,9 @@
                 // the mask is required, but according to Wikipedia
                 // https://en.wikipedia.org/wiki/ICO_(file_format)
                 // the mask is not required. Unfortunately, Wikipedia does not have a citation
-                // for that claim, so we can&#39;t be sure which is correct.
+                // for that claim, so we can't be sure which is correct.
                 </span><span class="kw">if </span>data_end &gt;= image_end + mask_length {
-                    <span class="comment">// If there&#39;s an AND mask following the image, read and apply it.
+                    <span class="comment">// If there's an AND mask following the image, read and apply it.
                     </span><span class="kw">for </span>y <span class="kw">in </span><span class="number">0</span>..height {
                         <span class="kw">let </span><span class="kw-2">mut </span>x = <span class="number">0</span>;
                         <span class="kw">for _ in </span><span class="number">0</span>..mask_row_bytes {
@@ -877,7 +879,7 @@
 </span><span class="kw">mod </span>test {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="comment">// Test if BMP images without alpha channel inside ICOs don&#39;t panic.
+    <span class="comment">// Test if BMP images without alpha channel inside ICOs don't panic.
     // Because the test data is invalid decoding should produce an error.
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>bmp_16_with_missing_alpha_channel() {

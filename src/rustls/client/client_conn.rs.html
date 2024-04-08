@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rustls-0.20.6/src/client/client_conn.rs`."><title>client_conn.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rustls" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rustls-0.20.6/src/client/client_conn.rs`."><title>client_conn.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rustls" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../rustls/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -638,9 +640,9 @@
 <span class="kw">use </span><span class="kw">crate</span>::conn::{CommonState, ConnectionCommon, Protocol, Side};
 <span class="kw">use </span><span class="kw">crate</span>::error::Error;
 <span class="kw">use </span><span class="kw">crate</span>::kx::SupportedKxGroup;
-<span class="attr">#[cfg(feature = <span class="string">&quot;logging&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"logging"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::log::trace;
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::msgs::enums::AlertDescription;
 <span class="kw">use </span><span class="kw">crate</span>::msgs::enums::CipherSuite;
 <span class="kw">use </span><span class="kw">crate</span>::msgs::enums::ProtocolVersion;
@@ -653,7 +655,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::KeyLog;
 
 <span class="kw">use </span><span class="kw">super</span>::hs;
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::quic;
 
 <span class="kw">use </span>std::convert::TryFrom;
@@ -671,7 +673,7 @@
 /// **highly sensitive data**, containing enough key material
 /// to break all security of the corresponding session.
 ///
-/// `put` is a mutating operation; this isn&#39;t expressed
+/// `put` is a mutating operation; this isn't expressed
 /// in the type system to allow implementations freedom in
 /// how to achieve interior mutability.  `Mutex` is a common
 /// choice.
@@ -681,7 +683,7 @@
     </span><span class="kw">fn </span>put(<span class="kw-2">&amp;</span><span class="self">self</span>, key: Vec&lt;u8&gt;, value: Vec&lt;u8&gt;) -&gt; bool;
 
     <span class="doccomment">/// Returns the latest value for `key`.  Returns `None`
-    /// if there&#39;s no such value.
+    /// if there's no such value.
     </span><span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;;
 }
 
@@ -689,7 +691,7 @@
 /// private key for the purposes of client authentication.
 </span><span class="kw">pub trait </span>ResolvesClientCert: Send + Sync {
     <span class="doccomment">/// With the server-supplied acceptable issuers in `acceptable_issuers`,
-    /// the server&#39;s supported signature schemes in `sigschemes`,
+    /// the server's supported signature schemes in `sigschemes`,
     /// return a certificate chain and signing key to authenticate.
     ///
     /// `acceptable_issuers` is undecoded and unverified by the rustls
@@ -733,7 +735,7 @@
     ///
     /// The first element in this list is the _default key share algorithm_,
     /// and in TLS1.3 a key share for it is sent in the client hello.
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) kx_groups: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>SupportedKxGroup&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) kx_groups: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>SupportedKxGroup&gt;,
 
     <span class="doccomment">/// Which ALPN protocols we include in our client hello.
     /// If empty, no ALPN extension is sent.
@@ -742,7 +744,7 @@
     <span class="doccomment">/// How we store session data or tickets.
     </span><span class="kw">pub </span>session_storage: Arc&lt;<span class="kw">dyn </span>StoresClientSessions&gt;,
 
-    <span class="doccomment">/// The maximum size of TLS message we&#39;ll emit.  If None, we don&#39;t limit TLS
+    <span class="doccomment">/// The maximum size of TLS message we'll emit.  If None, we don't limit TLS
     /// message lengths except to the 2**16 limit specified in the standard.
     ///
     /// rustls enforces an arbitrary minimum of 32 bytes for this field.
@@ -778,7 +780,7 @@
     /// does nothing.
     </span><span class="kw">pub </span>key_log: Arc&lt;<span class="kw">dyn </span>KeyLog&gt;,
 
-    <span class="doccomment">/// Whether to send data on the first flight (&quot;early data&quot;) in
+    <span class="doccomment">/// Whether to send data on the first flight ("early data") in
     /// TLS 1.3 handshakes.
     ///
     /// The default is false.
@@ -797,7 +799,7 @@
     }
 
     <span class="attr">#[doc(hidden)]
-    </span><span class="doccomment">/// We support a given TLS version if it&#39;s quoted in the configured
+    </span><span class="doccomment">/// We support a given TLS version if it's quoted in the configured
     /// versions *and* at least one ciphersuite for this version is
     /// also configured.
     </span><span class="kw">pub fn </span>supports_version(<span class="kw-2">&amp;</span><span class="self">self</span>, v: ProtocolVersion) -&gt; bool {
@@ -810,7 +812,7 @@
 
     <span class="doccomment">/// Access configuration options whose use is dangerous and requires
     /// extra care.
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;dangerous_configuration&quot;</span>)]
+    </span><span class="attr">#[cfg(feature = <span class="string">"dangerous_configuration"</span>)]
     </span><span class="kw">pub fn </span>dangerous(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; danger::DangerousClientConfig {
         danger::DangerousClientConfig { cfg: <span class="self">self </span>}
     }
@@ -827,7 +829,7 @@
 ///
 /// This currently covers knowing the DNS name of the server, but
 /// will be extended in the future to supporting privacy-preserving names
-/// for the server (&quot;ECH&quot;).  For this reason this enum is `non_exhaustive`.
+/// for the server ("ECH").  For this reason this enum is `non_exhaustive`.
 ///
 /// # Making one
 ///
@@ -837,11 +839,11 @@
 /// ```
 /// # use std::convert::{TryInto, TryFrom};
 /// # use rustls::ServerName;
-/// ServerName::try_from(&quot;example.com&quot;).expect(&quot;invalid DNS name&quot;);
+/// ServerName::try_from("example.com").expect("invalid DNS name");
 ///
 /// // or, alternatively...
 ///
-/// let x = &quot;example.com&quot;.try_into().expect(&quot;invalid DNS name&quot;);
+/// let x = "example.com".try_into().expect("invalid DNS name");
 /// # let _: ServerName = x;
 /// ```
 </span><span class="attr">#[non_exhaustive]
@@ -923,14 +925,14 @@
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>InvalidDnsNameError {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.write_str(<span class="string">&quot;invalid dns name&quot;</span>)
+        f.write_str(<span class="string">"invalid dns name"</span>)
     }
 }
 
 <span class="kw">impl </span>StdError <span class="kw">for </span>InvalidDnsNameError {}
 
 <span class="doccomment">/// Container for unsafe APIs
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;dangerous_configuration&quot;</span>)]
+</span><span class="attr">#[cfg(feature = <span class="string">"dangerous_configuration"</span>)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>danger {
     <span class="kw">use </span>std::sync::Arc;
 
@@ -938,12 +940,12 @@
     <span class="kw">use </span><span class="kw">super</span>::ClientConfig;
 
     <span class="doccomment">/// Accessor for dangerous configuration options.
-    </span><span class="kw">pub struct </span>DangerousClientConfig&lt;<span class="lifetime">&#39;a</span>&gt; {
+    </span><span class="kw">pub struct </span>DangerousClientConfig&lt;<span class="lifetime">'a</span>&gt; {
         <span class="doccomment">/// The underlying ClientConfig
-        </span><span class="kw">pub </span>cfg: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ClientConfig,
+        </span><span class="kw">pub </span>cfg: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>ClientConfig,
     }
 
-    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DangerousClientConfig&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DangerousClientConfig&lt;<span class="lifetime">'a</span>&gt; {
         <span class="doccomment">/// Overrides the default `ServerCertVerifier` with something else.
         </span><span class="kw">pub fn </span>set_certificate_verifier(<span class="kw-2">&amp;mut </span><span class="self">self</span>, verifier: Arc&lt;<span class="kw">dyn </span>ServerCertVerifier&gt;) {
             <span class="self">self</span>.cfg.verifier = verifier;
@@ -991,21 +993,21 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>rejected(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="macro">trace!</span>(<span class="string">&quot;EarlyData rejected&quot;</span>);
+        <span class="macro">trace!</span>(<span class="string">"EarlyData rejected"</span>);
         <span class="self">self</span>.state = EarlyDataState::Rejected;
     }
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>accepted(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="macro">trace!</span>(<span class="string">&quot;EarlyData accepted&quot;</span>);
+        <span class="macro">trace!</span>(<span class="string">"EarlyData accepted"</span>);
         <span class="macro">assert_eq!</span>(<span class="self">self</span>.state, EarlyDataState::Ready);
         <span class="self">self</span>.state = EarlyDataState::Accepted;
     }
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>finished(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="macro">trace!</span>(<span class="string">&quot;EarlyData finished&quot;</span>);
+        <span class="macro">trace!</span>(<span class="string">"EarlyData finished"</span>);
         <span class="self">self</span>.state = <span class="kw">match </span><span class="self">self</span>.state {
             EarlyDataState::Accepted =&gt; EarlyDataState::AcceptedFinished,
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;bad EarlyData state&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"bad EarlyData state"</span>),
         }
     }
 
@@ -1034,12 +1036,12 @@
 }
 
 <span class="doccomment">/// Stub that implements io::Write and dispatches to `write_early_data`.
-</span><span class="kw">pub struct </span>WriteEarlyData&lt;<span class="lifetime">&#39;a</span>&gt; {
-    sess: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ClientConnection,
+</span><span class="kw">pub struct </span>WriteEarlyData&lt;<span class="lifetime">'a</span>&gt; {
+    sess: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>ClientConnection,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; WriteEarlyData&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>new(sess: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ClientConnection) -&gt; WriteEarlyData&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; WriteEarlyData&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>new(sess: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>ClientConnection) -&gt; WriteEarlyData&lt;<span class="lifetime">'a</span>&gt; {
         WriteEarlyData { sess }
     }
 
@@ -1054,7 +1056,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; io::Write <span class="kw">for </span>WriteEarlyData&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; io::Write <span class="kw">for </span>WriteEarlyData&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;</span>[u8]) -&gt; io::Result&lt;usize&gt; {
         <span class="self">self</span>.sess.write_early_data(buf)
     }
@@ -1071,7 +1073,7 @@
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>ClientConnection {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;ClientConnection&quot;</span>)
+        f.debug_struct(<span class="string">"ClientConnection"</span>)
             .finish()
     }
 }
@@ -1106,12 +1108,12 @@
     }
 
     <span class="doccomment">/// Returns an `io::Write` implementer you can write bytes to
-    /// to send TLS1.3 early data (a.k.a. &quot;0-RTT data&quot;) to the server.
+    /// to send TLS1.3 early data (a.k.a. "0-RTT data") to the server.
     ///
     /// This returns None in many circumstances when the capability to
     /// send early data is not available, including but not limited to:
     ///
-    /// - The server hasn&#39;t been talked to previously.
+    /// - The server hasn't been talked to previously.
     /// - The server does not support resumption.
     /// - The server does not support early data.
     /// - The resumption data for the server has expired.
@@ -1168,10 +1170,10 @@
 }
 
 <span class="attr">#[doc(hidden)]
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TryFrom&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">crate</span>::Connection&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ClientConnection {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TryFrom&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="kw">crate</span>::Connection&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>ClientConnection {
     <span class="kw">type </span>Error = ();
 
-    <span class="kw">fn </span>try_from(value: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="kw">crate</span>::Connection) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+    <span class="kw">fn </span>try_from(value: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="kw">crate</span>::Connection) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
         <span class="kw">use </span><span class="kw">crate</span>::Connection::<span class="kw-2">*</span>;
         <span class="kw">match </span>value {
             Client(conn) =&gt; <span class="prelude-val">Ok</span>(conn),
@@ -1203,7 +1205,7 @@
 
 <span class="kw">impl </span><span class="kw">crate</span>::conn::SideData <span class="kw">for </span>ClientConnectionData {}
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">impl </span>quic::QuicExt <span class="kw">for </span>ClientConnection {
     <span class="kw">fn </span>quic_transport_parameters(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
         <span class="self">self</span>.inner
@@ -1242,7 +1244,7 @@
 }
 
 <span class="doccomment">/// Methods specific to QUIC client sessions
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+</span><span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">pub trait </span>ClientQuicExt {
     <span class="doccomment">/// Make a new QUIC ClientConnection. This differs from `ClientConnection::new()`
     /// in that it takes an extra argument, `params`, which contains the
@@ -1255,7 +1257,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ClientConnection, Error&gt; {
         <span class="kw">if </span>!config.supports_version(ProtocolVersion::TLSv1_3) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::General(
-                <span class="string">&quot;TLS 1.3 support is required for QUIC&quot;</span>.into(),
+                <span class="string">"TLS 1.3 support is required for QUIC"</span>.into(),
             ));
         }
 
@@ -1268,6 +1270,6 @@
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">impl </span>ClientQuicExt <span class="kw">for </span>ClientConnection {}
 </code></pre></div></section></main></body></html>

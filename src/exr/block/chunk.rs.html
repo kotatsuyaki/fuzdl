@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/block/chunk.rs`."><title>chunk.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/block/chunk.rs`."><title>chunk.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -426,7 +428,7 @@
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>CompressedScanLineBlock {
 
-    <span class="doccomment">/// The block&#39;s y coordinate is the pixel space y coordinate of the top scan line in the block.
+    <span class="doccomment">/// The block's y coordinate is the pixel space y coordinate of the top scan line in the block.
     /// The top scan line block in the image is aligned with the top edge of the data window.
     </span><span class="kw">pub </span>y_coordinate: i32,
 
@@ -466,7 +468,7 @@
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>CompressedDeepScanLineBlock {
 
-    <span class="doccomment">/// The block&#39;s y coordinate is the pixel space y coordinate of the top scan line in the block.
+    <span class="doccomment">/// The block's y coordinate is the pixel space y coordinate of the top scan line in the block.
     /// The top scan line block in the image is aligned with the top edge of the data window.
     </span><span class="kw">pub </span>y_coordinate: i32,
 
@@ -531,12 +533,12 @@
         <span class="kw">if </span>level_x &gt; <span class="number">31 </span>|| level_y &gt; <span class="number">31 </span>{
             <span class="comment">// there can be at most 31 levels, because the largest level would have a size of 2^31,
             // which exceeds the maximum 32-bit integer value.
-            </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;level index exceeding integer maximum&quot;</span>));
+            </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"level index exceeding integer maximum"</span>));
         }
 
         <span class="prelude-val">Ok</span>(TileCoordinates {
-            tile_index: Vec2(tile_x, tile_y).to_usize(<span class="string">&quot;tile coordinate index&quot;</span>)<span class="question-mark">?</span>,
-            level_index: Vec2(level_x, level_y).to_usize(<span class="string">&quot;tile coordinate level&quot;</span>)<span class="question-mark">?
+            tile_index: Vec2(tile_x, tile_y).to_usize(<span class="string">"tile coordinate index"</span>)<span class="question-mark">?</span>,
+            level_index: Vec2(level_x, level_y).to_usize(<span class="string">"tile coordinate level"</span>)<span class="question-mark">?
         </span>})
     }
 
@@ -548,7 +550,7 @@
         <span class="kw">let </span>y = <span class="self">self</span>.tile_index.y() * tile_size.height();
 
         <span class="kw">if </span>x &gt;= max.x() || y &gt;= max.y() {
-            <span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;tile index&quot;</span>))
+            <span class="prelude-val">Err</span>(Error::invalid(<span class="string">"tile index"</span>))
         }
         <span class="kw">else </span>{
             <span class="prelude-val">Ok</span>(IntegerBounds {
@@ -581,7 +583,7 @@
 
     <span class="doccomment">/// Without validation, write this instance to the byte stream.
     </span><span class="kw">pub fn </span>write&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, write: <span class="kw-2">&amp;mut </span>W) -&gt; UnitResult {
-        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_pixels.len(), <span class="number">0</span>, <span class="string">&quot;empty blocks should not be put in the file bug&quot;</span>);
+        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_pixels.len(), <span class="number">0</span>, <span class="string">"empty blocks should not be put in the file bug"</span>);
 
         i32::write(<span class="self">self</span>.y_coordinate, write)<span class="question-mark">?</span>;
         u8::write_i32_sized_slice(write, <span class="kw-2">&amp;</span><span class="self">self</span>.compressed_pixels)<span class="question-mark">?</span>;
@@ -591,7 +593,7 @@
     <span class="doccomment">/// Read the value without validating.
     </span><span class="kw">pub fn </span>read(read: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>Read, max_block_byte_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>y_coordinate = i32::read(read)<span class="question-mark">?</span>;
-        <span class="kw">let </span>compressed_pixels = u8::read_i32_sized_vec(read, max_block_byte_size, <span class="prelude-val">Some</span>(max_block_byte_size), <span class="string">&quot;scan line block sample count&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>compressed_pixels = u8::read_i32_sized_vec(read, max_block_byte_size, <span class="prelude-val">Some</span>(max_block_byte_size), <span class="string">"scan line block sample count"</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(CompressedScanLineBlock { y_coordinate, compressed_pixels })
     }
 }
@@ -600,7 +602,7 @@
 
     <span class="doccomment">/// Without validation, write this instance to the byte stream.
     </span><span class="kw">pub fn </span>write&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, write: <span class="kw-2">&amp;mut </span>W) -&gt; UnitResult {
-        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_pixels.len(), <span class="number">0</span>, <span class="string">&quot;empty blocks should not be put in the file bug&quot;</span>);
+        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_pixels.len(), <span class="number">0</span>, <span class="string">"empty blocks should not be put in the file bug"</span>);
 
         <span class="self">self</span>.coordinates.write(write)<span class="question-mark">?</span>;
         u8::write_i32_sized_slice(write, <span class="kw-2">&amp;</span><span class="self">self</span>.compressed_pixels)<span class="question-mark">?</span>;
@@ -610,7 +612,7 @@
     <span class="doccomment">/// Read the value without validating.
     </span><span class="kw">pub fn </span>read(read: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>Read, max_block_byte_size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>coordinates = TileCoordinates::read(read)<span class="question-mark">?</span>;
-        <span class="kw">let </span>compressed_pixels = u8::read_i32_sized_vec(read, max_block_byte_size, <span class="prelude-val">Some</span>(max_block_byte_size), <span class="string">&quot;tile block sample count&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>compressed_pixels = u8::read_i32_sized_vec(read, max_block_byte_size, <span class="prelude-val">Some</span>(max_block_byte_size), <span class="string">"tile block sample count"</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(CompressedTileBlock { coordinates, compressed_pixels })
     }
 }
@@ -619,7 +621,7 @@
 
     <span class="doccomment">/// Without validation, write this instance to the byte stream.
     </span><span class="kw">pub fn </span>write&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, write: <span class="kw-2">&amp;mut </span>W) -&gt; UnitResult {
-        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_sample_data.len(), <span class="number">0</span>, <span class="string">&quot;empty blocks should not be put in the file bug&quot;</span>);
+        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_sample_data.len(), <span class="number">0</span>, <span class="string">"empty blocks should not be put in the file bug"</span>);
 
         i32::write(<span class="self">self</span>.y_coordinate, write)<span class="question-mark">?</span>;
         u64::write(<span class="self">self</span>.compressed_pixel_offset_table.len() <span class="kw">as </span>u64, write)<span class="question-mark">?</span>;
@@ -641,13 +643,13 @@
         </span><span class="kw">let </span>compressed_pixel_offset_table = i8::read_vec(
             read, compressed_pixel_offset_table_size,
             <span class="number">6 </span>* u16::MAX <span class="kw">as </span>usize, <span class="prelude-val">Some</span>(max_block_byte_size),
-            <span class="string">&quot;deep scan line block table size&quot;
+            <span class="string">"deep scan line block table size"
         </span>)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>compressed_sample_data = u8::read_vec(
             read, compressed_sample_data_size,
             <span class="number">6 </span>* u16::MAX <span class="kw">as </span>usize, <span class="prelude-val">Some</span>(max_block_byte_size),
-            <span class="string">&quot;deep scan line block sample count&quot;
+            <span class="string">"deep scan line block sample count"
         </span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(CompressedDeepScanLineBlock {
@@ -664,7 +666,7 @@
 
     <span class="doccomment">/// Without validation, write this instance to the byte stream.
     </span><span class="kw">pub fn </span>write&lt;W: Write&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, write: <span class="kw-2">&amp;mut </span>W) -&gt; UnitResult {
-        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_sample_data.len(), <span class="number">0</span>, <span class="string">&quot;empty blocks should not be put in the file bug&quot;</span>);
+        <span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.compressed_sample_data.len(), <span class="number">0</span>, <span class="string">"empty blocks should not be put in the file bug"</span>);
 
         <span class="self">self</span>.coordinates.write(write)<span class="question-mark">?</span>;
         u64::write(<span class="self">self</span>.compressed_pixel_offset_table.len() <span class="kw">as </span>u64, write)<span class="question-mark">?</span>;
@@ -685,13 +687,13 @@
         <span class="kw">let </span>compressed_pixel_offset_table = i8::read_vec(
             read, compressed_pixel_offset_table_size,
             <span class="number">6 </span>* u16::MAX <span class="kw">as </span>usize, <span class="prelude-val">Some</span>(hard_max_block_byte_size),
-            <span class="string">&quot;deep tile block table size&quot;
+            <span class="string">"deep tile block table size"
         </span>)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>compressed_sample_data = u8::read_vec(
             read, compressed_sample_data_size,
             <span class="number">6 </span>* u16::MAX <span class="kw">as </span>usize, <span class="prelude-val">Some</span>(hard_max_block_byte_size),
-            <span class="string">&quot;deep tile block sample count&quot;
+            <span class="string">"deep tile block sample count"
         </span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(CompressedDeepTileBlock {
@@ -711,10 +713,10 @@
 
     <span class="doccomment">/// Without validation, write this instance to the byte stream.
     </span><span class="kw">pub fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, write: <span class="kw-2">&amp;mut </span><span class="kw">impl </span>Write, header_count: usize) -&gt; UnitResult {
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.layer_index &lt; header_count, <span class="string">&quot;layer index bug&quot;</span>); <span class="comment">// validation is done in full_image or simple_image
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.layer_index &lt; header_count, <span class="string">"layer index bug"</span>); <span class="comment">// validation is done in full_image or simple_image
 
         </span><span class="kw">if </span>header_count != <span class="number">1 </span>{  usize_to_i32(<span class="self">self</span>.layer_index).write(write)<span class="question-mark">?</span>; }
-        <span class="kw">else </span>{ <span class="macro">assert_eq!</span>(<span class="self">self</span>.layer_index, <span class="number">0</span>, <span class="string">&quot;invalid header index for single layer file&quot;</span>); }
+        <span class="kw">else </span>{ <span class="macro">assert_eq!</span>(<span class="self">self</span>.layer_index, <span class="number">0</span>, <span class="string">"invalid header index for single layer file"</span>); }
 
         <span class="kw">match </span><span class="self">self</span>.compressed_block {
             CompressedBlock::ScanLine     (<span class="kw-2">ref </span>value) =&gt; value.write(write),
@@ -729,11 +731,11 @@
         <span class="kw">let </span>layer_number = i32_to_usize(
             <span class="kw">if </span>meta_data.requirements.is_multilayer() { i32::read(read)<span class="question-mark">? </span>} <span class="comment">// documentation says u64, but is i32
             </span><span class="kw">else </span>{ <span class="number">0_i32 </span>}, <span class="comment">// reference the first header for single-layer images
-            </span><span class="string">&quot;chunk data part number&quot;
+            </span><span class="string">"chunk data part number"
         </span>)<span class="question-mark">?</span>;
 
         <span class="kw">if </span>layer_number &gt;= meta_data.headers.len() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;chunk data part number&quot;</span>));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"chunk data part number"</span>));
         }
 
         <span class="kw">let </span>header = <span class="kw-2">&amp;</span>meta_data.headers[layer_number];

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/time-0.3.14/src/duration.rs`."><title>duration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="time" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="icon" href="https://avatars0.githubusercontent.com/u/55999857"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../time/index.html"><img src="https://avatars0.githubusercontent.com/u/55999857" alt="time"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/time-0.3.14/src/duration.rs`."><title>duration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="time" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="icon" href="https://avatars0.githubusercontent.com/u/55999857"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../time/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1113,7 +1115,7 @@
 <span class="kw">use </span>core::time::Duration <span class="kw">as </span>StdDuration;
 
 <span class="kw">use </span><span class="kw">crate</span>::error;
-<span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::Instant;
 
 <span class="doccomment">/// By explicitly inserting this enum where padding is expected, the compiler is able to better
@@ -1148,10 +1150,10 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Duration {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;Duration&quot;</span>)
-            .field(<span class="string">&quot;seconds&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.seconds)
-            .field(<span class="string">&quot;nanoseconds&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.nanoseconds)
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        f.debug_struct(<span class="string">"Duration"</span>)
+            .field(<span class="string">"seconds"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.seconds)
+            .field(<span class="string">"nanoseconds"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.nanoseconds)
             .finish()
     }
 }
@@ -1467,7 +1469,7 @@
 
     <span class="doccomment">/// Create a new `Duration` with the given number of nanoseconds.
     ///
-    /// As the input range cannot be fully mapped to the output, this should only be used where it&#39;s
+    /// As the input range cannot be fully mapped to the output, this should only be used where it's
     /// known to result in a valid value.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>nanoseconds_i128(nanoseconds: i128) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new_unchecked(
@@ -1849,7 +1851,7 @@
 
     </span><span class="doccomment">/// Runs a closure, returning the duration of time it took to run. The return value of the
     /// closure is provided in the second part of the tuple.
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
     </span><span class="kw">pub fn </span>time_fn&lt;T&gt;(f: <span class="kw">impl </span>FnOnce() -&gt; T) -&gt; (<span class="self">Self</span>, T) {
         <span class="kw">let </span>start = Instant::now();
         <span class="kw">let </span>return_value = f();
@@ -1869,15 +1871,15 @@
 /// # use time::Duration;
 /// #
 /// let duration = Duration::new(123456, 789011223);
-/// println!(&quot;{duration:.3}&quot;);
+/// println!("{duration:.3}");
 /// ```
 ///
 /// For the purposes of this implementation, a day is exactly 24 hours and a minute is exactly 60
 /// seconds.
 </span><span class="kw">impl </span>fmt::Display <span class="kw">for </span>Duration {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">if </span><span class="self">self</span>.is_negative() {
-            f.write_str(<span class="string">&quot;-&quot;</span>)<span class="question-mark">?</span>;
+            f.write_str(<span class="string">"-"</span>)<span class="question-mark">?</span>;
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(_precision) = f.precision() {
@@ -1885,7 +1887,7 @@
 
             </span><span class="kw">if </span><span class="self">self</span>.is_zero() {
                 <span class="comment">// Write a zero value with the requested precision.
-                </span><span class="kw">return </span>(<span class="number">0.</span>).fmt(f).and_then(|<span class="kw">_</span>| f.write_str(<span class="string">&quot;s&quot;</span>));
+                </span><span class="kw">return </span>(<span class="number">0.</span>).fmt(f).and_then(|<span class="kw">_</span>| f.write_str(<span class="string">"s"</span>));
             }
 
             <span class="doccomment">/// Format the first item that produces a value greater than 1 and then break.
@@ -1898,21 +1900,21 @@
                 };
             }
 
-            <span class="comment">// Even if this produces a de-normal float, because we&#39;re rounding we don&#39;t really care.
+            <span class="comment">// Even if this produces a de-normal float, because we're rounding we don't really care.
             </span><span class="kw">let </span>seconds = <span class="self">self</span>.unsigned_abs().as_secs_f64();
 
-            <span class="macro">item!</span>(<span class="string">&quot;d&quot;</span>, seconds / <span class="number">86_400.</span>);
-            <span class="macro">item!</span>(<span class="string">&quot;h&quot;</span>, seconds / <span class="number">3_600.</span>);
-            <span class="macro">item!</span>(<span class="string">&quot;m&quot;</span>, seconds / <span class="number">60.</span>);
-            <span class="macro">item!</span>(<span class="string">&quot;s&quot;</span>, seconds);
-            <span class="macro">item!</span>(<span class="string">&quot;ms&quot;</span>, seconds * <span class="number">1_000.</span>);
-            <span class="macro">item!</span>(<span class="string">&quot;µs&quot;</span>, seconds * <span class="number">1_000_000.</span>);
-            <span class="macro">item!</span>(<span class="string">&quot;ns&quot;</span>, seconds * <span class="number">1_000_000_000.</span>);
+            <span class="macro">item!</span>(<span class="string">"d"</span>, seconds / <span class="number">86_400.</span>);
+            <span class="macro">item!</span>(<span class="string">"h"</span>, seconds / <span class="number">3_600.</span>);
+            <span class="macro">item!</span>(<span class="string">"m"</span>, seconds / <span class="number">60.</span>);
+            <span class="macro">item!</span>(<span class="string">"s"</span>, seconds);
+            <span class="macro">item!</span>(<span class="string">"ms"</span>, seconds * <span class="number">1_000.</span>);
+            <span class="macro">item!</span>(<span class="string">"µs"</span>, seconds * <span class="number">1_000_000.</span>);
+            <span class="macro">item!</span>(<span class="string">"ns"</span>, seconds * <span class="number">1_000_000_000.</span>);
         } <span class="kw">else </span>{
             <span class="comment">// Precise, but verbose representation.
 
             </span><span class="kw">if </span><span class="self">self</span>.is_zero() {
-                <span class="kw">return </span>f.write_str(<span class="string">&quot;0s&quot;</span>);
+                <span class="kw">return </span>f.write_str(<span class="string">"0s"</span>);
             }
 
             <span class="doccomment">/// Format a single item.
@@ -1928,13 +1930,13 @@
             <span class="kw">let </span>seconds = <span class="self">self</span>.seconds.unsigned_abs();
             <span class="kw">let </span>nanoseconds = <span class="self">self</span>.nanoseconds.unsigned_abs();
 
-            <span class="macro">item!</span>(<span class="string">&quot;d&quot;</span>, seconds / <span class="number">86_400</span>)<span class="question-mark">?</span>;
-            <span class="macro">item!</span>(<span class="string">&quot;h&quot;</span>, seconds / <span class="number">3_600 </span>% <span class="number">24</span>)<span class="question-mark">?</span>;
-            <span class="macro">item!</span>(<span class="string">&quot;m&quot;</span>, seconds / <span class="number">60 </span>% <span class="number">60</span>)<span class="question-mark">?</span>;
-            <span class="macro">item!</span>(<span class="string">&quot;s&quot;</span>, seconds % <span class="number">60</span>)<span class="question-mark">?</span>;
-            <span class="macro">item!</span>(<span class="string">&quot;ms&quot;</span>, nanoseconds / <span class="number">1_000_000</span>)<span class="question-mark">?</span>;
-            <span class="macro">item!</span>(<span class="string">&quot;µs&quot;</span>, nanoseconds / <span class="number">1_000 </span>% <span class="number">1_000</span>)<span class="question-mark">?</span>;
-            <span class="macro">item!</span>(<span class="string">&quot;ns&quot;</span>, nanoseconds % <span class="number">1_000</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"d"</span>, seconds / <span class="number">86_400</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"h"</span>, seconds / <span class="number">3_600 </span>% <span class="number">24</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"m"</span>, seconds / <span class="number">60 </span>% <span class="number">60</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"s"</span>, seconds % <span class="number">60</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"ms"</span>, nanoseconds / <span class="number">1_000_000</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"µs"</span>, nanoseconds / <span class="number">1_000 </span>% <span class="number">1_000</span>)<span class="question-mark">?</span>;
+            <span class="macro">item!</span>(<span class="string">"ns"</span>, nanoseconds % <span class="number">1_000</span>)<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
@@ -1977,7 +1979,7 @@
 
     <span class="kw">fn </span>add(<span class="self">self</span>, rhs: <span class="self">Self</span>) -&gt; <span class="self">Self</span>::Output {
         <span class="self">self</span>.checked_add(rhs)
-            .expect(<span class="string">&quot;overflow when adding durations&quot;</span>)
+            .expect(<span class="string">"overflow when adding durations"</span>)
     }
 }
 
@@ -1986,7 +1988,7 @@
 
     <span class="kw">fn </span>add(<span class="self">self</span>, std_duration: StdDuration) -&gt; <span class="self">Self</span>::Output {
         <span class="self">self </span>+ <span class="self">Self</span>::try_from(std_duration)
-            .expect(<span class="string">&quot;overflow converting `std::time::Duration` to `time::Duration`&quot;</span>)
+            .expect(<span class="string">"overflow converting `std::time::Duration` to `time::Duration`"</span>)
     }
 }
 
@@ -2003,8 +2005,8 @@
 <span class="kw">impl </span>AddAssign&lt;Duration&gt; <span class="kw">for </span>StdDuration {
     <span class="kw">fn </span>add_assign(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rhs: Duration) {
         <span class="kw-2">*</span><span class="self">self </span>= (<span class="kw-2">*</span><span class="self">self </span>+ rhs).try_into().expect(
-            <span class="string">&quot;Cannot represent a resulting duration in std. Try `let x = x + rhs;`, which will \
-             change the type.&quot;</span>,
+            <span class="string">"Cannot represent a resulting duration in std. Try `let x = x + rhs;`, which will \
+             change the type."</span>,
         );
     }
 }
@@ -2022,7 +2024,7 @@
 
     <span class="kw">fn </span>sub(<span class="self">self</span>, rhs: <span class="self">Self</span>) -&gt; <span class="self">Self</span>::Output {
         <span class="self">self</span>.checked_sub(rhs)
-            .expect(<span class="string">&quot;overflow when subtracting durations&quot;</span>)
+            .expect(<span class="string">"overflow when subtracting durations"</span>)
     }
 }
 
@@ -2031,7 +2033,7 @@
 
     <span class="kw">fn </span>sub(<span class="self">self</span>, rhs: StdDuration) -&gt; <span class="self">Self</span>::Output {
         <span class="self">self </span>- <span class="self">Self</span>::try_from(rhs)
-            .expect(<span class="string">&quot;overflow converting `std::time::Duration` to `time::Duration`&quot;</span>)
+            .expect(<span class="string">"overflow converting `std::time::Duration` to `time::Duration`"</span>)
     }
 }
 
@@ -2040,7 +2042,7 @@
 
     <span class="kw">fn </span>sub(<span class="self">self</span>, rhs: Duration) -&gt; <span class="self">Self</span>::Output {
         Duration::try_from(<span class="self">self</span>)
-            .expect(<span class="string">&quot;overflow converting `std::time::Duration` to `time::Duration`&quot;</span>)
+            .expect(<span class="string">"overflow converting `std::time::Duration` to `time::Duration`"</span>)
             - rhs
     }
 }
@@ -2050,8 +2052,8 @@
 <span class="kw">impl </span>SubAssign&lt;Duration&gt; <span class="kw">for </span>StdDuration {
     <span class="kw">fn </span>sub_assign(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rhs: Duration) {
         <span class="kw-2">*</span><span class="self">self </span>= (<span class="kw-2">*</span><span class="self">self </span>- rhs).try_into().expect(
-            <span class="string">&quot;Cannot represent a resulting duration in std. Try `let x = x - rhs;`, which will \
-             change the type.&quot;</span>,
+            <span class="string">"Cannot represent a resulting duration in std. Try `let x = x - rhs;`, which will \
+             change the type."</span>,
         );
     }
 }
@@ -2066,7 +2068,7 @@
                 <span class="self">Self</span>::nanoseconds_i128(
                     <span class="self">self</span>.whole_nanoseconds()
                         .checked_mul(rhs <span class="kw">as _</span>)
-                        .expect(<span class="string">&quot;overflow when multiplying duration&quot;</span>)
+                        .expect(<span class="string">"overflow when multiplying duration"</span>)
                 )
             }
         }
@@ -2204,8 +2206,8 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Sum&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">Self</span>&gt; <span class="kw">for </span>Duration {
-    <span class="kw">fn </span>sum&lt;I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">Self</span>&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Sum&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>&gt; <span class="kw">for </span>Duration {
+    <span class="kw">fn </span>sum&lt;I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">Self</span>&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
         iter.copied().sum()
     }
 }

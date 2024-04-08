@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/chrono-0.4.22/src/format/parse.rs`."><title>parse.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="chrono" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/chrono-0.4.22/src/format/parse.rs`."><title>parse.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="chrono" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../chrono/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1007,7 +1009,7 @@
     })
 }
 
-<span class="kw">fn </span>parse_rfc2822&lt;<span class="lifetime">&#39;a</span>&gt;(parsed: <span class="kw-2">&amp;mut </span>Parsed, <span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; ParseResult&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, ())&gt; {
+<span class="kw">fn </span>parse_rfc2822&lt;<span class="lifetime">'a</span>&gt;(parsed: <span class="kw-2">&amp;mut </span>Parsed, <span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; ParseResult&lt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, ())&gt; {
     <span class="macro">macro_rules! </span>try_consume {
         (<span class="macro-nonterminal">$e</span>:expr) =&gt; {{
             <span class="kw">let </span>(s_, v) = <span class="macro-nonterminal">$e</span><span class="question-mark">?</span>;
@@ -1018,27 +1020,27 @@
 
     <span class="comment">// an adapted RFC 2822 syntax from Section 3.3 and 4.3:
     //
-    // c-char      = &lt;any char except &#39;(&#39;, &#39;)&#39; and &#39;\\&#39;&gt;
-    // c-escape    = &quot;\&quot; &lt;any char&gt;
-    // comment     = &quot;(&quot; *(comment / c-char / c-escape) &quot;)&quot; *S
-    // date-time   = [ day-of-week &quot;,&quot; ] date 1*S time *S *comment
+    // c-char      = &lt;any char except '(', ')' and '\\'&gt;
+    // c-escape    = "\" &lt;any char&gt;
+    // comment     = "(" *(comment / c-char / c-escape) ")" *S
+    // date-time   = [ day-of-week "," ] date 1*S time *S *comment
     // day-of-week = *S day-name *S
-    // day-name    = &quot;Mon&quot; / &quot;Tue&quot; / &quot;Wed&quot; / &quot;Thu&quot; / &quot;Fri&quot; / &quot;Sat&quot; / &quot;Sun&quot;
+    // day-name    = "Mon" / "Tue" / "Wed" / "Thu" / "Fri" / "Sat" / "Sun"
     // date        = day month year
     // day         = *S 1*2DIGIT *S
     // month       = 1*S month-name 1*S
-    // month-name  = &quot;Jan&quot; / &quot;Feb&quot; / &quot;Mar&quot; / &quot;Apr&quot; / &quot;May&quot; / &quot;Jun&quot; /
-    //               &quot;Jul&quot; / &quot;Aug&quot; / &quot;Sep&quot; / &quot;Oct&quot; / &quot;Nov&quot; / &quot;Dec&quot;
+    // month-name  = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
+    //               "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
     // year        = *S 2*DIGIT *S
     // time        = time-of-day 1*S zone
-    // time-of-day = hour &quot;:&quot; minute [ &quot;:&quot; second ]
+    // time-of-day = hour ":" minute [ ":" second ]
     // hour        = *S 2DIGIT *S
     // minute      = *S 2DIGIT *S
     // second      = *S 2DIGIT *S
-    // zone        = ( &quot;+&quot; / &quot;-&quot; ) 4DIGIT /
-    //               &quot;UT&quot; / &quot;GMT&quot; /                  ; same as +0000
-    //               &quot;EST&quot; / &quot;CST&quot; / &quot;MST&quot; / &quot;PST&quot; / ; same as -0500 to -0800
-    //               &quot;EDT&quot; / &quot;CDT&quot; / &quot;MDT&quot; / &quot;PDT&quot; / ; same as -0400 to -0700
+    // zone        = ( "+" / "-" ) 4DIGIT /
+    //               "UT" / "GMT" /                  ; same as +0000
+    //               "EST" / "CST" / "MST" / "PST" / ; same as -0500 to -0800
+    //               "EDT" / "CDT" / "MDT" / "PDT" / ; same as -0400 to -0700
     //               1*(%d65-90 / %d97-122)          ; same as -0000
     //
     // some notes:
@@ -1058,7 +1060,7 @@
     //   are *never* affected by this rule.
     //
     // - mismatching day-of-week is always an error, which is consistent to
-    //   Chrono&#39;s own rules.
+    //   Chrono's own rules.
     //
     // - zones can range from `-9959` to `+9959`, but `FixedOffset` does not
     //   support offsets larger than 24 hours. this is not *that* problematic
@@ -1068,7 +1070,7 @@
     </span>s = s.trim_left();
 
     <span class="kw">if let </span><span class="prelude-val">Ok</span>((s_, weekday)) = scan::short_weekday(s) {
-        <span class="kw">if </span>!s_.starts_with(<span class="string">&#39;,&#39;</span>) {
+        <span class="kw">if </span>!s_.starts_with(<span class="string">','</span>) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(INVALID);
         }
         s = <span class="kw-2">&amp;</span>s_[<span class="number">1</span>..];
@@ -1101,10 +1103,10 @@
 
     s = scan::space(s)<span class="question-mark">?</span>; <span class="comment">// mandatory
     </span>parsed.set_hour(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
-    s = scan::char(s.trim_left(), <span class="string">b&#39;:&#39;</span>)<span class="question-mark">?</span>.trim_left(); <span class="comment">// *S &quot;:&quot; *S
+    s = scan::char(s.trim_left(), <span class="string">b':'</span>)<span class="question-mark">?</span>.trim_left(); <span class="comment">// *S ":" *S
     </span>parsed.set_minute(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
-    <span class="kw">if let </span><span class="prelude-val">Ok</span>(s_) = scan::char(s.trim_left(), <span class="string">b&#39;:&#39;</span>) {
-        <span class="comment">// [ &quot;:&quot; *S 2DIGIT ]
+    <span class="kw">if let </span><span class="prelude-val">Ok</span>(s_) = scan::char(s.trim_left(), <span class="string">b':'</span>) {
+        <span class="comment">// [ ":" *S 2DIGIT ]
         </span>parsed.set_second(<span class="macro">try_consume!</span>(scan::number(s_, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
     }
 
@@ -1122,7 +1124,7 @@
     <span class="prelude-val">Ok</span>((s, ()))
 }
 
-<span class="kw">fn </span>parse_rfc3339&lt;<span class="lifetime">&#39;a</span>&gt;(parsed: <span class="kw-2">&amp;mut </span>Parsed, <span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; ParseResult&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, ())&gt; {
+<span class="kw">fn </span>parse_rfc3339&lt;<span class="lifetime">'a</span>&gt;(parsed: <span class="kw-2">&amp;mut </span>Parsed, <span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; ParseResult&lt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, ())&gt; {
     <span class="macro">macro_rules! </span>try_consume {
         (<span class="macro-nonterminal">$e</span>:expr) =&gt; {{
             <span class="kw">let </span>(s_, v) = <span class="macro-nonterminal">$e</span><span class="question-mark">?</span>;
@@ -1139,13 +1141,13 @@
     // time-hour      = 2DIGIT ; 00-23
     // time-minute    = 2DIGIT ; 00-59
     // time-second    = 2DIGIT ; 00-58, 00-59, 00-60 based on leap second rules
-    // time-secfrac   = &quot;.&quot; 1*DIGIT
-    // time-numoffset = (&quot;+&quot; / &quot;-&quot;) time-hour &quot;:&quot; time-minute
-    // time-offset    = &quot;Z&quot; / time-numoffset
-    // partial-time   = time-hour &quot;:&quot; time-minute &quot;:&quot; time-second [time-secfrac]
-    // full-date      = date-fullyear &quot;-&quot; date-month &quot;-&quot; date-mday
+    // time-secfrac   = "." 1*DIGIT
+    // time-numoffset = ("+" / "-") time-hour ":" time-minute
+    // time-offset    = "Z" / time-numoffset
+    // partial-time   = time-hour ":" time-minute ":" time-second [time-secfrac]
+    // full-date      = date-fullyear "-" date-month "-" date-mday
     // full-time      = partial-time time-offset
-    // date-time      = full-date &quot;T&quot; full-time
+    // date-time      = full-date "T" full-time
     //
     // some notes:
     //
@@ -1159,28 +1161,28 @@
     //   since this is not a typical Chrono behavior, we check it earlier.
 
     </span>parsed.set_year(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">4</span>, <span class="number">4</span>)))<span class="question-mark">?</span>;
-    s = scan::char(s, <span class="string">b&#39;-&#39;</span>)<span class="question-mark">?</span>;
+    s = scan::char(s, <span class="string">b'-'</span>)<span class="question-mark">?</span>;
     parsed.set_month(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
-    s = scan::char(s, <span class="string">b&#39;-&#39;</span>)<span class="question-mark">?</span>;
+    s = scan::char(s, <span class="string">b'-'</span>)<span class="question-mark">?</span>;
     parsed.set_day(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
 
     s = <span class="kw">match </span>s.as_bytes().first() {
-        <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">b&#39;t&#39;</span>) | <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">b&#39;T&#39;</span>) =&gt; <span class="kw-2">&amp;</span>s[<span class="number">1</span>..],
+        <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">b't'</span>) | <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">b'T'</span>) =&gt; <span class="kw-2">&amp;</span>s[<span class="number">1</span>..],
         <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(INVALID),
         <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TOO_SHORT),
     };
 
     parsed.set_hour(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
-    s = scan::char(s, <span class="string">b&#39;:&#39;</span>)<span class="question-mark">?</span>;
+    s = scan::char(s, <span class="string">b':'</span>)<span class="question-mark">?</span>;
     parsed.set_minute(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
-    s = scan::char(s, <span class="string">b&#39;:&#39;</span>)<span class="question-mark">?</span>;
+    s = scan::char(s, <span class="string">b':'</span>)<span class="question-mark">?</span>;
     parsed.set_second(<span class="macro">try_consume!</span>(scan::number(s, <span class="number">2</span>, <span class="number">2</span>)))<span class="question-mark">?</span>;
-    <span class="kw">if </span>s.starts_with(<span class="string">&#39;.&#39;</span>) {
+    <span class="kw">if </span>s.starts_with(<span class="string">'.'</span>) {
         <span class="kw">let </span>nanosecond = <span class="macro">try_consume!</span>(scan::nanosecond(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..]));
         parsed.set_nanosecond(nanosecond)<span class="question-mark">?</span>;
     }
 
-    <span class="kw">let </span>offset = <span class="macro">try_consume!</span>(scan::timezone_offset_zulu(s, |s| scan::char(s, <span class="string">b&#39;:&#39;</span>)));
+    <span class="kw">let </span>offset = <span class="macro">try_consume!</span>(scan::timezone_offset_zulu(s, |s| scan::char(s, <span class="string">b':'</span>)));
     <span class="kw">if </span>offset &lt;= -<span class="number">86_400 </span>|| offset &gt;= <span class="number">86_400 </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(OUT_OF_RANGE);
     }
@@ -1205,22 +1207,22 @@
 ///   so one can prepend any number of whitespace then any number of zeroes before numbers.
 ///
 /// - (Still) obeying the intrinsic parsing width. This allows, for example, parsing `HHMMSS`.
-</span><span class="kw">pub fn </span>parse&lt;<span class="lifetime">&#39;a</span>, I, B&gt;(parsed: <span class="kw-2">&amp;mut </span>Parsed, s: <span class="kw-2">&amp;</span>str, items: I) -&gt; ParseResult&lt;()&gt;
+</span><span class="kw">pub fn </span>parse&lt;<span class="lifetime">'a</span>, I, B&gt;(parsed: <span class="kw-2">&amp;mut </span>Parsed, s: <span class="kw-2">&amp;</span>str, items: I) -&gt; ParseResult&lt;()&gt;
 <span class="kw">where
     </span>I: Iterator&lt;Item = B&gt;,
-    B: Borrow&lt;Item&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+    B: Borrow&lt;Item&lt;<span class="lifetime">'a</span>&gt;&gt;,
 {
     parse_internal(parsed, s, items).map(|<span class="kw">_</span>| ()).map_err(|(_s, e)| e)
 }
 
-<span class="kw">fn </span>parse_internal&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, I, B&gt;(
+<span class="kw">fn </span>parse_internal&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, I, B&gt;(
     parsed: <span class="kw-2">&amp;mut </span>Parsed,
-    <span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>str,
+    <span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>str,
     items: I,
-) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>str, (<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>str, ParseError)&gt;
+) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span>str, (<span class="kw-2">&amp;</span><span class="lifetime">'b </span>str, ParseError)&gt;
 <span class="kw">where
     </span>I: Iterator&lt;Item = B&gt;,
-    B: Borrow&lt;Item&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+    B: Borrow&lt;Item&lt;<span class="lifetime">'a</span>&gt;&gt;,
 {
     <span class="macro">macro_rules! </span>try_consume {
         (<span class="macro-nonterminal">$e</span>:expr) =&gt; {{
@@ -1246,7 +1248,7 @@
                 s = <span class="kw-2">&amp;</span>s[prefix.len()..];
             }
 
-            <span class="attr">#[cfg(any(feature = <span class="string">&quot;alloc&quot;</span>, feature = <span class="string">&quot;std&quot;</span>, test))]
+            <span class="attr">#[cfg(any(feature = <span class="string">"alloc"</span>, feature = <span class="string">"std"</span>, test))]
             </span>Item::OwnedLiteral(<span class="kw-2">ref </span>prefix) =&gt; {
                 <span class="kw">if </span>s.len() &lt; prefix.len() {
                     <span class="kw">return </span><span class="prelude-val">Err</span>((s, TOO_SHORT));
@@ -1261,7 +1263,7 @@
                 s = s.trim_left();
             }
 
-            <span class="attr">#[cfg(any(feature = <span class="string">&quot;alloc&quot;</span>, feature = <span class="string">&quot;std&quot;</span>, test))]
+            <span class="attr">#[cfg(any(feature = <span class="string">"alloc"</span>, feature = <span class="string">"std"</span>, test))]
             </span>Item::OwnedSpace(<span class="kw">_</span>) =&gt; {
                 s = s.trim_left();
             }
@@ -1298,10 +1300,10 @@
 
                 s = s.trim_left();
                 <span class="kw">let </span>v = <span class="kw">if </span>signed {
-                    <span class="kw">if </span>s.starts_with(<span class="string">&#39;-&#39;</span>) {
+                    <span class="kw">if </span>s.starts_with(<span class="string">'-'</span>) {
                         <span class="kw">let </span>v = <span class="macro">try_consume!</span>(scan::number(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..], <span class="number">1</span>, usize::MAX));
                         <span class="number">0i64</span>.checked_sub(v).ok_or((s, OUT_OF_RANGE))<span class="question-mark">?
-                    </span>} <span class="kw">else if </span>s.starts_with(<span class="string">&#39;+&#39;</span>) {
+                    </span>} <span class="kw">else if </span>s.starts_with(<span class="string">'+'</span>) {
                         <span class="macro">try_consume!</span>(scan::number(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..], <span class="number">1</span>, usize::MAX))
                     } <span class="kw">else </span>{
                         <span class="comment">// if there is no explicit sign, we respect the original `width`
@@ -1342,8 +1344,8 @@
                             <span class="kw">return </span><span class="prelude-val">Err</span>((s, TOO_SHORT));
                         }
                         <span class="kw">let </span>ampm = <span class="kw">match </span>(s.as_bytes()[<span class="number">0</span>] | <span class="number">32</span>, s.as_bytes()[<span class="number">1</span>] | <span class="number">32</span>) {
-                            (<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;m&#39;</span>) =&gt; <span class="bool-val">false</span>,
-                            (<span class="string">b&#39;p&#39;</span>, <span class="string">b&#39;m&#39;</span>) =&gt; <span class="bool-val">true</span>,
+                            (<span class="string">b'a'</span>, <span class="string">b'm'</span>) =&gt; <span class="bool-val">false</span>,
+                            (<span class="string">b'p'</span>, <span class="string">b'm'</span>) =&gt; <span class="bool-val">true</span>,
                             <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>((s, INVALID)),
                         };
                         parsed.set_ampm(ampm).map_err(|e| (s, e))<span class="question-mark">?</span>;
@@ -1351,7 +1353,7 @@
                     }
 
                     <span class="kw-2">&amp;</span>Nanosecond | <span class="kw-2">&amp;</span>Nanosecond3 | <span class="kw-2">&amp;</span>Nanosecond6 | <span class="kw-2">&amp;</span>Nanosecond9 =&gt; {
-                        <span class="kw">if </span>s.starts_with(<span class="string">&#39;.&#39;</span>) {
+                        <span class="kw">if </span>s.starts_with(<span class="string">'.'</span>) {
                             <span class="kw">let </span>nano = <span class="macro">try_consume!</span>(scan::nanosecond(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..]));
                             parsed.set_nanosecond(nano).map_err(|e| (s, e))<span class="question-mark">?</span>;
                         }
@@ -1430,47 +1432,47 @@
 }
 
 <span class="doccomment">/// Accepts a relaxed form of RFC3339.
-/// A space or a &#39;T&#39; are acepted as the separator between the date and time
+/// A space or a 'T' are acepted as the separator between the date and time
 /// parts. Additional spaces are allowed between each component.
 ///
 /// All of these examples are equivalent:
 /// ```
 /// # use chrono::{DateTime, offset::FixedOffset};
-/// &quot;2012-12-12T12:12:12Z&quot;.parse::&lt;DateTime&lt;FixedOffset&gt;&gt;();
-/// &quot;2012-12-12 12:12:12Z&quot;.parse::&lt;DateTime&lt;FixedOffset&gt;&gt;();
-/// &quot;2012-  12-12T12:  12:12Z&quot;.parse::&lt;DateTime&lt;FixedOffset&gt;&gt;();
+/// "2012-12-12T12:12:12Z".parse::&lt;DateTime&lt;FixedOffset&gt;&gt;();
+/// "2012-12-12 12:12:12Z".parse::&lt;DateTime&lt;FixedOffset&gt;&gt;();
+/// "2012-  12-12T12:  12:12Z".parse::&lt;DateTime&lt;FixedOffset&gt;&gt;();
 /// ```
 </span><span class="kw">impl </span>str::FromStr <span class="kw">for </span>DateTime&lt;FixedOffset&gt; {
     <span class="kw">type </span><span class="prelude-val">Err </span>= ParseError;
 
     <span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; ParseResult&lt;DateTime&lt;FixedOffset&gt;&gt; {
-        <span class="kw">const </span>DATE_ITEMS: <span class="kw-2">&amp;</span>[Item&lt;<span class="lifetime">&#39;static</span>&gt;] = <span class="kw-2">&amp;</span>[
+        <span class="kw">const </span>DATE_ITEMS: <span class="kw-2">&amp;</span>[Item&lt;<span class="lifetime">'static</span>&gt;] = <span class="kw-2">&amp;</span>[
             Item::Numeric(Numeric::Year, Pad::Zero),
-            Item::Space(<span class="string">&quot;&quot;</span>),
-            Item::Literal(<span class="string">&quot;-&quot;</span>),
+            Item::Space(<span class="string">""</span>),
+            Item::Literal(<span class="string">"-"</span>),
             Item::Numeric(Numeric::Month, Pad::Zero),
-            Item::Space(<span class="string">&quot;&quot;</span>),
-            Item::Literal(<span class="string">&quot;-&quot;</span>),
+            Item::Space(<span class="string">""</span>),
+            Item::Literal(<span class="string">"-"</span>),
             Item::Numeric(Numeric::Day, Pad::Zero),
         ];
-        <span class="kw">const </span>TIME_ITEMS: <span class="kw-2">&amp;</span>[Item&lt;<span class="lifetime">&#39;static</span>&gt;] = <span class="kw-2">&amp;</span>[
+        <span class="kw">const </span>TIME_ITEMS: <span class="kw-2">&amp;</span>[Item&lt;<span class="lifetime">'static</span>&gt;] = <span class="kw-2">&amp;</span>[
             Item::Numeric(Numeric::Hour, Pad::Zero),
-            Item::Space(<span class="string">&quot;&quot;</span>),
-            Item::Literal(<span class="string">&quot;:&quot;</span>),
+            Item::Space(<span class="string">""</span>),
+            Item::Literal(<span class="string">":"</span>),
             Item::Numeric(Numeric::Minute, Pad::Zero),
-            Item::Space(<span class="string">&quot;&quot;</span>),
-            Item::Literal(<span class="string">&quot;:&quot;</span>),
+            Item::Space(<span class="string">""</span>),
+            Item::Literal(<span class="string">":"</span>),
             Item::Numeric(Numeric::Second, Pad::Zero),
             Item::Fixed(Fixed::Nanosecond),
-            Item::Space(<span class="string">&quot;&quot;</span>),
+            Item::Space(<span class="string">""</span>),
             Item::Fixed(Fixed::TimezoneOffsetZ),
-            Item::Space(<span class="string">&quot;&quot;</span>),
+            Item::Space(<span class="string">""</span>),
         ];
 
         <span class="kw">let </span><span class="kw-2">mut </span>parsed = Parsed::new();
         <span class="kw">match </span>parse_internal(<span class="kw-2">&amp;mut </span>parsed, s, DATE_ITEMS.iter()) {
             <span class="prelude-val">Err</span>((remainder, e)) <span class="kw">if </span>e.<span class="number">0 </span>== ParseErrorKind::TooLong =&gt; {
-                <span class="kw">if </span>remainder.starts_with(<span class="string">&#39;T&#39;</span>) || remainder.starts_with(<span class="string">&#39; &#39;</span>) {
+                <span class="kw">if </span>remainder.starts_with(<span class="string">'T'</span>) || remainder.starts_with(<span class="string">' '</span>) {
                     parse(<span class="kw-2">&amp;mut </span>parsed, <span class="kw-2">&amp;</span>remainder[<span class="number">1</span>..], TIME_ITEMS.iter())<span class="question-mark">?</span>;
                 } <span class="kw">else </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(INVALID);
@@ -1508,272 +1510,272 @@
     }
 
     <span class="comment">// empty string
-    </span><span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,  []; );
-    <span class="macro">check!</span>(<span class="string">&quot; &quot;</span>, []; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;a&quot;</span>, []; TOO_LONG);
+    </span><span class="macro">check!</span>(<span class="string">""</span>,  []; );
+    <span class="macro">check!</span>(<span class="string">" "</span>, []; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"a"</span>, []; TOO_LONG);
 
     <span class="comment">// whitespaces
-    </span><span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,          [<span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot; &quot;</span>,         [<span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot;\t&quot;</span>,        [<span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot; \n\r  \n&quot;</span>, [<span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot;a&quot;</span>,         [<span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>)]; TOO_LONG);
+    </span><span class="macro">check!</span>(<span class="string">""</span>,          [<span class="macro">sp!</span>(<span class="string">""</span>)]; );
+    <span class="macro">check!</span>(<span class="string">" "</span>,         [<span class="macro">sp!</span>(<span class="string">""</span>)]; );
+    <span class="macro">check!</span>(<span class="string">"\t"</span>,        [<span class="macro">sp!</span>(<span class="string">""</span>)]; );
+    <span class="macro">check!</span>(<span class="string">" \n\r  \n"</span>, [<span class="macro">sp!</span>(<span class="string">""</span>)]; );
+    <span class="macro">check!</span>(<span class="string">"a"</span>,         [<span class="macro">sp!</span>(<span class="string">""</span>)]; TOO_LONG);
 
     <span class="comment">// literal
-    </span><span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,    [<span class="macro">lit!</span>(<span class="string">&quot;a&quot;</span>)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot; &quot;</span>,   [<span class="macro">lit!</span>(<span class="string">&quot;a&quot;</span>)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;a&quot;</span>,   [<span class="macro">lit!</span>(<span class="string">&quot;a&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot;aa&quot;</span>,  [<span class="macro">lit!</span>(<span class="string">&quot;a&quot;</span>)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;A&quot;</span>,   [<span class="macro">lit!</span>(<span class="string">&quot;a&quot;</span>)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;xy&quot;</span>,  [<span class="macro">lit!</span>(<span class="string">&quot;xy&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot;xy&quot;</span>,  [<span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">lit!</span>(<span class="string">&quot;y&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot;x y&quot;</span>, [<span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">lit!</span>(<span class="string">&quot;y&quot;</span>)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;xy&quot;</span>,  [<span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>), <span class="macro">lit!</span>(<span class="string">&quot;y&quot;</span>)]; );
-    <span class="macro">check!</span>(<span class="string">&quot;x y&quot;</span>, [<span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">sp!</span>(<span class="string">&quot;&quot;</span>), <span class="macro">lit!</span>(<span class="string">&quot;y&quot;</span>)]; );
+    </span><span class="macro">check!</span>(<span class="string">""</span>,    [<span class="macro">lit!</span>(<span class="string">"a"</span>)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">" "</span>,   [<span class="macro">lit!</span>(<span class="string">"a"</span>)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"a"</span>,   [<span class="macro">lit!</span>(<span class="string">"a"</span>)]; );
+    <span class="macro">check!</span>(<span class="string">"aa"</span>,  [<span class="macro">lit!</span>(<span class="string">"a"</span>)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"A"</span>,   [<span class="macro">lit!</span>(<span class="string">"a"</span>)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"xy"</span>,  [<span class="macro">lit!</span>(<span class="string">"xy"</span>)]; );
+    <span class="macro">check!</span>(<span class="string">"xy"</span>,  [<span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">lit!</span>(<span class="string">"y"</span>)]; );
+    <span class="macro">check!</span>(<span class="string">"x y"</span>, [<span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">lit!</span>(<span class="string">"y"</span>)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"xy"</span>,  [<span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">sp!</span>(<span class="string">""</span>), <span class="macro">lit!</span>(<span class="string">"y"</span>)]; );
+    <span class="macro">check!</span>(<span class="string">"x y"</span>, [<span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">sp!</span>(<span class="string">""</span>), <span class="macro">lit!</span>(<span class="string">"y"</span>)]; );
 
     <span class="comment">// numeric
-    </span><span class="macro">check!</span>(<span class="string">&quot;1987&quot;</span>,        [<span class="macro">num!</span>(Year)]; year: <span class="number">1987</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;1987 &quot;</span>,       [<span class="macro">num!</span>(Year)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;0x12&quot;</span>,        [<span class="macro">num!</span>(Year)]; TOO_LONG); <span class="comment">// `0` is parsed
-    </span><span class="macro">check!</span>(<span class="string">&quot;x123&quot;</span>,        [<span class="macro">num!</span>(Year)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;2015&quot;</span>,        [<span class="macro">num!</span>(Year)]; year: <span class="number">2015</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;0000&quot;</span>,        [<span class="macro">num!</span>(Year)]; year:    <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;9999&quot;</span>,        [<span class="macro">num!</span>(Year)]; year: <span class="number">9999</span>);
-    <span class="macro">check!</span>(<span class="string">&quot; \t987&quot;</span>,      [<span class="macro">num!</span>(Year)]; year:  <span class="number">987</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;5&quot;</span>,           [<span class="macro">num!</span>(Year)]; year:    <span class="number">5</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;5\0&quot;</span>,         [<span class="macro">num!</span>(Year)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;\x005&quot;</span>,       [<span class="macro">num!</span>(Year)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,            [<span class="macro">num!</span>(Year)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;12345&quot;</span>,       [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;5&quot;</span>)]; year: <span class="number">1234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;12345&quot;</span>,       [<span class="macro">nums!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;5&quot;</span>)]; year: <span class="number">1234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;12345&quot;</span>,       [<span class="macro">num0!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;5&quot;</span>)]; year: <span class="number">1234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;12341234&quot;</span>,    [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Year)]; year: <span class="number">1234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;1234 1234&quot;</span>,   [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Year)]; year: <span class="number">1234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;1234 1235&quot;</span>,   [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Year)]; IMPOSSIBLE);
-    <span class="macro">check!</span>(<span class="string">&quot;1234 1234&quot;</span>,   [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">num!</span>(Year)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;1234x1234&quot;</span>,   [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">num!</span>(Year)]; year: <span class="number">1234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;1234xx1234&quot;</span>,  [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">num!</span>(Year)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;1234 x 1234&quot;</span>, [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;x&quot;</span>), <span class="macro">num!</span>(Year)]; INVALID);
+    </span><span class="macro">check!</span>(<span class="string">"1987"</span>,        [<span class="macro">num!</span>(Year)]; year: <span class="number">1987</span>);
+    <span class="macro">check!</span>(<span class="string">"1987 "</span>,       [<span class="macro">num!</span>(Year)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"0x12"</span>,        [<span class="macro">num!</span>(Year)]; TOO_LONG); <span class="comment">// `0` is parsed
+    </span><span class="macro">check!</span>(<span class="string">"x123"</span>,        [<span class="macro">num!</span>(Year)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"2015"</span>,        [<span class="macro">num!</span>(Year)]; year: <span class="number">2015</span>);
+    <span class="macro">check!</span>(<span class="string">"0000"</span>,        [<span class="macro">num!</span>(Year)]; year:    <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"9999"</span>,        [<span class="macro">num!</span>(Year)]; year: <span class="number">9999</span>);
+    <span class="macro">check!</span>(<span class="string">" \t987"</span>,      [<span class="macro">num!</span>(Year)]; year:  <span class="number">987</span>);
+    <span class="macro">check!</span>(<span class="string">"5"</span>,           [<span class="macro">num!</span>(Year)]; year:    <span class="number">5</span>);
+    <span class="macro">check!</span>(<span class="string">"5\0"</span>,         [<span class="macro">num!</span>(Year)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"\x005"</span>,       [<span class="macro">num!</span>(Year)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">""</span>,            [<span class="macro">num!</span>(Year)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"12345"</span>,       [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">"5"</span>)]; year: <span class="number">1234</span>);
+    <span class="macro">check!</span>(<span class="string">"12345"</span>,       [<span class="macro">nums!</span>(Year), <span class="macro">lit!</span>(<span class="string">"5"</span>)]; year: <span class="number">1234</span>);
+    <span class="macro">check!</span>(<span class="string">"12345"</span>,       [<span class="macro">num0!</span>(Year), <span class="macro">lit!</span>(<span class="string">"5"</span>)]; year: <span class="number">1234</span>);
+    <span class="macro">check!</span>(<span class="string">"12341234"</span>,    [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Year)]; year: <span class="number">1234</span>);
+    <span class="macro">check!</span>(<span class="string">"1234 1234"</span>,   [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Year)]; year: <span class="number">1234</span>);
+    <span class="macro">check!</span>(<span class="string">"1234 1235"</span>,   [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Year)]; IMPOSSIBLE);
+    <span class="macro">check!</span>(<span class="string">"1234 1234"</span>,   [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">num!</span>(Year)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"1234x1234"</span>,   [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">num!</span>(Year)]; year: <span class="number">1234</span>);
+    <span class="macro">check!</span>(<span class="string">"1234xx1234"</span>,  [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">num!</span>(Year)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"1234 x 1234"</span>, [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">"x"</span>), <span class="macro">num!</span>(Year)]; INVALID);
 
     <span class="comment">// signed numeric
-    </span><span class="macro">check!</span>(<span class="string">&quot;-42&quot;</span>,         [<span class="macro">num!</span>(Year)]; year: -<span class="number">42</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+42&quot;</span>,         [<span class="macro">num!</span>(Year)]; year: <span class="number">42</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-0042&quot;</span>,       [<span class="macro">num!</span>(Year)]; year: -<span class="number">42</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+0042&quot;</span>,       [<span class="macro">num!</span>(Year)]; year: <span class="number">42</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-42195&quot;</span>,      [<span class="macro">num!</span>(Year)]; year: -<span class="number">42195</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+42195&quot;</span>,      [<span class="macro">num!</span>(Year)]; year: <span class="number">42195</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;  -42195&quot;</span>,    [<span class="macro">num!</span>(Year)]; year: -<span class="number">42195</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;  +42195&quot;</span>,    [<span class="macro">num!</span>(Year)]; year: <span class="number">42195</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;  -   42&quot;</span>,    [<span class="macro">num!</span>(Year)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;  +   42&quot;</span>,    [<span class="macro">num!</span>(Year)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;-&quot;</span>,           [<span class="macro">num!</span>(Year)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;+&quot;</span>,           [<span class="macro">num!</span>(Year)]; TOO_SHORT);
+    </span><span class="macro">check!</span>(<span class="string">"-42"</span>,         [<span class="macro">num!</span>(Year)]; year: -<span class="number">42</span>);
+    <span class="macro">check!</span>(<span class="string">"+42"</span>,         [<span class="macro">num!</span>(Year)]; year: <span class="number">42</span>);
+    <span class="macro">check!</span>(<span class="string">"-0042"</span>,       [<span class="macro">num!</span>(Year)]; year: -<span class="number">42</span>);
+    <span class="macro">check!</span>(<span class="string">"+0042"</span>,       [<span class="macro">num!</span>(Year)]; year: <span class="number">42</span>);
+    <span class="macro">check!</span>(<span class="string">"-42195"</span>,      [<span class="macro">num!</span>(Year)]; year: -<span class="number">42195</span>);
+    <span class="macro">check!</span>(<span class="string">"+42195"</span>,      [<span class="macro">num!</span>(Year)]; year: <span class="number">42195</span>);
+    <span class="macro">check!</span>(<span class="string">"  -42195"</span>,    [<span class="macro">num!</span>(Year)]; year: -<span class="number">42195</span>);
+    <span class="macro">check!</span>(<span class="string">"  +42195"</span>,    [<span class="macro">num!</span>(Year)]; year: <span class="number">42195</span>);
+    <span class="macro">check!</span>(<span class="string">"  -   42"</span>,    [<span class="macro">num!</span>(Year)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"  +   42"</span>,    [<span class="macro">num!</span>(Year)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"-"</span>,           [<span class="macro">num!</span>(Year)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"+"</span>,           [<span class="macro">num!</span>(Year)]; TOO_SHORT);
 
     <span class="comment">// unsigned numeric
-    </span><span class="macro">check!</span>(<span class="string">&quot;345&quot;</span>,   [<span class="macro">num!</span>(Ordinal)]; ordinal: <span class="number">345</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+345&quot;</span>,  [<span class="macro">num!</span>(Ordinal)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;-345&quot;</span>,  [<span class="macro">num!</span>(Ordinal)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot; 345&quot;</span>,  [<span class="macro">num!</span>(Ordinal)]; ordinal: <span class="number">345</span>);
-    <span class="macro">check!</span>(<span class="string">&quot; +345&quot;</span>, [<span class="macro">num!</span>(Ordinal)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot; -345&quot;</span>, [<span class="macro">num!</span>(Ordinal)]; INVALID);
+    </span><span class="macro">check!</span>(<span class="string">"345"</span>,   [<span class="macro">num!</span>(Ordinal)]; ordinal: <span class="number">345</span>);
+    <span class="macro">check!</span>(<span class="string">"+345"</span>,  [<span class="macro">num!</span>(Ordinal)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"-345"</span>,  [<span class="macro">num!</span>(Ordinal)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">" 345"</span>,  [<span class="macro">num!</span>(Ordinal)]; ordinal: <span class="number">345</span>);
+    <span class="macro">check!</span>(<span class="string">" +345"</span>, [<span class="macro">num!</span>(Ordinal)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">" -345"</span>, [<span class="macro">num!</span>(Ordinal)]; INVALID);
 
     <span class="comment">// various numeric fields
-    </span><span class="macro">check!</span>(<span class="string">&quot;1234 5678&quot;</span>,
+    </span><span class="macro">check!</span>(<span class="string">"1234 5678"</span>,
            [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(IsoYear)];
            year: <span class="number">1234</span>, isoyear: <span class="number">5678</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;12 34 56 78&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"12 34 56 78"</span>,
            [<span class="macro">num!</span>(YearDiv100), <span class="macro">num!</span>(YearMod100), <span class="macro">num!</span>(IsoYearDiv100), <span class="macro">num!</span>(IsoYearMod100)];
            year_div_100: <span class="number">12</span>, year_mod_100: <span class="number">34</span>, isoyear_div_100: <span class="number">56</span>, isoyear_mod_100: <span class="number">78</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;1 2 3 4 5 6&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"1 2 3 4 5 6"</span>,
            [<span class="macro">num!</span>(Month), <span class="macro">num!</span>(Day), <span class="macro">num!</span>(WeekFromSun), <span class="macro">num!</span>(WeekFromMon), <span class="macro">num!</span>(IsoWeek),
             <span class="macro">num!</span>(NumDaysFromSun)];
            month: <span class="number">1</span>, day: <span class="number">2</span>, week_from_sun: <span class="number">3</span>, week_from_mon: <span class="number">4</span>, isoweek: <span class="number">5</span>, weekday: Weekday::Sat);
-    <span class="macro">check!</span>(<span class="string">&quot;7 89 01&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"7 89 01"</span>,
            [<span class="macro">num!</span>(WeekdayFromMon), <span class="macro">num!</span>(Ordinal), <span class="macro">num!</span>(Hour12)];
            weekday: Weekday::Sun, ordinal: <span class="number">89</span>, hour_mod_12: <span class="number">1</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;23 45 6 78901234 567890123&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"23 45 6 78901234 567890123"</span>,
            [<span class="macro">num!</span>(Hour), <span class="macro">num!</span>(Minute), <span class="macro">num!</span>(Second), <span class="macro">num!</span>(Nanosecond), <span class="macro">num!</span>(Timestamp)];
            hour_div_12: <span class="number">1</span>, hour_mod_12: <span class="number">11</span>, minute: <span class="number">45</span>, second: <span class="number">6</span>, nanosecond: <span class="number">78_901_234</span>,
            timestamp: <span class="number">567_890_123</span>);
 
     <span class="comment">// fixed: month and weekday names
-    </span><span class="macro">check!</span>(<span class="string">&quot;apr&quot;</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Apr&quot;</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;APR&quot;</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;ApR&quot;</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;April&quot;</span>,     [<span class="macro">fix!</span>(ShortMonthName)]; TOO_LONG); <span class="comment">// `Apr` is parsed
-    </span><span class="macro">check!</span>(<span class="string">&quot;A&quot;</span>,         [<span class="macro">fix!</span>(ShortMonthName)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;Sol&quot;</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;Apr&quot;</span>,       [<span class="macro">fix!</span>(LongMonthName)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Apri&quot;</span>,      [<span class="macro">fix!</span>(LongMonthName)]; TOO_LONG); <span class="comment">// `Apr` is parsed
-    </span><span class="macro">check!</span>(<span class="string">&quot;April&quot;</span>,     [<span class="macro">fix!</span>(LongMonthName)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Aprill&quot;</span>,    [<span class="macro">fix!</span>(LongMonthName)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;Aprill&quot;</span>,    [<span class="macro">fix!</span>(LongMonthName), <span class="macro">lit!</span>(<span class="string">&quot;l&quot;</span>)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Aprl&quot;</span>,      [<span class="macro">fix!</span>(LongMonthName), <span class="macro">lit!</span>(<span class="string">&quot;l&quot;</span>)]; month: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;April&quot;</span>,     [<span class="macro">fix!</span>(LongMonthName), <span class="macro">lit!</span>(<span class="string">&quot;il&quot;</span>)]; TOO_SHORT); <span class="comment">// do not backtrack
-    </span><span class="macro">check!</span>(<span class="string">&quot;thu&quot;</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;Thu&quot;</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;THU&quot;</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;tHu&quot;</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;Thursday&quot;</span>,  [<span class="macro">fix!</span>(ShortWeekdayName)]; TOO_LONG); <span class="comment">// `Thu` is parsed
-    </span><span class="macro">check!</span>(<span class="string">&quot;T&quot;</span>,         [<span class="macro">fix!</span>(ShortWeekdayName)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;The&quot;</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;Nop&quot;</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;Thu&quot;</span>,       [<span class="macro">fix!</span>(LongWeekdayName)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;Thur&quot;</span>,      [<span class="macro">fix!</span>(LongWeekdayName)]; TOO_LONG); <span class="comment">// `Thu` is parsed
-    </span><span class="macro">check!</span>(<span class="string">&quot;Thurs&quot;</span>,     [<span class="macro">fix!</span>(LongWeekdayName)]; TOO_LONG); <span class="comment">// ditto
-    </span><span class="macro">check!</span>(<span class="string">&quot;Thursday&quot;</span>,  [<span class="macro">fix!</span>(LongWeekdayName)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;Thursdays&quot;</span>, [<span class="macro">fix!</span>(LongWeekdayName)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;Thursdays&quot;</span>, [<span class="macro">fix!</span>(LongWeekdayName), <span class="macro">lit!</span>(<span class="string">&quot;s&quot;</span>)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;Thus&quot;</span>,      [<span class="macro">fix!</span>(LongWeekdayName), <span class="macro">lit!</span>(<span class="string">&quot;s&quot;</span>)]; weekday: Weekday::Thu);
-    <span class="macro">check!</span>(<span class="string">&quot;Thursday&quot;</span>,  [<span class="macro">fix!</span>(LongWeekdayName), <span class="macro">lit!</span>(<span class="string">&quot;rsday&quot;</span>)]; TOO_SHORT); <span class="comment">// do not backtrack
+    </span><span class="macro">check!</span>(<span class="string">"apr"</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"Apr"</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"APR"</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"ApR"</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"April"</span>,     [<span class="macro">fix!</span>(ShortMonthName)]; TOO_LONG); <span class="comment">// `Apr` is parsed
+    </span><span class="macro">check!</span>(<span class="string">"A"</span>,         [<span class="macro">fix!</span>(ShortMonthName)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"Sol"</span>,       [<span class="macro">fix!</span>(ShortMonthName)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"Apr"</span>,       [<span class="macro">fix!</span>(LongMonthName)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"Apri"</span>,      [<span class="macro">fix!</span>(LongMonthName)]; TOO_LONG); <span class="comment">// `Apr` is parsed
+    </span><span class="macro">check!</span>(<span class="string">"April"</span>,     [<span class="macro">fix!</span>(LongMonthName)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"Aprill"</span>,    [<span class="macro">fix!</span>(LongMonthName)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"Aprill"</span>,    [<span class="macro">fix!</span>(LongMonthName), <span class="macro">lit!</span>(<span class="string">"l"</span>)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"Aprl"</span>,      [<span class="macro">fix!</span>(LongMonthName), <span class="macro">lit!</span>(<span class="string">"l"</span>)]; month: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">"April"</span>,     [<span class="macro">fix!</span>(LongMonthName), <span class="macro">lit!</span>(<span class="string">"il"</span>)]; TOO_SHORT); <span class="comment">// do not backtrack
+    </span><span class="macro">check!</span>(<span class="string">"thu"</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"Thu"</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"THU"</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"tHu"</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"Thursday"</span>,  [<span class="macro">fix!</span>(ShortWeekdayName)]; TOO_LONG); <span class="comment">// `Thu` is parsed
+    </span><span class="macro">check!</span>(<span class="string">"T"</span>,         [<span class="macro">fix!</span>(ShortWeekdayName)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"The"</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"Nop"</span>,       [<span class="macro">fix!</span>(ShortWeekdayName)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"Thu"</span>,       [<span class="macro">fix!</span>(LongWeekdayName)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"Thur"</span>,      [<span class="macro">fix!</span>(LongWeekdayName)]; TOO_LONG); <span class="comment">// `Thu` is parsed
+    </span><span class="macro">check!</span>(<span class="string">"Thurs"</span>,     [<span class="macro">fix!</span>(LongWeekdayName)]; TOO_LONG); <span class="comment">// ditto
+    </span><span class="macro">check!</span>(<span class="string">"Thursday"</span>,  [<span class="macro">fix!</span>(LongWeekdayName)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"Thursdays"</span>, [<span class="macro">fix!</span>(LongWeekdayName)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"Thursdays"</span>, [<span class="macro">fix!</span>(LongWeekdayName), <span class="macro">lit!</span>(<span class="string">"s"</span>)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"Thus"</span>,      [<span class="macro">fix!</span>(LongWeekdayName), <span class="macro">lit!</span>(<span class="string">"s"</span>)]; weekday: Weekday::Thu);
+    <span class="macro">check!</span>(<span class="string">"Thursday"</span>,  [<span class="macro">fix!</span>(LongWeekdayName), <span class="macro">lit!</span>(<span class="string">"rsday"</span>)]; TOO_SHORT); <span class="comment">// do not backtrack
 
     // fixed: am/pm
-    </span><span class="macro">check!</span>(<span class="string">&quot;am&quot;</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;pm&quot;</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">1</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;AM&quot;</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;PM&quot;</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">1</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;am&quot;</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;pm&quot;</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">1</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;AM&quot;</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;PM&quot;</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">1</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Am&quot;</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot; Am&quot;</span>, [<span class="macro">fix!</span>(LowerAmPm)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;ame&quot;</span>, [<span class="macro">fix!</span>(LowerAmPm)]; TOO_LONG); <span class="comment">// `am` is parsed
-    </span><span class="macro">check!</span>(<span class="string">&quot;a&quot;</span>,   [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;p&quot;</span>,   [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;x&quot;</span>,   [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;xx&quot;</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,    [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
+    </span><span class="macro">check!</span>(<span class="string">"am"</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"pm"</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">1</span>);
+    <span class="macro">check!</span>(<span class="string">"AM"</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"PM"</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">1</span>);
+    <span class="macro">check!</span>(<span class="string">"am"</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"pm"</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">1</span>);
+    <span class="macro">check!</span>(<span class="string">"AM"</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"PM"</span>,  [<span class="macro">fix!</span>(UpperAmPm)]; hour_div_12: <span class="number">1</span>);
+    <span class="macro">check!</span>(<span class="string">"Am"</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; hour_div_12: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">" Am"</span>, [<span class="macro">fix!</span>(LowerAmPm)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"ame"</span>, [<span class="macro">fix!</span>(LowerAmPm)]; TOO_LONG); <span class="comment">// `am` is parsed
+    </span><span class="macro">check!</span>(<span class="string">"a"</span>,   [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"p"</span>,   [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"x"</span>,   [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"xx"</span>,  [<span class="macro">fix!</span>(LowerAmPm)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">""</span>,    [<span class="macro">fix!</span>(LowerAmPm)]; TOO_SHORT);
 
     <span class="comment">// fixed: dot plus nanoseconds
-    </span><span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,              [<span class="macro">fix!</span>(Nanosecond)]; ); <span class="comment">// no field set, but not an error
-    </span><span class="macro">check!</span>(<span class="string">&quot;4&quot;</span>,             [<span class="macro">fix!</span>(Nanosecond)]; TOO_LONG); <span class="comment">// never consumes `4`
-    </span><span class="macro">check!</span>(<span class="string">&quot;4&quot;</span>,             [<span class="macro">fix!</span>(Nanosecond), <span class="macro">num!</span>(Second)]; second: <span class="number">4</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.0&quot;</span>,            [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.4&quot;</span>,            [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">400_000_000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.42&quot;</span>,           [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">420_000_000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.421&quot;</span>,          [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_000_000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.42195&quot;</span>,        [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_950_000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.421950803&quot;</span>,    [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_950_803</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.421950803547&quot;</span>, [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_950_803</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.000000003547&quot;</span>, [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">3</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.000000000547&quot;</span>, [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;.&quot;</span>,             [<span class="macro">fix!</span>(Nanosecond)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;.4x&quot;</span>,           [<span class="macro">fix!</span>(Nanosecond)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;.  4&quot;</span>,          [<span class="macro">fix!</span>(Nanosecond)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;  .4&quot;</span>,          [<span class="macro">fix!</span>(Nanosecond)]; TOO_LONG); <span class="comment">// no automatic trimming
+    </span><span class="macro">check!</span>(<span class="string">""</span>,              [<span class="macro">fix!</span>(Nanosecond)]; ); <span class="comment">// no field set, but not an error
+    </span><span class="macro">check!</span>(<span class="string">"4"</span>,             [<span class="macro">fix!</span>(Nanosecond)]; TOO_LONG); <span class="comment">// never consumes `4`
+    </span><span class="macro">check!</span>(<span class="string">"4"</span>,             [<span class="macro">fix!</span>(Nanosecond), <span class="macro">num!</span>(Second)]; second: <span class="number">4</span>);
+    <span class="macro">check!</span>(<span class="string">".0"</span>,            [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">".4"</span>,            [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">400_000_000</span>);
+    <span class="macro">check!</span>(<span class="string">".42"</span>,           [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">420_000_000</span>);
+    <span class="macro">check!</span>(<span class="string">".421"</span>,          [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_000_000</span>);
+    <span class="macro">check!</span>(<span class="string">".42195"</span>,        [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_950_000</span>);
+    <span class="macro">check!</span>(<span class="string">".421950803"</span>,    [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_950_803</span>);
+    <span class="macro">check!</span>(<span class="string">".421950803547"</span>, [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">421_950_803</span>);
+    <span class="macro">check!</span>(<span class="string">".000000003547"</span>, [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">3</span>);
+    <span class="macro">check!</span>(<span class="string">".000000000547"</span>, [<span class="macro">fix!</span>(Nanosecond)]; nanosecond: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"."</span>,             [<span class="macro">fix!</span>(Nanosecond)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">".4x"</span>,           [<span class="macro">fix!</span>(Nanosecond)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">".  4"</span>,          [<span class="macro">fix!</span>(Nanosecond)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"  .4"</span>,          [<span class="macro">fix!</span>(Nanosecond)]; TOO_LONG); <span class="comment">// no automatic trimming
 
     // fixed: nanoseconds without the dot
-    </span><span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,             [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;0&quot;</span>,            [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;4&quot;</span>,            [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;42&quot;</span>,           [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;421&quot;</span>,          [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; nanosecond: <span class="number">421_000_000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;42143&quot;</span>,        [<span class="macro">internal_fix!</span>(Nanosecond3NoDot), <span class="macro">num!</span>(Second)]; nanosecond: <span class="number">421_000_000</span>, second: <span class="number">43</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;42195&quot;</span>,        [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;4x&quot;</span>,           [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;  4&quot;</span>,          [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;.421&quot;</span>,         [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; INVALID);
+    </span><span class="macro">check!</span>(<span class="string">""</span>,             [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"0"</span>,            [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"4"</span>,            [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"42"</span>,           [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"421"</span>,          [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; nanosecond: <span class="number">421_000_000</span>);
+    <span class="macro">check!</span>(<span class="string">"42143"</span>,        [<span class="macro">internal_fix!</span>(Nanosecond3NoDot), <span class="macro">num!</span>(Second)]; nanosecond: <span class="number">421_000_000</span>, second: <span class="number">43</span>);
+    <span class="macro">check!</span>(<span class="string">"42195"</span>,        [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"4x"</span>,           [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"  4"</span>,          [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">".421"</span>,         [<span class="macro">internal_fix!</span>(Nanosecond3NoDot)]; INVALID);
 
-    <span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,             [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;0&quot;</span>,            [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;42195&quot;</span>,        [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;421950&quot;</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; nanosecond: <span class="number">421_950_000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;000003&quot;</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; nanosecond: <span class="number">3000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;000000&quot;</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; nanosecond: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;4x&quot;</span>,           [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;     4&quot;</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;.42100&quot;</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">""</span>,             [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"0"</span>,            [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"42195"</span>,        [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"421950"</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; nanosecond: <span class="number">421_950_000</span>);
+    <span class="macro">check!</span>(<span class="string">"000003"</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; nanosecond: <span class="number">3000</span>);
+    <span class="macro">check!</span>(<span class="string">"000000"</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; nanosecond: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"4x"</span>,           [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"     4"</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">".42100"</span>,       [<span class="macro">internal_fix!</span>(Nanosecond6NoDot)]; INVALID);
 
-    <span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,             [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;42195&quot;</span>,        [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;421950803&quot;</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; nanosecond: <span class="number">421_950_803</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;000000003&quot;</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; nanosecond: <span class="number">3</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;42195080354&quot;</span>,  [<span class="macro">internal_fix!</span>(Nanosecond9NoDot), <span class="macro">num!</span>(Second)]; nanosecond: <span class="number">421_950_803</span>, second: <span class="number">54</span>); <span class="comment">// don&#39;t skip digits that come after the 9
-    </span><span class="macro">check!</span>(<span class="string">&quot;421950803547&quot;</span>, [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;000000000&quot;</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; nanosecond: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;00000000x&quot;</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;        4&quot;</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;.42100000&quot;</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">""</span>,             [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"42195"</span>,        [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"421950803"</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; nanosecond: <span class="number">421_950_803</span>);
+    <span class="macro">check!</span>(<span class="string">"000000003"</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; nanosecond: <span class="number">3</span>);
+    <span class="macro">check!</span>(<span class="string">"42195080354"</span>,  [<span class="macro">internal_fix!</span>(Nanosecond9NoDot), <span class="macro">num!</span>(Second)]; nanosecond: <span class="number">421_950_803</span>, second: <span class="number">54</span>); <span class="comment">// don't skip digits that come after the 9
+    </span><span class="macro">check!</span>(<span class="string">"421950803547"</span>, [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"000000000"</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; nanosecond: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"00000000x"</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"        4"</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">".42100000"</span>,    [<span class="macro">internal_fix!</span>(Nanosecond9NoDot)]; INVALID);
 
     <span class="comment">// fixed: timezone offsets
-    </span><span class="macro">check!</span>(<span class="string">&quot;+00:00&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-00:00&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+00:01&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-00:01&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+00:30&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">30 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-00:30&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">30 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+04:56&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">296 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-04:56&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">296 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+24:00&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">24 </span>* <span class="number">60 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-24:00&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">24 </span>* <span class="number">60 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+99:59&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: (<span class="number">100 </span>* <span class="number">60 </span>- <span class="number">1</span>) * <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;-99:59&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -(<span class="number">100 </span>* <span class="number">60 </span>- <span class="number">1</span>) * <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+00:59&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">59 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+00:60&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; OUT_OF_RANGE);
-    <span class="macro">check!</span>(<span class="string">&quot;+00:99&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; OUT_OF_RANGE);
-    <span class="macro">check!</span>(<span class="string">&quot;#12:34&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;12:34&quot;</span>,     [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;+12:34 &quot;</span>,   [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot; +12:34&quot;</span>,   [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;\t -12:34&quot;</span>, [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">754 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;&quot;</span>,          [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;+&quot;</span>,         [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;+1&quot;</span>,        [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;+12&quot;</span>,       [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;+123&quot;</span>,      [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
-    <span class="macro">check!</span>(<span class="string">&quot;+1234&quot;</span>,     [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+12345&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_LONG);
-    <span class="macro">check!</span>(<span class="string">&quot;+12345&quot;</span>,    [<span class="macro">fix!</span>(TimezoneOffset), <span class="macro">num!</span>(Day)]; offset: <span class="number">754 </span>* <span class="number">60</span>, day: <span class="number">5</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Z&quot;</span>,         [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;z&quot;</span>,         [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;Z&quot;</span>,         [<span class="macro">fix!</span>(TimezoneOffsetZ)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;z&quot;</span>,         [<span class="macro">fix!</span>(TimezoneOffsetZ)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Y&quot;</span>,         [<span class="macro">fix!</span>(TimezoneOffsetZ)]; INVALID);
-    <span class="macro">check!</span>(<span class="string">&quot;Zulu&quot;</span>,      [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">&quot;ulu&quot;</span>)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;zulu&quot;</span>,      [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">&quot;ulu&quot;</span>)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+1234ulu&quot;</span>,  [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">&quot;ulu&quot;</span>)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+12:34ulu&quot;</span>, [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">&quot;ulu&quot;</span>)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Z&quot;</span>,         [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;z&quot;</span>,         [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">0</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+12:00&quot;</span>,    [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">12 </span>* <span class="number">60 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;+12&quot;</span>,       [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">12 </span>* <span class="number">60 </span>* <span class="number">60</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;CEST 5&quot;</span>,    [<span class="macro">fix!</span>(TimezoneName), <span class="macro">lit!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">num!</span>(Day)]; day: <span class="number">5</span>);
+    </span><span class="macro">check!</span>(<span class="string">"+00:00"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"-00:00"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"+00:01"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"-00:01"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+00:30"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">30 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"-00:30"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">30 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+04:56"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">296 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"-04:56"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">296 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+24:00"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">24 </span>* <span class="number">60 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"-24:00"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">24 </span>* <span class="number">60 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+99:59"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: (<span class="number">100 </span>* <span class="number">60 </span>- <span class="number">1</span>) * <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"-99:59"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -(<span class="number">100 </span>* <span class="number">60 </span>- <span class="number">1</span>) * <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+00:59"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">59 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+00:60"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; OUT_OF_RANGE);
+    <span class="macro">check!</span>(<span class="string">"+00:99"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; OUT_OF_RANGE);
+    <span class="macro">check!</span>(<span class="string">"#12:34"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"12:34"</span>,     [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"+12:34 "</span>,   [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">" +12:34"</span>,   [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"\t -12:34"</span>, [<span class="macro">fix!</span>(TimezoneOffset)]; offset: -<span class="number">754 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">""</span>,          [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"+"</span>,         [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"+1"</span>,        [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"+12"</span>,       [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"+123"</span>,      [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_SHORT);
+    <span class="macro">check!</span>(<span class="string">"+1234"</span>,     [<span class="macro">fix!</span>(TimezoneOffset)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+12345"</span>,    [<span class="macro">fix!</span>(TimezoneOffset)]; TOO_LONG);
+    <span class="macro">check!</span>(<span class="string">"+12345"</span>,    [<span class="macro">fix!</span>(TimezoneOffset), <span class="macro">num!</span>(Day)]; offset: <span class="number">754 </span>* <span class="number">60</span>, day: <span class="number">5</span>);
+    <span class="macro">check!</span>(<span class="string">"Z"</span>,         [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"z"</span>,         [<span class="macro">fix!</span>(TimezoneOffset)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"Z"</span>,         [<span class="macro">fix!</span>(TimezoneOffsetZ)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"z"</span>,         [<span class="macro">fix!</span>(TimezoneOffsetZ)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"Y"</span>,         [<span class="macro">fix!</span>(TimezoneOffsetZ)]; INVALID);
+    <span class="macro">check!</span>(<span class="string">"Zulu"</span>,      [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">"ulu"</span>)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"zulu"</span>,      [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">"ulu"</span>)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"+1234ulu"</span>,  [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">"ulu"</span>)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+12:34ulu"</span>, [<span class="macro">fix!</span>(TimezoneOffsetZ), <span class="macro">lit!</span>(<span class="string">"ulu"</span>)]; offset: <span class="number">754 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"Z"</span>,         [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"z"</span>,         [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">0</span>);
+    <span class="macro">check!</span>(<span class="string">"+12:00"</span>,    [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">12 </span>* <span class="number">60 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"+12"</span>,       [<span class="macro">internal_fix!</span>(TimezoneOffsetPermissive)]; offset: <span class="number">12 </span>* <span class="number">60 </span>* <span class="number">60</span>);
+    <span class="macro">check!</span>(<span class="string">"CEST 5"</span>,    [<span class="macro">fix!</span>(TimezoneName), <span class="macro">lit!</span>(<span class="string">" "</span>), <span class="macro">num!</span>(Day)]; day: <span class="number">5</span>);
 
     <span class="comment">// some practical examples
-    </span><span class="macro">check!</span>(<span class="string">&quot;2015-02-04T14:37:05+09:00&quot;</span>,
-           [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">&quot;-&quot;</span>), <span class="macro">num!</span>(Month), <span class="macro">lit!</span>(<span class="string">&quot;-&quot;</span>), <span class="macro">num!</span>(Day), <span class="macro">lit!</span>(<span class="string">&quot;T&quot;</span>),
-            <span class="macro">num!</span>(Hour), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>), <span class="macro">num!</span>(Minute), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>), <span class="macro">num!</span>(Second), <span class="macro">fix!</span>(TimezoneOffset)];
+    </span><span class="macro">check!</span>(<span class="string">"2015-02-04T14:37:05+09:00"</span>,
+           [<span class="macro">num!</span>(Year), <span class="macro">lit!</span>(<span class="string">"-"</span>), <span class="macro">num!</span>(Month), <span class="macro">lit!</span>(<span class="string">"-"</span>), <span class="macro">num!</span>(Day), <span class="macro">lit!</span>(<span class="string">"T"</span>),
+            <span class="macro">num!</span>(Hour), <span class="macro">lit!</span>(<span class="string">":"</span>), <span class="macro">num!</span>(Minute), <span class="macro">lit!</span>(<span class="string">":"</span>), <span class="macro">num!</span>(Second), <span class="macro">fix!</span>(TimezoneOffset)];
            year: <span class="number">2015</span>, month: <span class="number">2</span>, day: <span class="number">4</span>, hour_div_12: <span class="number">1</span>, hour_mod_12: <span class="number">2</span>,
            minute: <span class="number">37</span>, second: <span class="number">5</span>, offset: <span class="number">32400</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;20150204143705567&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"20150204143705567"</span>,
             [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Month), <span class="macro">num!</span>(Day),
             <span class="macro">num!</span>(Hour), <span class="macro">num!</span>(Minute), <span class="macro">num!</span>(Second), <span class="macro">internal_fix!</span>(Nanosecond3NoDot)];
             year: <span class="number">2015</span>, month: <span class="number">2</span>, day: <span class="number">4</span>, hour_div_12: <span class="number">1</span>, hour_mod_12: <span class="number">2</span>,
             minute: <span class="number">37</span>, second: <span class="number">5</span>, nanosecond: <span class="number">567000000</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Mon, 10 Jun 2013 09:32:37 GMT&quot;</span>,
-           [<span class="macro">fix!</span>(ShortWeekdayName), <span class="macro">lit!</span>(<span class="string">&quot;,&quot;</span>), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">num!</span>(Day), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>),
-            <span class="macro">fix!</span>(ShortMonthName), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">num!</span>(Year), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">num!</span>(Hour), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>),
-            <span class="macro">num!</span>(Minute), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>), <span class="macro">num!</span>(Second), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">lit!</span>(<span class="string">&quot;GMT&quot;</span>)];
+    <span class="macro">check!</span>(<span class="string">"Mon, 10 Jun 2013 09:32:37 GMT"</span>,
+           [<span class="macro">fix!</span>(ShortWeekdayName), <span class="macro">lit!</span>(<span class="string">","</span>), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">num!</span>(Day), <span class="macro">sp!</span>(<span class="string">" "</span>),
+            <span class="macro">fix!</span>(ShortMonthName), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">num!</span>(Year), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">num!</span>(Hour), <span class="macro">lit!</span>(<span class="string">":"</span>),
+            <span class="macro">num!</span>(Minute), <span class="macro">lit!</span>(<span class="string">":"</span>), <span class="macro">num!</span>(Second), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">lit!</span>(<span class="string">"GMT"</span>)];
            year: <span class="number">2013</span>, month: <span class="number">6</span>, day: <span class="number">10</span>, weekday: Weekday::Mon,
            hour_div_12: <span class="number">0</span>, hour_mod_12: <span class="number">9</span>, minute: <span class="number">32</span>, second: <span class="number">37</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;Sun Aug 02 13:39:15 CEST 2020&quot;</span>,
-            [<span class="macro">fix!</span>(ShortWeekdayName), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">fix!</span>(ShortMonthName), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>),
-            <span class="macro">num!</span>(Day), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">num!</span>(Hour), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>), <span class="macro">num!</span>(Minute), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>),
-            <span class="macro">num!</span>(Second), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">fix!</span>(TimezoneName), <span class="macro">sp!</span>(<span class="string">&quot; &quot;</span>), <span class="macro">num!</span>(Year)];
+    <span class="macro">check!</span>(<span class="string">"Sun Aug 02 13:39:15 CEST 2020"</span>,
+            [<span class="macro">fix!</span>(ShortWeekdayName), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">fix!</span>(ShortMonthName), <span class="macro">sp!</span>(<span class="string">" "</span>),
+            <span class="macro">num!</span>(Day), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">num!</span>(Hour), <span class="macro">lit!</span>(<span class="string">":"</span>), <span class="macro">num!</span>(Minute), <span class="macro">lit!</span>(<span class="string">":"</span>),
+            <span class="macro">num!</span>(Second), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">fix!</span>(TimezoneName), <span class="macro">sp!</span>(<span class="string">" "</span>), <span class="macro">num!</span>(Year)];
             year: <span class="number">2020</span>, month: <span class="number">8</span>, day: <span class="number">2</span>, weekday: Weekday::Sun,
             hour_div_12: <span class="number">1</span>, hour_mod_12: <span class="number">1</span>, minute: <span class="number">39</span>, second: <span class="number">15</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;20060102150405&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"20060102150405"</span>,
            [<span class="macro">num!</span>(Year), <span class="macro">num!</span>(Month), <span class="macro">num!</span>(Day), <span class="macro">num!</span>(Hour), <span class="macro">num!</span>(Minute), <span class="macro">num!</span>(Second)];
            year: <span class="number">2006</span>, month: <span class="number">1</span>, day: <span class="number">2</span>, hour_div_12: <span class="number">1</span>, hour_mod_12: <span class="number">3</span>, minute: <span class="number">4</span>, second: <span class="number">5</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;3:14PM&quot;</span>,
-           [<span class="macro">num!</span>(Hour12), <span class="macro">lit!</span>(<span class="string">&quot;:&quot;</span>), <span class="macro">num!</span>(Minute), <span class="macro">fix!</span>(LowerAmPm)];
+    <span class="macro">check!</span>(<span class="string">"3:14PM"</span>,
+           [<span class="macro">num!</span>(Hour12), <span class="macro">lit!</span>(<span class="string">":"</span>), <span class="macro">num!</span>(Minute), <span class="macro">fix!</span>(LowerAmPm)];
            hour_div_12: <span class="number">1</span>, hour_mod_12: <span class="number">3</span>, minute: <span class="number">14</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;12345678901234.56789&quot;</span>,
-           [<span class="macro">num!</span>(Timestamp), <span class="macro">lit!</span>(<span class="string">&quot;.&quot;</span>), <span class="macro">num!</span>(Nanosecond)];
+    <span class="macro">check!</span>(<span class="string">"12345678901234.56789"</span>,
+           [<span class="macro">num!</span>(Timestamp), <span class="macro">lit!</span>(<span class="string">"."</span>), <span class="macro">num!</span>(Nanosecond)];
            nanosecond: <span class="number">56_789</span>, timestamp: <span class="number">12_345_678_901_234</span>);
-    <span class="macro">check!</span>(<span class="string">&quot;12345678901234.56789&quot;</span>,
+    <span class="macro">check!</span>(<span class="string">"12345678901234.56789"</span>,
            [<span class="macro">num!</span>(Timestamp), <span class="macro">fix!</span>(Nanosecond)];
            nanosecond: <span class="number">567_890_000</span>, timestamp: <span class="number">12_345_678_901_234</span>);
 }
@@ -1788,34 +1790,34 @@
 
     <span class="comment">// Test data - (input, Ok(expected result after parse and format) or Err(error code))
     </span><span class="kw">let </span>testdates = [
-        (<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>)), <span class="comment">// normal case
-        </span>(<span class="string">&quot;Fri,  2 Jan 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Fri, 02 Jan 2015 17:35:20 -0800&quot;</span>)), <span class="comment">// folding whitespace
-        </span>(<span class="string">&quot;Fri, 02 Jan 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Fri, 02 Jan 2015 17:35:20 -0800&quot;</span>)), <span class="comment">// leading zero
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800 (UTC)&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>)), <span class="comment">// trailing comment
+        (<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>)), <span class="comment">// normal case
+        </span>(<span class="string">"Fri,  2 Jan 2015 17:35:20 -0800"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Fri, 02 Jan 2015 17:35:20 -0800"</span>)), <span class="comment">// folding whitespace
+        </span>(<span class="string">"Fri, 02 Jan 2015 17:35:20 -0800"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Fri, 02 Jan 2015 17:35:20 -0800"</span>)), <span class="comment">// leading zero
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800 (UTC)"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>)), <span class="comment">// trailing comment
         </span>(
-            <span class="string">r&quot;Tue, 20 Jan 2015 17:35:20 -0800 ( (UTC ) (\( (a)\(( \t ) ) \\( \) ))&quot;</span>,
-            <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>),
+            <span class="string">r"Tue, 20 Jan 2015 17:35:20 -0800 ( (UTC ) (\( (a)\(( \t ) ) \\( \) ))"</span>,
+            <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>),
         ), <span class="comment">// complex trailing comment
-        </span>(<span class="string">r&quot;Tue, 20 Jan 2015 17:35:20 -0800 (UTC\)&quot;</span>, <span class="prelude-val">Err</span>(TOO_LONG)), <span class="comment">// incorrect comment, not enough closing parentheses
+        </span>(<span class="string">r"Tue, 20 Jan 2015 17:35:20 -0800 (UTC\)"</span>, <span class="prelude-val">Err</span>(TOO_LONG)), <span class="comment">// incorrect comment, not enough closing parentheses
         </span>(
-            <span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800 (UTC)\t \r\n(Anothercomment)&quot;</span>,
-            <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>),
+            <span class="string">"Tue, 20 Jan 2015 17:35:20 -0800 (UTC)\t \r\n(Anothercomment)"</span>,
+            <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>),
         ), <span class="comment">// multiple comments
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800 (UTC) &quot;</span>, <span class="prelude-val">Err</span>(TOO_LONG)), <span class="comment">// trailing whitespace after comment
-        </span>(<span class="string">&quot;20 Jan 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>)), <span class="comment">// no day of week
-        </span>(<span class="string">&quot;20 JAN 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0800&quot;</span>)), <span class="comment">// upper case month
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35 -0800&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:00 -0800&quot;</span>)), <span class="comment">// no second
-        </span>(<span class="string">&quot;11 Sep 2001 09:45:00 EST&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;Tue, 11 Sep 2001 09:45:00 -0500&quot;</span>)),
-        (<span class="string">&quot;30 Feb 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad day of month
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015&quot;</span>, <span class="prelude-val">Err</span>(TOO_SHORT)),              <span class="comment">// omitted fields
-        </span>(<span class="string">&quot;Tue, 20 Avr 2015 17:35:20 -0800&quot;</span>, <span class="prelude-val">Err</span>(INVALID)), <span class="comment">// bad month name
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 25:35:20 -0800&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad hour
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 7:35:20 -0800&quot;</span>, <span class="prelude-val">Err</span>(INVALID)),  <span class="comment">// bad # of digits in hour
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:65:20 -0800&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad minute
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:90 -0800&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad second
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 -0890&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad offset
-        </span>(<span class="string">&quot;6 Jun 1944 04:00:00Z&quot;</span>, <span class="prelude-val">Err</span>(INVALID)),            <span class="comment">// bad offset (zulu not allowed)
-        </span>(<span class="string">&quot;Tue, 20 Jan 2015 17:35:20 HAS&quot;</span>, <span class="prelude-val">Err</span>(NOT_ENOUGH)), <span class="comment">// bad named time zone
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800 (UTC) "</span>, <span class="prelude-val">Err</span>(TOO_LONG)), <span class="comment">// trailing whitespace after comment
+        </span>(<span class="string">"20 Jan 2015 17:35:20 -0800"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>)), <span class="comment">// no day of week
+        </span>(<span class="string">"20 JAN 2015 17:35:20 -0800"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0800"</span>)), <span class="comment">// upper case month
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:35 -0800"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Tue, 20 Jan 2015 17:35:00 -0800"</span>)), <span class="comment">// no second
+        </span>(<span class="string">"11 Sep 2001 09:45:00 EST"</span>, <span class="prelude-val">Ok</span>(<span class="string">"Tue, 11 Sep 2001 09:45:00 -0500"</span>)),
+        (<span class="string">"30 Feb 2015 17:35:20 -0800"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad day of month
+        </span>(<span class="string">"Tue, 20 Jan 2015"</span>, <span class="prelude-val">Err</span>(TOO_SHORT)),              <span class="comment">// omitted fields
+        </span>(<span class="string">"Tue, 20 Avr 2015 17:35:20 -0800"</span>, <span class="prelude-val">Err</span>(INVALID)), <span class="comment">// bad month name
+        </span>(<span class="string">"Tue, 20 Jan 2015 25:35:20 -0800"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad hour
+        </span>(<span class="string">"Tue, 20 Jan 2015 7:35:20 -0800"</span>, <span class="prelude-val">Err</span>(INVALID)),  <span class="comment">// bad # of digits in hour
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:65:20 -0800"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad minute
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:35:90 -0800"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad second
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 -0890"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad offset
+        </span>(<span class="string">"6 Jun 1944 04:00:00Z"</span>, <span class="prelude-val">Err</span>(INVALID)),            <span class="comment">// bad offset (zulu not allowed)
+        </span>(<span class="string">"Tue, 20 Jan 2015 17:35:20 HAS"</span>, <span class="prelude-val">Err</span>(NOT_ENOUGH)), <span class="comment">// bad named time zone
     </span>];
 
     <span class="kw">fn </span>rfc2822_to_datetime(date: <span class="kw-2">&amp;</span>str) -&gt; ParseResult&lt;DateTime&lt;FixedOffset&gt;&gt; {
@@ -1839,7 +1841,7 @@
         <span class="kw">if </span>dt != checkdate.map(|s| s.to_string()) {
             <span class="comment">// check for expected result
             </span><span class="macro">panic!</span>(
-                <span class="string">&quot;Date conversion failed for {}\nReceived: {:?}\nExpected: {:?}&quot;</span>,
+                <span class="string">"Date conversion failed for {}\nReceived: {:?}\nExpected: {:?}"</span>,
                 date, dt, checkdate
             );
         }
@@ -1851,26 +1853,26 @@
 </span><span class="kw">fn </span>parse_rfc850() {
     <span class="kw">use crate</span>::{TimeZone, Utc};
 
-    <span class="kw">static </span>RFC850_FMT: <span class="kw-2">&amp;</span>str = <span class="string">&quot;%A, %d-%b-%y %T GMT&quot;</span>;
+    <span class="kw">static </span>RFC850_FMT: <span class="kw-2">&amp;</span>str = <span class="string">"%A, %d-%b-%y %T GMT"</span>;
 
-    <span class="kw">let </span>dt_str = <span class="string">&quot;Sunday, 06-Nov-94 08:49:37 GMT&quot;</span>;
+    <span class="kw">let </span>dt_str = <span class="string">"Sunday, 06-Nov-94 08:49:37 GMT"</span>;
     <span class="kw">let </span>dt = Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">6</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>);
 
     <span class="comment">// Check that the format is what we expect
     </span><span class="macro">assert_eq!</span>(dt.format(RFC850_FMT).to_string(), dt_str);
 
     <span class="comment">// Check that it parses correctly
-    </span><span class="macro">assert_eq!</span>(<span class="prelude-val">Ok</span>(dt), Utc.datetime_from_str(<span class="string">&quot;Sunday, 06-Nov-94 08:49:37 GMT&quot;</span>, RFC850_FMT));
+    </span><span class="macro">assert_eq!</span>(<span class="prelude-val">Ok</span>(dt), Utc.datetime_from_str(<span class="string">"Sunday, 06-Nov-94 08:49:37 GMT"</span>, RFC850_FMT));
 
     <span class="comment">// Check that the rest of the weekdays parse correctly (this test originally failed because
     // Sunday parsed incorrectly).
     </span><span class="kw">let </span>testdates = [
-        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">7</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">&quot;Monday, 07-Nov-94 08:49:37 GMT&quot;</span>),
-        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">8</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">&quot;Tuesday, 08-Nov-94 08:49:37 GMT&quot;</span>),
-        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">9</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">&quot;Wednesday, 09-Nov-94 08:49:37 GMT&quot;</span>),
-        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">10</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">&quot;Thursday, 10-Nov-94 08:49:37 GMT&quot;</span>),
-        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">11</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">&quot;Friday, 11-Nov-94 08:49:37 GMT&quot;</span>),
-        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">12</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">&quot;Saturday, 12-Nov-94 08:49:37 GMT&quot;</span>),
+        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">7</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">"Monday, 07-Nov-94 08:49:37 GMT"</span>),
+        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">8</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">"Tuesday, 08-Nov-94 08:49:37 GMT"</span>),
+        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">9</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">"Wednesday, 09-Nov-94 08:49:37 GMT"</span>),
+        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">10</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">"Thursday, 10-Nov-94 08:49:37 GMT"</span>),
+        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">11</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">"Friday, 11-Nov-94 08:49:37 GMT"</span>),
+        (Utc.ymd(<span class="number">1994</span>, <span class="number">11</span>, <span class="number">12</span>).and_hms(<span class="number">8</span>, <span class="number">49</span>, <span class="number">37</span>), <span class="string">"Saturday, 12-Nov-94 08:49:37 GMT"</span>),
     ];
 
     <span class="kw">for </span>val <span class="kw">in </span><span class="kw-2">&amp;</span>testdates {
@@ -1887,18 +1889,18 @@
 
     <span class="comment">// Test data - (input, Ok(expected result after parse and format) or Err(error code))
     </span><span class="kw">let </span>testdates = [
-        (<span class="string">&quot;2015-01-20T17:35:20-08:00&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;2015-01-20T17:35:20-08:00&quot;</span>)), <span class="comment">// normal case
-        </span>(<span class="string">&quot;1944-06-06T04:04:00Z&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;1944-06-06T04:04:00+00:00&quot;</span>)),      <span class="comment">// D-day
-        </span>(<span class="string">&quot;2001-09-11T09:45:00-08:00&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;2001-09-11T09:45:00-08:00&quot;</span>)),
-        (<span class="string">&quot;2015-01-20T17:35:20.001-08:00&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;2015-01-20T17:35:20.001-08:00&quot;</span>)),
-        (<span class="string">&quot;2015-01-20T17:35:20.000031-08:00&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;2015-01-20T17:35:20.000031-08:00&quot;</span>)),
-        (<span class="string">&quot;2015-01-20T17:35:20.000000004-08:00&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;2015-01-20T17:35:20.000000004-08:00&quot;</span>)),
-        (<span class="string">&quot;2015-01-20T17:35:20.000000000452-08:00&quot;</span>, <span class="prelude-val">Ok</span>(<span class="string">&quot;2015-01-20T17:35:20-08:00&quot;</span>)), <span class="comment">// too small
-        </span>(<span class="string">&quot;2015-02-30T17:35:20-08:00&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad day of month
-        </span>(<span class="string">&quot;2015-01-20T25:35:20-08:00&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad hour
-        </span>(<span class="string">&quot;2015-01-20T17:65:20-08:00&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad minute
-        </span>(<span class="string">&quot;2015-01-20T17:35:90-08:00&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad second
-        </span>(<span class="string">&quot;2015-01-20T17:35:20-24:00&quot;</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad offset
+        (<span class="string">"2015-01-20T17:35:20-08:00"</span>, <span class="prelude-val">Ok</span>(<span class="string">"2015-01-20T17:35:20-08:00"</span>)), <span class="comment">// normal case
+        </span>(<span class="string">"1944-06-06T04:04:00Z"</span>, <span class="prelude-val">Ok</span>(<span class="string">"1944-06-06T04:04:00+00:00"</span>)),      <span class="comment">// D-day
+        </span>(<span class="string">"2001-09-11T09:45:00-08:00"</span>, <span class="prelude-val">Ok</span>(<span class="string">"2001-09-11T09:45:00-08:00"</span>)),
+        (<span class="string">"2015-01-20T17:35:20.001-08:00"</span>, <span class="prelude-val">Ok</span>(<span class="string">"2015-01-20T17:35:20.001-08:00"</span>)),
+        (<span class="string">"2015-01-20T17:35:20.000031-08:00"</span>, <span class="prelude-val">Ok</span>(<span class="string">"2015-01-20T17:35:20.000031-08:00"</span>)),
+        (<span class="string">"2015-01-20T17:35:20.000000004-08:00"</span>, <span class="prelude-val">Ok</span>(<span class="string">"2015-01-20T17:35:20.000000004-08:00"</span>)),
+        (<span class="string">"2015-01-20T17:35:20.000000000452-08:00"</span>, <span class="prelude-val">Ok</span>(<span class="string">"2015-01-20T17:35:20-08:00"</span>)), <span class="comment">// too small
+        </span>(<span class="string">"2015-02-30T17:35:20-08:00"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad day of month
+        </span>(<span class="string">"2015-01-20T25:35:20-08:00"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad hour
+        </span>(<span class="string">"2015-01-20T17:65:20-08:00"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad minute
+        </span>(<span class="string">"2015-01-20T17:35:90-08:00"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad second
+        </span>(<span class="string">"2015-01-20T17:35:20-24:00"</span>, <span class="prelude-val">Err</span>(OUT_OF_RANGE)), <span class="comment">// bad offset
     </span>];
 
     <span class="kw">fn </span>rfc3339_to_datetime(date: <span class="kw-2">&amp;</span>str) -&gt; ParseResult&lt;DateTime&lt;FixedOffset&gt;&gt; {
@@ -1922,7 +1924,7 @@
         <span class="kw">if </span>dt != checkdate.map(|s| s.to_string()) {
             <span class="comment">// check for expected result
             </span><span class="macro">panic!</span>(
-                <span class="string">&quot;Date conversion failed for {}\nReceived: {:?}\nExpected: {:?}&quot;</span>,
+                <span class="string">"Date conversion failed for {}\nReceived: {:?}\nExpected: {:?}"</span>,
                 date, dt, checkdate
             );
         }

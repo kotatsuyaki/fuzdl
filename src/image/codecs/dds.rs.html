@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/dds.rs`."><title>dds.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/dds.rs`."><title>dds.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -412,35 +414,35 @@
     <span class="doccomment">/// Invalid array size in DX10 header
     </span>Dx10ArraySizeInvalid(u32),
 
-    <span class="doccomment">/// DDS &quot;DDS &quot; signature invalid or missing
+    <span class="doccomment">/// DDS "DDS " signature invalid or missing
     </span>DdsSignatureInvalid,
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
             DecoderError::PixelFormatSizeInvalid(s) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS PixelFormat size: {}&quot;</span>, s))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS PixelFormat size: {}"</span>, s))
             }
             DecoderError::HeaderSizeInvalid(s) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS header size: {}&quot;</span>, s))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS header size: {}"</span>, s))
             }
             DecoderError::HeaderFlagsInvalid(fs) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS header flags: {:#010X}&quot;</span>, fs))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS header flags: {:#010X}"</span>, fs))
             }
             DecoderError::DxgiFormatInvalid(df) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DXGI format: {}&quot;</span>, df))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS DXGI format: {}"</span>, df))
             }
             DecoderError::ResourceDimensionInvalid(d) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS resource dimension: {}&quot;</span>, d))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS resource dimension: {}"</span>, d))
             }
             DecoderError::Dx10FlagsInvalid(fs) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DX10 header flags: {:#010X}&quot;</span>, fs))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS DX10 header flags: {:#010X}"</span>, fs))
             }
             DecoderError::Dx10ArraySizeInvalid(s) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Invalid DDS DX10 array size: {}&quot;</span>, s))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Invalid DDS DX10 array size: {}"</span>, s))
             }
-            DecoderError::DdsSignatureInvalid =&gt; f.write_str(<span class="string">&quot;DDS signature not found&quot;</span>),
+            DecoderError::DdsSignatureInvalid =&gt; f.write_str(<span class="string">"DDS signature not found"</span>),
         }
     }
 }
@@ -624,7 +626,7 @@
     </span><span class="kw">pub fn </span>new(<span class="kw-2">mut </span>r: R) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>magic = [<span class="number">0</span>; <span class="number">4</span>];
         r.read_exact(<span class="kw-2">&amp;mut </span>magic)<span class="question-mark">?</span>;
-        <span class="kw">if </span>magic != <span class="string">b&quot;DDS &quot;</span>[..] {
+        <span class="kw">if </span>magic != <span class="string">b"DDS "</span>[..] {
             <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::DdsSignatureInvalid.into());
         }
 
@@ -633,10 +635,10 @@
         <span class="kw">if </span>header.pixel_format.flags &amp; <span class="number">0x4 </span>!= <span class="number">0 </span>{
             <span class="attr">#[allow(deprecated)]
             </span><span class="kw">let </span>variant = <span class="kw">match </span><span class="kw-2">&amp;</span>header.pixel_format.fourcc {
-                <span class="string">b&quot;DXT1&quot; </span>=&gt; DxtVariant::DXT1,
-                <span class="string">b&quot;DXT3&quot; </span>=&gt; DxtVariant::DXT3,
-                <span class="string">b&quot;DXT5&quot; </span>=&gt; DxtVariant::DXT5,
-                <span class="string">b&quot;DX10&quot; </span>=&gt; {
+                <span class="string">b"DXT1" </span>=&gt; DxtVariant::DXT1,
+                <span class="string">b"DXT3" </span>=&gt; DxtVariant::DXT3,
+                <span class="string">b"DXT5" </span>=&gt; DxtVariant::DXT5,
+                <span class="string">b"DX10" </span>=&gt; {
                     <span class="kw">let </span>dx10_header = DX10Header::from_reader(<span class="kw-2">&amp;mut </span>r)<span class="question-mark">?</span>;
                     <span class="comment">// Format equivalents were taken from https://docs.microsoft.com/en-us/windows/win32/direct3d11/texture-block-compression-in-direct3d-11
                     // The enum integer values were taken from https://docs.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format
@@ -650,7 +652,7 @@
                                 UnsupportedError::from_format_and_kind(
                                     ImageFormat::Dds.into(),
                                     UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                                        <span class="string">&quot;DDS DXGI Format {}&quot;</span>,
+                                        <span class="string">"DDS DXGI Format {}"</span>,
                                         dx10_header.dxgi_format
                                     )),
                                 ),
@@ -663,7 +665,7 @@
                         UnsupportedError::from_format_and_kind(
                             ImageFormat::Dds.into(),
                             UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                                <span class="string">&quot;DDS FourCC {:?}&quot;</span>,
+                                <span class="string">"DDS FourCC {:?}"</span>,
                                 fourcc
                             )),
                         ),
@@ -680,7 +682,7 @@
                     UnsupportedError::from_format_and_kind(
                         ImageFormat::Dds.into(),
                         UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                            <span class="string">&quot;Image dimensions ({}x{}) are too large&quot;</span>,
+                            <span class="string">"Image dimensions ({}x{}) are too large"</span>,
                             header.width, header.height
                         )),
                     ),
@@ -695,14 +697,14 @@
             </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
                 UnsupportedError::from_format_and_kind(
                     ImageFormat::Dds.into(),
-                    UnsupportedErrorKind::Format(ImageFormatHint::Name(<span class="string">&quot;DDS&quot;</span>.to_string())),
+                    UnsupportedErrorKind::Format(ImageFormatHint::Name(<span class="string">"DDS"</span>.to_string())),
                 ),
             ))
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>DdsDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>DdsDecoder&lt;R&gt; {
     <span class="attr">#[allow(deprecated)]
     </span><span class="kw">type </span>Reader = DxtReader&lt;R&gt;;
 

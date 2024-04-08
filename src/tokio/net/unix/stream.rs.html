@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/net/unix/stream.rs`."><title>stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/net/unix/stream.rs`."><title>stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../tokio/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1003,7 +1005,7 @@
     <span class="doccomment">/// Connects to the socket named by `path`.
     ///
     /// This function will create a new Unix socket and connect to the path
-    /// specified, associating the returned stream with the default event loop&#39;s
+    /// specified, associating the returned stream with the default event loop's
     /// handle.
     </span><span class="kw">pub async fn </span>connect&lt;P&gt;(path: P) -&gt; io::Result&lt;UnixStream&gt;
     <span class="kw">where
@@ -1048,7 +1050,7 @@
     /// #[tokio::main]
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
     ///     loop {
@@ -1060,7 +1062,7 @@
     ///             // if the readiness event is a false positive.
     ///             match stream.try_read(&amp;mut data) {
     ///                 Ok(n) =&gt; {
-    ///                     println!(&quot;read {} bytes&quot;, n);        
+    ///                     println!("read {} bytes", n);        
     ///                 }
     ///                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock =&gt; {
     ///                     continue;
@@ -1075,9 +1077,9 @@
     ///         if ready.is_writable() {
     ///             // Try to write data, this may still fail with `WouldBlock`
     ///             // if the readiness event is a false positive.
-    ///             match stream.try_write(b&quot;hello world&quot;) {
+    ///             match stream.try_write(b"hello world") {
     ///                 Ok(n) =&gt; {
-    ///                     println!(&quot;write {} bytes&quot;, n);
+    ///                     println!("write {} bytes", n);
     ///                 }
     ///                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock =&gt; {
     ///                     continue;
@@ -1118,7 +1120,7 @@
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     // Connect to a peer
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
     ///     let mut msg = vec![0; 1024];
@@ -1143,7 +1145,7 @@
     ///         }
     ///     }
     ///
-    ///     println!(&quot;GOT = {:?}&quot;, msg);
+    ///     println!("GOT = {:?}", msg);
     ///     Ok(())
     /// }
     /// ```
@@ -1181,7 +1183,7 @@
     /// This function may encounter any standard I/O error except `WouldBlock`.
     ///
     /// [`readable`]: method@Self::readable
-    </span><span class="kw">pub fn </span>poll_read_ready(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
+    </span><span class="kw">pub fn </span>poll_read_ready(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
         <span class="self">self</span>.io.registration().poll_read_ready(cx).map_ok(|<span class="kw">_</span>| ())
     }
 
@@ -1201,7 +1203,7 @@
     /// # Return
     ///
     /// If data is successfully read, `Ok(n)` is returned, where `n` is the
-    /// number of bytes read. `Ok(0)` indicates the stream&#39;s read half is closed
+    /// number of bytes read. `Ok(0)` indicates the stream's read half is closed
     /// and will no longer yield data. If the stream is not ready to read data
     /// `Err(io::ErrorKind::WouldBlock)` is returned.
     ///
@@ -1216,7 +1218,7 @@
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     // Connect to a peer
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
     ///     loop {
@@ -1232,7 +1234,7 @@
     ///         match stream.try_read(&amp;mut buf) {
     ///             Ok(0) =&gt; break,
     ///             Ok(n) =&gt; {
-    ///                 println!(&quot;read {} bytes&quot;, n);
+    ///                 println!("read {} bytes", n);
     ///             }
     ///             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock =&gt; {
     ///                 continue;
@@ -1274,7 +1276,7 @@
     /// # Return
     ///
     /// If data is successfully read, `Ok(n)` is returned, where `n` is the
-    /// number of bytes read. `Ok(0)` indicates the stream&#39;s read half is closed
+    /// number of bytes read. `Ok(0)` indicates the stream's read half is closed
     /// and will no longer yield data. If the stream is not ready to read data
     /// `Err(io::ErrorKind::WouldBlock)` is returned.
     ///
@@ -1289,7 +1291,7 @@
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     // Connect to a peer
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
     ///     loop {
@@ -1310,7 +1312,7 @@
     ///         match stream.try_read_vectored(&amp;mut bufs) {
     ///             Ok(0) =&gt; break,
     ///             Ok(n) =&gt; {
-    ///                 println!(&quot;read {} bytes&quot;, n);
+    ///                 println!("read {} bytes", n);
     ///             }
     ///             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock =&gt; {
     ///                 continue;
@@ -1324,7 +1326,7 @@
     ///     Ok(())
     /// }
     /// ```
-    </span><span class="kw">pub fn </span>try_read_vectored(<span class="kw-2">&amp;</span><span class="self">self</span>, bufs: <span class="kw-2">&amp;mut </span>[io::IoSliceMut&lt;<span class="lifetime">&#39;_</span>&gt;]) -&gt; io::Result&lt;usize&gt; {
+    </span><span class="kw">pub fn </span>try_read_vectored(<span class="kw-2">&amp;</span><span class="self">self</span>, bufs: <span class="kw-2">&amp;mut </span>[io::IoSliceMut&lt;<span class="lifetime">'_</span>&gt;]) -&gt; io::Result&lt;usize&gt; {
         <span class="self">self</span>.io
             .registration()
             .try_io(Interest::READABLE, || (<span class="kw-2">&amp;*</span><span class="self">self</span>.io).read_vectored(bufs))
@@ -1332,7 +1334,7 @@
 
     <span class="macro">cfg_io_util! </span>{
         <span class="doccomment">/// Tries to read data from the stream into the provided buffer, advancing the
-        /// buffer&#39;s internal cursor, returning how many bytes were read.
+        /// buffer's internal cursor, returning how many bytes were read.
         ///
         /// Receives any pending data from the socket but does not wait for new data
         /// to arrive. On success, returns the number of bytes read. Because
@@ -1347,7 +1349,7 @@
         /// # Return
         ///
         /// If data is successfully read, `Ok(n)` is returned, where `n` is the
-        /// number of bytes read. `Ok(0)` indicates the stream&#39;s read half is closed
+        /// number of bytes read. `Ok(0)` indicates the stream's read half is closed
         /// and will no longer yield data. If the stream is not ready to read data
         /// `Err(io::ErrorKind::WouldBlock)` is returned.
         ///
@@ -1362,7 +1364,7 @@
         /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
         ///     // Connect to a peer
         ///     let dir = tempfile::tempdir().unwrap();
-        ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+        ///     let bind_path = dir.path().join("bind_path");
         ///     let stream = UnixStream::connect(bind_path).await?;
         ///
         ///     loop {
@@ -1376,7 +1378,7 @@
         ///         match stream.try_read_buf(&amp;mut buf) {
         ///             Ok(0) =&gt; break,
         ///             Ok(n) =&gt; {
-        ///                 println!(&quot;read {} bytes&quot;, n);
+        ///                 println!("read {} bytes", n);
         ///             }
         ///             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock =&gt; {
         ///                 continue;
@@ -1434,7 +1436,7 @@
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     // Connect to a peer
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
     ///     loop {
@@ -1443,7 +1445,7 @@
     ///
     ///         // Try to write data, this may still fail with `WouldBlock`
     ///         // if the readiness event is a false positive.
-    ///         match stream.try_write(b&quot;hello world&quot;) {
+    ///         match stream.try_write(b"hello world") {
     ///             Ok(n) =&gt; {
     ///                 break;
     ///             }
@@ -1493,7 +1495,7 @@
     /// This function may encounter any standard I/O error except `WouldBlock`.
     ///
     /// [`writable`]: method@Self::writable
-    </span><span class="kw">pub fn </span>poll_write_ready(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
+    </span><span class="kw">pub fn </span>poll_write_ready(<span class="kw-2">&amp;</span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
         <span class="self">self</span>.io.registration().poll_write_ready(cx).map_ok(|<span class="kw">_</span>| ())
     }
 
@@ -1522,7 +1524,7 @@
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     // Connect to a peer
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
     ///     loop {
@@ -1531,7 +1533,7 @@
     ///
     ///         // Try to write data, this may still fail with `WouldBlock`
     ///         // if the readiness event is a false positive.
-    ///         match stream.try_write(b&quot;hello world&quot;) {
+    ///         match stream.try_write(b"hello world") {
     ///             Ok(n) =&gt; {
     ///                 break;
     ///             }
@@ -1582,10 +1584,10 @@
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     // Connect to a peer
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///     let stream = UnixStream::connect(bind_path).await?;
     ///
-    ///     let bufs = [io::IoSlice::new(b&quot;hello &quot;), io::IoSlice::new(b&quot;world&quot;)];
+    ///     let bufs = [io::IoSlice::new(b"hello "), io::IoSlice::new(b"world")];
     ///
     ///     loop {
     ///         // Wait for the socket to be writable
@@ -1609,7 +1611,7 @@
     ///     Ok(())
     /// }
     /// ```
-    </span><span class="kw">pub fn </span>try_write_vectored(<span class="kw-2">&amp;</span><span class="self">self</span>, buf: <span class="kw-2">&amp;</span>[io::IoSlice&lt;<span class="lifetime">&#39;_</span>&gt;]) -&gt; io::Result&lt;usize&gt; {
+    </span><span class="kw">pub fn </span>try_write_vectored(<span class="kw-2">&amp;</span><span class="self">self</span>, buf: <span class="kw-2">&amp;</span>[io::IoSlice&lt;<span class="lifetime">'_</span>&gt;]) -&gt; io::Result&lt;usize&gt; {
         <span class="self">self</span>.io
             .registration()
             .try_io(Interest::WRITABLE, || (<span class="kw-2">&amp;*</span><span class="self">self</span>.io).write_vectored(buf))
@@ -1691,20 +1693,20 @@
     /// #[tokio::main]
     /// async fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     ///     let dir = tempfile::tempdir().unwrap();
-    ///     let bind_path = dir.path().join(&quot;bind_path&quot;);
+    ///     let bind_path = dir.path().join("bind_path");
     ///
     ///     let mut data = [0u8; 12];
     ///     let listener = UnixListener::bind(&amp;bind_path)?;
     /// #   let handle = tokio::spawn(async {
     /// #       let mut stream = UnixStream::connect(bind_path).await.unwrap();
-    /// #       stream.write(b&quot;Hello world!&quot;).await.unwrap();
+    /// #       stream.write(b"Hello world!").await.unwrap();
     /// #   });
     ///     let (tokio_unix_stream, _) = listener.accept().await?;
     ///     let mut std_unix_stream = tokio_unix_stream.into_std()?;
-    /// #   handle.await.expect(&quot;The task being joined has panicked&quot;);
+    /// #   handle.await.expect("The task being joined has panicked");
     ///     std_unix_stream.set_nonblocking(false)?;
     ///     std_unix_stream.read_exact(&amp;mut data)?;
-    /// #   assert_eq!(b&quot;Hello world!&quot;, &amp;data);
+    /// #   assert_eq!(b"Hello world!", &amp;data);
     ///     Ok(())
     /// }
     /// ```
@@ -1722,7 +1724,7 @@
     ///
     /// This function will create a pair of interconnected Unix sockets for
     /// communicating back and forth between one another. Each socket will
-    /// be associated with the default event loop&#39;s handle.
+    /// be associated with the default event loop's handle.
     </span><span class="kw">pub fn </span>pair() -&gt; io::Result&lt;(UnixStream, UnixStream)&gt; {
         <span class="kw">let </span>(a, b) = mio::net::UnixStream::pair()<span class="question-mark">?</span>;
         <span class="kw">let </span>a = UnixStream::new(a)<span class="question-mark">?</span>;
@@ -1745,10 +1747,10 @@
     ///
     /// # async fn dox() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     /// let dir = tempfile::tempdir().unwrap();
-    /// let bind_path = dir.path().join(&quot;bind_path&quot;);
+    /// let bind_path = dir.path().join("bind_path");
     /// let stream = UnixStream::connect(bind_path).await?;
     ///
-    /// println!(&quot;{:?}&quot;, stream.local_addr()?);
+    /// println!("{:?}", stream.local_addr()?);
     /// # Ok(())
     /// # }
     /// ```
@@ -1765,10 +1767,10 @@
     ///
     /// # async fn dox() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     /// let dir = tempfile::tempdir().unwrap();
-    /// let bind_path = dir.path().join(&quot;bind_path&quot;);
+    /// let bind_path = dir.path().join("bind_path");
     /// let stream = UnixStream::connect(bind_path).await?;
     ///
-    /// println!(&quot;{:?}&quot;, stream.peer_addr()?);
+    /// println!("{:?}", stream.peer_addr()?);
     /// # Ok(())
     /// # }
     /// ```
@@ -1805,7 +1807,7 @@
     /// moved into independently spawned tasks.
     ///
     /// [`into_split`]: Self::into_split()
-    </span><span class="kw">pub fn </span>split&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; (ReadHalf&lt;<span class="lifetime">&#39;a</span>&gt;, WriteHalf&lt;<span class="lifetime">&#39;a</span>&gt;) {
+    </span><span class="kw">pub fn </span>split&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="self">self</span>) -&gt; (ReadHalf&lt;<span class="lifetime">'a</span>&gt;, WriteHalf&lt;<span class="lifetime">'a</span>&gt;) {
         split(<span class="self">self</span>)
     }
 
@@ -1840,8 +1842,8 @@
 <span class="kw">impl </span>AsyncRead <span class="kw">for </span>UnixStream {
     <span class="kw">fn </span>poll_read(
         <span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
-        buf: <span class="kw-2">&amp;mut </span>ReadBuf&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;,
+        buf: <span class="kw-2">&amp;mut </span>ReadBuf&lt;<span class="lifetime">'_</span>&gt;,
     ) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
         <span class="self">self</span>.poll_read_priv(cx, buf)
     }
@@ -1850,7 +1852,7 @@
 <span class="kw">impl </span>AsyncWrite <span class="kw">for </span>UnixStream {
     <span class="kw">fn </span>poll_write(
         <span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;,
         buf: <span class="kw-2">&amp;</span>[u8],
     ) -&gt; Poll&lt;io::Result&lt;usize&gt;&gt; {
         <span class="self">self</span>.poll_write_priv(cx, buf)
@@ -1858,8 +1860,8 @@
 
     <span class="kw">fn </span>poll_write_vectored(
         <span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;,
-        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
-        bufs: <span class="kw-2">&amp;</span>[io::IoSlice&lt;<span class="lifetime">&#39;_</span>&gt;],
+        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;,
+        bufs: <span class="kw-2">&amp;</span>[io::IoSlice&lt;<span class="lifetime">'_</span>&gt;],
     ) -&gt; Poll&lt;io::Result&lt;usize&gt;&gt; {
         <span class="self">self</span>.poll_write_vectored_priv(cx, bufs)
     }
@@ -1868,11 +1870,11 @@
         <span class="bool-val">true
     </span>}
 
-    <span class="kw">fn </span>poll_flush(<span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
+    <span class="kw">fn </span>poll_flush(<span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
         Poll::Ready(<span class="prelude-val">Ok</span>(()))
     }
 
-    <span class="kw">fn </span>poll_shutdown(<span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
+    <span class="kw">fn </span>poll_shutdown(<span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
         <span class="self">self</span>.shutdown_std(std::net::Shutdown::Write)<span class="question-mark">?</span>;
         Poll::Ready(<span class="prelude-val">Ok</span>(()))
     }
@@ -1887,8 +1889,8 @@
 
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>poll_read_priv(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
-        buf: <span class="kw-2">&amp;mut </span>ReadBuf&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;,
+        buf: <span class="kw-2">&amp;mut </span>ReadBuf&lt;<span class="lifetime">'_</span>&gt;,
     ) -&gt; Poll&lt;io::Result&lt;()&gt;&gt; {
         <span class="comment">// Safety: `UnixStream::read` correctly handles reads into uninitialized memory
         </span><span class="kw">unsafe </span>{ <span class="self">self</span>.io.poll_read(cx, buf) }
@@ -1896,7 +1898,7 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>poll_write_priv(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;,
         buf: <span class="kw-2">&amp;</span>[u8],
     ) -&gt; Poll&lt;io::Result&lt;usize&gt;&gt; {
         <span class="self">self</span>.io.poll_write(cx, buf)
@@ -1904,15 +1906,15 @@
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>poll_write_vectored_priv(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
-        bufs: <span class="kw-2">&amp;</span>[io::IoSlice&lt;<span class="lifetime">&#39;_</span>&gt;],
+        cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;,
+        bufs: <span class="kw-2">&amp;</span>[io::IoSlice&lt;<span class="lifetime">'_</span>&gt;],
     ) -&gt; Poll&lt;io::Result&lt;usize&gt;&gt; {
         <span class="self">self</span>.io.poll_write_vectored(cx, bufs)
     }
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>UnixStream {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="self">self</span>.io.fmt(f)
     }
 }

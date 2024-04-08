@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/proc-macro-hack-0.5.19/src/parse.rs`."><title>parse.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="proc_macro_hack" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/proc-macro-hack-0.5.19/src/parse.rs`."><title>parse.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="proc_macro_hack" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../proc_macro_hack/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -261,24 +263,24 @@
     <span class="kw">let </span>attrs = parse_attributes(tokens)<span class="question-mark">?</span>;
     <span class="kw">let </span>vis = parse_visibility(tokens)<span class="question-mark">?</span>;
     <span class="kw">let </span>kw = parse_ident(tokens)<span class="question-mark">?</span>;
-    <span class="kw">if </span>kw.to_string() == <span class="string">&quot;use&quot; </span>{
+    <span class="kw">if </span>kw.to_string() == <span class="string">"use" </span>{
         parse_export(attrs, vis, tokens).map(Input::Export)
-    } <span class="kw">else if </span>kw.to_string() == <span class="string">&quot;fn&quot; </span>{
+    } <span class="kw">else if </span>kw.to_string() == <span class="string">"fn" </span>{
         parse_define(attrs, vis, kw.span(), tokens).map(Input::Define)
     } <span class="kw">else </span>{
         <span class="prelude-val">Err</span>(Error::new(
             kw.span(),
-            <span class="string">&quot;unexpected input to #[proc_macro_hack]&quot;</span>,
+            <span class="string">"unexpected input to #[proc_macro_hack]"</span>,
         ))
     }
 }
 
 <span class="kw">fn </span>parse_export(attrs: TokenStream, vis: Visibility, tokens: Iter) -&gt; <span class="prelude-ty">Result</span>&lt;Export, Error&gt; {
-    <span class="kw">let _ </span>= parse_punct(tokens, <span class="string">&#39;:&#39;</span>);
-    <span class="kw">let _ </span>= parse_punct(tokens, <span class="string">&#39;:&#39;</span>);
+    <span class="kw">let _ </span>= parse_punct(tokens, <span class="string">':'</span>);
+    <span class="kw">let _ </span>= parse_punct(tokens, <span class="string">':'</span>);
     <span class="kw">let </span>from = parse_ident(tokens)<span class="question-mark">?</span>;
-    parse_punct(tokens, <span class="string">&#39;:&#39;</span>)<span class="question-mark">?</span>;
-    parse_punct(tokens, <span class="string">&#39;:&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(tokens, <span class="string">':'</span>)<span class="question-mark">?</span>;
+    parse_punct(tokens, <span class="string">':'</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">mut </span>macros = Vec::new();
     <span class="kw">match </span>tokens.peek() {
@@ -289,7 +291,7 @@
                 <span class="kw">if </span>content.peek().is_none() {
                     <span class="kw">break</span>;
                 }
-                parse_punct(content, <span class="string">&#39;,&#39;</span>)<span class="question-mark">?</span>;
+                parse_punct(content, <span class="string">','</span>)<span class="question-mark">?</span>;
                 <span class="kw">if </span>content.peek().is_none() {
                     <span class="kw">break</span>;
                 }
@@ -299,7 +301,7 @@
         <span class="kw">_ </span>=&gt; macros.push(parse_macro(tokens)<span class="question-mark">?</span>),
     }
 
-    parse_punct(tokens, <span class="string">&#39;;&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(tokens, <span class="string">';'</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(Export {
         attrs,
         vis,
@@ -316,7 +318,7 @@
         }
         tt =&gt; <span class="prelude-val">Err</span>(Error::new(
             tt.map_or_else(Span::call_site, TokenTree::span),
-            <span class="macro">format!</span>(<span class="string">&quot;expected `{}`&quot;</span>, ch),
+            <span class="macro">format!</span>(<span class="string">"expected `{}`"</span>, ch),
         )),
     }
 }
@@ -330,7 +332,7 @@
     <span class="kw">if </span>vis.is_none() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(
             fn_token,
-            <span class="string">&quot;functions tagged with `#[proc_macro_hack]` must be `pub`&quot;</span>,
+            <span class="string">"functions tagged with `#[proc_macro_hack]` must be `pub`"</span>,
         ));
     }
     <span class="kw">let </span>name = parse_ident(tokens)<span class="question-mark">?</span>;
@@ -341,7 +343,7 @@
 <span class="kw">fn </span>parse_macro(tokens: Iter) -&gt; <span class="prelude-ty">Result</span>&lt;Macro, Error&gt; {
     <span class="kw">let </span>name = parse_ident(tokens)<span class="question-mark">?</span>;
     <span class="kw">let </span>export_as = <span class="kw">match </span>tokens.peek() {
-        <span class="prelude-val">Some</span>(TokenTree::Ident(ident)) <span class="kw">if </span>ident.to_string() == <span class="string">&quot;as&quot; </span>=&gt; {
+        <span class="prelude-val">Some</span>(TokenTree::Ident(ident)) <span class="kw">if </span>ident.to_string() == <span class="string">"as" </span>=&gt; {
             tokens.next().unwrap();
             parse_ident(tokens)<span class="question-mark">?
         </span>}
@@ -355,17 +357,17 @@
         <span class="prelude-val">Some</span>(TokenTree::Ident(ident)) =&gt; <span class="prelude-val">Ok</span>(ident),
         tt =&gt; <span class="prelude-val">Err</span>(Error::new(
             tt.as_ref().map_or_else(Span::call_site, TokenTree::span),
-            <span class="string">&quot;expected identifier&quot;</span>,
+            <span class="string">"expected identifier"</span>,
         )),
     }
 }
 
-<span class="kw">fn </span>parse_keyword(tokens: Iter, kw: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+<span class="kw">fn </span>parse_keyword(tokens: Iter, kw: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
     <span class="kw">match </span><span class="kw-2">&amp;</span>tokens.next() {
         <span class="prelude-val">Some</span>(TokenTree::Ident(ident)) <span class="kw">if </span>ident.to_string() == kw =&gt; <span class="prelude-val">Ok</span>(()),
         tt =&gt; <span class="prelude-val">Err</span>(Error::new(
             tt.as_ref().map_or_else(Span::call_site, TokenTree::span),
-            <span class="macro">format!</span>(<span class="string">&quot;expected `{}`&quot;</span>, kw),
+            <span class="macro">format!</span>(<span class="string">"expected `{}`"</span>, kw),
         )),
     }
 }
@@ -385,14 +387,14 @@
         }
         tt =&gt; <span class="prelude-val">Err</span>(Error::new(
             tt.as_ref().map_or_else(Span::call_site, TokenTree::span),
-            <span class="string">&quot;expected delimiter&quot;</span>,
+            <span class="string">"expected delimiter"</span>,
         )),
     }
 }
 
 <span class="kw">fn </span>parse_visibility(tokens: Iter) -&gt; <span class="prelude-ty">Result</span>&lt;Visibility, Error&gt; {
     <span class="kw">if let </span><span class="prelude-val">Some</span>(TokenTree::Ident(ident)) = tokens.peek() {
-        <span class="kw">if </span>ident.to_string() == <span class="string">&quot;pub&quot; </span>{
+        <span class="kw">if </span>ident.to_string() == <span class="string">"pub" </span>{
             <span class="kw">match </span>tokens.next().unwrap() {
                 TokenTree::Ident(vis) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(vis)),
                 <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
@@ -405,7 +407,7 @@
 <span class="kw">fn </span>parse_attributes(tokens: Iter) -&gt; <span class="prelude-ty">Result</span>&lt;TokenStream, Error&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>attrs = TokenStream::new();
     <span class="kw">while let </span><span class="prelude-val">Some</span>(TokenTree::Punct(punct)) = tokens.peek() {
-        <span class="kw">if </span>punct.as_char() != <span class="string">&#39;#&#39; </span>{
+        <span class="kw">if </span>punct.as_char() != <span class="string">'#' </span>{
             <span class="kw">break</span>;
         }
         <span class="kw">let </span>span = punct.span();
@@ -414,7 +416,7 @@
             <span class="prelude-val">Some</span>(TokenTree::Group(group)) <span class="kw">if </span>group.delimiter() == Bracket =&gt; {
                 attrs.extend(tokens.next());
             }
-            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(span, <span class="string">&quot;unexpected input&quot;</span>)),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(span, <span class="string">"unexpected input"</span>)),
         }
     }
     <span class="prelude-val">Ok</span>(attrs)
@@ -430,33 +432,33 @@
 
     <span class="kw">while let </span><span class="prelude-val">Some</span>(tt) = tokens.next() {
         <span class="kw">match </span><span class="kw-2">&amp;</span>tt {
-            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">&quot;support_nested&quot; </span>=&gt; {
+            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">"support_nested" </span>=&gt; {
                 args.support_nested = <span class="bool-val">true</span>;
             }
-            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">&quot;internal_macro_calls&quot; </span>=&gt; {
-                parse_punct(tokens, <span class="string">&#39;=&#39;</span>)<span class="question-mark">?</span>;
+            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">"internal_macro_calls" </span>=&gt; {
+                parse_punct(tokens, <span class="string">'='</span>)<span class="question-mark">?</span>;
                 <span class="kw">let </span>calls = parse_int(tokens).map_err(|span| {
-                    Error::new(span, <span class="string">&quot;expected integer value for internal_macro_calls&quot;</span>)
+                    Error::new(span, <span class="string">"expected integer value for internal_macro_calls"</span>)
                 })<span class="question-mark">?</span>;
                 args.internal_macro_calls = calls;
             }
-            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">&quot;fake_call_site&quot; </span>=&gt; {
+            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">"fake_call_site" </span>=&gt; {
                 args.fake_call_site = <span class="bool-val">true</span>;
             }
-            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">&quot;only_hack_old_rustc&quot; </span>=&gt; {
+            TokenTree::Ident(ident) <span class="kw">if </span>ident.to_string() == <span class="string">"only_hack_old_rustc" </span>=&gt; {
                 args.only_hack_old_rustc = <span class="bool-val">true</span>;
             }
             <span class="kw">_ </span>=&gt; {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(
                     tt.span(),
-                    <span class="string">&quot;expected one of: `support_nested`, `internal_macro_calls`, `fake_call_site`, `only_hack_old_rustc`&quot;</span>,
+                    <span class="string">"expected one of: `support_nested`, `internal_macro_calls`, `fake_call_site`, `only_hack_old_rustc`"</span>,
                 ));
             }
         }
         <span class="kw">if </span>tokens.peek().is_none() {
             <span class="kw">break</span>;
         }
-        parse_punct(tokens, <span class="string">&#39;,&#39;</span>)<span class="question-mark">?</span>;
+        parse_punct(tokens, <span class="string">','</span>)<span class="question-mark">?</span>;
     }
 
     <span class="prelude-val">Ok</span>(args)
@@ -467,39 +469,39 @@
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
         <span class="prelude-val">Some</span>(token) =&gt; <span class="prelude-val">Err</span>(Error::new(
             token.span(),
-            <span class="string">&quot;unexpected argument to proc_macro_hack macro implementation; args are only accepted on the macro declaration (the `pub use`)&quot;</span>,
+            <span class="string">"unexpected argument to proc_macro_hack macro implementation; args are only accepted on the macro declaration (the `pub use`)"</span>,
         )),
     }
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_enum_hack(tokens: Iter) -&gt; <span class="prelude-ty">Result</span>&lt;TokenStream, Error&gt; {
-    parse_keyword(tokens, <span class="string">&quot;enum&quot;</span>)<span class="question-mark">?</span>;
+    parse_keyword(tokens, <span class="string">"enum"</span>)<span class="question-mark">?</span>;
     parse_ident(tokens)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">ref mut </span>braces = parse_group(tokens, Brace)<span class="question-mark">?</span>;
     parse_ident(braces)<span class="question-mark">?</span>;
-    parse_punct(braces, <span class="string">&#39;=&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(braces, <span class="string">'='</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">ref mut </span>parens = parse_group(braces, Parenthesis)<span class="question-mark">?</span>;
     parse_ident(parens)<span class="question-mark">?</span>;
-    parse_punct(parens, <span class="string">&#39;!&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(parens, <span class="string">'!'</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">ref mut </span>inner = parse_group(parens, Brace)<span class="question-mark">?</span>;
     <span class="kw">let </span>token_stream = inner.collect();
 
-    parse_punct(parens, <span class="string">&#39;,&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(parens, <span class="string">','</span>)<span class="question-mark">?</span>;
     <span class="kw">let _ </span>= parens.next();
-    parse_punct(braces, <span class="string">&#39;.&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(braces, <span class="string">'.'</span>)<span class="question-mark">?</span>;
     <span class="kw">let _ </span>= braces.next();
-    parse_punct(braces, <span class="string">&#39;,&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(braces, <span class="string">','</span>)<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(token_stream)
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_fake_call_site(tokens: Iter) -&gt; <span class="prelude-ty">Result</span>&lt;FakeCallSite, Error&gt; {
-    parse_punct(tokens, <span class="string">&#39;#&#39;</span>)<span class="question-mark">?</span>;
+    parse_punct(tokens, <span class="string">'#'</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">ref mut </span>attr = parse_group(tokens, Bracket)<span class="question-mark">?</span>;
-    parse_keyword(attr, <span class="string">&quot;derive&quot;</span>)<span class="question-mark">?</span>;
+    parse_keyword(attr, <span class="string">"derive"</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">ref mut </span>path = parse_group(attr, Parenthesis)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(FakeCallSite {
         derive: parse_ident(path)<span class="question-mark">?</span>,

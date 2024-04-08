@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/urlparse-0.7.3/src/url.rs`."><title>url.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="urlparse" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/urlparse-0.7.3/src/url.rs`."><title>url.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="urlparse" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../urlparse/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -238,10 +240,10 @@
 </span><span class="kw">use </span>query_string::{Query, parse_qs};
 
 
-<span class="kw">const </span>SCHEMA_CHARS : <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+<span class="kw">const </span>SCHEMA_CHARS : <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                                      abcdefghijklmnopqrstuvwxyz\
                                      0123456789\
-                                     +-.&quot;</span>;
+                                     +-."</span>;
 
 
 <span class="attr">#[derive(PartialEq, Eq, Clone, Debug, Hash, PartialOrd, Ord)]
@@ -280,9 +282,9 @@
     ///
     </span><span class="kw">pub fn </span>new() -&gt; Url {
         Url {
-            scheme: <span class="string">&quot;&quot;</span>.to_string(),
-            netloc: <span class="string">&quot;&quot;</span>.to_string(),
-            path: <span class="string">&quot;&quot;</span>.to_string(),
+            scheme: <span class="string">""</span>.to_string(),
+            netloc: <span class="string">""</span>.to_string(),
+            path: <span class="string">""</span>.to_string(),
             query: <span class="prelude-val">None</span>,
             fragment: <span class="prelude-val">None</span>,
             username: <span class="prelude-val">None</span>,
@@ -299,27 +301,27 @@
     /// ```
     /// use urlparse::Url;
     ///
-    /// let url = Url::parse(&quot;http://Example.com:8080/foo?filter=%28%21%28cn%3Dbar%29%29&quot;);
-    /// assert_eq!(url.scheme, &quot;http&quot;);
-    /// assert_eq!(url.netloc, &quot;Example.com:8080&quot;);
-    /// assert_eq!(url.path, &quot;/foo&quot;);
-    /// assert_eq!(url.query, Some(&quot;filter=%28%21%28cn%3Dbar%29%29&quot;.to_string()));
+    /// let url = Url::parse("http://Example.com:8080/foo?filter=%28%21%28cn%3Dbar%29%29");
+    /// assert_eq!(url.scheme, "http");
+    /// assert_eq!(url.netloc, "Example.com:8080");
+    /// assert_eq!(url.path, "/foo");
+    /// assert_eq!(url.query, Some("filter=%28%21%28cn%3Dbar%29%29".to_string()));
     /// assert_eq!(url.fragment, None);
     /// assert_eq!(url.username, None);
     /// assert_eq!(url.password, None);
-    /// assert_eq!(url.hostname, Some(&quot;example.com&quot;.to_string()));
+    /// assert_eq!(url.hostname, Some("example.com".to_string()));
     /// assert_eq!(url.port, Some(8080));
     ///
     /// let query = match url.get_parsed_query() {
     ///     Some(q) =&gt; q,
-    ///     None    =&gt; panic!(&quot;Failed to parse my query&quot;),
+    ///     None    =&gt; panic!("Failed to parse my query"),
     /// };
-    /// assert_eq!(query.get(&amp;&quot;filter&quot;.to_string()).unwrap().get(0).unwrap(), &quot;(!(cn=bar))&quot;);
+    /// assert_eq!(query.get(&amp;"filter".to_string()).unwrap().get(0).unwrap(), "(!(cn=bar))");
     /// ```
     ///
     </span><span class="kw">pub fn </span>parse&lt;S: AsRef&lt;str&gt;&gt;(s: S) -&gt; Url {
         <span class="kw">let </span>s = s.as_ref();
-        <span class="kw">let </span>(scheme, extra) = <span class="kw">match </span>s.find(<span class="string">&#39;:&#39;</span>) {
+        <span class="kw">let </span>(scheme, extra) = <span class="kw">match </span>s.find(<span class="string">':'</span>) {
             <span class="prelude-val">Some</span>(pos) =&gt; {
                 <span class="kw">let </span>(a, b) = s.split_at(pos);
                 <span class="kw">let </span><span class="kw-2">mut </span>is_scheme = <span class="bool-val">true</span>;
@@ -329,22 +331,22 @@
                         <span class="kw">break</span>;
                     }
                 }
-                <span class="kw">let </span>(_a, _b) = <span class="kw">if </span>is_scheme { (a, <span class="kw-2">&amp;</span>b[<span class="number">1</span>..]) } <span class="kw">else </span>{ (<span class="string">&quot;&quot;</span>, s) };
+                <span class="kw">let </span>(_a, _b) = <span class="kw">if </span>is_scheme { (a, <span class="kw-2">&amp;</span>b[<span class="number">1</span>..]) } <span class="kw">else </span>{ (<span class="string">""</span>, s) };
                 <span class="kw">match </span>_b.parse::&lt;u16&gt;() {
-                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>)   =&gt; (<span class="string">&quot;&quot;</span>, s),  <span class="comment">// It is not a scheme because &#39;:&#39;
+                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>)   =&gt; (<span class="string">""</span>, s),  <span class="comment">// It is not a scheme because ':'
                                          // after the scheme is port number.
                     </span><span class="prelude-val">Err</span>(<span class="kw">_</span>)  =&gt; (_a, _b),
                 }
             },
-            <span class="prelude-val">None      </span>=&gt; (<span class="string">&quot;&quot;</span>, s),
+            <span class="prelude-val">None      </span>=&gt; (<span class="string">""</span>, s),
         };
-        <span class="kw">let </span>(netloc, extra) = <span class="kw">match </span>extra.starts_with(<span class="string">&quot;//&quot;</span>) {
+        <span class="kw">let </span>(netloc, extra) = <span class="kw">match </span>extra.starts_with(<span class="string">"//"</span>) {
             <span class="bool-val">true  </span>=&gt; {
                 <span class="kw">let </span>_extra = <span class="kw-2">&amp;</span>extra[<span class="number">2</span>..];
                 <span class="kw">let </span><span class="kw-2">mut </span>a = _extra;
-                <span class="kw">let </span><span class="kw-2">mut </span>b = <span class="string">&quot;&quot;</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>b = <span class="string">""</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>delim = !<span class="number">0 </span><span class="kw">as </span>usize;
-                <span class="kw">for </span>c <span class="kw">in </span><span class="string">&quot;/?#&quot;</span>.chars() {
+                <span class="kw">for </span>c <span class="kw">in </span><span class="string">"/?#"</span>.chars() {
                     <span class="kw">match </span>_extra.find(c) {
                         <span class="prelude-val">Some</span>(pos) =&gt; {
                             <span class="kw">if </span>delim &gt;= pos {
@@ -359,37 +361,37 @@
                 }
                 (a, b)
             },
-            <span class="bool-val">false </span>=&gt; (<span class="string">&quot;&quot;</span>, extra),
+            <span class="bool-val">false </span>=&gt; (<span class="string">""</span>, extra),
         };
-        <span class="kw">let </span>(extra, fragment) = <span class="kw">match </span>extra.rfind(<span class="string">&#39;#&#39;</span>) {
+        <span class="kw">let </span>(extra, fragment) = <span class="kw">match </span>extra.rfind(<span class="string">'#'</span>) {
             <span class="prelude-val">Some</span>(pos) =&gt; {
                 <span class="kw">let </span>(a, b) = extra.split_at(pos);
                 (a, <span class="kw-2">&amp;</span>b[<span class="number">1</span>..])
             },
-            <span class="prelude-val">None      </span>=&gt; (extra, <span class="string">&quot;&quot;</span>),
+            <span class="prelude-val">None      </span>=&gt; (extra, <span class="string">""</span>),
         };
-        <span class="kw">let </span>(path, query) = <span class="kw">match </span>extra.find(<span class="string">&#39;?&#39;</span>) {
+        <span class="kw">let </span>(path, query) = <span class="kw">match </span>extra.find(<span class="string">'?'</span>) {
             <span class="prelude-val">Some</span>(pos) =&gt; {
                 <span class="kw">let </span>(a, b) = extra.split_at(pos);
                 (a, <span class="kw-2">&amp;</span>b[<span class="number">1</span>..])
             },
-            <span class="prelude-val">None      </span>=&gt; (extra, <span class="string">&quot;&quot;</span>),
+            <span class="prelude-val">None      </span>=&gt; (extra, <span class="string">""</span>),
         };
-        <span class="kw">let </span>(userinfo, hostinfo) = <span class="kw">match </span>netloc.find(<span class="string">&#39;@&#39;</span>) {
+        <span class="kw">let </span>(userinfo, hostinfo) = <span class="kw">match </span>netloc.find(<span class="string">'@'</span>) {
             <span class="prelude-val">Some</span>(pos) =&gt; {
                 <span class="kw">let </span>(a, b) = netloc.split_at(pos);
                 (a, <span class="kw-2">&amp;</span>b[<span class="number">1</span>..])
             },
-            <span class="prelude-val">None      </span>=&gt; (<span class="string">&quot;&quot;</span>, netloc),
+            <span class="prelude-val">None      </span>=&gt; (<span class="string">""</span>, netloc),
         };
-        <span class="kw">let </span>(username, password) = <span class="kw">match </span>userinfo.find(<span class="string">&#39;:&#39;</span>) {
+        <span class="kw">let </span>(username, password) = <span class="kw">match </span>userinfo.find(<span class="string">':'</span>) {
                 <span class="prelude-val">Some</span>(pos) =&gt; {
                     <span class="kw">let </span>(a, b) = userinfo.split_at(pos);
                     (a, <span class="kw-2">&amp;</span>b[<span class="number">1</span>..])
                 },
-                <span class="prelude-val">None       </span>=&gt; (userinfo, <span class="string">&quot;&quot;</span>),
+                <span class="prelude-val">None       </span>=&gt; (userinfo, <span class="string">""</span>),
         };
-        <span class="kw">let </span>(hostname, port) = <span class="kw">match </span>hostinfo.rfind(|c| c == <span class="string">&#39;:&#39; </span>|| c == <span class="string">&#39;]&#39;</span>) {
+        <span class="kw">let </span>(hostname, port) = <span class="kw">match </span>hostinfo.rfind(|c| c == <span class="string">':' </span>|| c == <span class="string">']'</span>) {
                 <span class="prelude-val">Some</span>(pos) =&gt; {
                     <span class="kw">let </span>(a, b) = hostinfo.split_at(pos);
                     <span class="kw">let </span>_b = <span class="kw-2">&amp;</span>b[<span class="number">1</span>..];
@@ -400,7 +402,7 @@
                 },
                 <span class="prelude-val">None       </span>=&gt; (hostinfo, <span class="number">0</span>),
         };
-        <span class="kw">let </span>hostname = hostname.trim_matches(|c| c == <span class="string">&#39;[&#39; </span>|| c == <span class="string">&#39;]&#39;</span>);
+        <span class="kw">let </span>hostname = hostname.trim_matches(|c| c == <span class="string">'[' </span>|| c == <span class="string">']'</span>);
         Url {
             scheme: scheme.to_string().to_lowercase(),
             netloc: netloc.to_string(),
@@ -421,18 +423,18 @@
     /// ```
     /// use urlparse::urlparse;
     ///
-    /// let original_str = &quot;http://www.example.com/?a=123&amp;b=A%20B&quot;;
+    /// let original_str = "http://www.example.com/?a=123&amp;b=A%20B";
     /// let url = urlparse(original_str);
     /// assert_eq!(original_str, url.unparse());
     /// ```
     ///
     </span><span class="kw">pub fn </span>unparse(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
-        <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">format!</span>(<span class="string">&quot;{}://{}{}&quot;</span>, <span class="self">self</span>.scheme, <span class="self">self</span>.netloc, <span class="self">self</span>.path);
+        <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="macro">format!</span>(<span class="string">"{}://{}{}"</span>, <span class="self">self</span>.scheme, <span class="self">self</span>.netloc, <span class="self">self</span>.path);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>q) = <span class="self">self</span>.query {
-            result.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;?{}&quot;</span>, q));
+            result.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"?{}"</span>, q));
         }
         <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>f) = <span class="self">self</span>.fragment {
-            result.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;#{}&quot;</span>, f));
+            result.push_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"#{}"</span>, f));
         }
         <span class="kw">return </span>result;
     }
@@ -445,9 +447,9 @@
     /// ```
     /// use urlparse::urlparse;
     ///
-    /// let url = urlparse(&quot;http://www.example.com/?a=123&amp;b=A%20B&quot;);
+    /// let url = urlparse("http://www.example.com/?a=123&amp;b=A%20B");
     /// let query = url.get_parsed_query().unwrap();
-    /// assert_eq!(query.get(&amp;&quot;b&quot;.to_string()).unwrap().get(0).unwrap(), &quot;A B&quot;);
+    /// assert_eq!(query.get(&amp;"b".to_string()).unwrap().get(0).unwrap(), "A B");
     /// ```
     ///
     </span><span class="kw">pub fn </span>get_parsed_query(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Query&gt; {

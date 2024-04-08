@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/nanorand-0.7.0/src/entropy.rs`."><title>entropy.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="nanorand" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/nanorand-0.7.0/src/entropy.rs`."><title>entropy.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="nanorand" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../nanorand/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -127,38 +129,38 @@
 <a href="#127" id="127">127</a>
 <a href="#128" id="128">128</a>
 <a href="#129" id="129">129</a>
-</pre></div><pre class="rust"><code><span class="attr">#[cfg(all(target_vendor = <span class="string">&quot;apple&quot;</span>, not(feature = <span class="string">&quot;getrandom&quot;</span>)))]
+</pre></div><pre class="rust"><code><span class="attr">#[cfg(all(target_vendor = <span class="string">"apple"</span>, not(feature = <span class="string">"getrandom"</span>)))]
 </span><span class="kw">pub use </span>darwin::entropy <span class="kw">as </span>system;
 <span class="attr">#[cfg(all(
-	any(target_os = <span class="string">&quot;linux&quot;</span>, target_os = <span class="string">&quot;android&quot;</span>),
-	not(feature = <span class="string">&quot;getrandom&quot;</span>)
+	any(target_os = <span class="string">"linux"</span>, target_os = <span class="string">"android"</span>),
+	not(feature = <span class="string">"getrandom"</span>)
 ))]
 </span><span class="kw">pub use </span>linux::entropy <span class="kw">as </span>system;
-<span class="attr">#[cfg(all(windows, not(target_vendor = <span class="string">&quot;uwp&quot;</span>), not(feature = <span class="string">&quot;getrandom&quot;</span>)))]
+<span class="attr">#[cfg(all(windows, not(target_vendor = <span class="string">"uwp"</span>), not(feature = <span class="string">"getrandom"</span>)))]
 </span><span class="kw">pub use </span>windows::entropy <span class="kw">as </span>system;
-<span class="attr">#[cfg(all(windows, target_vendor = <span class="string">&quot;uwp&quot;</span>, not(feature = <span class="string">&quot;getrandom&quot;</span>)))]
+<span class="attr">#[cfg(all(windows, target_vendor = <span class="string">"uwp"</span>, not(feature = <span class="string">"getrandom"</span>)))]
 </span><span class="kw">pub use </span>windows_uwp::entropy <span class="kw">as </span>system;
 
 <span class="attr">#[cfg(all(
-	any(target_os = <span class="string">&quot;linux&quot;</span>, target_os = <span class="string">&quot;android&quot;</span>),
-	not(feature = <span class="string">&quot;getrandom&quot;</span>)
+	any(target_os = <span class="string">"linux"</span>, target_os = <span class="string">"android"</span>),
+	not(feature = <span class="string">"getrandom"</span>)
 ))]
-</span><span class="doccomment">/// An entropy generator for Linux, using libc&#39;s `getrandom` function.
+</span><span class="doccomment">/// An entropy generator for Linux, using libc's `getrandom` function.
 </span><span class="kw">pub mod </span>linux;
 
-<span class="attr">#[cfg(all(target_vendor = <span class="string">&quot;apple&quot;</span>, not(feature = <span class="string">&quot;getrandom&quot;</span>)))]
-</span><span class="doccomment">/// An entropy generator for macOS/iOS, using libc&#39;s `getrandom` function.
+<span class="attr">#[cfg(all(target_vendor = <span class="string">"apple"</span>, not(feature = <span class="string">"getrandom"</span>)))]
+</span><span class="doccomment">/// An entropy generator for macOS/iOS, using libc's `getrandom` function.
 </span><span class="kw">pub mod </span>darwin;
 
-<span class="attr">#[cfg(all(windows, target_vendor = <span class="string">&quot;uwp&quot;</span>, not(feature = <span class="string">&quot;getrandom&quot;</span>)))]
-</span><span class="doccomment">/// An entropy generator for Windows, using WinAPI&#39;s `BCryptGenRandom` function.
+<span class="attr">#[cfg(all(windows, target_vendor = <span class="string">"uwp"</span>, not(feature = <span class="string">"getrandom"</span>)))]
+</span><span class="doccomment">/// An entropy generator for Windows, using WinAPI's `BCryptGenRandom` function.
 </span><span class="kw">pub mod </span>windows_uwp;
 
-<span class="attr">#[cfg(all(windows, not(target_vendor = <span class="string">&quot;uwp&quot;</span>), not(feature = <span class="string">&quot;getrandom&quot;</span>)))]
-</span><span class="doccomment">/// An entropy generator for Windows, using WinAPI&#39;s `RtlGenRandom` function.
+<span class="attr">#[cfg(all(windows, not(target_vendor = <span class="string">"uwp"</span>), not(feature = <span class="string">"getrandom"</span>)))]
+</span><span class="doccomment">/// An entropy generator for Windows, using WinAPI's `RtlGenRandom` function.
 </span><span class="kw">pub mod </span>windows;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;getrandom&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"getrandom"</span>)]
 </span><span class="doccomment">/// Pull in system entropy using the [`getrandom`](https://crates.io/crates/getrandom) crate.
 /// Uses backup entropy (rdseed and system time) if it fails.
 </span><span class="kw">pub fn </span>system(out: <span class="kw-2">&amp;mut </span>[u8]) {
@@ -170,22 +172,22 @@
 
 <span class="doccomment">/// Pull in backup entropy (rdseed and system time).
 </span><span class="attr">#[cfg(not(any(
-	feature = <span class="string">&quot;getrandom&quot;</span>,
-	target_os = <span class="string">&quot;linux&quot;</span>,
-	target_os = <span class="string">&quot;android&quot;</span>,
-	target_vendor = <span class="string">&quot;apple&quot;</span>,
+	feature = <span class="string">"getrandom"</span>,
+	target_os = <span class="string">"linux"</span>,
+	target_os = <span class="string">"android"</span>,
+	target_vendor = <span class="string">"apple"</span>,
 	windows
 )))]
 </span><span class="kw">pub fn </span>system(out: <span class="kw-2">&amp;mut </span>[u8]) {
 	backup_entropy(out);
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;rdseed&quot;</span>)]
-#[cfg(any(target_arch = <span class="string">&quot;x86&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>))]
+<span class="attr">#[cfg(feature = <span class="string">"rdseed"</span>)]
+#[cfg(any(target_arch = <span class="string">"x86"</span>, target_arch = <span class="string">"x86_64"</span>))]
 </span><span class="kw">fn </span>stupid_rdseed_hack() -&gt; <span class="prelude-ty">Option</span>&lt;u64&gt; {
-	<span class="attr">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+	<span class="attr">#[cfg(target_arch = <span class="string">"x86"</span>)]
 	</span><span class="kw">use </span>core::arch::x86::_rdseed64_step <span class="kw">as </span>rdseed;
-	<span class="attr">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+	<span class="attr">#[cfg(target_arch = <span class="string">"x86_64"</span>)]
 	</span><span class="kw">use </span>core::arch::x86_64::_rdseed64_step <span class="kw">as </span>rdseed;
 	<span class="kw">let </span><span class="kw-2">mut </span>x = <span class="number">0</span>;
 	<span class="kw">for _ in </span><span class="number">0</span>..<span class="number">10 </span>{
@@ -196,14 +198,14 @@
 	<span class="prelude-val">None
 </span>}
 
-<span class="attr">#[cfg(all(feature = <span class="string">&quot;rdseed&quot;</span>, any(target_arch = <span class="string">&quot;x86&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>)))]
+<span class="attr">#[cfg(all(feature = <span class="string">"rdseed"</span>, any(target_arch = <span class="string">"x86"</span>, target_arch = <span class="string">"x86_64"</span>)))]
 </span><span class="doccomment">/// An rdseed-based entropy source.
 /// Only works on x86/x86_64 platforms where the `rdseed` instructions are available.
 /// Returns [`None`] if `rdseed` is not available.
 /// Returns [`Some`] if it successfully managed to pull some bytes.
 /// ***VERY unreliable.***
 </span><span class="kw">pub fn </span>rdseed(out: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
-	<span class="kw">if </span>!<span class="macro">std::is_x86_feature_detected!</span>(<span class="string">&quot;rdseed&quot;</span>) {
+	<span class="kw">if </span>!<span class="macro">std::is_x86_feature_detected!</span>(<span class="string">"rdseed"</span>) {
 		<span class="kw">return </span><span class="prelude-val">None</span>;
 	}
 	<span class="kw">let </span>amt = out.len();
@@ -226,14 +228,14 @@
 
 <span class="doccomment">/// A wrapper function for non-x86(64) platforms that do not have rdseed.
 </span><span class="attr">#[cfg(any(
-	not(feature = <span class="string">&quot;rdseed&quot;</span>),
-	not(any(target_arch = <span class="string">&quot;x86&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>))
+	not(feature = <span class="string">"rdseed"</span>),
+	not(any(target_arch = <span class="string">"x86"</span>, target_arch = <span class="string">"x86_64"</span>))
 ))]
 </span><span class="kw">pub fn </span>rdseed(_out: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
 	<span class="prelude-val">None
 </span>}
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
 </span><span class="doccomment">/// A backup entropy source, trying rdseed first,
 /// and if it fails or does not complete, combining it with or
 /// using system time-based entropy generation.
@@ -248,12 +250,12 @@
 		}
 	};
 
-	<span class="macro">panic!</span>(<span class="string">&quot;Failed to source sufficient entropy!&quot;</span>)
+	<span class="macro">panic!</span>(<span class="string">"Failed to source sufficient entropy!"</span>)
 }
 
-<span class="attr">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
 </span><span class="doccomment">/// This just panics.
 </span><span class="kw">pub fn </span>backup_entropy(<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>[u8]) {
-	<span class="macro">panic!</span>(<span class="string">&quot;Failed to source any entropy!&quot;</span>)
+	<span class="macro">panic!</span>(<span class="string">"Failed to source any entropy!"</span>)
 }
 </code></pre></div></section></main></body></html>

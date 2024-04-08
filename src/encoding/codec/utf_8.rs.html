@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/encoding-0.2.33/src/codec/utf_8.rs`."><title>utf_8.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="encoding" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/encoding-0.2.33/src/codec/utf_8.rs`."><title>utf_8.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="encoding" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../encoding/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -833,7 +835,7 @@
 // Portions Copyright (c) 2008-2009 Bjoern Hoehrmann &lt;bjoern@hoehrmann.de&gt;
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the &quot;Software&quot;), to deal
+// of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
@@ -842,7 +844,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -864,19 +866,19 @@
  * It has a variable-length design,
  * where one codepoint may use 1 (up to U+007F), 2 (up to U+07FF), 3 (up to U+FFFF)
  * and 4 bytes (up to U+10FFFF) depending on its value.
- * The first byte of the sequence is distinct from other &quot;continuation&quot; bytes of the sequence
+ * The first byte of the sequence is distinct from other "continuation" bytes of the sequence
  * making UTF-8 self-synchronizable and easy to handle.
  * It has a fixed endianness, and can be lexicographically sorted by codepoints.
  *
- * The UTF-8 scanner used by this module is heavily based on Bjoern Hoehrmann&#39;s
+ * The UTF-8 scanner used by this module is heavily based on Bjoern Hoehrmann's
  * [Flexible and Economical UTF-8 Decoder](http://bjoern.hoehrmann.de/utf-8/decoder/dfa/).
  */
 </span><span class="attr">#[derive(Clone, Copy)]
 </span><span class="kw">pub struct </span>UTF8Encoding;
 
 <span class="kw">impl </span>Encoding <span class="kw">for </span>UTF8Encoding {
-    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str { <span class="string">&quot;utf-8&quot; </span>}
-    <span class="kw">fn </span>whatwg_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; { <span class="prelude-val">Some</span>(<span class="string">&quot;utf-8&quot;</span>) }
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str { <span class="string">"utf-8" </span>}
+    <span class="kw">fn </span>whatwg_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; { <span class="prelude-val">Some</span>(<span class="string">"utf-8"</span>) }
     <span class="kw">fn </span>raw_encoder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;RawEncoder&gt; { UTF8Encoder::new() }
     <span class="kw">fn </span>raw_decoder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;RawDecoder&gt; { UTF8Decoder::new() }
 }
@@ -944,16 +946,16 @@
 ];
 
 <span class="kw">static </span>STATE_TRANSITIONS: [u8; <span class="number">110</span>] = [
-     <span class="number">0</span>,<span class="number">98</span>,<span class="number">12</span>,<span class="number">24</span>,<span class="number">48</span>,<span class="number">84</span>,<span class="number">72</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">36</span>,<span class="number">60</span>,       <span class="comment">//  0: &#39;??
-    </span><span class="number">86</span>, <span class="number">0</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>, <span class="number">0</span>,<span class="number">86</span>, <span class="number">0</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 12: .. &#39;cc
-    </span><span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 24: .. &#39;cc cc
-    </span><span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 36: .. &#39;cc(A0-BF) cc
-    </span><span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 48: .. &#39;cc(80-9F) cc
-    </span><span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 60: .. &#39;cc(90-BF) cc cc
-    </span><span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 72: .. &#39;cc cc cc
-    </span><span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>, <span class="comment">// 84: .. &#39;cc(80-8F) cc cc
-       // 86,86,86,86,86,86,86,86,86,86,86,86, // 86: .. xx &#39;..
-          </span><span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>, <span class="comment">// 98: xx &#39;..
+     <span class="number">0</span>,<span class="number">98</span>,<span class="number">12</span>,<span class="number">24</span>,<span class="number">48</span>,<span class="number">84</span>,<span class="number">72</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">36</span>,<span class="number">60</span>,       <span class="comment">//  0: '??
+    </span><span class="number">86</span>, <span class="number">0</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>, <span class="number">0</span>,<span class="number">86</span>, <span class="number">0</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 12: .. 'cc
+    </span><span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 24: .. 'cc cc
+    </span><span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 36: .. 'cc(A0-BF) cc
+    </span><span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">12</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 48: .. 'cc(80-9F) cc
+    </span><span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 60: .. 'cc(90-BF) cc cc
+    </span><span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,       <span class="comment">// 72: .. 'cc cc cc
+    </span><span class="number">86</span>,<span class="number">24</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>,<span class="number">86</span>, <span class="comment">// 84: .. 'cc(80-8F) cc cc
+       // 86,86,86,86,86,86,86,86,86,86,86,86, // 86: .. xx '..
+          </span><span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>,<span class="number">98</span>, <span class="comment">// 98: xx '..
 </span>];
 
 <span class="kw">static </span>INITIAL_STATE: u8 = <span class="number">0</span>;
@@ -1001,7 +1003,7 @@
                 <span class="self">self</span>.queuelen = <span class="number">0</span>;
                 write_bytes(output, <span class="kw-2">&amp;</span>input[<span class="number">0</span>..processed]);
                 <span class="kw">return </span>(processed, <span class="prelude-val">Some</span>(CodecError {
-                    upto: upto <span class="kw">as </span>isize, cause: <span class="string">&quot;invalid sequence&quot;</span>.into()
+                    upto: upto <span class="kw">as </span>isize, cause: <span class="string">"invalid sequence"</span>.into()
                 }));
             }
         }
@@ -1028,7 +1030,7 @@
         <span class="self">self</span>.state = INITIAL_STATE;
         <span class="self">self</span>.queuelen = <span class="number">0</span>;
         <span class="kw">if </span>state != ACCEPT_STATE {
-            <span class="prelude-val">Some</span>(CodecError { upto: <span class="number">0</span>, cause: <span class="string">&quot;incomplete sequence&quot;</span>.into() })
+            <span class="prelude-val">Some</span>(CodecError { upto: <span class="number">0</span>, cause: <span class="string">"incomplete sequence"</span>.into() })
         } <span class="kw">else </span>{
             <span class="macro">assert!</span>(queuelen == <span class="number">0</span>);
             <span class="prelude-val">None
@@ -1037,9 +1039,9 @@
 }
 
 <span class="doccomment">/// Almost equivalent to `std::str::from_utf8`.
-/// This function is provided for the fair benchmark against the stdlib&#39;s UTF-8 conversion
+/// This function is provided for the fair benchmark against the stdlib's UTF-8 conversion
 /// functions, as rust-encoding always allocates a new string.
-</span><span class="kw">pub fn </span>from_utf8&lt;<span class="lifetime">&#39;a</span>&gt;(input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
+</span><span class="kw">pub fn </span>from_utf8&lt;<span class="lifetime">'a</span>&gt;(input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>iter = input.iter();
     <span class="kw">let </span><span class="kw-2">mut </span>state;
 
@@ -1067,7 +1069,7 @@
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-    <span class="comment">// portions of these tests are adopted from Markus Kuhn&#39;s UTF-8 decoder capability and
+    <span class="comment">// portions of these tests are adopted from Markus Kuhn's UTF-8 decoder capability and
     // stress test: &lt;http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt&gt;.
 
     </span><span class="kw">use super</span>::{UTF8Encoding, from_utf8};
@@ -1079,112 +1081,112 @@
     </span><span class="kw">fn </span>test_valid() {
         <span class="comment">// one byte
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x41</span>], [], <span class="string">&quot;A&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x42</span>, <span class="number">0x43</span>], [], <span class="string">&quot;BC&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x44</span>, <span class="number">0x45</span>, <span class="number">0x46</span>], [], <span class="string">&quot;DEF&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x41</span>], [], <span class="string">"A"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x42</span>, <span class="number">0x43</span>], [], <span class="string">"BC"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x44</span>, <span class="number">0x45</span>, <span class="number">0x46</span>], [], <span class="string">"DEF"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="comment">// two bytes
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0xa2</span>], [], <span class="string">&quot;\u{a2}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0xac</span>, <span class="number">0xc2</span>, <span class="number">0xa9</span>], [], <span class="string">&quot;\u{ac}\u{0a9}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0xa2</span>], [], <span class="string">"\u{a2}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0xac</span>, <span class="number">0xc2</span>, <span class="number">0xa9</span>], [], <span class="string">"\u{ac}\u{0a9}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">""</span>);
         <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xd5</span>, <span class="number">0xa1</span>, <span class="number">0xd5</span>, <span class="number">0xb5</span>, <span class="number">0xd5</span>, <span class="number">0xa2</span>, <span class="number">0xd5</span>, <span class="number">0xb8</span>, <span class="number">0xd6</span>, <span class="number">0x82</span>,
                             <span class="number">0xd5</span>, <span class="number">0xa2</span>, <span class="number">0xd5</span>, <span class="number">0xa5</span>, <span class="number">0xd5</span>, <span class="number">0xb6</span>], [],
-                        <span class="string">&quot;\u{561}\u{0575}\u{562}\u{578}\u{582}\u{562}\u{565}\u{576}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+                        <span class="string">"\u{561}\u{0575}\u{562}\u{578}\u{582}\u{562}\u{565}\u{576}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="comment">// three bytes
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xed</span>, <span class="number">0x92</span>, <span class="number">0x89</span>], [], <span class="string">&quot;\u{d489}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xe6</span>, <span class="number">0xbc</span>, <span class="number">0xa2</span>, <span class="number">0xe5</span>, <span class="number">0xad</span>, <span class="number">0x97</span>], [], <span class="string">&quot;\u{6f22}\u{5b57}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc9</span>, <span class="number">0x99</span>, <span class="number">0xc9</span>, <span class="number">0x94</span>, <span class="number">0xc9</span>, <span class="number">0x90</span>], [], <span class="string">&quot;\u{259}\u{0254}\u{250}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xed</span>, <span class="number">0x92</span>, <span class="number">0x89</span>], [], <span class="string">"\u{d489}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xe6</span>, <span class="number">0xbc</span>, <span class="number">0xa2</span>, <span class="number">0xe5</span>, <span class="number">0xad</span>, <span class="number">0x97</span>], [], <span class="string">"\u{6f22}\u{5b57}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc9</span>, <span class="number">0x99</span>, <span class="number">0xc9</span>, <span class="number">0x94</span>, <span class="number">0xc9</span>, <span class="number">0x90</span>], [], <span class="string">"\u{259}\u{0254}\u{250}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="comment">// four bytes
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x82</span>, <span class="number">0x82</span>], [], <span class="string">&quot;\u{10082}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x82</span>, <span class="number">0x82</span>], [], <span class="string">"\u{10082}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
-        <span class="comment">// we don&#39;t test encoders as it is largely a no-op.
+        <span class="comment">// we don't test encoders as it is largely a no-op.
     </span>}
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_valid_boundary() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x00</span>], [], <span class="string">&quot;\x00&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x00</span>], [], <span class="string">"\x00"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x7f</span>], [], <span class="string">&quot;\x7f&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x7f</span>], [], <span class="string">"\x7f"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [], <span class="string">&quot;\u{80}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [], <span class="string">"\u{80}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xdf</span>, <span class="number">0xbf</span>], [], <span class="string">&quot;\u{7ff}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xdf</span>, <span class="number">0xbf</span>], [], <span class="string">"\u{7ff}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xe0</span>, <span class="number">0xa0</span>, <span class="number">0x80</span>], [], <span class="string">&quot;\u{800}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xe0</span>, <span class="number">0xa0</span>, <span class="number">0x80</span>], [], <span class="string">"\u{800}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xed</span>, <span class="number">0x9f</span>, <span class="number">0xbf</span>], [], <span class="string">&quot;\u{d7ff}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xed</span>, <span class="number">0x9f</span>, <span class="number">0xbf</span>], [], <span class="string">"\u{d7ff}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xee</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], [], <span class="string">&quot;\u{e000}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xee</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], [], <span class="string">"\u{e000}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xef</span>, <span class="number">0xbf</span>, <span class="number">0xbf</span>], [], <span class="string">&quot;\u{ffff}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xef</span>, <span class="number">0xbf</span>, <span class="number">0xbf</span>], [], <span class="string">"\u{ffff}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], [], <span class="string">&quot;\u{10000}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], [], <span class="string">"\u{10000}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf4</span>, <span class="number">0x8f</span>, <span class="number">0xbf</span>, <span class="number">0xbf</span>], [], <span class="string">&quot;\u{10ffff}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf4</span>, <span class="number">0x8f</span>, <span class="number">0xbf</span>, <span class="number">0xbf</span>], [], <span class="string">"\u{10ffff}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_valid_partial() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xf0</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0x90</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0x82</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x82</span>], [<span class="number">0xed</span>], <span class="string">&quot;\u{10082}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x92</span>, <span class="number">0x89</span>], [], <span class="string">&quot;\u{d489}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xf0</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0x90</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0x82</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x82</span>], [<span class="number">0xed</span>], <span class="string">"\u{10082}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x92</span>, <span class="number">0x89</span>], [], <span class="string">"\u{d489}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xc2</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa9</span>, <span class="number">0x20</span>], [], <span class="string">&quot;\u{a9}\u{020}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xc2</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa9</span>, <span class="number">0x20</span>], [], <span class="string">"\u{a9}\u{020}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_continuation() {
         <span class="kw">for </span>c <span class="kw">in </span><span class="number">0x80</span>..<span class="number">0xc0 </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [c], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [c], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [c, c], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [c, c], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -1193,40 +1195,40 @@
         <span class="comment">// surrogates should fail at the second byte.
 
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xa0</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xa0</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xad</span>, <span class="number">0xbf</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xad</span>, <span class="number">0xbf</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xae</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xae</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xaf</span>, <span class="number">0xbf</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xaf</span>, <span class="number">0xbf</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xb0</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xb0</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xbe</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xbe</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xbf</span>, <span class="number">0xbf</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xed</span>], [<span class="number">0xbf</span>, <span class="number">0xbf</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_boundary() {
         <span class="comment">// as with surrogates, should fail at the second byte.
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf4</span>], [<span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0x90</span>], <span class="string">&quot;&quot;</span>); <span class="comment">// U+110000
-        </span><span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf4</span>], [<span class="number">0x90</span>, <span class="number">0x90</span>, <span class="number">0x90</span>], <span class="string">""</span>); <span class="comment">// U+110000
+        </span><span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
@@ -1234,8 +1236,8 @@
         <span class="kw">for </span>c <span class="kw">in </span><span class="number">0xf5</span>..<span class="number">0x100 </span>{
             <span class="kw">let </span>c = c <span class="kw">as </span>u8;
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -1245,13 +1247,13 @@
             <span class="kw">let </span>c = c <span class="kw">as </span>u8;
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x20</span>], [], <span class="string">&quot;\x20&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [], <span class="string">""</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x20</span>], [], <span class="string">"\x20"</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -1259,8 +1261,8 @@
     </span><span class="kw">fn </span>test_invalid_lone_start_immediate_test_finish() {
         <span class="kw">for </span>c <span class="kw">in </span><span class="number">0xc2</span>..<span class="number">0xf5 </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_finish_err!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_finish_err!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -1268,13 +1270,13 @@
     </span><span class="kw">fn </span>test_invalid_lone_start_followed_by_space() {
         <span class="kw">for </span>c <span class="kw">in </span><span class="number">0xc2</span>..<span class="number">0xf5 </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -1284,24 +1286,24 @@
             <span class="kw">let </span>c = <span class="kw">if </span>b == <span class="number">0xe0 </span>|| b == <span class="number">0xf0 </span>{<span class="number">0xa0</span>} <span class="kw">else </span>{<span class="number">0x80</span>};
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [b, c], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [b, c], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [b, c], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [b, c], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [b], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [b], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [b], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [b], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -1312,136 +1314,136 @@
             <span class="kw">let </span>c = <span class="number">0x80</span>;
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [a, b, c], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [a, b, c], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [a], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_ok!</span>(d, [], [b], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [a], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_ok!</span>(d, [], [b], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_ok!</span>(d, [], [c], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [a, b], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [a, b], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [c], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [a, b, c], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for cont. bytes
-            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [a, b, c], <span class="string">""</span>); <span class="comment">// wait for cont. bytes
+            </span><span class="macro">assert_feed_err!</span>(d, [], [], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_too_many_cont_bytes() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">&quot;\u{80}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">"\u{80}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0xe0</span>, <span class="number">0xa0</span>, <span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">&quot;\u{800}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0xe0</span>, <span class="number">0xa0</span>, <span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">"\u{800}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">&quot;\u{10000}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">"\u{10000}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="comment">// no continuation byte is consumed after 5/6-byte sequence starters and FE/FF
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf8</span>], [<span class="number">0x88</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf8</span>], [<span class="number">0x88</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfc</span>], [<span class="number">0x84</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfc</span>], [<span class="number">0x84</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfe</span>], [<span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfe</span>], [<span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_too_many_cont_bytes_partial() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xc2</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">&quot;\u{80}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xc2</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">"\u{80}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xe0</span>, <span class="number">0xa0</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">&quot;\u{800}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xe0</span>, <span class="number">0xa0</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">"\u{800}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">&quot;\u{10000}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xf0</span>, <span class="number">0x90</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [<span class="number">0x80</span>], [<span class="number">0x80</span>], [], <span class="string">"\u{10000}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="comment">// no continuation byte is consumed after 5/6-byte sequence starters and FE/FF
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf8</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x88</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf8</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x88</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfc</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x84</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfc</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x84</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfe</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xfe</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_overlong_minimal() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xc0</span>], [<span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xc0</span>], [<span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xe0</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xe0</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf0</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf0</span>], [<span class="number">0x80</span>, <span class="number">0x80</span>, <span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_invalid_overlong_maximal() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xc1</span>], [<span class="number">0xbf</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xc1</span>], [<span class="number">0xbf</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xe0</span>], [<span class="number">0x9f</span>, <span class="number">0xbf</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xe0</span>], [<span class="number">0x9f</span>, <span class="number">0xbf</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf0</span>], [<span class="number">0x8f</span>, <span class="number">0xbf</span>, <span class="number">0xbf</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xf0</span>], [<span class="number">0x8f</span>, <span class="number">0xbf</span>, <span class="number">0xbf</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_feed_after_finish() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = UTF8Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [<span class="number">0xc2</span>], <span class="string">&quot;\u{80}&quot;</span>);
-        <span class="macro">assert_finish_err!</span>(d, <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [], <span class="string">&quot;\u{80}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [<span class="number">0xc2</span>], <span class="string">"\u{80}"</span>);
+        <span class="macro">assert_finish_err!</span>(d, <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc2</span>, <span class="number">0x80</span>], [], <span class="string">"\u{80}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]

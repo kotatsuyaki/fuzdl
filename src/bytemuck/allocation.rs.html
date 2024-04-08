@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bytemuck-1.12.1/src/allocation.rs`."><title>allocation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="bytemuck" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bytemuck-1.12.1/src/allocation.rs`."><title>allocation.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="bytemuck" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../bytemuck/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -410,7 +412,7 @@
 <a href="#410" id="410">410</a>
 <a href="#411" id="411">411</a>
 <a href="#412" id="412">412</a>
-</pre></div><pre class="rust"><code><span class="attr">#![cfg(feature = <span class="string">&quot;extern_crate_alloc&quot;</span>)]
+</pre></div><pre class="rust"><code><span class="attr">#![cfg(feature = <span class="string">"extern_crate_alloc"</span>)]
 
 </span><span class="doccomment">//! Stuff to boost things in the `alloc` crate.
 //!
@@ -418,8 +420,8 @@
 //!   not be able to use this module! This is generally done by adding the
 //!   feature to the dependency in Cargo.toml like so:
 //!
-//!   `bytemuck = { version = &quot;VERSION_YOU_ARE_USING&quot;, features =
-//! [&quot;extern_crate_alloc&quot;]}`
+//!   `bytemuck = { version = "VERSION_YOU_ARE_USING", features =
+//! ["extern_crate_alloc"]}`
 
 </span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 <span class="kw">use </span>alloc::{
@@ -463,8 +465,8 @@
 <span class="doccomment">/// Allocates a `Box&lt;T&gt;` with all of the contents being zeroed out.
 ///
 /// This uses the global allocator to create a zeroed allocation and _then_
-/// turns it into a Box. In other words, it&#39;s 100% assured that the zeroed data
-/// won&#39;t be put temporarily on the stack. You can make a box of any size
+/// turns it into a Box. In other words, it's 100% assured that the zeroed data
+/// won't be put temporarily on the stack. You can make a box of any size
 /// without fear of a stack overflow.
 ///
 /// ## Failure
@@ -492,7 +494,7 @@
     Layout::from_size_align(size_of::&lt;T&gt;(), align_of::&lt;T&gt;()).unwrap();
   <span class="kw">let </span>ptr = <span class="kw">unsafe </span>{ alloc_zeroed(layout) };
   <span class="kw">if </span>ptr.is_null() {
-    <span class="comment">// we don&#39;t know what the error is because `alloc_zeroed` is a dumb API
+    <span class="comment">// we don't know what the error is because `alloc_zeroed` is a dumb API
     </span><span class="prelude-val">Err</span>(())
   } <span class="kw">else </span>{
     <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ Box::&lt;T&gt;::from_raw(ptr <span class="kw">as </span><span class="kw-2">*mut </span>T) })
@@ -529,8 +531,8 @@
 <span class="doccomment">/// Allocates a `Box&lt;[T]&gt;` with all contents being zeroed out.
 ///
 /// This uses the global allocator to create a zeroed allocation and _then_
-/// turns it into a Box. In other words, it&#39;s 100% assured that the zeroed data
-/// won&#39;t be put temporarily on the stack. You can make a box of any size
+/// turns it into a Box. In other words, it's 100% assured that the zeroed data
+/// won't be put temporarily on the stack. You can make a box of any size
 /// without fear of a stack overflow.
 ///
 /// ## Failure
@@ -554,7 +556,7 @@
   <span class="kw">let </span>layout = core::alloc::Layout::array::&lt;T&gt;(length).map_err(|<span class="kw">_</span>| ())<span class="question-mark">?</span>;
   <span class="kw">let </span>ptr = <span class="kw">unsafe </span>{ alloc_zeroed(layout) };
   <span class="kw">if </span>ptr.is_null() {
-    <span class="comment">// we don&#39;t know what the error is because `alloc_zeroed` is a dumb API
+    <span class="comment">// we don't know what the error is because `alloc_zeroed` is a dumb API
     </span><span class="prelude-val">Err</span>(())
   } <span class="kw">else </span>{
     <span class="kw">let </span>slice =
@@ -663,28 +665,28 @@
       // bytes. So as long as both of those stay the same, the Layout will
       // remain a valid input to dealloc.
 
-      // Note(Lokathor): First we record the length and capacity, which don&#39;t
+      // Note(Lokathor): First we record the length and capacity, which don't
       // have any secret provenance metadata.
       </span><span class="kw">let </span>length: usize = size_of::&lt;A&gt;() * input.len() / size_of::&lt;B&gt;();
       <span class="kw">let </span>capacity: usize = size_of::&lt;A&gt;() * input.capacity() / size_of::&lt;B&gt;();
-      <span class="comment">// Note(Lokathor): Next we &quot;pre-forget&quot; the old Vec by wrapping with
+      <span class="comment">// Note(Lokathor): Next we "pre-forget" the old Vec by wrapping with
       // ManuallyDrop, because if we used `core::mem::forget` after taking the
-      // pointer then that would invalidate our pointer. In nightly there&#39;s a
-      // &quot;into raw parts&quot; method, which we can switch this too eventually.
+      // pointer then that would invalidate our pointer. In nightly there's a
+      // "into raw parts" method, which we can switch this too eventually.
       </span><span class="kw">let </span><span class="kw-2">mut </span>manual_drop_vec = ManuallyDrop::new(input);
       <span class="kw">let </span>vec_ptr: <span class="kw-2">*mut </span>A = manual_drop_vec.as_mut_ptr();
       <span class="kw">let </span>ptr: <span class="kw-2">*mut </span>B = vec_ptr <span class="kw">as </span><span class="kw-2">*mut </span>B;
       <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ Vec::from_raw_parts(ptr, length, capacity) })
     }
   } <span class="kw">else </span>{
-    <span class="comment">// Note(Lokathor): First we record the length and capacity, which don&#39;t have
+    <span class="comment">// Note(Lokathor): First we record the length and capacity, which don't have
     // any secret provenance metadata.
     </span><span class="kw">let </span>length: usize = input.len();
     <span class="kw">let </span>capacity: usize = input.capacity();
-    <span class="comment">// Note(Lokathor): Next we &quot;pre-forget&quot; the old Vec by wrapping with
+    <span class="comment">// Note(Lokathor): Next we "pre-forget" the old Vec by wrapping with
     // ManuallyDrop, because if we used `core::mem::forget` after taking the
-    // pointer then that would invalidate our pointer. In nightly there&#39;s a
-    // &quot;into raw parts&quot; method, which we can switch this too eventually.
+    // pointer then that would invalidate our pointer. In nightly there's a
+    // "into raw parts" method, which we can switch this too eventually.
     </span><span class="kw">let </span><span class="kw-2">mut </span>manual_drop_vec = ManuallyDrop::new(input);
     <span class="kw">let </span>vec_ptr: <span class="kw-2">*mut </span>A = manual_drop_vec.as_mut_ptr();
     <span class="kw">let </span>ptr: <span class="kw-2">*mut </span>B = vec_ptr <span class="kw">as </span><span class="kw-2">*mut </span>B;
@@ -692,7 +694,7 @@
   }
 }
 
-<span class="doccomment">/// This &quot;collects&quot; a slice of pod data into a vec of a different pod type.
+<span class="doccomment">/// This "collects" a slice of pod data into a vec of a different pod type.
 ///
 /// Unlike with [`cast_slice`] and [`cast_slice_mut`], this will always work.
 ///
@@ -702,7 +704,7 @@
 /// # use bytemuck::*;
 /// let halfwords: [u16; 4] = [5, 6, 7, 8];
 /// let vec_of_words: Vec&lt;u32&gt; = pod_collect_to_vec(&amp;halfwords);
-/// if cfg!(target_endian = &quot;little&quot;) {
+/// if cfg!(target_endian = "little") {
 ///   assert_eq!(&amp;vec_of_words[..], &amp;[0x0006_0005, 0x0008_0007][..])
 /// } else {
 ///   assert_eq!(&amp;vec_of_words[..], &amp;[0x0005_0006, 0x0007_0008][..])
@@ -759,9 +761,9 @@
     <span class="macro">assert!</span>(size_of::&lt;<span class="kw-2">*mut </span>Inner&gt;() == size_of::&lt;<span class="kw-2">*mut </span><span class="self">Self</span>&gt;());
 
     <span class="kw">unsafe </span>{
-      <span class="comment">// A pointer cast doesn&#39;t work here because rustc can&#39;t tell that
+      <span class="comment">// A pointer cast doesn't work here because rustc can't tell that
       // the vtables match (because of the `?Sized` restriction relaxation).
-      // A `transmute` doesn&#39;t work because the sizes are unspecified.
+      // A `transmute` doesn't work because the sizes are unspecified.
       //
       // SAFETY:
       // * The unsafe contract requires that pointers to Inner and Self have
@@ -804,9 +806,9 @@
     <span class="macro">assert!</span>(size_of::&lt;<span class="kw-2">*mut </span>Inner&gt;() == size_of::&lt;<span class="kw-2">*mut </span><span class="self">Self</span>&gt;());
 
     <span class="kw">unsafe </span>{
-      <span class="comment">// A pointer cast doesn&#39;t work here because rustc can&#39;t tell that
+      <span class="comment">// A pointer cast doesn't work here because rustc can't tell that
       // the vtables match (because of the `?Sized` restriction relaxation).
-      // A `transmute` doesn&#39;t work because the sizes are unspecified.
+      // A `transmute` doesn't work because the sizes are unspecified.
       //
       // SAFETY:
       // * The unsafe contract requires that pointers to Inner and Self have

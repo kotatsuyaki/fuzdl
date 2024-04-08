@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/thirtyfour-0.31.0/src/session/handle.rs`."><title>handle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="thirtyfour" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/thirtyfour-0.31.0/src/session/handle.rs`."><title>handle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="thirtyfour" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../thirtyfour/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1160,8 +1162,8 @@
 }
 
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>SessionHandle {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-        f.debug_struct(<span class="string">&quot;SessionHandle&quot;</span>).field(<span class="string">&quot;session_id&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.session_id).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+        f.debug_struct(<span class="string">"SessionHandle"</span>).field(<span class="string">"session_id"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.session_id).finish()
     }
 }
 
@@ -1169,7 +1171,7 @@
     <span class="doccomment">/// Create new SessionHandle from a fantoccini Client.
     </span><span class="attr">#[allow(dead_code)]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>new(client: fantoccini::Client) -&gt; WebDriverResult&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>session_id = client.session_id().<span class="kw">await</span><span class="question-mark">?</span>.expect(<span class="string">&quot;session id to be valid&quot;</span>);
+        <span class="kw">let </span>session_id = client.session_id().<span class="kw">await</span><span class="question-mark">?</span>.expect(<span class="string">"session id to be valid"</span>);
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             client,
             session_id,
@@ -1197,7 +1199,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// let caps = DesiredCapabilities::chrome();
-    /// let mut driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// let mut driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let status = driver.status().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1219,7 +1221,7 @@
     // /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     // /// #     block_on(async {
     // /// let caps = DesiredCapabilities::chrome();
-    // /// let mut driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    // /// let mut driver = WebDriver::new("http://localhost:4444", caps).await?;
     // /// driver.set_request_timeout(Duration::from_secs(180)).await?;
     // /// #         driver.quit().await?;
     // /// #         Ok(())
@@ -1240,7 +1242,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// // Open a new tab.
     /// driver.new_tab().await?;
     ///
@@ -1249,7 +1251,7 @@
     /// driver.switch_to_window(handles[1].clone()).await?;
     ///
     /// // We are now controlling the new tab.
-    /// driver.goto(&quot;https://www.rust-lang.org&quot;).await?;
+    /// driver.goto("https://www.rust-lang.org").await?;
     ///
     /// // Close the tab. This will return to the original tab.
     /// driver.close_window().await?;
@@ -1263,7 +1265,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to close_window()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to close_window()"</span>)]
     </span><span class="kw">pub async fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;()&gt; {
         <span class="self">self</span>.client.close_window().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
@@ -1279,8 +1281,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// driver.goto(&quot;https://www.rust-lang.org&quot;).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// driver.goto("https://www.rust-lang.org").await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -1293,7 +1295,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.goto(url.as_ref()).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to goto()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to goto()"</span>)]
     </span><span class="kw">pub async fn </span>get&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, url: S) -&gt; WebDriverResult&lt;()&gt;
     <span class="kw">where
         </span>S: AsRef&lt;str&gt;,
@@ -1311,7 +1313,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.source().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to source()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to source()"</span>)]
     </span><span class="kw">pub async fn </span>page_source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;String&gt; {
         <span class="self">self</span>.source().<span class="kw">await
     </span>}
@@ -1336,9 +1338,9 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem_button = driver.find(By::Id(&quot;my-element-id&quot;)).await?;
-    /// let elem_text = driver.find(By::Name(&quot;my-text-input&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem_button = driver.find(By::Id("my-element-id")).await?;
+    /// let elem_text = driver.find(By::Name("my-text-input")).await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -1347,14 +1349,14 @@
     </span><span class="kw">pub async fn </span>find(<span class="kw-2">&amp;</span><span class="self">self</span>, by: <span class="kw">impl </span>Into&lt;By&gt;) -&gt; WebDriverResult&lt;WebElement&gt; {
         <span class="kw">let </span>by = by.into();
         <span class="kw">let </span>elem = <span class="self">self</span>.client.find(by.locator()).<span class="kw">await</span>.map_err(|e| <span class="kw">match </span>e {
-            <span class="comment">// It&#39;s generally only useful to know the element query that failed.
+            <span class="comment">// It's generally only useful to know the element query that failed.
             </span>CmdError::NoSuchElement(<span class="kw">_</span>) =&gt; WebDriverError::NoSuchElement(by.to_string()),
             x =&gt; WebDriverError::CmdError(x),
         })<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.wrap_element(elem))
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to find()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to find()"</span>)]
     </span><span class="kw">pub async fn </span>find_element(<span class="kw-2">&amp;</span><span class="self">self</span>, by: By) -&gt; WebDriverResult&lt;WebElement&gt; {
         <span class="self">self</span>.find(by).<span class="kw">await
     </span>}
@@ -1374,10 +1376,10 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elems = driver.find_all(By::ClassName(&quot;section&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elems = driver.find_all(By::ClassName("section")).await?;
     /// for elem in elems {
-    ///     assert!(elem.attr(&quot;class&quot;).await?.expect(&quot;Missing class on element&quot;).contains(&quot;section&quot;));
+    ///     assert!(elem.attr("class").await?.expect("Missing class on element").contains("section"));
     /// }
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1387,14 +1389,14 @@
     </span><span class="kw">pub async fn </span>find_all(<span class="kw-2">&amp;</span><span class="self">self</span>, by: <span class="kw">impl </span>Into&lt;By&gt;) -&gt; WebDriverResult&lt;Vec&lt;WebElement&gt;&gt; {
         <span class="kw">let </span>by = by.into();
         <span class="kw">let </span>elems = <span class="self">self</span>.client.find_all(by.locator()).<span class="kw">await</span>.map_err(|e| <span class="kw">match </span>e {
-            <span class="comment">// It&#39;s generally only useful to know the element query that failed.
+            <span class="comment">// It's generally only useful to know the element query that failed.
             </span>CmdError::NoSuchElement(<span class="kw">_</span>) =&gt; WebDriverError::NoSuchElement(by.to_string()),
             x =&gt; WebDriverError::CmdError(x),
         })<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(elems.into_iter().map(|x| <span class="self">self</span>.wrap_element(x)).collect())
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to find_all()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to find_all()"</span>)]
     </span><span class="kw">pub async fn </span>find_elements(<span class="kw-2">&amp;</span><span class="self">self</span>, by: By) -&gt; WebDriverResult&lt;Vec&lt;WebElement&gt;&gt; {
         <span class="self">self</span>.find_all(by).<span class="kw">await
     </span>}
@@ -1405,7 +1407,7 @@
     </span><span class="kw">pub async fn </span>form(<span class="kw-2">&amp;</span><span class="self">self</span>, by: <span class="kw">impl </span>Into&lt;By&gt;) -&gt; WebDriverResult&lt;Form&gt; {
         <span class="kw">let </span>by = by.into();
         <span class="kw">let </span>form = <span class="self">self</span>.client.form(by.locator()).<span class="kw">await</span>.map_err(|e| <span class="kw">match </span>e {
-            <span class="comment">// It&#39;s generally only useful to know the element query that failed.
+            <span class="comment">// It's generally only useful to know the element query that failed.
             </span>CmdError::NoSuchElement(<span class="kw">_</span>) =&gt; WebDriverError::NoSuchElement(by.to_string()),
             x =&gt; WebDriverError::CmdError(x),
         })<span class="question-mark">?</span>;
@@ -1422,12 +1424,12 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let ret = driver.execute(r#&quot;
-    ///     let elem = document.getElementById(&quot;button1&quot;);
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let ret = driver.execute(r#"
+    ///     let elem = document.getElementById("button1");
     ///     elem.click();
     ///     return elem;
-    ///     &quot;#, Vec::new()
+    ///     "#, Vec::new()
     /// ).await?;
     /// let elem_out: WebElement = ret.element()?;
     /// #         driver.quit().await?;
@@ -1445,16 +1447,16 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
-    /// let ret = driver.execute(r#&quot;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
+    /// let ret = driver.execute(r#"
     ///     arguments[0].innerHTML = arguments[1];
     ///     return arguments[0];
-    ///     &quot;#, vec![elem.to_json()?, serde_json::to_value(&quot;TESTING&quot;)?]
+    ///     "#, vec![elem.to_json()?, serde_json::to_value("TESTING")?]
     /// ).await?;
     /// let elem_out = ret.element()?;
     /// assert_eq!(elem_out.element_id(), elem.element_id());
-    /// assert_eq!(elem_out.text().await?, &quot;TESTING&quot;);
+    /// assert_eq!(elem_out.text().await?, "TESTING");
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -1465,7 +1467,7 @@
         <span class="prelude-val">Ok</span>(ScriptRet::new(<span class="self">self</span>.clone(), v))
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to execute()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to execute()"</span>)]
     </span><span class="kw">pub async fn </span>execute_script(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         script: <span class="kw-2">&amp;</span>str,
@@ -1484,17 +1486,17 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let ret = driver.execute_async(r#&quot;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let ret = driver.execute_async(r#"
     ///     // Selenium automatically provides an extra argument which is a
     ///     // function that receives the return value(s).
     ///     let done = arguments[0];
     ///     window.setTimeout(() =&gt; {
-    ///         let elem = document.getElementById(&quot;button1&quot;);
+    ///         let elem = document.getElementById("button1");
     ///         elem.click();
     ///         done(elem);
     ///     }, 1000);
-    ///     &quot;#, Vec::new()
+    ///     "#, Vec::new()
     /// ).await?;
     /// let elem_out: WebElement = ret.element()?;
     /// #         driver.quit().await?;
@@ -1512,10 +1514,10 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
-    /// let args = vec![elem.to_json()?, serde_json::to_value(&quot;TESTING&quot;)?];
-    /// let ret = driver.execute_async(r#&quot;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
+    /// let args = vec![elem.to_json()?, serde_json::to_value("TESTING")?];
+    /// let ret = driver.execute_async(r#"
     ///     // Selenium automatically provides an extra argument which is a
     ///     // function that receives the return value(s).
     ///     let done = arguments[2];
@@ -1523,11 +1525,11 @@
     ///         arguments[0].innerHTML = arguments[1];
     ///         done(arguments[0]);
     ///     }, 1000);
-    ///     &quot;#, args
+    ///     "#, args
     /// ).await?;
     /// let elem_out = ret.element()?;
     /// assert_eq!(elem_out.element_id(), elem.element_id());
-    /// assert_eq!(elem_out.text().await?, &quot;TESTING&quot;);
+    /// assert_eq!(elem_out.text().await?, "TESTING");
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -1542,7 +1544,7 @@
         <span class="prelude-val">Ok</span>(ScriptRet::new(<span class="self">self</span>.clone(), v))
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to execute_async()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to execute_async()"</span>)]
     </span><span class="kw">pub async fn </span>execute_script_async(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         script: <span class="kw-2">&amp;</span>str,
@@ -1561,7 +1563,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// // Get the current window handle.
     /// let handle = driver.window().await?;
     ///
@@ -1573,7 +1575,7 @@
     /// driver.switch_to_window(handles[1].clone()).await?;
     ///
     /// // We are now controlling the new tab.
-    /// driver.goto(&quot;https://www.rust-lang.org/&quot;).await?;
+    /// driver.goto("https://www.rust-lang.org/").await?;
     /// assert_ne!(driver.window().await?, handle);
     ///
     /// // Switch back to original tab.
@@ -1588,7 +1590,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.window().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to window()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to window()"</span>)]
     </span><span class="kw">pub async fn </span>current_window_handle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;WindowHandle&gt; {
         <span class="self">self</span>.window().<span class="kw">await
     </span>}
@@ -1603,7 +1605,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// assert_eq!(driver.windows().await?.len(), 1);
     /// // Open a new tab.
     /// driver.new_tab().await?;
@@ -1621,7 +1623,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.windows().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to windows()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to windows()"</span>)]
     </span><span class="kw">pub async fn </span>window_handles(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;WindowHandle&gt;&gt; {
         <span class="self">self</span>.windows().<span class="kw">await
     </span>}
@@ -1636,7 +1638,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.maximize_window().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1660,7 +1662,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.minimize_window().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1682,7 +1684,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.fullscreen_window().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1708,7 +1710,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.set_window_rect(0, 0, 600, 400).await?;
     /// let rect = driver.get_window_rect().await?;
     /// assert_eq!(rect, Rect::new(0, 0, 600, 400));
@@ -1731,7 +1733,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.set_window_rect(0, 0, 500, 400).await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1748,7 +1750,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.set_window_rect(x, y, width, height).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="doccomment">/// Go back. This is equivalent to clicking the browser&#39;s back button.
+    <span class="doccomment">/// Go back. This is equivalent to clicking the browser's back button.
     ///
     /// # Example:
     /// ```no_run
@@ -1758,7 +1760,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.back().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1769,7 +1771,7 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.back().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="doccomment">/// Go forward. This is equivalent to clicking the browser&#39;s forward button.
+    <span class="doccomment">/// Go forward. This is equivalent to clicking the browser's forward button.
     ///
     /// # Example:
     /// ```no_run
@@ -1779,7 +1781,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.forward().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1801,7 +1803,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.refresh().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1824,9 +1826,9 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let timeouts = driver.get_timeouts().await?;
-    /// println!(&quot;Page load timeout = {:?}&quot;, timeouts.page_load());
+    /// println!("Page load timeout = {:?}", timeouts.page_load());
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -1857,7 +1859,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// // Setting timeouts to None means those timeout values will not be updated.
     /// let timeouts = TimeoutConfiguration::new(None, Some(Duration::new(11, 0)), None);
     /// driver.update_timeouts(timeouts).await?;
@@ -1871,7 +1873,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to update_timeouts()&quot;</span>)]
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to update_timeouts()"</span>)]
     </span><span class="kw">pub async fn </span>set_timeouts(<span class="kw-2">&amp;</span><span class="self">self</span>, timeouts: TimeoutConfiguration) -&gt; WebDriverResult&lt;()&gt; {
         <span class="self">self</span>.update_timeouts(timeouts).<span class="kw">await
     </span>}
@@ -1899,7 +1901,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let delay = Duration::new(11, 0);
     /// driver.set_implicit_wait_timeout(delay).await?;
     /// #         driver.quit().await?;
@@ -1927,7 +1929,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let delay = Duration::new(11, 0);
     /// driver.set_script_timeout(delay).await?;
     /// #         driver.quit().await?;
@@ -1955,7 +1957,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let delay = Duration::new(11, 0);
     /// driver.set_page_load_timeout(delay).await?;
     /// #         driver.quit().await?;
@@ -1982,12 +1984,12 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem_text = driver.find(By::Name(&quot;input1&quot;)).await?;
-    /// let elem_button = driver.find(By::Id(&quot;button-set&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem_text = driver.find(By::Name("input1")).await?;
+    /// let elem_button = driver.find(By::Id("button-set")).await?;
     ///
     /// driver.action_chain()
-    ///     .send_keys_to_element(&amp;elem_text, &quot;thirtyfour&quot;)
+    ///     .send_keys_to_element(&amp;elem_text, "thirtyfour")
     ///     .move_to_element_center(&amp;elem_button)
     ///     .click()
     ///     .perform()
@@ -2008,7 +2010,7 @@
     /// [`WebDriver::action_chain`]: SessionHandle::action_chain
     ///
     /// ```ignore
-    /// let mouse_actions = MouseActions::new(&quot;mouse&quot;)
+    /// let mouse_actions = MouseActions::new("mouse")
     ///     .then(PointerAction::Down {
     ///         button: MOUSE_BUTTON_LEFT,
     ///     })
@@ -2046,22 +2048,22 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let cookies = driver.get_all_cookies().await?;
     /// for cookie in &amp;cookies {
-    ///     println!(&quot;Got cookie: {}&quot;, cookie.value());
+    ///     println!("Got cookie: {}", cookie.value());
     /// }
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>get_all_cookies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;Cookie&lt;<span class="lifetime">&#39;static</span>&gt;&gt;&gt; {
+    </span><span class="kw">pub async fn </span>get_all_cookies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;Cookie&lt;<span class="lifetime">'static</span>&gt;&gt;&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.get_all_cookies().<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to get_all_cookies()&quot;</span>)]
-    </span><span class="kw">pub async fn </span>get_cookies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;Cookie&lt;<span class="lifetime">&#39;static</span>&gt;&gt;&gt; {
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to get_all_cookies()"</span>)]
+    </span><span class="kw">pub async fn </span>get_cookies(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WebDriverResult&lt;Vec&lt;Cookie&lt;<span class="lifetime">'static</span>&gt;&gt;&gt; {
         <span class="self">self</span>.get_all_cookies().<span class="kw">await
     </span>}
 
@@ -2076,20 +2078,20 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let cookie = driver.get_named_cookie(&quot;key&quot;).await?;
-    /// println!(&quot;Got cookie: {}&quot;, cookie.value());
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let cookie = driver.get_named_cookie("key").await?;
+    /// println!("Got cookie: {}", cookie.value());
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>get_named_cookie(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; WebDriverResult&lt;Cookie&lt;<span class="lifetime">&#39;static</span>&gt;&gt; {
+    </span><span class="kw">pub async fn </span>get_named_cookie(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; WebDriverResult&lt;Cookie&lt;<span class="lifetime">'static</span>&gt;&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.client.get_named_cookie(name).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
-    <span class="attr">#[deprecated(since = <span class="string">&quot;0.30.0&quot;</span>, note = <span class="string">&quot;This method has been renamed to get_named_cookie()&quot;</span>)]
-    </span><span class="kw">pub async fn </span>get_cookie(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; WebDriverResult&lt;Cookie&lt;<span class="lifetime">&#39;static</span>&gt;&gt; {
+    <span class="attr">#[deprecated(since = <span class="string">"0.30.0"</span>, note = <span class="string">"This method has been renamed to get_named_cookie()"</span>)]
+    </span><span class="kw">pub async fn </span>get_cookie(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; WebDriverResult&lt;Cookie&lt;<span class="lifetime">'static</span>&gt;&gt; {
         <span class="self">self</span>.get_named_cookie(name).<span class="kw">await
     </span>}
 
@@ -2104,8 +2106,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// driver.delete_cookie(&quot;key&quot;).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// driver.delete_cookie("key").await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -2126,7 +2128,7 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// driver.delete_all_cookies().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -2148,11 +2150,11 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// driver.goto(&quot;https://wikipedia.org&quot;).await?;
-    /// let mut cookie = Cookie::new(&quot;key&quot;, &quot;value&quot;);
-    /// cookie.set_domain(&quot;wikipedia.org&quot;);
-    /// cookie.set_path(&quot;/&quot;);
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// driver.goto("https://wikipedia.org").await?;
+    /// let mut cookie = Cookie::new("key", "value");
+    /// cookie.set_domain("wikipedia.org");
+    /// cookie.set_path("/");
     /// cookie.set_same_site(Some(SameSite::Lax));
     /// driver.add_cookie(cookie.clone()).await?;
     /// #         driver.quit().await?;
@@ -2160,7 +2162,7 @@
     /// #     })
     /// # }
     /// ```
-    </span><span class="kw">pub async fn </span>add_cookie(<span class="kw-2">&amp;</span><span class="self">self</span>, cookie: Cookie&lt;<span class="lifetime">&#39;static</span>&gt;) -&gt; WebDriverResult&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>add_cookie(<span class="kw-2">&amp;</span><span class="self">self</span>, cookie: Cookie&lt;<span class="lifetime">'static</span>&gt;) -&gt; WebDriverResult&lt;()&gt; {
         <span class="self">self</span>.client.add_cookie(cookie).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -2180,8 +2182,8 @@
 
     <span class="doccomment">/// Return a SwitchTo struct for switching to another window or frame.
     </span><span class="attr">#[deprecated(
-        since = <span class="string">&quot;0.30.0&quot;</span>,
-        note = <span class="string">&quot;SwitchTo has been deprecated. Use WebDriver::switch_to_*() methods instead&quot;
+        since = <span class="string">"0.30.0"</span>,
+        note = <span class="string">"SwitchTo has been deprecated. Use WebDriver::switch_to_*() methods instead"
     </span>)]
     </span><span class="kw">pub fn </span>switch_to(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SwitchTo {
         SwitchTo::new(<span class="self">self</span>.clone())
@@ -2201,10 +2203,10 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// // Get the current window handle.
     /// let handle = driver.window().await?;
-    /// driver.set_window_name(&quot;main&quot;).await?;
+    /// driver.set_window_name("main").await?;
     ///
     /// // Open a new tab.
     /// let new_handle = driver.new_tab().await?;
@@ -2213,11 +2215,11 @@
     /// driver.switch_to_window(new_handle).await?;
     ///
     /// // We are now controlling the new tab.
-    /// driver.goto(&quot;https://www.rust-lang.org&quot;).await?;
+    /// driver.goto("https://www.rust-lang.org").await?;
     /// assert_ne!(driver.window().await?, handle);
     ///
     /// // Switch back to original tab using window name.
-    /// driver.switch_to_named_window(&quot;main&quot;).await?;
+    /// driver.switch_to_named_window("main").await?;
     /// assert_eq!(driver.window().await?, handle);
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -2225,7 +2227,7 @@
     /// # }
     /// ```
     </span><span class="kw">pub async fn </span>set_window_name(<span class="kw-2">&amp;</span><span class="self">self</span>, window_name: <span class="kw-2">&amp;</span>str) -&gt; WebDriverResult&lt;()&gt; {
-        <span class="kw">let </span>script = <span class="macro">format!</span>(<span class="string">r#&quot;window.name = &quot;{}&quot;&quot;#</span>, window_name);
+        <span class="kw">let </span>script = <span class="macro">format!</span>(<span class="string">r#"window.name = "{}""#</span>, window_name);
         <span class="self">self</span>.execute(<span class="kw-2">&amp;</span>script, Vec::new()).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -2242,12 +2244,12 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// let window_title = driver.in_new_tab(|| async {
-    ///     driver.goto(&quot;https://www.google.com&quot;).await?;
+    ///     driver.goto("https://www.google.com").await?;
     ///     driver.title().await
     /// }).await?;
-    /// assert_eq!(window_title, &quot;Google&quot;);
+    /// assert_eq!(window_title, "Google");
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })

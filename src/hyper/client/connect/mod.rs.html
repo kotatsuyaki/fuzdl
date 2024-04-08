@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-0.14.20/src/client/connect/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="hyper" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/hyper-0.14.20/src/client/connect/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="hyper" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../hyper/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -420,7 +422,7 @@
 //!
 //! # Connectors
 //!
-//! A &quot;connector&quot; is a [`Service`][] that takes a [`Uri`][] destination, and
+//! A "connector" is a [`Service`][] that takes a [`Uri`][] destination, and
 //! its `Response` is some type implementing [`AsyncRead`][], [`AsyncWrite`][],
 //! and [`Connection`][].
 //!
@@ -431,14 +433,14 @@
 //!
 //! ```rust,ignore
 //! let connector = tower::service_fn(|_dst| async {
-//!     tokio::net::TcpStream::connect(&quot;127.0.0.1:1337&quot;)
+//!     tokio::net::TcpStream::connect("127.0.0.1:1337")
 //! })
 //! ```
 //!
 //! Or, fully written out:
 //!
 //! ```
-//! # #[cfg(feature = &quot;runtime&quot;)]
+//! # #[cfg(feature = "runtime")]
 //! # mod rt {
 //! use std::{future::Future, net::SocketAddr, pin::Pin, task::{self, Poll}};
 //! use hyper::{service::Service, Uri};
@@ -450,12 +452,12 @@
 //! impl Service&lt;Uri&gt; for LocalConnector {
 //!     type Response = TcpStream;
 //!     type Error = std::io::Error;
-//!     // We can&#39;t &quot;name&quot; an `async` generated future.
+//!     // We can't "name" an `async` generated future.
 //!     type Future = Pin&lt;Box&lt;
 //!         dyn Future&lt;Output = Result&lt;Self::Response, Self::Error&gt;&gt; + Send
 //!     &gt;&gt;;
 //!
-//!     fn poll_ready(&amp;mut self, _: &amp;mut task::Context&lt;&#39;_&gt;) -&gt; Poll&lt;Result&lt;(), Self::Error&gt;&gt; {
+//!     fn poll_ready(&amp;mut self, _: &amp;mut task::Context&lt;'_&gt;) -&gt; Poll&lt;Result&lt;(), Self::Error&gt;&gt; {
 //!         // This connector is always ready, but others might not be.
 //!         Poll::Ready(Ok(()))
 //!     }
@@ -467,14 +469,14 @@
 //! # }
 //! ```
 //!
-//! It&#39;s worth noting that for `TcpStream`s, the [`HttpConnector`][] is a
+//! It's worth noting that for `TcpStream`s, the [`HttpConnector`][] is a
 //! better starting place to extend from.
 //!
 //! Using either of the above connector examples, it can be used with the
 //! `Client` like this:
 //!
 //! ```
-//! # #[cfg(feature = &quot;runtime&quot;)]
+//! # #[cfg(feature = "runtime")]
 //! # fn rt () {
 //! # let connector = hyper::client::HttpConnector::new();
 //! // let connector = ...
@@ -496,7 +498,7 @@
 <span class="kw">use </span>::http::Extensions;
 
 <span class="macro">cfg_feature! </span>{
-    <span class="attr">#![feature = <span class="string">&quot;tcp&quot;</span>]
+    <span class="attr">#![feature = <span class="string">"tcp"</span>]
 
     </span><span class="kw">pub use </span><span class="self">self</span>::http::{HttpConnector, HttpInfo};
 
@@ -505,7 +507,7 @@
 }
 
 <span class="macro">cfg_feature! </span>{
-    <span class="attr">#![any(feature = <span class="string">&quot;http1&quot;</span>, feature = <span class="string">&quot;http2&quot;</span>)]
+    <span class="attr">#![any(feature = <span class="string">"http1"</span>, feature = <span class="string">"http2"</span>)]
 
     </span><span class="kw">pub use </span><span class="self">self</span>::sealed::Connect;
 }
@@ -574,7 +576,7 @@
     }
 
     <span class="doccomment">/// Set extra connection information to be set in the extensions of every `Response`.
-    </span><span class="kw">pub fn </span>extra&lt;T: Clone + Send + Sync + <span class="lifetime">&#39;static</span>&gt;(<span class="kw-2">mut </span><span class="self">self</span>, extra: T) -&gt; Connected {
+    </span><span class="kw">pub fn </span>extra&lt;T: Clone + Send + Sync + <span class="lifetime">'static</span>&gt;(<span class="kw-2">mut </span><span class="self">self</span>, extra: T) -&gt; Connected {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(prev) = <span class="self">self</span>.extra {
             <span class="self">self</span>.extra = <span class="prelude-val">Some</span>(Extra(Box::new(ExtraChain(prev.<span class="number">0</span>, extra))));
         } <span class="kw">else </span>{
@@ -601,9 +603,9 @@
         <span class="self">self</span>.alpn == Alpn::H2
     }
 
-    <span class="comment">// Don&#39;t public expose that `Connected` is `Clone`, unsure if we want to
+    <span class="comment">// Don't public expose that `Connected` is `Clone`, unsure if we want to
     // keep that contract...
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;http2&quot;</span>)]
+    </span><span class="attr">#[cfg(feature = <span class="string">"http2"</span>)]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Connected {
         Connected {
             alpn: <span class="self">self</span>.alpn.clone(),
@@ -628,8 +630,8 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Extra {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;Extra&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        f.debug_struct(<span class="string">"Extra"</span>).finish()
     }
 }
 
@@ -638,7 +640,7 @@
     <span class="kw">fn </span>set(<span class="kw-2">&amp;</span><span class="self">self</span>, res: <span class="kw-2">&amp;mut </span>Extensions);
 }
 
-<span class="comment">// This indirection allows the `Connected` to have a type-erased &quot;extra&quot; value,
+<span class="comment">// This indirection allows the `Connected` to have a type-erased "extra" value,
 // while that type still knows its inner extra type. This allows the correct
 // TypeId to be used when inserting into `res.extensions_mut()`.
 </span><span class="attr">#[derive(Clone)]
@@ -646,7 +648,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; ExtraInner <span class="kw">for </span>ExtraEnvelope&lt;T&gt;
 <span class="kw">where
-    </span>T: Clone + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: Clone + Send + Sync + <span class="lifetime">'static</span>,
 {
     <span class="kw">fn </span>clone_box(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>ExtraInner&gt; {
         Box::new(<span class="self">self</span>.clone())
@@ -667,7 +669,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; ExtraInner <span class="kw">for </span>ExtraChain&lt;T&gt;
 <span class="kw">where
-    </span>T: Clone + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: Clone + Send + Sync + <span class="lifetime">'static</span>,
 {
     <span class="kw">fn </span>clone_box(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;<span class="kw">dyn </span>ExtraInner&gt; {
         Box::new(<span class="self">self</span>.clone())
@@ -679,7 +681,7 @@
     }
 }
 
-<span class="attr">#[cfg(any(feature = <span class="string">&quot;http1&quot;</span>, feature = <span class="string">&quot;http2&quot;</span>))]
+<span class="attr">#[cfg(any(feature = <span class="string">"http1"</span>, feature = <span class="string">"http2"</span>))]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>sealed {
     <span class="kw">use </span>std::error::Error <span class="kw">as </span>StdError;
 
@@ -697,7 +699,7 @@
     /// # Trait Alias
     ///
     /// This is really just an *alias* for the `tower::Service` trait, with
-    /// additional bounds set for convenience *inside* hyper. You don&#39;t actually
+    /// additional bounds set for convenience *inside* hyper. You don't actually
     /// implement this trait, but `tower::Service&lt;Uri&gt;` instead.
     </span><span class="comment">// The `Sized` bound is to prevent creating `dyn Connect`, since they cannot
     // fit the `Connect` bounds because of the blanket impl for `Service`.
@@ -709,19 +711,19 @@
     }
 
     <span class="kw">pub trait </span>ConnectSvc {
-        <span class="kw">type </span>Connection: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">&#39;static</span>;
+        <span class="kw">type </span>Connection: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">'static</span>;
         <span class="kw">type </span>Error: Into&lt;Box&lt;<span class="kw">dyn </span>StdError + Send + Sync&gt;&gt;;
-        <span class="kw">type </span>Future: Future&lt;Output = <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Connection, <span class="self">Self</span>::Error&gt;&gt; + Unpin + Send + <span class="lifetime">&#39;static</span>;
+        <span class="kw">type </span>Future: Future&lt;Output = <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Connection, <span class="self">Self</span>::Error&gt;&gt; + Unpin + Send + <span class="lifetime">'static</span>;
 
         <span class="kw">fn </span>connect(<span class="self">self</span>, internal_only: Internal, dst: Uri) -&gt; <span class="self">Self</span>::Future;
     }
 
     <span class="kw">impl</span>&lt;S, T&gt; Connect <span class="kw">for </span>S
     <span class="kw">where
-        </span>S: tower_service::Service&lt;Uri, Response = T&gt; + Send + <span class="lifetime">&#39;static</span>,
+        </span>S: tower_service::Service&lt;Uri, Response = T&gt; + Send + <span class="lifetime">'static</span>,
         S::Error: Into&lt;Box&lt;<span class="kw">dyn </span>StdError + Send + Sync&gt;&gt;,
         S::Future: Unpin + Send,
-        T: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">&#39;static</span>,
+        T: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">type </span>_Svc = S;
 
@@ -732,10 +734,10 @@
 
     <span class="kw">impl</span>&lt;S, T&gt; ConnectSvc <span class="kw">for </span>S
     <span class="kw">where
-        </span>S: tower_service::Service&lt;Uri, Response = T&gt; + Send + <span class="lifetime">&#39;static</span>,
+        </span>S: tower_service::Service&lt;Uri, Response = T&gt; + Send + <span class="lifetime">'static</span>,
         S::Error: Into&lt;Box&lt;<span class="kw">dyn </span>StdError + Send + Sync&gt;&gt;,
         S::Future: Unpin + Send,
-        T: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">&#39;static</span>,
+        T: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">type </span>Connection = T;
         <span class="kw">type </span>Error = S::Error;
@@ -751,7 +753,7 @@
         </span>S: tower_service::Service&lt;Uri, Response = T&gt; + Send,
         S::Error: Into&lt;Box&lt;<span class="kw">dyn </span>StdError + Send + Sync&gt;&gt;,
         S::Future: Unpin + Send,
-        T: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">&#39;static</span>,
+        T: AsyncRead + AsyncWrite + Connection + Unpin + Send + <span class="lifetime">'static</span>,
     {
     }
 
@@ -768,10 +770,10 @@
     </span><span class="kw">struct </span>Ex1(usize);
 
     <span class="attr">#[derive(Clone, Debug, PartialEq)]
-    </span><span class="kw">struct </span>Ex2(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str);
+    </span><span class="kw">struct </span>Ex2(<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str);
 
     <span class="attr">#[derive(Clone, Debug, PartialEq)]
-    </span><span class="kw">struct </span>Ex3(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str);
+    </span><span class="kw">struct </span>Ex3(<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str);
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_connected_extra() {
@@ -781,20 +783,20 @@
 
         <span class="macro">assert_eq!</span>(ex.get::&lt;Ex1&gt;(), <span class="prelude-val">None</span>);
 
-        c1.extra.as_ref().expect(<span class="string">&quot;c1 extra&quot;</span>).set(<span class="kw-2">&amp;mut </span>ex);
+        c1.extra.as_ref().expect(<span class="string">"c1 extra"</span>).set(<span class="kw-2">&amp;mut </span>ex);
 
         <span class="macro">assert_eq!</span>(ex.get::&lt;Ex1&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex1(<span class="number">41</span>)));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_connected_extra_chain() {
-        <span class="comment">// If a user composes connectors and at each stage, there&#39;s &quot;extra&quot;
-        // info to attach, it shouldn&#39;t override the previous extras.
+        <span class="comment">// If a user composes connectors and at each stage, there's "extra"
+        // info to attach, it shouldn't override the previous extras.
 
         </span><span class="kw">let </span>c1 = Connected::new()
             .extra(Ex1(<span class="number">45</span>))
-            .extra(Ex2(<span class="string">&quot;zoom&quot;</span>))
-            .extra(Ex3(<span class="string">&quot;pew pew&quot;</span>));
+            .extra(Ex2(<span class="string">"zoom"</span>))
+            .extra(Ex3(<span class="string">"pew pew"</span>));
 
         <span class="kw">let </span><span class="kw-2">mut </span>ex1 = ::http::Extensions::new();
 
@@ -802,24 +804,24 @@
         <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex2&gt;(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex3&gt;(), <span class="prelude-val">None</span>);
 
-        c1.extra.as_ref().expect(<span class="string">&quot;c1 extra&quot;</span>).set(<span class="kw-2">&amp;mut </span>ex1);
+        c1.extra.as_ref().expect(<span class="string">"c1 extra"</span>).set(<span class="kw-2">&amp;mut </span>ex1);
 
         <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex1&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex1(<span class="number">45</span>)));
-        <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex2&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex2(<span class="string">&quot;zoom&quot;</span>)));
-        <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex3&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex3(<span class="string">&quot;pew pew&quot;</span>)));
+        <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex2&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex2(<span class="string">"zoom"</span>)));
+        <span class="macro">assert_eq!</span>(ex1.get::&lt;Ex3&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex3(<span class="string">"pew pew"</span>)));
 
         <span class="comment">// Just like extensions, inserting the same type overrides previous type.
         </span><span class="kw">let </span>c2 = Connected::new()
             .extra(Ex1(<span class="number">33</span>))
-            .extra(Ex2(<span class="string">&quot;hiccup&quot;</span>))
+            .extra(Ex2(<span class="string">"hiccup"</span>))
             .extra(Ex1(<span class="number">99</span>));
 
         <span class="kw">let </span><span class="kw-2">mut </span>ex2 = ::http::Extensions::new();
 
-        c2.extra.as_ref().expect(<span class="string">&quot;c2 extra&quot;</span>).set(<span class="kw-2">&amp;mut </span>ex2);
+        c2.extra.as_ref().expect(<span class="string">"c2 extra"</span>).set(<span class="kw-2">&amp;mut </span>ex2);
 
         <span class="macro">assert_eq!</span>(ex2.get::&lt;Ex1&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex1(<span class="number">99</span>)));
-        <span class="macro">assert_eq!</span>(ex2.get::&lt;Ex2&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex2(<span class="string">&quot;hiccup&quot;</span>)));
+        <span class="macro">assert_eq!</span>(ex2.get::&lt;Ex2&gt;(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Ex2(<span class="string">"hiccup"</span>)));
     }
 }
 </code></pre></div></section></main></body></html>

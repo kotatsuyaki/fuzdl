@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/webp/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/webp/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -378,22 +380,22 @@
 <span class="doccomment">/// All errors that can occur when attempting to parse a WEBP container
 </span><span class="attr">#[derive(Debug, Clone, Copy)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>DecoderError {
-    <span class="doccomment">/// RIFF&#39;s &quot;RIFF&quot; signature not found or invalid
+    <span class="doccomment">/// RIFF's "RIFF" signature not found or invalid
     </span>RiffSignatureInvalid([u8; <span class="number">4</span>]),
-    <span class="doccomment">/// WebP&#39;s &quot;WEBP&quot; signature not found or invalid
+    <span class="doccomment">/// WebP's "WEBP" signature not found or invalid
     </span>WebpSignatureInvalid([u8; <span class="number">4</span>]),
     <span class="doccomment">/// Chunk Header was incorrect or invalid in its usage
     </span>ChunkHeaderInvalid([u8; <span class="number">4</span>]),
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">struct </span>SignatureWriter([u8; <span class="number">4</span>]);
         <span class="kw">impl </span>fmt::Display <span class="kw">for </span>SignatureWriter {
-            <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+            <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
                 <span class="macro">write!</span>(
                     f,
-                    <span class="string">&quot;[{:#04X?}, {:#04X?}, {:#04X?}, {:#04X?}]&quot;</span>,
+                    <span class="string">"[{:#04X?}, {:#04X?}, {:#04X?}, {:#04X?}]"</span>,
                     <span class="self">self</span>.<span class="number">0</span>[<span class="number">0</span>], <span class="self">self</span>.<span class="number">0</span>[<span class="number">1</span>], <span class="self">self</span>.<span class="number">0</span>[<span class="number">2</span>], <span class="self">self</span>.<span class="number">0</span>[<span class="number">3</span>]
                 )
             }
@@ -401,15 +403,15 @@
 
         <span class="kw">match </span><span class="self">self </span>{
             DecoderError::RiffSignatureInvalid(riff) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Invalid RIFF signature: {}&quot;</span>,
+                <span class="string">"Invalid RIFF signature: {}"</span>,
                 SignatureWriter(<span class="kw-2">*</span>riff)
             )),
             DecoderError::WebpSignatureInvalid(webp) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Invalid WebP signature: {}&quot;</span>,
+                <span class="string">"Invalid WebP signature: {}"</span>,
                 SignatureWriter(<span class="kw-2">*</span>webp)
             )),
             DecoderError::ChunkHeaderInvalid(header) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Invalid Chunk header: {}&quot;</span>,
+                <span class="string">"Invalid Chunk header: {}"</span>,
                 SignatureWriter(<span class="kw-2">*</span>header)
             )),
         }
@@ -444,34 +446,34 @@
 <span class="kw">impl </span>WebPRiffChunk {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>from_fourcc(chunk_fourcc: [u8; <span class="number">4</span>]) -&gt; ImageResult&lt;<span class="self">Self</span>&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span>chunk_fourcc {
-            <span class="string">b&quot;RIFF&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::RIFF),
-            <span class="string">b&quot;WEBP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::WEBP),
-            <span class="string">b&quot;VP8 &quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8),
-            <span class="string">b&quot;VP8L&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8L),
-            <span class="string">b&quot;VP8X&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8X),
-            <span class="string">b&quot;ANIM&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ANIM),
-            <span class="string">b&quot;ANMF&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ANMF),
-            <span class="string">b&quot;ALPH&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ALPH),
-            <span class="string">b&quot;ICCP&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ICCP),
-            <span class="string">b&quot;EXIF&quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::EXIF),
-            <span class="string">b&quot;XMP &quot; </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::XMP),
+            <span class="string">b"RIFF" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::RIFF),
+            <span class="string">b"WEBP" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::WEBP),
+            <span class="string">b"VP8 " </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8),
+            <span class="string">b"VP8L" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8L),
+            <span class="string">b"VP8X" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::VP8X),
+            <span class="string">b"ANIM" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ANIM),
+            <span class="string">b"ANMF" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ANMF),
+            <span class="string">b"ALPH" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ALPH),
+            <span class="string">b"ICCP" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ICCP),
+            <span class="string">b"EXIF" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::EXIF),
+            <span class="string">b"XMP " </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::XMP),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(DecoderError::ChunkHeaderInvalid(chunk_fourcc).into()),
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>to_fourcc(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u8; <span class="number">4</span>] {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::RIFF =&gt; <span class="kw-2">*</span><span class="string">b&quot;RIFF&quot;</span>,
-            <span class="self">Self</span>::WEBP =&gt; <span class="kw-2">*</span><span class="string">b&quot;WEBP&quot;</span>,
-            <span class="self">Self</span>::VP8 =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8 &quot;</span>,
-            <span class="self">Self</span>::VP8L =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8L&quot;</span>,
-            <span class="self">Self</span>::VP8X =&gt; <span class="kw-2">*</span><span class="string">b&quot;VP8X&quot;</span>,
-            <span class="self">Self</span>::ANIM =&gt; <span class="kw-2">*</span><span class="string">b&quot;ANIM&quot;</span>,
-            <span class="self">Self</span>::ANMF =&gt; <span class="kw-2">*</span><span class="string">b&quot;ANMF&quot;</span>,
-            <span class="self">Self</span>::ALPH =&gt; <span class="kw-2">*</span><span class="string">b&quot;ALPH&quot;</span>,
-            <span class="self">Self</span>::ICCP =&gt; <span class="kw-2">*</span><span class="string">b&quot;ICCP&quot;</span>,
-            <span class="self">Self</span>::EXIF =&gt; <span class="kw-2">*</span><span class="string">b&quot;EXIF&quot;</span>,
-            <span class="self">Self</span>::XMP =&gt; <span class="kw-2">*</span><span class="string">b&quot;XMP &quot;</span>,
+            <span class="self">Self</span>::RIFF =&gt; <span class="kw-2">*</span><span class="string">b"RIFF"</span>,
+            <span class="self">Self</span>::WEBP =&gt; <span class="kw-2">*</span><span class="string">b"WEBP"</span>,
+            <span class="self">Self</span>::VP8 =&gt; <span class="kw-2">*</span><span class="string">b"VP8 "</span>,
+            <span class="self">Self</span>::VP8L =&gt; <span class="kw-2">*</span><span class="string">b"VP8L"</span>,
+            <span class="self">Self</span>::VP8X =&gt; <span class="kw-2">*</span><span class="string">b"VP8X"</span>,
+            <span class="self">Self</span>::ANIM =&gt; <span class="kw-2">*</span><span class="string">b"ANIM"</span>,
+            <span class="self">Self</span>::ANMF =&gt; <span class="kw-2">*</span><span class="string">b"ANMF"</span>,
+            <span class="self">Self</span>::ALPH =&gt; <span class="kw-2">*</span><span class="string">b"ALPH"</span>,
+            <span class="self">Self</span>::ICCP =&gt; <span class="kw-2">*</span><span class="string">b"ICCP"</span>,
+            <span class="self">Self</span>::EXIF =&gt; <span class="kw-2">*</span><span class="string">b"EXIF"</span>,
+            <span class="self">Self</span>::XMP =&gt; <span class="kw-2">*</span><span class="string">b"XMP "</span>,
         }
     }
 }
@@ -503,7 +505,7 @@
     </span><span class="kw">fn </span>read_riff_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ImageResult&lt;u32&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>riff = [<span class="number">0</span>; <span class="number">4</span>];
         <span class="self">self</span>.r.read_exact(<span class="kw-2">&amp;mut </span>riff)<span class="question-mark">?</span>;
-        <span class="kw">if </span><span class="kw-2">&amp;</span>riff != <span class="string">b&quot;RIFF&quot; </span>{
+        <span class="kw">if </span><span class="kw-2">&amp;</span>riff != <span class="string">b"RIFF" </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::RiffSignatureInvalid(riff).into());
         }
 
@@ -511,7 +513,7 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>webp = [<span class="number">0</span>; <span class="number">4</span>];
         <span class="self">self</span>.r.read_exact(<span class="kw-2">&amp;mut </span>webp)<span class="question-mark">?</span>;
-        <span class="kw">if </span><span class="kw-2">&amp;</span>webp != <span class="string">b&quot;WEBP&quot; </span>{
+        <span class="kw">if </span><span class="kw-2">&amp;</span>webp != <span class="string">b"WEBP" </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::WebpSignatureInvalid(webp).into());
         }
 
@@ -629,7 +631,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>WebPDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>WebPDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = WebpReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -691,8 +693,8 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; AnimationDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>WebPDecoder&lt;R&gt; {
-    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; Frames&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; AnimationDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>WebPDecoder&lt;R&gt; {
+    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; Frames&lt;<span class="lifetime">'a</span>&gt; {
         <span class="kw">match </span><span class="self">self</span>.image {
             WebPImage::Lossy(<span class="kw">_</span>) | WebPImage::Lossless(<span class="kw">_</span>) =&gt; {
                 Frames::new(Box::new(std::iter::empty()))

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/creator.rs`."><title>creator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/creator.rs`."><title>creator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../lopdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -256,7 +258,7 @@
         (<span class="self">self</span>.max_id, <span class="number">0</span>)
     }
 
-    <span class="doccomment">/// Add PDF object into document&#39;s object list.
+    <span class="doccomment">/// Add PDF object into document's object list.
     </span><span class="kw">pub fn </span>add_object&lt;T: Into&lt;Object&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, object: T) -&gt; ObjectId {
         <span class="self">self</span>.max_id += <span class="number">1</span>;
         <span class="kw">let </span>id = (<span class="self">self</span>.max_id, <span class="number">0</span>);
@@ -264,11 +266,11 @@
         id
     }
 
-    <span class="doccomment">/// Remove PDF object from document&#39;s object list.
+    <span class="doccomment">/// Remove PDF object from document's object list.
     </span><span class="kw">pub fn </span>remove_object(<span class="kw-2">&amp;mut </span><span class="self">self</span>, object_id: <span class="kw-2">&amp;</span>ObjectId) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>(<span class="kw">_</span>, page_id) <span class="kw">in </span><span class="self">self</span>.get_pages() {
             <span class="kw">let </span>page = <span class="self">self</span>.get_object_mut(page_id)<span class="question-mark">?</span>.as_dict_mut()<span class="question-mark">?</span>;
-            <span class="kw">let </span>annots = page.get_mut(<span class="string">b&quot;Annots&quot;</span>)<span class="question-mark">?</span>.as_array_mut()<span class="question-mark">?</span>;
+            <span class="kw">let </span>annots = page.get_mut(<span class="string">b"Annots"</span>)<span class="question-mark">?</span>.as_array_mut()<span class="question-mark">?</span>;
 
             annots.retain(|object| {
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = object.as_reference() {
@@ -284,16 +286,16 @@
 
     <span class="kw">fn </span>get_or_create_resources_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, page_id: ObjectId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>Object&gt; {
         <span class="kw">let </span>page = <span class="self">self</span>.get_object_mut(page_id).and_then(Object::as_dict_mut)<span class="question-mark">?</span>;
-        <span class="kw">if </span>page.has(<span class="string">b&quot;Resources&quot;</span>) {
-            <span class="kw">if let </span><span class="prelude-val">Ok</span>(_res_id) = page.get(<span class="string">b&quot;Resources&quot;</span>).and_then(Object::as_reference) {
+        <span class="kw">if </span>page.has(<span class="string">b"Resources"</span>) {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(_res_id) = page.get(<span class="string">b"Resources"</span>).and_then(Object::as_reference) {
                 <span class="comment">// self.get_object_mut(res_id)
                 </span><span class="prelude-val">Err</span>(Error::ObjectNotFound)
             } <span class="kw">else </span>{
-                page.get_mut(<span class="string">b&quot;Resources&quot;</span>)
+                page.get_mut(<span class="string">b"Resources"</span>)
             }
         } <span class="kw">else </span>{
-            page.set(<span class="string">&quot;Resources&quot;</span>, Dictionary::new());
-            page.get_mut(<span class="string">b&quot;Resources&quot;</span>)
+            page.set(<span class="string">"Resources"</span>, Dictionary::new());
+            page.get_mut(<span class="string">b"Resources"</span>)
         }
     }
 
@@ -301,8 +303,8 @@
         <span class="kw">let </span><span class="kw-2">mut </span>resources_id = <span class="prelude-val">None</span>;
         {
             <span class="kw">let </span>page = <span class="self">self</span>.get_object(page_id).and_then(Object::as_dict)<span class="question-mark">?</span>;
-            <span class="kw">if </span>page.has(<span class="string">b&quot;Resources&quot;</span>) {
-                resources_id = page.get(<span class="string">b&quot;Resources&quot;</span>).and_then(Object::as_reference).ok();
+            <span class="kw">if </span>page.has(<span class="string">b"Resources"</span>) {
+                resources_id = page.get(<span class="string">b"Resources"</span>).and_then(Object::as_reference).ok();
             }
         }
         <span class="kw">match </span>resources_id {
@@ -321,11 +323,11 @@
             </span>.get_or_create_resources(page_id)
             .and_then(Object::as_dict_mut)
         {
-            <span class="kw">if </span>!resources.has(<span class="string">b&quot;XObject&quot;</span>) {
-                resources.set(<span class="string">&quot;XObject&quot;</span>, Dictionary::new());
+            <span class="kw">if </span>!resources.has(<span class="string">b"XObject"</span>) {
+                resources.set(<span class="string">"XObject"</span>, Dictionary::new());
             }
             <span class="kw">let </span>xobjects = resources
-                .get_mut(<span class="string">b&quot;XObject&quot;</span>)
+                .get_mut(<span class="string">b"XObject"</span>)
                 .and_then(Object::as_dict_mut)<span class="question-mark">?</span>;
             xobjects.set(xobject_name, Object::Reference(xobject_id));
         }
@@ -342,11 +344,11 @@
             </span>.get_or_create_resources(page_id)
             .and_then(Object::as_dict_mut)
         {
-            <span class="kw">if </span>!resources.has(<span class="string">b&quot;ExtGState&quot;</span>) {
-                resources.set(<span class="string">&quot;ExtGState&quot;</span>, Dictionary::new());
+            <span class="kw">if </span>!resources.has(<span class="string">b"ExtGState"</span>) {
+                resources.set(<span class="string">"ExtGState"</span>, Dictionary::new());
             }
             <span class="kw">let </span>states = resources
-                .get_mut(<span class="string">b&quot;ExtGState&quot;</span>)
+                .get_mut(<span class="string">b"ExtGState"</span>)
                 .and_then(Object::as_dict_mut)<span class="question-mark">?</span>;
             states.set(gs_name, Object::Reference(gs_id));
         }
@@ -373,52 +375,52 @@
 
     <span class="doccomment">/// Create and return a document for testing
     </span><span class="kw">pub fn </span>create_document() -&gt; Document {
-        <span class="kw">let </span><span class="kw-2">mut </span>doc = Document::with_version(<span class="string">&quot;1.5&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>doc = Document::with_version(<span class="string">"1.5"</span>);
         <span class="kw">let </span>info_id = doc.add_object(<span class="macro">dictionary! </span>{
-            <span class="string">&quot;Title&quot; </span>=&gt; Object::string_literal(<span class="string">&quot;Create PDF document example&quot;</span>),
-            <span class="string">&quot;Creator&quot; </span>=&gt; Object::string_literal(<span class="string">&quot;https://crates.io/crates/lopdf&quot;</span>),
-            <span class="string">&quot;CreationDate&quot; </span>=&gt; time::OffsetDateTime::now_utc(),
+            <span class="string">"Title" </span>=&gt; Object::string_literal(<span class="string">"Create PDF document example"</span>),
+            <span class="string">"Creator" </span>=&gt; Object::string_literal(<span class="string">"https://crates.io/crates/lopdf"</span>),
+            <span class="string">"CreationDate" </span>=&gt; time::OffsetDateTime::now_utc(),
         });
         <span class="kw">let </span>pages_id = doc.new_object_id();
         <span class="kw">let </span>font_id = doc.add_object(<span class="macro">dictionary! </span>{
-            <span class="string">&quot;Type&quot; </span>=&gt; <span class="string">&quot;Font&quot;</span>,
-            <span class="string">&quot;Subtype&quot; </span>=&gt; <span class="string">&quot;Type1&quot;</span>,
-            <span class="string">&quot;BaseFont&quot; </span>=&gt; <span class="string">&quot;Courier&quot;</span>,
+            <span class="string">"Type" </span>=&gt; <span class="string">"Font"</span>,
+            <span class="string">"Subtype" </span>=&gt; <span class="string">"Type1"</span>,
+            <span class="string">"BaseFont" </span>=&gt; <span class="string">"Courier"</span>,
         });
         <span class="kw">let </span>resources_id = doc.add_object(<span class="macro">dictionary! </span>{
-            <span class="string">&quot;Font&quot; </span>=&gt; <span class="macro">dictionary! </span>{
-                <span class="string">&quot;F1&quot; </span>=&gt; font_id,
+            <span class="string">"Font" </span>=&gt; <span class="macro">dictionary! </span>{
+                <span class="string">"F1" </span>=&gt; font_id,
             },
         });
         <span class="kw">let </span>content = Content {
             operations: <span class="macro">vec!</span>[
-                Operation::new(<span class="string">&quot;BT&quot;</span>, <span class="macro">vec!</span>[]),
-                Operation::new(<span class="string">&quot;Tf&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;F1&quot;</span>.into(), <span class="number">48</span>.into()]),
-                Operation::new(<span class="string">&quot;Td&quot;</span>, <span class="macro">vec!</span>[<span class="number">100</span>.into(), <span class="number">600</span>.into()]),
-                Operation::new(<span class="string">&quot;Tj&quot;</span>, <span class="macro">vec!</span>[Object::string_literal(<span class="string">&quot;Hello World!&quot;</span>)]),
-                Operation::new(<span class="string">&quot;ET&quot;</span>, <span class="macro">vec!</span>[]),
+                Operation::new(<span class="string">"BT"</span>, <span class="macro">vec!</span>[]),
+                Operation::new(<span class="string">"Tf"</span>, <span class="macro">vec!</span>[<span class="string">"F1"</span>.into(), <span class="number">48</span>.into()]),
+                Operation::new(<span class="string">"Td"</span>, <span class="macro">vec!</span>[<span class="number">100</span>.into(), <span class="number">600</span>.into()]),
+                Operation::new(<span class="string">"Tj"</span>, <span class="macro">vec!</span>[Object::string_literal(<span class="string">"Hello World!"</span>)]),
+                Operation::new(<span class="string">"ET"</span>, <span class="macro">vec!</span>[]),
             ],
         };
         <span class="kw">let </span>content_id = doc.add_object(Stream::new(<span class="macro">dictionary! </span>{}, content.encode().unwrap()));
         <span class="kw">let </span>page_id = doc.add_object(<span class="macro">dictionary! </span>{
-            <span class="string">&quot;Type&quot; </span>=&gt; <span class="string">&quot;Page&quot;</span>,
-            <span class="string">&quot;Parent&quot; </span>=&gt; pages_id,
-            <span class="string">&quot;Contents&quot; </span>=&gt; content_id,
+            <span class="string">"Type" </span>=&gt; <span class="string">"Page"</span>,
+            <span class="string">"Parent" </span>=&gt; pages_id,
+            <span class="string">"Contents" </span>=&gt; content_id,
         });
         <span class="kw">let </span>pages = <span class="macro">dictionary! </span>{
-            <span class="string">&quot;Type&quot; </span>=&gt; <span class="string">&quot;Pages&quot;</span>,
-            <span class="string">&quot;Kids&quot; </span>=&gt; <span class="macro">vec!</span>[page_id.into()],
-            <span class="string">&quot;Count&quot; </span>=&gt; <span class="number">1</span>,
-            <span class="string">&quot;Resources&quot; </span>=&gt; resources_id,
-            <span class="string">&quot;MediaBox&quot; </span>=&gt; <span class="macro">vec!</span>[<span class="number">0</span>.into(), <span class="number">0</span>.into(), <span class="number">595</span>.into(), <span class="number">842</span>.into()],
+            <span class="string">"Type" </span>=&gt; <span class="string">"Pages"</span>,
+            <span class="string">"Kids" </span>=&gt; <span class="macro">vec!</span>[page_id.into()],
+            <span class="string">"Count" </span>=&gt; <span class="number">1</span>,
+            <span class="string">"Resources" </span>=&gt; resources_id,
+            <span class="string">"MediaBox" </span>=&gt; <span class="macro">vec!</span>[<span class="number">0</span>.into(), <span class="number">0</span>.into(), <span class="number">595</span>.into(), <span class="number">842</span>.into()],
         };
         doc.objects.insert(pages_id, Object::Dictionary(pages));
         <span class="kw">let </span>catalog_id = doc.add_object(<span class="macro">dictionary! </span>{
-            <span class="string">&quot;Type&quot; </span>=&gt; <span class="string">&quot;Catalog&quot;</span>,
-            <span class="string">&quot;Pages&quot; </span>=&gt; pages_id,
+            <span class="string">"Type" </span>=&gt; <span class="string">"Catalog"</span>,
+            <span class="string">"Pages" </span>=&gt; pages_id,
         });
-        doc.trailer.set(<span class="string">&quot;Root&quot;</span>, catalog_id);
-        doc.trailer.set(<span class="string">&quot;Info&quot;</span>, info_id);
+        doc.trailer.set(<span class="string">"Root"</span>, catalog_id);
+        doc.trailer.set(<span class="string">"Info"</span>, info_id);
         doc.compress();
 
         doc
@@ -438,8 +440,8 @@
     </span><span class="kw">pub fn </span>remove_document(filename: <span class="kw-2">&amp;</span>String) {
         <span class="kw">let </span>path = Path::new(<span class="kw-2">&amp;</span>filename);
 
-        <span class="macro">assert_ne!</span>(path.as_os_str(), <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_ne!</span>(path.as_os_str(), <span class="string">&quot;/&quot;</span>);
+        <span class="macro">assert_ne!</span>(path.as_os_str(), <span class="string">""</span>);
+        <span class="macro">assert_ne!</span>(path.as_os_str(), <span class="string">"/"</span>);
 
         <span class="kw">let </span>exists = path.exists();
         <span class="macro">assert!</span>(exists);
@@ -451,7 +453,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>create_document_creates_document() {
-        <span class="kw">let </span>filename = String::from(<span class="string">&quot;test_1_create.pdf&quot;</span>);
+        <span class="kw">let </span>filename = String::from(<span class="string">"test_1_create.pdf"</span>);
         <span class="kw">let </span>path = Path::new(<span class="kw-2">&amp;</span>filename);
         <span class="kw">let </span><span class="kw-2">mut </span>doc = create_document();
 
@@ -465,7 +467,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>remove_document_removes_document() {
-        <span class="kw">let </span>filename = String::from(<span class="string">&quot;test_1_create.pdf&quot;</span>);
+        <span class="kw">let </span>filename = String::from(<span class="string">"test_1_create.pdf"</span>);
 
         <span class="kw">let </span>path = Path::new(<span class="kw-2">&amp;</span>filename);
 

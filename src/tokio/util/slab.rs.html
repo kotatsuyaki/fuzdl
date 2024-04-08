@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/util/slab.rs`."><title>slab.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/util/slab.rs`."><title>slab.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../tokio/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -852,7 +854,7 @@
 <a href="#852" id="852">852</a>
 <a href="#853" id="853">853</a>
 <a href="#854" id="854">854</a>
-</pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(not(feature = <span class="string">&quot;rt&quot;</span>), allow(dead_code))]
+</pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(not(feature = <span class="string">"rt"</span>), allow(dead_code))]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::loom::cell::UnsafeCell;
 <span class="kw">use </span><span class="kw">crate</span>::loom::sync::atomic::{AtomicBool, AtomicUsize};
@@ -885,7 +887,7 @@
 /// previously used slot is available, a new slot is initialized in an existing
 /// page. If all pages are full, then a new page is allocated.
 ///
-/// When an allocated object is released, it is pushed into it&#39;s page&#39;s free
+/// When an allocated object is released, it is pushed into it's page's free
 /// list. Allocating scans all pages for a free slot.
 ///
 /// # Indexing
@@ -893,7 +895,7 @@
 /// The slab is able to index values using an address. Even when the indexed
 /// object has been released, it is still safe to index. This is a key ability
 /// for using the slab with the I/O driver. Addresses are registered with the
-/// OS&#39;s selector and I/O resources can be released without synchronizing with
+/// OS's selector and I/O resources can be released without synchronizing with
 /// the OS.
 ///
 /// # Compaction
@@ -931,7 +933,7 @@
 /// However, it is not guaranteed that the slot has not been reused and is now
 /// represents a different value.
 ///
-/// The I/O driver uses a counter to track the slot&#39;s generation. Once accessing
+/// The I/O driver uses a counter to track the slot's generation. Once accessing
 /// the slot, the generations are compared. If they match, the value matches the
 /// address.
 </span><span class="attr">#[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -939,7 +941,7 @@
 
 <span class="doccomment">/// An entry in the slab.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>Entry: Default {
-    <span class="doccomment">/// Resets the entry&#39;s value and track the generation.
+    <span class="doccomment">/// Resets the entry's value and track the generation.
     </span><span class="kw">fn </span>reset(<span class="kw-2">&amp;</span><span class="self">self</span>);
 }
 
@@ -975,7 +977,7 @@
 }
 
 <span class="kw">struct </span>CachedPage&lt;T&gt; {
-    <span class="doccomment">/// Pointer to the page&#39;s slots.
+    <span class="doccomment">/// Pointer to the page's slots.
     </span>slots: <span class="kw-2">*const </span>Slot&lt;T&gt;,
 
     <span class="doccomment">/// Number of initialized slots.
@@ -1052,10 +1054,10 @@
             len <span class="kw-2">*</span>= <span class="number">2</span>;
             prev_len += page.len;
 
-            <span class="comment">// Ensure we don&#39;t exceed the max address space.
+            <span class="comment">// Ensure we don't exceed the max address space.
             </span><span class="macro">debug_assert!</span>(
                 page.len - <span class="number">1 </span>+ page.prev_len &lt; (<span class="number">1 </span>&lt;&lt; <span class="number">24</span>),
-                <span class="string">&quot;max = {:b}&quot;</span>,
+                <span class="string">"max = {:b}"</span>,
                 page.len - <span class="number">1 </span>+ page.prev_len
             );
         }
@@ -1142,7 +1144,7 @@
             <span class="kw">let </span><span class="kw-2">mut </span>slots = <span class="kw">match </span>page.slots.try_lock() {
                 <span class="prelude-val">Some</span>(slots) =&gt; slots,
                 <span class="comment">// If the lock cannot be acquired due to being held by another
-                // thread, don&#39;t try to compact the page.
+                // thread, don't try to compact the page.
                 </span><span class="kw">_ </span>=&gt; <span class="kw">continue</span>,
             };
 
@@ -1155,7 +1157,7 @@
             page.allocated.store(<span class="bool-val">false</span>, Relaxed);
 
             <span class="comment">// Remove the slots vector from the page. This is done so that the
-            // freeing process is done outside of the lock&#39;s critical section.
+            // freeing process is done outside of the lock's critical section.
             </span><span class="kw">let </span>vec = mem::take(<span class="kw-2">&amp;mut </span>slots.slots);
             slots.head = <span class="number">0</span>;
 
@@ -1164,7 +1166,7 @@
 
             <span class="macro">debug_assert!</span>(
                 <span class="self">self</span>.cached[idx].slots.is_null() || <span class="self">self</span>.cached[idx].slots == vec.as_ptr(),
-                <span class="string">&quot;cached = {:?}; actual = {:?}&quot;</span>,
+                <span class="string">"cached = {:?}; actual = {:?}"</span>,
                 <span class="self">self</span>.cached[idx].slots,
                 vec.as_ptr(),
             );
@@ -1179,8 +1181,8 @@
 }
 
 <span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>Slab&lt;T&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        debug(fmt, <span class="string">&quot;Slab&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pages[..])
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        debug(fmt, <span class="string">"Slab"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pages[..])
     }
 }
 
@@ -1204,8 +1206,8 @@
 }
 
 <span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>Allocator&lt;T&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        debug(fmt, <span class="string">&quot;slab::Allocator&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pages[..])
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        debug(fmt, <span class="string">"slab::Allocator"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.pages[..])
     }
 }
 
@@ -1228,7 +1230,7 @@
 }
 
 <span class="kw">impl</span>&lt;T: fmt::Debug&gt; fmt::Debug <span class="kw">for </span>Ref&lt;T&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         (<span class="kw-2">**</span><span class="self">self</span>).fmt(fmt)
     }
 }
@@ -1339,7 +1341,7 @@
 }
 
 <span class="kw">impl</span>&lt;T&gt; Page&lt;T&gt; {
-    <span class="doccomment">/// Release a slot into the page&#39;s free list.
+    <span class="doccomment">/// Release a slot into the page's free list.
     </span><span class="kw">fn </span>release(<span class="kw-2">&amp;</span><span class="self">self</span>, value: <span class="kw-2">*const </span>Value&lt;T&gt;) {
         <span class="kw">let </span><span class="kw-2">mut </span>locked = <span class="self">self</span>.slots.lock();
 
@@ -1405,13 +1407,13 @@
     </span><span class="kw">fn </span>index_for(<span class="kw-2">&amp;</span><span class="self">self</span>, slot: <span class="kw-2">*const </span>Value&lt;T&gt;) -&gt; usize {
         <span class="kw">use </span>std::mem;
 
-        <span class="macro">assert_ne!</span>(<span class="self">self</span>.slots.capacity(), <span class="number">0</span>, <span class="string">&quot;page is unallocated&quot;</span>);
+        <span class="macro">assert_ne!</span>(<span class="self">self</span>.slots.capacity(), <span class="number">0</span>, <span class="string">"page is unallocated"</span>);
 
         <span class="kw">let </span>base = <span class="self">self</span>.slots.as_ptr() <span class="kw">as </span>usize;
         <span class="kw">let </span>slot = slot <span class="kw">as </span>usize;
         <span class="kw">let </span>width = mem::size_of::&lt;Slot&lt;T&gt;&gt;();
 
-        <span class="macro">assert!</span>(slot &gt;= base, <span class="string">&quot;unexpected pointer&quot;</span>);
+        <span class="macro">assert!</span>(slot &gt;= base, <span class="string">"unexpected pointer"</span>);
 
         <span class="kw">let </span>idx = (slot - base) / width;
         <span class="macro">assert!</span>(idx &lt; <span class="self">self</span>.slots.len() <span class="kw">as </span>usize);
@@ -1419,7 +1421,7 @@
         idx
     }
 
-    <span class="doccomment">/// Generates a `Ref` for the slot at the given index. This involves bumping the page&#39;s ref count.
+    <span class="doccomment">/// Generates a `Ref` for the slot at the given index. This involves bumping the page's ref count.
     </span><span class="kw">fn </span>gen_ref(<span class="kw-2">&amp;</span><span class="self">self</span>, idx: usize, page: <span class="kw-2">&amp;</span>Arc&lt;Page&lt;T&gt;&gt;) -&gt; Ref&lt;T&gt; {
         <span class="macro">assert!</span>(idx &lt; <span class="self">self</span>.slots.len());
         mem::forget(page.clone());
@@ -1450,7 +1452,7 @@
         // page size and looking at how many twos places necessary to represent
         // that number, telling us what power of two page size it fits inside
         // of. We can determine the number of twos places by counting the number
-        // of leading zeros (unused twos places) in the number&#39;s binary
+        // of leading zeros (unused twos places) in the number's binary
         // representation, and subtracting that count from the total number of
         // bits in a word.
         </span><span class="kw">let </span>slot_shifted = (<span class="self">self</span>.<span class="number">0 </span>+ PAGE_INITIAL_SIZE) &gt;&gt; PAGE_INDEX_SHIFT;
@@ -1466,7 +1468,7 @@
     }
 }
 
-<span class="kw">fn </span>debug&lt;T&gt;(fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;, name: <span class="kw-2">&amp;</span>str, pages: <span class="kw-2">&amp;</span>[Arc&lt;Page&lt;T&gt;&gt;]) -&gt; fmt::Result {
+<span class="kw">fn </span>debug&lt;T&gt;(fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;, name: <span class="kw-2">&amp;</span>str, pages: <span class="kw-2">&amp;</span>[Arc&lt;Page&lt;T&gt;&gt;]) -&gt; fmt::Result {
     <span class="kw">let </span><span class="kw-2">mut </span>capacity = <span class="number">0</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>len = <span class="number">0</span>;
 
@@ -1478,8 +1480,8 @@
     }
 
     fmt.debug_struct(name)
-        .field(<span class="string">&quot;len&quot;</span>, <span class="kw-2">&amp;</span>len)
-        .field(<span class="string">&quot;capacity&quot;</span>, <span class="kw-2">&amp;</span>capacity)
+        .field(<span class="string">"len"</span>, <span class="kw-2">&amp;</span>len)
+        .field(<span class="string">"capacity"</span>, <span class="kw-2">&amp;</span>capacity)
         .finish()
 }
 

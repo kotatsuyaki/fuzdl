@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/compression/rle.rs`."><title>rle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/compression/rle.rs`."><title>rle.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -135,19 +137,19 @@
         <span class="kw">let </span>count = take_1(<span class="kw-2">&amp;mut </span>remaining)<span class="question-mark">? </span><span class="kw">as </span>i8 <span class="kw">as </span>i32;
 
         <span class="kw">if </span>count &lt; <span class="number">0 </span>{
-            <span class="comment">// take the next &#39;-count&#39; bytes as-is
+            <span class="comment">// take the next '-count' bytes as-is
             </span><span class="kw">let </span>values = take_n(<span class="kw-2">&amp;mut </span>remaining, (-count) <span class="kw">as </span>usize)<span class="question-mark">?</span>;
             decompressed.extend_from_slice(values);
         }
         <span class="kw">else </span>{
-            <span class="comment">// repeat the next value &#39;count + 1&#39; times
+            <span class="comment">// repeat the next value 'count + 1' times
             </span><span class="kw">let </span>value = take_1(<span class="kw-2">&amp;mut </span>remaining)<span class="question-mark">?</span>;
             decompressed.resize(decompressed.len() + count <span class="kw">as </span>usize + <span class="number">1</span>, value);
         }
     }
 
     <span class="kw">if </span>pedantic &amp;&amp; !remaining.is_empty() {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;data amount&quot;</span>));
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"data amount"</span>));
     }
 
     differences_to_samples(<span class="kw-2">&amp;mut </span>decompressed);
@@ -155,7 +157,7 @@
     <span class="prelude-val">Ok</span>(<span class="kw">super</span>::convert_little_endian_to_current(<span class="kw-2">&amp;</span>decompressed, channels, rectangle))<span class="comment">// TODO no alloc
 </span>}
 
-<span class="kw">pub fn </span>compress_bytes(channels: <span class="kw-2">&amp;</span>ChannelList, uncompressed: Bytes&lt;<span class="lifetime">&#39;_</span>&gt;, rectangle: IntegerBounds) -&gt; <span class="prelude-ty">Result</span>&lt;ByteVec&gt; {
+<span class="kw">pub fn </span>compress_bytes(channels: <span class="kw-2">&amp;</span>ChannelList, uncompressed: Bytes&lt;<span class="lifetime">'_</span>&gt;, rectangle: IntegerBounds) -&gt; <span class="prelude-ty">Result</span>&lt;ByteVec&gt; {
     <span class="comment">// see https://github.com/AcademySoftwareFoundation/openexr/blob/3bd93f85bcb74c77255f28cdbb913fdbfbb39dfe/OpenEXR/IlmImf/ImfTiledOutputFile.cpp#L750-L842
     </span><span class="kw">let </span><span class="kw-2">mut </span>data = <span class="kw">super</span>::convert_current_to_little_endian(uncompressed, channels, rectangle);<span class="comment">// TODO no alloc
 
@@ -208,18 +210,18 @@
         <span class="prelude-val">Ok</span>(result)
 
     } <span class="kw">else </span>{
-        <span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;compressed data&quot;</span>))
+        <span class="prelude-val">Err</span>(Error::invalid(<span class="string">"compressed data"</span>))
     }
 }
 
-<span class="kw">fn </span>take_n&lt;<span class="lifetime">&#39;s</span>&gt;(slice: <span class="kw-2">&amp;mut &amp;</span><span class="lifetime">&#39;s </span>[u8], n: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;s </span>[u8]&gt; {
+<span class="kw">fn </span>take_n&lt;<span class="lifetime">'s</span>&gt;(slice: <span class="kw-2">&amp;mut &amp;</span><span class="lifetime">'s </span>[u8], n: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'s </span>[u8]&gt; {
     <span class="kw">if </span>n &lt;= slice.len() {
         <span class="kw">let </span>(front, back) = slice.split_at(n);
         <span class="kw-2">*</span>slice = back;
         <span class="prelude-val">Ok</span>(front)
 
     } <span class="kw">else </span>{
-        <span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;compressed data&quot;</span>))
+        <span class="prelude-val">Err</span>(Error::invalid(<span class="string">"compressed data"</span>))
     }
 }
 </code></pre></div></section></main></body></html>

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/lz77.rs`."><title>lz77.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/lz77.rs`."><title>lz77.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../deflate/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1275,8 +1277,8 @@
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>MatchingType {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
-            MatchingType::Greedy =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Greedy matching&quot;</span>),
-            MatchingType::Lazy =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Lazy matching&quot;</span>),
+            MatchingType::Greedy =&gt; <span class="macro">write!</span>(f, <span class="string">"Greedy matching"</span>),
+            MatchingType::Lazy =&gt; <span class="macro">write!</span>(f, <span class="string">"Lazy matching"</span>),
         }
     }
 }
@@ -1505,7 +1507,7 @@
     };
 }
 
-<span class="doccomment">/// If the match is only 3 bytes long and the distance is more than 8 * 1024, it&#39;s likely to take
+<span class="doccomment">/// If the match is only 3 bytes long and the distance is more than 8 * 1024, it's likely to take
 /// up more space than it would save.
 </span><span class="attr">#[inline]
 </span><span class="kw">fn </span>match_too_far(match_len: usize, match_dist: usize) -&gt; bool {
@@ -1514,13 +1516,13 @@
 }
 
 <span class="doccomment">///Create the iterators used when processing through a chunk of data.
-</span><span class="kw">fn </span>create_iterators&lt;<span class="lifetime">&#39;a</span>&gt;(
-    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
+</span><span class="kw">fn </span>create_iterators&lt;<span class="lifetime">'a</span>&gt;(
+    data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8],
     iterated_data: <span class="kw-2">&amp;</span>Range&lt;usize&gt;,
 ) -&gt; (
     usize,
-    iter::Zip&lt;RangeFrom&lt;usize&gt;, Iter&lt;<span class="lifetime">&#39;a</span>, u8&gt;&gt;,
-    Iter&lt;<span class="lifetime">&#39;a</span>, u8&gt;,
+    iter::Zip&lt;RangeFrom&lt;usize&gt;, Iter&lt;<span class="lifetime">'a</span>, u8&gt;&gt;,
+    Iter&lt;<span class="lifetime">'a</span>, u8&gt;,
 ) {
     <span class="kw">let </span>end = cmp::min(data.len(), iterated_data.end);
     <span class="kw">let </span>start = iterated_data.start;
@@ -1564,7 +1566,7 @@
     </span><span class="kw">let </span><span class="kw-2">mut </span>overlap = <span class="number">0</span>;
 
     <span class="comment">// Set to true if we found a match that is equal to or longer than `lazy_if_less_than`,
-    // indicating that we won&#39;t lazy match (check for a better match at the next byte).
+    // indicating that we won't lazy match (check for a better match at the next byte).
     // If we had a good match, carry this over from the previous call.
     </span><span class="kw">let </span><span class="kw-2">mut </span>ignore_next = prev_length <span class="kw">as </span>usize &gt;= lazy_if_less_than;
 
@@ -1601,20 +1603,20 @@
                     )
                 };
 
-                <span class="comment">// If the match is only 3 bytes long and very far back, it&#39;s probably not worth
+                <span class="comment">// If the match is only 3 bytes long and very far back, it's probably not worth
                 // outputting.
                 </span><span class="kw">if </span>match_too_far(match_len, match_dist) {
                     match_len = NO_LENGTH <span class="kw">as </span>usize;
                 };
 
                 <span class="kw">if </span>match_len &gt;= lazy_if_less_than {
-                    <span class="comment">// We found a decent match, so we won&#39;t check for a better one at the next byte.
+                    <span class="comment">// We found a decent match, so we won't check for a better one at the next byte.
                     </span>ignore_next = <span class="bool-val">true</span>;
                 }
                 state.current_length = match_len <span class="kw">as </span>u16;
                 state.current_distance = match_dist <span class="kw">as </span>u16;
             } <span class="kw">else </span>{
-                <span class="comment">// We already had a decent match, so we don&#39;t bother checking for another one.
+                <span class="comment">// We already had a decent match, so we don't bother checking for another one.
                 </span>state.current_length = NO_LENGTH;
                 state.current_distance = <span class="number">0</span>;
                 <span class="comment">// Make sure we check again next time.
@@ -1629,7 +1631,7 @@
                     writer.write_length_distance(prev_length <span class="kw">as </span>u16, prev_distance <span class="kw">as </span>u16);
 
                 <span class="comment">// We add the bytes to the hash table and checksum.
-                // Since we&#39;ve already added two of them, we need to add two less than
+                // Since we've already added two of them, we need to add two less than
                 // the length.
                 </span><span class="kw">let </span>bytes_to_add = prev_length - <span class="number">2</span>;
 
@@ -1641,9 +1643,9 @@
                 );
 
                 <span class="comment">// If the match is longer than the current window, we have note how many
-                // bytes we overlap, since we don&#39;t need to do any matching on these bytes
+                // bytes we overlap, since we don't need to do any matching on these bytes
                 // in the next call of this function.
-                // We don&#39;t have to worry about setting overlap to 0 if this is false, as the
+                // We don't have to worry about setting overlap to 0 if this is false, as the
                 // function will stop after this condition is true, and overlap is not altered
                 // elsewhere.
                 </span><span class="kw">if </span>position + prev_length <span class="kw">as </span>usize &gt; end {
@@ -1693,10 +1695,10 @@
                     .saturating_sub(<span class="number">1</span>);
 
                 <span class="comment">// TODO: Not sure if we need to signal that the buffer is full here.
-                // It&#39;s only needed in the case of syncing.
+                // It's only needed in the case of syncing.
                 </span><span class="kw">if let </span>BufferStatus::Full = b_status {
                     <span class="comment">// TODO: These bytes should be hashed when doing a sync flush.
-                    // This can&#39;t be done here as the new input data does not exist yet.
+                    // This can't be done here as the new input data does not exist yet.
                     </span><span class="kw">return </span>(overlap, buffer_full(end));
                 } <span class="kw">else </span>{
                     <span class="kw">return </span>(overlap, ProcessStatus::Ok);
@@ -1751,13 +1753,13 @@
                 </span><span class="kw">let </span>b_status = writer.write_length_distance(match_len <span class="kw">as </span>u16, match_dist <span class="kw">as </span>u16);
 
                 <span class="comment">// We add the bytes to the hash table and checksum.
-                // Since we&#39;ve already added one of them, we need to add one less than
+                // Since we've already added one of them, we need to add one less than
                 // the length.
                 </span><span class="kw">let </span>bytes_to_add = match_len - <span class="number">1</span>;
                 add_to_hash_table(bytes_to_add, <span class="kw-2">&amp;mut </span>insert_it, <span class="kw-2">&amp;mut </span>hash_it, <span class="kw-2">&amp;mut </span>hash_table);
 
                 <span class="comment">// If the match is longer than the current window, we have note how many
-                // bytes we overlap, since we don&#39;t need to do any matching on these bytes
+                // bytes we overlap, since we don't need to do any matching on these bytes
                 // in the next call of this function.
                 </span><span class="kw">if </span>position + match_len &gt; end {
                     <span class="comment">// We need to subtract 1 since the byte at pos is also included.
@@ -1808,10 +1810,10 @@
 <span class="doccomment">/// Compress a slice with lz77 compression.
 ///
 /// This function processes one window at a time, and returns when there is no input left,
-/// or it determines it&#39;s time to end a block.
+/// or it determines it's time to end a block.
 ///
 /// Returns the number of bytes of the input that were consumed, a status describing
-/// whether there is no input, it&#39;s time to finish, or it&#39;s time to end the block, and the position
+/// whether there is no input, it's time to finish, or it's time to end the block, and the position
 /// of the first byte in the input buffer that has not been output (but may have been checked for
 /// matches).
 </span><span class="kw">pub fn </span>lz77_compress_block(
@@ -1837,7 +1839,7 @@
     <span class="comment">// Whether warm up the hash chain with the two first values.
     </span><span class="kw">let </span><span class="kw-2">mut </span>add_initial = <span class="bool-val">true</span>;
 
-    <span class="comment">// If we have synced, add the two first bytes to the hash as they couldn&#39;t be added before.
+    <span class="comment">// If we have synced, add the two first bytes to the hash as they couldn't be added before.
     </span><span class="kw">if </span>state.was_synced {
         <span class="kw">if </span>buffer.current_end() &gt; <span class="number">2 </span>{
             <span class="kw">let </span>pos_add = buffer.current_end() - <span class="number">2</span>;
@@ -1858,7 +1860,7 @@
         </span><span class="kw">let </span>pending_previous = state.pending_byte_as_num();
 
         <span class="macro">assert!</span>(writer.buffer_length() &lt;= (window_size * <span class="number">2</span>));
-        <span class="comment">// Don&#39;t do anything until we are either flushing, or we have at least one window of
+        <span class="comment">// Don't do anything until we are either flushing, or we have at least one window of
         // data.
         </span><span class="kw">if </span>buffer.current_end() &gt;= (window_size * <span class="number">2</span>) + MAX_MATCH || finish {
             <span class="kw">if </span>state.is_first_window {
@@ -1951,7 +1953,7 @@
                 } <span class="kw">else </span>{
                     <span class="macro">debug_assert!</span>(
                         !state.pending_byte(),
-                        <span class="string">&quot;Bug! Ended compression with a pending byte!&quot;
+                        <span class="string">"Bug! Ended compression with a pending byte!"
                     </span>);
                     buffer.current_end()
                 };
@@ -1965,7 +1967,7 @@
                     <span class="comment">// For sync flushing we need to slide the buffer and the hash chains so that the
                     // next call to this function starts at the right place.
 
-                    // There won&#39;t be any overlap, since when syncing, we process to the end of the
+                    // There won't be any overlap, since when syncing, we process to the end of the
                     // pending data.
                     </span>state.overlap = <span class="kw">if </span>state.is_first_window {
                         end
@@ -2026,8 +2028,8 @@
 
                     <span class="macro">assert!</span>(
                         into_back_buffer &lt;= back_buffer.len(),
-                        <span class="string">&quot;ERROR: Attempted to refer to a match in non-existing data!\
-                         into_back_buffer: {}, back_buffer len {}, d {}, l {:?}&quot;</span>,
+                        <span class="string">"ERROR: Attempted to refer to a match in non-existing data!\
+                         into_back_buffer: {}, back_buffer len {}, d {}, l {:?}"</span>,
                         into_back_buffer,
                         back_buffer.len(),
                         d,
@@ -2161,19 +2163,19 @@
             <span class="kw">match </span>l.value() {
                 LZType::Literal(l) =&gt; output.push(l),
                 LZType::StoredLengthDistance(l, d) =&gt; {
-                    output.extend(<span class="macro">format!</span>(<span class="string">&quot;&lt;L {}&gt;&quot;</span>, l.actual_length()).into_bytes());
-                    output.extend(<span class="macro">format!</span>(<span class="string">&quot;&lt;D {}&gt;&quot;</span>, d).into_bytes())
+                    output.extend(<span class="macro">format!</span>(<span class="string">"&lt;L {}&gt;"</span>, l.actual_length()).into_bytes());
+                    output.extend(<span class="macro">format!</span>(<span class="string">"&lt;D {}&gt;"</span>, d).into_bytes())
                 }
             }
         }
 
-        <span class="macro">println!</span>(<span class="string">&quot;\&quot;{}\&quot;&quot;</span>, String::from_utf8(output).unwrap());
+        <span class="macro">println!</span>(<span class="string">"\"{}\""</span>, String::from_utf8(output).unwrap());
     }
 
     <span class="doccomment">/// Test that a short string from an example on SO compresses correctly
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>compress_short() {
-        <span class="kw">let </span>test_bytes = String::from(<span class="string">&quot;Deflate late&quot;</span>).into_bytes();
+        <span class="kw">let </span>test_bytes = String::from(<span class="string">"Deflate late"</span>).into_bytes();
         <span class="kw">let </span>res = lz77_compress(<span class="kw-2">&amp;</span>test_bytes).unwrap();
 
         <span class="kw">let </span>decompressed = decompress_lz77(<span class="kw-2">&amp;</span>res);
@@ -2190,12 +2192,12 @@
         <span class="macro">assert!</span>(compressed.len() &lt; input.len());
 
         <span class="kw">let </span>decompressed = decompress_lz77(<span class="kw-2">&amp;</span>compressed);
-        <span class="macro">println!</span>(<span class="string">&quot;compress_long length: {}&quot;</span>, input.len());
+        <span class="macro">println!</span>(<span class="string">"compress_long length: {}"</span>, input.len());
 
         <span class="comment">// This is to check where the compression fails, if it were to
         </span><span class="kw">for </span>(n, (<span class="kw-2">&amp;</span>a, <span class="kw-2">&amp;</span>b)) <span class="kw">in </span>input.iter().zip(decompressed.iter()).enumerate() {
             <span class="kw">if </span>a != b {
-                <span class="macro">println!</span>(<span class="string">&quot;First difference at {}, input: {}, output: {}&quot;</span>, n, a, b);
+                <span class="macro">println!</span>(<span class="string">"First difference at {}, input: {}, output: {}"</span>, n, a, b);
                 <span class="kw">break</span>;
             }
         }
@@ -2207,8 +2209,8 @@
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>lazy() {
         <span class="comment">// We want to match on `badger` rather than `nba` as it is longer
-        // let data = b&quot; nba nbadg badger nbadger&quot;;
-        </span><span class="kw">let </span>data = <span class="string">b&quot;nba badger nbadger&quot;</span>;
+        // let data = b" nba nbadg badger nbadger";
+        </span><span class="kw">let </span>data = <span class="string">b"nba badger nbadger"</span>;
         <span class="kw">let </span>compressed = lz77_compress(data).unwrap();
         <span class="kw">let </span>test = compressed[compressed.len() - <span class="number">1</span>];
         <span class="kw">if let </span>LZType::StoredLengthDistance(l, <span class="kw">_</span>) = test.value() {
@@ -2247,7 +2249,7 @@
     </span><span class="kw">fn </span>border() {
         <span class="kw">use </span><span class="kw">crate</span>::chained_hash_table::WINDOW_SIZE;
         <span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">35</span>; WINDOW_SIZE];
-        data.extend(<span class="string">b&quot;Test&quot;</span>);
+        data.extend(<span class="string">b"Test"</span>);
         <span class="kw">let </span>compressed = <span class="kw">super</span>::lz77_compress(<span class="kw-2">&amp;</span>data).unwrap();
         <span class="macro">assert!</span>(compressed.len() &lt; data.len());
         <span class="kw">let </span>decompressed = decompress_lz77(<span class="kw-2">&amp;</span>compressed);
@@ -2272,7 +2274,7 @@
     </span><span class="kw">fn </span>compress_block_status() {
         <span class="kw">use </span><span class="kw">crate</span>::input_buffer::InputBuffer;
 
-        <span class="kw">let </span>data = <span class="string">b&quot;Test data data&quot;</span>;
+        <span class="kw">let </span>data = <span class="string">b"Test data data"</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>writer = DynamicWriter::new();
 
         <span class="kw">let </span><span class="kw-2">mut </span>buffer = InputBuffer::empty();
@@ -2316,7 +2318,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>multiple_inputs() {
-        <span class="kw">let </span>data = <span class="string">b&quot;Badger badger bababa test data 25 asfgestghresjkgh&quot;</span>;
+        <span class="kw">let </span>data = <span class="string">b"Badger badger bababa test data 25 asfgestghresjkgh"</span>;
         <span class="kw">let </span>comp1 = lz77_compress(data).unwrap();
         <span class="kw">let </span>comp2 = {
             <span class="kw">const </span>SPLIT: usize = <span class="number">25</span>;
@@ -2438,7 +2440,7 @@
         // For the test file, this is how much data needs to be added to get the buffer
         // full at the right spot to test that this buffer full exit is workong correctly.
         for i in 0..31743 {
-            assert!(state.writer.write_literal(0) == BufferStatus::NotFull, &quot;Buffer pos: {}&quot;, i);
+            assert!(state.writer.write_literal(0) == BufferStatus::NotFull, "Buffer pos: {}", i);
         }
 
         let dec = decompress_lz77(&amp;state.writer.get_buffer()[pos..]);
@@ -2459,7 +2461,7 @@
     }
 }
 
-<span class="attr">#[cfg(all(test, feature = <span class="string">&quot;benchmarks&quot;</span>))]
+<span class="attr">#[cfg(all(test, feature = <span class="string">"benchmarks"</span>))]
 </span><span class="kw">mod </span>bench {
     <span class="kw">use </span><span class="kw">super</span>::lz77_compress;
     <span class="kw">use </span>test_std::Bencher;

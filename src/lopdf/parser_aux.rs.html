@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/parser_aux.rs`."><title>parser_aux.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/parser_aux.rs`."><title>parser_aux.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../lopdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -290,7 +292,7 @@
 <a href="#290" id="290">290</a>
 <a href="#291" id="291">291</a>
 <a href="#292" id="292">292</a>
-</pre></div><pre class="rust"><code><span class="attr">#![cfg(any(feature = <span class="string">&quot;pom_parser&quot;</span>, feature = <span class="string">&quot;nom_parser&quot;</span>))]
+</pre></div><pre class="rust"><code><span class="attr">#![cfg(any(feature = <span class="string">"pom_parser"</span>, feature = <span class="string">"nom_parser"</span>))]
 
 </span><span class="kw">use crate</span>::{
     content::{Content, Operation},
@@ -357,20 +359,20 @@
             <span class="kw">let </span><span class="kw-2">mut </span>current_encoding = <span class="prelude-val">None</span>;
             <span class="kw">for </span>operation <span class="kw">in </span><span class="kw-2">&amp;</span>content.operations {
                 <span class="kw">match </span>operation.operator.as_ref() {
-                    <span class="string">&quot;Tf&quot; </span>=&gt; {
+                    <span class="string">"Tf" </span>=&gt; {
                         <span class="kw">let </span>current_font = operation
                             .operands
                             .get(<span class="number">0</span>)
-                            .ok_or_else(|| Error::Syntax(<span class="string">&quot;missing font operand&quot;</span>.to_string()))<span class="question-mark">?
+                            .ok_or_else(|| Error::Syntax(<span class="string">"missing font operand"</span>.to_string()))<span class="question-mark">?
                             </span>.as_name()<span class="question-mark">?</span>;
                         current_encoding = encodings.get(current_font).cloned();
                     }
-                    <span class="string">&quot;Tj&quot; </span>| <span class="string">&quot;TJ&quot; </span>=&gt; {
+                    <span class="string">"Tj" </span>| <span class="string">"TJ" </span>=&gt; {
                         collect_text(<span class="kw-2">&amp;mut </span>text, current_encoding, <span class="kw-2">&amp;</span>operation.operands);
                     }
-                    <span class="string">&quot;ET&quot; </span>=&gt; {
-                        <span class="kw">if </span>!text.ends_with(<span class="string">&#39;\n&#39;</span>) {
-                            text.push(<span class="string">&#39;\n&#39;</span>)
+                    <span class="string">"ET" </span>=&gt; {
+                        <span class="kw">if </span>!text.ends_with(<span class="string">'\n'</span>) {
+                            text.push(<span class="string">'\n'</span>)
                         }
                     }
                     <span class="kw">_ </span>=&gt; {}
@@ -395,18 +397,18 @@
         <span class="kw">let </span><span class="kw-2">mut </span>current_encoding = <span class="prelude-val">None</span>;
         <span class="kw">for </span>operation <span class="kw">in </span><span class="kw-2">&amp;mut </span>content.operations {
             <span class="kw">match </span>operation.operator.as_ref() {
-                <span class="string">&quot;Tf&quot; </span>=&gt; {
+                <span class="string">"Tf" </span>=&gt; {
                     <span class="kw">let </span>current_font = operation
                         .operands
                         .get(<span class="number">0</span>)
-                        .ok_or_else(|| Error::Syntax(<span class="string">&quot;missing font operand&quot;</span>.to_string()))<span class="question-mark">?
+                        .ok_or_else(|| Error::Syntax(<span class="string">"missing font operand"</span>.to_string()))<span class="question-mark">?
                         </span>.as_name()<span class="question-mark">?</span>;
                     current_encoding = encodings.get(current_font).map(std::string::String::as_str);
                 }
-                <span class="string">&quot;Tj&quot; </span>=&gt; {
+                <span class="string">"Tj" </span>=&gt; {
                     <span class="kw">for </span>bytes <span class="kw">in </span>operation.operands.iter_mut().flat_map(Object::as_str_mut) {
                         <span class="kw">let </span>decoded_text = Document::decode_text(current_encoding, bytes);
-                        <span class="macro">info!</span>(<span class="string">&quot;{}&quot;</span>, decoded_text);
+                        <span class="macro">info!</span>(<span class="string">"{}"</span>, decoded_text);
                         <span class="kw">if </span>decoded_text == text {
                             <span class="kw">let </span>encoded_bytes = Document::encode_text(current_encoding, other_text);
                             <span class="kw-2">*</span>bytes = encoded_bytes;
@@ -424,14 +426,14 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>, page_id: ObjectId, img_object: Stream, position: (f64, f64), size: (f64, f64),
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>img_id = <span class="self">self</span>.add_object(img_object);
-        <span class="kw">let </span>img_name = <span class="macro">format!</span>(<span class="string">&quot;X{}&quot;</span>, img_id.<span class="number">0</span>);
+        <span class="kw">let </span>img_name = <span class="macro">format!</span>(<span class="string">"X{}"</span>, img_id.<span class="number">0</span>);
 
         <span class="self">self</span>.add_xobject(page_id, img_name.as_bytes(), img_id)<span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>content = <span class="self">self</span>.get_and_decode_page_content(page_id)<span class="question-mark">?</span>;
-        content.operations.push(Operation::new(<span class="string">&quot;q&quot;</span>, <span class="macro">vec!</span>[]));
+        content.operations.push(Operation::new(<span class="string">"q"</span>, <span class="macro">vec!</span>[]));
         content.operations.push(Operation::new(
-            <span class="string">&quot;cm&quot;</span>,
+            <span class="string">"cm"</span>,
             <span class="macro">vec!</span>[
                 size.<span class="number">0</span>.into(),
                 <span class="number">0</span>.into(),
@@ -443,25 +445,25 @@
         ));
         content
             .operations
-            .push(Operation::new(<span class="string">&quot;Do&quot;</span>, <span class="macro">vec!</span>[Name(img_name.as_bytes().to_vec())]));
-        content.operations.push(Operation::new(<span class="string">&quot;Q&quot;</span>, <span class="macro">vec!</span>[]));
-        content.operations.push(Operation::new(<span class="string">&quot;Q&quot;</span>, <span class="macro">vec!</span>[]));
+            .push(Operation::new(<span class="string">"Do"</span>, <span class="macro">vec!</span>[Name(img_name.as_bytes().to_vec())]));
+        content.operations.push(Operation::new(<span class="string">"Q"</span>, <span class="macro">vec!</span>[]));
+        content.operations.push(Operation::new(<span class="string">"Q"</span>, <span class="macro">vec!</span>[]));
 
         <span class="self">self</span>.change_page_content(page_id, content.encode()<span class="question-mark">?</span>)
     }
 
     <span class="kw">pub fn </span>insert_form_object(<span class="kw-2">&amp;mut </span><span class="self">self</span>, page_id: ObjectId, form_obj: Stream) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>form_id = <span class="self">self</span>.add_object(form_obj);
-        <span class="kw">let </span>form_name = <span class="macro">format!</span>(<span class="string">&quot;X{}&quot;</span>, form_id.<span class="number">0</span>);
+        <span class="kw">let </span>form_name = <span class="macro">format!</span>(<span class="string">"X{}"</span>, form_id.<span class="number">0</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>content = <span class="self">self</span>.get_and_decode_page_content(page_id)<span class="question-mark">?</span>;
-        content.operations.insert(<span class="number">0</span>, Operation::new(<span class="string">&quot;q&quot;</span>, <span class="macro">vec!</span>[]));
-        content.operations.push(Operation::new(<span class="string">&quot;Q&quot;</span>, <span class="macro">vec!</span>[]));
-        <span class="comment">// content.operations.push(Operation::new(&quot;q&quot;, vec![]));
+        content.operations.insert(<span class="number">0</span>, Operation::new(<span class="string">"q"</span>, <span class="macro">vec!</span>[]));
+        content.operations.push(Operation::new(<span class="string">"Q"</span>, <span class="macro">vec!</span>[]));
+        <span class="comment">// content.operations.push(Operation::new("q", vec![]));
         </span>content
             .operations
-            .push(Operation::new(<span class="string">&quot;Do&quot;</span>, <span class="macro">vec!</span>[Name(form_name.as_bytes().to_vec())]));
-        <span class="comment">// content.operations.push(Operation::new(&quot;Q&quot;, vec![]));
+            .push(Operation::new(<span class="string">"Do"</span>, <span class="macro">vec!</span>[Name(form_name.as_bytes().to_vec())]));
+        <span class="comment">// content.operations.push(Operation::new("Q", vec![]));
         </span><span class="kw">let </span>modified_content = content.encode()<span class="question-mark">?</span>;
         <span class="self">self</span>.add_xobject(page_id, form_name, form_id)<span class="question-mark">?</span>;
 
@@ -474,17 +476,17 @@
     <span class="kw">let </span><span class="kw-2">mut </span>dict = stream.dict;
     <span class="kw">let </span><span class="kw-2">mut </span>reader = Cursor::new(stream.content);
     <span class="kw">let </span>size = dict
-        .get(<span class="string">b&quot;Size&quot;</span>)
+        .get(<span class="string">b"Size"</span>)
         .and_then(Object::as_i64)
         .map_err(|<span class="kw">_</span>| Error::Xref(XrefError::Parse))<span class="question-mark">?</span>;
     <span class="kw">let </span><span class="kw-2">mut </span>xref = Xref::new(size <span class="kw">as </span>u32);
     {
         <span class="kw">let </span>section_indice = dict
-            .get(<span class="string">b&quot;Index&quot;</span>)
+            .get(<span class="string">b"Index"</span>)
             .and_then(parse_integer_array)
             .unwrap_or_else(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="number">0</span>, size]);
         <span class="kw">let </span>field_widths = dict
-            .get(<span class="string">b&quot;W&quot;</span>)
+            .get(<span class="string">b"W"</span>)
             .and_then(parse_integer_array)
             .map_err(|<span class="kw">_</span>| Error::Xref(XrefError::Parse))<span class="question-mark">?</span>;
 
@@ -533,9 +535,9 @@
             }
         }
     }
-    dict.remove(<span class="string">b&quot;Length&quot;</span>);
-    dict.remove(<span class="string">b&quot;W&quot;</span>);
-    dict.remove(<span class="string">b&quot;Index&quot;</span>);
+    dict.remove(<span class="string">b"Length"</span>);
+    dict.remove(<span class="string">b"W"</span>);
+    dict.remove(<span class="string">b"Index"</span>);
     <span class="prelude-val">Ok</span>((xref, dict))
 }
 
@@ -566,12 +568,12 @@
     <span class="kw">use </span>std::fs::File;
     <span class="kw">use </span>std::io::Cursor;
 
-    <span class="kw">let </span>filename = String::from(<span class="string">&quot;test_1_load_and_save.pdf&quot;</span>);
+    <span class="kw">let </span>filename = String::from(<span class="string">"test_1_load_and_save.pdf"</span>);
     <span class="kw">let </span><span class="kw-2">mut </span>doc = create_document();
 
     save_document(<span class="kw-2">&amp;</span>filename, <span class="kw-2">&amp;mut </span>doc);
 
-    <span class="kw">let </span>in_file = File::open(<span class="string">&quot;test_1_load_and_save.pdf&quot;</span>).unwrap();
+    <span class="kw">let </span>in_file = File::open(<span class="string">"test_1_load_and_save.pdf"</span>).unwrap();
     <span class="kw">let </span><span class="kw-2">mut </span>in_doc = Document::load_from(in_file).unwrap();
 
     <span class="kw">let </span>out_buf = Vec::new();

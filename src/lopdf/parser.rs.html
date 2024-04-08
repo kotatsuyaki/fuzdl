@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/parser.rs`."><title>parser.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../lopdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -380,113 +382,113 @@
 <span class="kw">use </span>pom::parser::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::str::{<span class="self">self</span>, FromStr};
 
-<span class="kw">fn </span>eol&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, u8&gt; {
-    (sym(<span class="string">b&#39;\r&#39;</span>) * sym(<span class="string">b&#39;\n&#39;</span>)) | sym(<span class="string">b&#39;\n&#39;</span>) | sym(<span class="string">b&#39;\r&#39;</span>)
+<span class="kw">fn </span>eol&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, u8&gt; {
+    (sym(<span class="string">b'\r'</span>) * sym(<span class="string">b'\n'</span>)) | sym(<span class="string">b'\n'</span>) | sym(<span class="string">b'\r'</span>)
 }
 
-<span class="kw">fn </span>comment&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, ()&gt; {
-    sym(<span class="string">b&#39;%&#39;</span>) * none_of(<span class="string">b&quot;\r\n&quot;</span>).repeat(<span class="number">0</span>..) * eol().discard()
+<span class="kw">fn </span>comment&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, ()&gt; {
+    sym(<span class="string">b'%'</span>) * none_of(<span class="string">b"\r\n"</span>).repeat(<span class="number">0</span>..) * eol().discard()
 }
 
-<span class="kw">fn </span>white_space&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, ()&gt; {
-    one_of(<span class="string">b&quot; \t\n\r\0\x0C&quot;</span>).repeat(<span class="number">0</span>..).discard()
+<span class="kw">fn </span>white_space&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, ()&gt; {
+    one_of(<span class="string">b" \t\n\r\0\x0C"</span>).repeat(<span class="number">0</span>..).discard()
 }
 
-<span class="kw">fn </span>space&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, ()&gt; {
-    (one_of(<span class="string">b&quot; \t\n\r\0\x0C&quot;</span>).repeat(<span class="number">1</span>..).discard() | comment())
+<span class="kw">fn </span>space&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, ()&gt; {
+    (one_of(<span class="string">b" \t\n\r\0\x0C"</span>).repeat(<span class="number">1</span>..).discard() | comment())
         .repeat(<span class="number">0</span>..)
         .discard()
 }
 
-<span class="kw">fn </span>integer&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, i64&gt; {
-    <span class="kw">let </span>number = one_of(<span class="string">b&quot;+-&quot;</span>).opt() + one_of(<span class="string">b&quot;0123456789&quot;</span>).repeat(<span class="number">1</span>..);
+<span class="kw">fn </span>integer&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, i64&gt; {
+    <span class="kw">let </span>number = one_of(<span class="string">b"+-"</span>).opt() + one_of(<span class="string">b"0123456789"</span>).repeat(<span class="number">1</span>..);
     number.collect().convert(str::from_utf8).convert(|s| i64::from_str(<span class="kw-2">&amp;</span>s))
 }
 
-<span class="kw">fn </span>real&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, f64&gt; {
-    <span class="kw">let </span>number = one_of(<span class="string">b&quot;+-&quot;</span>).opt()
-        + ((one_of(<span class="string">b&quot;0123456789&quot;</span>).repeat(<span class="number">1</span>..) * sym(<span class="string">b&#39;.&#39;</span>) - one_of(<span class="string">b&quot;0123456789&quot;</span>).repeat(<span class="number">0</span>..))
-            | (sym(<span class="string">b&#39;.&#39;</span>) - one_of(<span class="string">b&quot;0123456789&quot;</span>).repeat(<span class="number">1</span>..)));
+<span class="kw">fn </span>real&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, f64&gt; {
+    <span class="kw">let </span>number = one_of(<span class="string">b"+-"</span>).opt()
+        + ((one_of(<span class="string">b"0123456789"</span>).repeat(<span class="number">1</span>..) * sym(<span class="string">b'.'</span>) - one_of(<span class="string">b"0123456789"</span>).repeat(<span class="number">0</span>..))
+            | (sym(<span class="string">b'.'</span>) - one_of(<span class="string">b"0123456789"</span>).repeat(<span class="number">1</span>..)));
     number.collect().convert(str::from_utf8).convert(|s| f64::from_str(<span class="kw-2">&amp;</span>s))
 }
 
-<span class="kw">fn </span>hex_char&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, u8&gt; {
+<span class="kw">fn </span>hex_char&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, u8&gt; {
     <span class="kw">let </span>number = is_a(hex_digit).repeat(<span class="number">2</span>);
     number
         .collect()
         .convert(|v| u8::from_str_radix(str::from_utf8(v).unwrap(), <span class="number">16</span>))
 }
 
-<span class="kw">fn </span>oct_char&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, u8&gt; {
+<span class="kw">fn </span>oct_char&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, u8&gt; {
     <span class="kw">let </span>number = is_a(oct_digit).repeat(<span class="number">1</span>..<span class="number">4</span>);
     number
         .collect()
         .convert(|v| u8::from_str_radix(str::from_utf8(v).unwrap(), <span class="number">8</span>))
 }
 
-<span class="kw">fn </span>name&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Vec&lt;u8&gt;&gt; {
-    sym(<span class="string">b&#39;/&#39;</span>) * (none_of(<span class="string">b&quot; \t\n\r\x0C()&lt;&gt;[]{}/%#&quot;</span>) | (sym(<span class="string">b&#39;#&#39;</span>) * hex_char())).repeat(<span class="number">0</span>..)
+<span class="kw">fn </span>name&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Vec&lt;u8&gt;&gt; {
+    sym(<span class="string">b'/'</span>) * (none_of(<span class="string">b" \t\n\r\x0C()&lt;&gt;[]{}/%#"</span>) | (sym(<span class="string">b'#'</span>) * hex_char())).repeat(<span class="number">0</span>..)
 }
 
-<span class="kw">fn </span>escape_sequence&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Vec&lt;u8&gt;&gt; {
-    sym(<span class="string">b&#39;\\&#39;</span>)
-        * (sym(<span class="string">b&#39;\\&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;\\&#39;</span>])
-            | sym(<span class="string">b&#39;(&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;(&#39;</span>])
-            | sym(<span class="string">b&#39;)&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;)&#39;</span>])
-            | sym(<span class="string">b&#39;n&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;\n&#39;</span>])
-            | sym(<span class="string">b&#39;r&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;\r&#39;</span>])
-            | sym(<span class="string">b&#39;t&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;\t&#39;</span>])
-            | sym(<span class="string">b&#39;b&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;\x08&#39;</span>])
-            | sym(<span class="string">b&#39;f&#39;</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b&#39;\x0C&#39;</span>])
+<span class="kw">fn </span>escape_sequence&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Vec&lt;u8&gt;&gt; {
+    sym(<span class="string">b'\\'</span>)
+        * (sym(<span class="string">b'\\'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'\\'</span>])
+            | sym(<span class="string">b'('</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'('</span>])
+            | sym(<span class="string">b')'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b')'</span>])
+            | sym(<span class="string">b'n'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'\n'</span>])
+            | sym(<span class="string">b'r'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'\r'</span>])
+            | sym(<span class="string">b't'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'\t'</span>])
+            | sym(<span class="string">b'b'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'\x08'</span>])
+            | sym(<span class="string">b'f'</span>).map(|<span class="kw">_</span>| <span class="macro">vec!</span>[<span class="string">b'\x0C'</span>])
             | oct_char().map(|c| <span class="macro">vec!</span>[c])
             | eol().map(|<span class="kw">_</span>| <span class="macro">vec!</span>[])
             | empty().map(|<span class="kw">_</span>| <span class="macro">vec!</span>[]))
 }
 
-<span class="kw">fn </span>nested_literal_string&lt;<span class="lifetime">&#39;a</span>&gt;(depth: usize) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Vec&lt;u8&gt;&gt; {
+<span class="kw">fn </span>nested_literal_string&lt;<span class="lifetime">'a</span>&gt;(depth: usize) -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Vec&lt;u8&gt;&gt; {
     <span class="kw">if </span>depth == <span class="number">0 </span>{
-        <span class="kw">return </span>Parser::new(<span class="kw">move </span>|<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], pos: usize| {
+        <span class="kw">return </span>Parser::new(<span class="kw">move </span>|<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], pos: usize| {
             <span class="prelude-val">Err</span>(pom::Error::Custom {
-                message: <span class="string">&quot;Brackets embedded to deep.&quot;</span>.to_string(),
+                message: <span class="string">"Brackets embedded to deep."</span>.to_string(),
                 position: pos,
                 inner: <span class="prelude-val">None</span>,
             })
         });
     }
 
-    sym(<span class="string">b&#39;(&#39;</span>)
-        * (none_of(<span class="string">b&quot;\\()&quot;</span>).repeat(<span class="number">1</span>..) | escape_sequence() | call(<span class="kw">move </span>|| nested_literal_string(depth - <span class="number">1</span>)))
+    sym(<span class="string">b'('</span>)
+        * (none_of(<span class="string">b"\\()"</span>).repeat(<span class="number">1</span>..) | escape_sequence() | call(<span class="kw">move </span>|| nested_literal_string(depth - <span class="number">1</span>)))
             .repeat(<span class="number">0</span>..)
             .map(|segments| {
-                <span class="kw">let </span><span class="kw-2">mut </span>bytes = segments.into_iter().fold(<span class="macro">vec!</span>[<span class="string">b&#39;(&#39;</span>], |<span class="kw-2">mut </span>bytes, <span class="kw-2">mut </span>segment| {
+                <span class="kw">let </span><span class="kw-2">mut </span>bytes = segments.into_iter().fold(<span class="macro">vec!</span>[<span class="string">b'('</span>], |<span class="kw-2">mut </span>bytes, <span class="kw-2">mut </span>segment| {
                     bytes.append(<span class="kw-2">&amp;mut </span>segment);
                     bytes
                 });
-                bytes.push(<span class="string">b&#39;)&#39;</span>);
+                bytes.push(<span class="string">b')'</span>);
                 bytes
             })
-        - sym(<span class="string">b&#39;)&#39;</span>)
+        - sym(<span class="string">b')'</span>)
 }
 
-<span class="kw">fn </span>literal_string&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Vec&lt;u8&gt;&gt; {
-    sym(<span class="string">b&#39;(&#39;</span>)
-        * (none_of(<span class="string">b&quot;\\()&quot;</span>).repeat(<span class="number">1</span>..) | escape_sequence() | nested_literal_string(<span class="kw">crate</span>::reader::MAX_BRACKET))
+<span class="kw">fn </span>literal_string&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Vec&lt;u8&gt;&gt; {
+    sym(<span class="string">b'('</span>)
+        * (none_of(<span class="string">b"\\()"</span>).repeat(<span class="number">1</span>..) | escape_sequence() | nested_literal_string(<span class="kw">crate</span>::reader::MAX_BRACKET))
             .repeat(<span class="number">0</span>..)
             .map(|segments| segments.concat())
-        - sym(<span class="string">b&#39;)&#39;</span>)
+        - sym(<span class="string">b')'</span>)
 }
 
-<span class="kw">fn </span>hexadecimal_string&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Vec&lt;u8&gt;&gt; {
-    sym(<span class="string">b&#39;&lt;&#39;</span>) * (white_space() * hex_char()).repeat(<span class="number">0</span>..) - (white_space() * sym(<span class="string">b&#39;&gt;&#39;</span>))
+<span class="kw">fn </span>hexadecimal_string&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Vec&lt;u8&gt;&gt; {
+    sym(<span class="string">b'&lt;'</span>) * (white_space() * hex_char()).repeat(<span class="number">0</span>..) - (white_space() * sym(<span class="string">b'&gt;'</span>))
 }
 
-<span class="kw">fn </span>array&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Vec&lt;Object&gt;&gt; {
-    sym(<span class="string">b&#39;[&#39;</span>) * space() * call(_direct_object).repeat(<span class="number">0</span>..) - sym(<span class="string">b&#39;]&#39;</span>)
+<span class="kw">fn </span>array&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Vec&lt;Object&gt;&gt; {
+    sym(<span class="string">b'['</span>) * space() * call(_direct_object).repeat(<span class="number">0</span>..) - sym(<span class="string">b']'</span>)
 }
 
-<span class="kw">fn </span>dictionary&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Dictionary&gt; {
+<span class="kw">fn </span>dictionary&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Dictionary&gt; {
     <span class="kw">let </span>entry = name() - space() + call(_direct_object);
-    <span class="kw">let </span>entries = seq(<span class="string">b&quot;&lt;&lt;&quot;</span>) * space() * entry.repeat(<span class="number">0</span>..) - seq(<span class="string">b&quot;&gt;&gt;&quot;</span>);
+    <span class="kw">let </span>entries = seq(<span class="string">b"&lt;&lt;"</span>) * space() * entry.repeat(<span class="number">0</span>..) - seq(<span class="string">b"&gt;&gt;"</span>);
     entries.map(|entries| {
         entries
             .into_iter()
@@ -497,20 +499,20 @@
     })
 }
 
-<span class="kw">fn </span>stream&lt;<span class="lifetime">&#39;a</span>&gt;(reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Reader) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Stream&gt; {
-    (dictionary() - space() - seq(<span class="string">b&quot;stream&quot;</span>) - eol())
+<span class="kw">fn </span>stream&lt;<span class="lifetime">'a</span>&gt;(reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Reader) -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Stream&gt; {
+    (dictionary() - space() - seq(<span class="string">b"stream"</span>) - eol())
         &gt;&gt; <span class="kw">move </span>|dict: Dictionary| {
-            <span class="kw">if let </span><span class="prelude-val">Ok</span>(length) = dict.get(<span class="string">b&quot;Length&quot;</span>).and_then(|value| {
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(length) = dict.get(<span class="string">b"Length"</span>).and_then(|value| {
                 <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = value.as_reference() {
                     <span class="kw">return </span>reader.get_object(id).and_then(|value| value.as_i64());
                 }
                 value.as_i64()
             }) {
                 <span class="kw">if </span>length &lt; <span class="number">0 </span>{
-                    <span class="macro">println!</span>(<span class="string">&quot;Warning: invalid stream length {}&quot;</span>, length);
+                    <span class="macro">println!</span>(<span class="string">"Warning: invalid stream length {}"</span>, length);
                     <span class="kw">return </span>empty().map(<span class="kw">move </span>|<span class="kw">_</span>| Stream::new(dict.clone(), <span class="macro">vec!</span>[]));
                 }
-                <span class="kw">let </span>stream = take(length <span class="kw">as </span>usize) - eol().opt() - seq(<span class="string">b&quot;endstream&quot;</span>).expect(<span class="string">&quot;endstream&quot;</span>);
+                <span class="kw">let </span>stream = take(length <span class="kw">as </span>usize) - eol().opt() - seq(<span class="string">b"endstream"</span>).expect(<span class="string">"endstream"</span>);
                 stream.map(<span class="kw">move </span>|data| Stream::new(dict.clone(), data.to_vec()))
             } <span class="kw">else </span>{
                 empty().pos().map(<span class="kw">move </span>|pos| Stream::with_position(dict.clone(), pos))
@@ -518,11 +520,11 @@
         }
 }
 
-<span class="kw">fn </span>object_id&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, ObjectId&gt; {
-    <span class="kw">let </span>id = one_of(<span class="string">b&quot;0123456789&quot;</span>)
+<span class="kw">fn </span>object_id&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, ObjectId&gt; {
+    <span class="kw">let </span>id = one_of(<span class="string">b"0123456789"</span>)
         .repeat(<span class="number">1</span>..)
         .convert(|v| u32::from_str(<span class="kw-2">&amp;</span>str::from_utf8(<span class="kw-2">&amp;</span>v).unwrap()));
-    <span class="kw">let </span>gen = one_of(<span class="string">b&quot;0123456789&quot;</span>)
+    <span class="kw">let </span>gen = one_of(<span class="string">b"0123456789"</span>)
         .repeat(<span class="number">1</span>..)
         .convert(|v| u16::from_str(<span class="kw-2">&amp;</span>str::from_utf8(<span class="kw-2">&amp;</span>v).unwrap()));
     id - space() + gen - space()
@@ -532,11 +534,11 @@
     _direct_object().parse(input).ok()
 }
 
-<span class="kw">fn </span>_direct_object&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Object&gt; {
-    (seq(<span class="string">b&quot;null&quot;</span>).map(|<span class="kw">_</span>| Object::Null)
-        | seq(<span class="string">b&quot;true&quot;</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">true</span>))
-        | seq(<span class="string">b&quot;false&quot;</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">false</span>))
-        | (object_id().map(Object::Reference) - sym(<span class="string">b&#39;R&#39;</span>))
+<span class="kw">fn </span>_direct_object&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Object&gt; {
+    (seq(<span class="string">b"null"</span>).map(|<span class="kw">_</span>| Object::Null)
+        | seq(<span class="string">b"true"</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">true</span>))
+        | seq(<span class="string">b"false"</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">false</span>))
+        | (object_id().map(Object::Reference) - sym(<span class="string">b'R'</span>))
         | real().map(Object::Real)
         | integer().map(Object::Integer)
         | name().map(Object::Name)
@@ -547,11 +549,11 @@
         - space()
 }
 
-<span class="kw">fn </span>object&lt;<span class="lifetime">&#39;a</span>&gt;(reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Reader) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Object&gt; {
-    (seq(<span class="string">b&quot;null&quot;</span>).map(|<span class="kw">_</span>| Object::Null)
-        | seq(<span class="string">b&quot;true&quot;</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">true</span>))
-        | seq(<span class="string">b&quot;false&quot;</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">false</span>))
-        | (object_id().map(Object::Reference) - sym(<span class="string">b&#39;R&#39;</span>))
+<span class="kw">fn </span>object&lt;<span class="lifetime">'a</span>&gt;(reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Reader) -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Object&gt; {
+    (seq(<span class="string">b"null"</span>).map(|<span class="kw">_</span>| Object::Null)
+        | seq(<span class="string">b"true"</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">true</span>))
+        | seq(<span class="string">b"false"</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">false</span>))
+        | (object_id().map(Object::Reference) - sym(<span class="string">b'R'</span>))
         | real().map(Object::Real)
         | integer().map(Object::Integer)
         | name().map(Object::Name)
@@ -572,32 +574,32 @@
         .map_err(|<span class="kw">_</span>| Error::Parse { offset })
 }
 
-<span class="kw">fn </span>_indirect_object&lt;<span class="lifetime">&#39;a</span>&gt;(expected_id: <span class="prelude-ty">Option</span>&lt;ObjectId&gt;, reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Reader) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, (ObjectId, Object)&gt; {
+<span class="kw">fn </span>_indirect_object&lt;<span class="lifetime">'a</span>&gt;(expected_id: <span class="prelude-ty">Option</span>&lt;ObjectId&gt;, reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Reader) -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, (ObjectId, Object)&gt; {
     object_id().convert(<span class="kw">move </span>|id| <span class="kw">match </span>expected_id {
         <span class="prelude-val">Some</span>(expected_id) <span class="kw">if </span>expected_id == id =&gt; <span class="prelude-val">Ok</span>(id),
         <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(()),
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(id),
-    }) - seq(<span class="string">b&quot;obj&quot;</span>)
+    }) - seq(<span class="string">b"obj"</span>)
         - space()
         + object(reader)
         - space()
-        - seq(<span class="string">b&quot;endobj&quot;</span>).opt()
+        - seq(<span class="string">b"endobj"</span>).opt()
         - space()
 }
 
 <span class="kw">pub fn </span>header(input: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
-    (seq(<span class="string">b&quot;%PDF-&quot;</span>) * none_of(<span class="string">b&quot;\r\n&quot;</span>).repeat(<span class="number">0</span>..).convert(String::from_utf8) - eol() - comment().repeat(<span class="number">0</span>..))
+    (seq(<span class="string">b"%PDF-"</span>) * none_of(<span class="string">b"\r\n"</span>).repeat(<span class="number">0</span>..).convert(String::from_utf8) - eol() - comment().repeat(<span class="number">0</span>..))
         .parse(input)
         .ok()
 }
 
-<span class="kw">fn </span>xref&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Xref&gt; {
-    <span class="kw">let </span>xref_entry = integer().map(|i| i <span class="kw">as </span>u32) - sym(<span class="string">b&#39; &#39;</span>) + integer().map(|i| i <span class="kw">as </span>u16) - sym(<span class="string">b&#39; &#39;</span>)
-        + one_of(<span class="string">b&quot;nf&quot;</span>).map(|k| k == <span class="string">b&#39;n&#39;</span>)
+<span class="kw">fn </span>xref&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Xref&gt; {
+    <span class="kw">let </span>xref_entry = integer().map(|i| i <span class="kw">as </span>u32) - sym(<span class="string">b' '</span>) + integer().map(|i| i <span class="kw">as </span>u16) - sym(<span class="string">b' '</span>)
+        + one_of(<span class="string">b"nf"</span>).map(|k| k == <span class="string">b'n'</span>)
         - take(<span class="number">2</span>);
     <span class="kw">let </span>xref_section =
-        integer().map(|i| i <span class="kw">as </span>usize) - sym(<span class="string">b&#39; &#39;</span>) + integer() - sym(<span class="string">b&#39; &#39;</span>).opt() - eol() + xref_entry.repeat(<span class="number">0</span>..);
-    <span class="kw">let </span>xref = seq(<span class="string">b&quot;xref&quot;</span>) * eol() * xref_section.repeat(<span class="number">1</span>..) - space();
+        integer().map(|i| i <span class="kw">as </span>usize) - sym(<span class="string">b' '</span>) + integer() - sym(<span class="string">b' '</span>).opt() - eol() + xref_entry.repeat(<span class="number">0</span>..);
+    <span class="kw">let </span>xref = seq(<span class="string">b"xref"</span>) * eol() * xref_section.repeat(<span class="number">1</span>..) - space();
     xref.map(|sections| {
         sections
             .into_iter()
@@ -612,20 +614,20 @@
     })
 }
 
-<span class="kw">fn </span>trailer&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Dictionary&gt; {
-    seq(<span class="string">b&quot;trailer&quot;</span>) * space() * dictionary() - space()
+<span class="kw">fn </span>trailer&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Dictionary&gt; {
+    seq(<span class="string">b"trailer"</span>) * space() * dictionary() - space()
 }
 
-<span class="kw">pub fn </span>xref_and_trailer&lt;<span class="lifetime">&#39;a</span>&gt;(input: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Reader) -&gt; <span class="prelude-ty">Result</span>&lt;(Xref, Dictionary)&gt; {
+<span class="kw">pub fn </span>xref_and_trailer&lt;<span class="lifetime">'a</span>&gt;(input: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8], reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Reader) -&gt; <span class="prelude-ty">Result</span>&lt;(Xref, Dictionary)&gt; {
     _xref_and_trailer(reader)
         .parse(input)
         .map_err(|<span class="kw">_</span>| Error::Xref(XrefError::Parse))
 }
 
-<span class="kw">fn </span>_xref_and_trailer&lt;<span class="lifetime">&#39;a</span>&gt;(reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Reader) -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, (Xref, Dictionary)&gt; {
+<span class="kw">fn </span>_xref_and_trailer&lt;<span class="lifetime">'a</span>&gt;(reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Reader) -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, (Xref, Dictionary)&gt; {
     (xref() + trailer()).convert(|(<span class="kw-2">mut </span>xref, trailer)| -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">_</span>&gt; {
         xref.size = trailer
-            .get(<span class="string">b&quot;Size&quot;</span>)
+            .get(<span class="string">b"Size"</span>)
             .and_then(Object::as_i64)
             .map_err(|<span class="kw">_</span>| Error::Trailer)<span class="question-mark">? </span><span class="kw">as </span>u32;
         <span class="prelude-val">Ok</span>((xref, trailer))
@@ -636,25 +638,25 @@
 }
 
 <span class="kw">pub fn </span>xref_start(input: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;i64&gt; {
-    (seq(<span class="string">b&quot;startxref&quot;</span>) * white_space() * integer() - white_space() - seq(<span class="string">b&quot;%%EOF&quot;</span>) - space())
+    (seq(<span class="string">b"startxref"</span>) * white_space() * integer() - white_space() - seq(<span class="string">b"%%EOF"</span>) - space())
         .parse(input)
         .ok()
 }
 
 <span class="comment">// The following code create parser to parse content stream.
 
-</span><span class="kw">fn </span>content_space&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, ()&gt; {
+</span><span class="kw">fn </span>content_space&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, ()&gt; {
     is_a(multispace).repeat(<span class="number">0</span>..).discard()
 }
 
-<span class="kw">fn </span>operator&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, String&gt; {
-    (is_a(alpha) | one_of(<span class="string">b&quot;*&#39;\&quot;&quot;</span>)).repeat(<span class="number">1</span>..).convert(String::from_utf8)
+<span class="kw">fn </span>operator&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, String&gt; {
+    (is_a(alpha) | one_of(<span class="string">b"*'\""</span>)).repeat(<span class="number">1</span>..).convert(String::from_utf8)
 }
 
-<span class="kw">fn </span>operand&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Object&gt; {
-    (seq(<span class="string">b&quot;null&quot;</span>).map(|<span class="kw">_</span>| Object::Null)
-        | seq(<span class="string">b&quot;true&quot;</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">true</span>))
-        | seq(<span class="string">b&quot;false&quot;</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">false</span>))
+<span class="kw">fn </span>operand&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Object&gt; {
+    (seq(<span class="string">b"null"</span>).map(|<span class="kw">_</span>| Object::Null)
+        | seq(<span class="string">b"true"</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">true</span>))
+        | seq(<span class="string">b"false"</span>).map(|<span class="kw">_</span>| Object::Boolean(<span class="bool-val">false</span>))
         | real().map(Object::Real)
         | integer().map(Object::Integer)
         | name().map(Object::Name)
@@ -665,7 +667,7 @@
         - content_space()
 }
 
-<span class="kw">fn </span>operation&lt;<span class="lifetime">&#39;a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">&#39;a</span>, u8, Operation&gt; {
+<span class="kw">fn </span>operation&lt;<span class="lifetime">'a</span>&gt;() -&gt; Parser&lt;<span class="lifetime">'a</span>, u8, Operation&gt; {
     <span class="kw">let </span>operation = operand().repeat(<span class="number">0</span>..) + operator() - content_space();
     operation.map(|(operands, operator)| Operation { operator, operands })
 }
@@ -682,29 +684,29 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_real_number() {
-        <span class="kw">let </span>r0 = real().parse(<span class="string">b&quot;0.12&quot;</span>);
+        <span class="kw">let </span>r0 = real().parse(<span class="string">b"0.12"</span>);
         <span class="macro">assert_eq!</span>(r0, <span class="prelude-val">Ok</span>(<span class="number">0.12</span>));
-        <span class="kw">let </span>r1 = real().parse(<span class="string">b&quot;-.12&quot;</span>);
+        <span class="kw">let </span>r1 = real().parse(<span class="string">b"-.12"</span>);
         <span class="macro">assert_eq!</span>(r1, <span class="prelude-val">Ok</span>(-<span class="number">0.12</span>));
-        <span class="kw">let </span>r2 = real().parse(<span class="string">b&quot;10.&quot;</span>);
+        <span class="kw">let </span>r2 = real().parse(<span class="string">b"10."</span>);
         <span class="macro">assert_eq!</span>(r2, <span class="prelude-val">Ok</span>(<span class="number">10.0</span>));
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_string() {
         <span class="kw">let </span>data = <span class="macro">vec!</span>[
-            (<span class="string">&quot;()&quot;</span>, <span class="string">&quot;&quot;</span>),
-            (<span class="string">&quot;(text())&quot;</span>, <span class="string">&quot;text()&quot;</span>),
-            (<span class="string">&quot;(text\r\n\\\\(nested\\t\\b\\f))&quot;</span>, <span class="string">&quot;text\r\n\\(nested\t\x08\x0C)&quot;</span>),
-            (<span class="string">&quot;(text\\0\\53\\053\\0053)&quot;</span>, <span class="string">&quot;text\0++\x053&quot;</span>),
-            (<span class="string">&quot;(text line\\\n())&quot;</span>, <span class="string">&quot;text line()&quot;</span>),
+            (<span class="string">"()"</span>, <span class="string">""</span>),
+            (<span class="string">"(text())"</span>, <span class="string">"text()"</span>),
+            (<span class="string">"(text\r\n\\\\(nested\\t\\b\\f))"</span>, <span class="string">"text\r\n\\(nested\t\x08\x0C)"</span>),
+            (<span class="string">"(text\\0\\53\\053\\0053)"</span>, <span class="string">"text\0++\x053"</span>),
+            (<span class="string">"(text line\\\n())"</span>, <span class="string">"text line()"</span>),
         ];
 
         <span class="kw">for </span>(input, expected) <span class="kw">in </span>data {
             <span class="macro">assert_eq!</span>(
                 literal_string().parse(input.as_bytes()),
                 <span class="prelude-val">Ok</span>(expected.as_bytes().to_vec()),
-                <span class="string">&quot;input: {:?} output: {:?}&quot;</span>,
+                <span class="string">"input: {:?} output: {:?}"</span>,
                 input,
                 expected,
             );
@@ -713,11 +715,11 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>parse_name() {
-        <span class="kw">let </span>(text, expected) = (<span class="string">b&quot;/ABC#5f&quot;</span>, <span class="string">b&quot;ABC\x5F&quot;</span>);
+        <span class="kw">let </span>(text, expected) = (<span class="string">b"/ABC#5f"</span>, <span class="string">b"ABC\x5F"</span>);
         <span class="kw">let </span>result = name().parse(text).ok();
         <span class="macro">assert_eq!</span>(result, <span class="prelude-val">Some</span>(expected.to_vec()));
 
-        <span class="kw">let </span>(text, expected) = (<span class="string">b&quot;/#cb#ce#cc#e5&quot;</span>, <span class="string">b&quot;\xcb\xce\xcc\xe5&quot;</span>);
+        <span class="kw">let </span>(text, expected) = (<span class="string">b"/#cb#ce#cc#e5"</span>, <span class="string">b"\xcb\xce\xcc\xe5"</span>);
         <span class="kw">let </span>result = name().parse(text).ok();
         <span class="macro">assert_eq!</span>(result, <span class="prelude-val">Some</span>(expected.to_vec()));
     }
@@ -725,7 +727,7 @@
     <span class="attr">#[test]
     </span><span class="doccomment">/// Run `cargo test -- --nocapture` to see output
     </span><span class="kw">fn </span>parse_content() {
-        <span class="kw">let </span>stream = <span class="string">b&quot;
+        <span class="kw">let </span>stream = <span class="string">b"
 2 J
 BT
 /F1 12 Tf
@@ -736,9 +738,9 @@ BT
 0 -14 TD
 [(b) 20 (ut generally tak) 10 (e more space than \\311)] TJ
 T* (encoded streams.) Tj
-		&quot;</span>;
+		"</span>;
         <span class="kw">let </span>content = content(stream);
-        <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, content);
+        <span class="macro">println!</span>(<span class="string">"{:?}"</span>, content);
         <span class="macro">assert!</span>(content.is_some());
     }
 }

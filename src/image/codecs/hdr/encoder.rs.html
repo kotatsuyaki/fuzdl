@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/hdr/encoder.rs`."><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/hdr/encoder.rs`."><title>encoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -454,10 +456,10 @@
         <span class="macro">assert!</span>(data.len() &gt;= width * height);
         <span class="kw">let </span>w = <span class="kw-2">&amp;mut </span><span class="self">self</span>.w;
         w.write_all(SIGNATURE)<span class="question-mark">?</span>;
-        w.write_all(<span class="string">b&quot;\n&quot;</span>)<span class="question-mark">?</span>;
-        w.write_all(<span class="string">b&quot;# Rust HDR encoder\n&quot;</span>)<span class="question-mark">?</span>;
-        w.write_all(<span class="string">b&quot;FORMAT=32-bit_rle_rgbe\n\n&quot;</span>)<span class="question-mark">?</span>;
-        w.write_all(<span class="macro">format!</span>(<span class="string">&quot;-Y {} +X {}\n&quot;</span>, height, width).as_bytes())<span class="question-mark">?</span>;
+        w.write_all(<span class="string">b"\n"</span>)<span class="question-mark">?</span>;
+        w.write_all(<span class="string">b"# Rust HDR encoder\n"</span>)<span class="question-mark">?</span>;
+        w.write_all(<span class="string">b"FORMAT=32-bit_rle_rgbe\n\n"</span>)<span class="question-mark">?</span>;
+        w.write_all(<span class="macro">format!</span>(<span class="string">"-Y {} +X {}\n"</span>, height, width).as_bytes())<span class="question-mark">?</span>;
 
         <span class="kw">if </span>width &lt; <span class="number">8 </span>|| width &gt; <span class="number">32_768 </span>{
             <span class="kw">for </span><span class="kw-2">&amp;</span>pix <span class="kw">in </span>data {
@@ -515,18 +517,18 @@
 <span class="kw">const </span>RUN_MAX_LEN: usize = <span class="number">127</span>;
 <span class="kw">const </span>NORUN_MAX_LEN: usize = <span class="number">128</span>;
 
-<span class="kw">struct </span>RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
+<span class="kw">struct </span>RunIterator&lt;<span class="lifetime">'a</span>&gt; {
+    data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8],
     curidx: usize,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; RunIterator&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; RunIterator&lt;<span class="lifetime">'a</span>&gt; {
         RunIterator { data, curidx: <span class="number">0 </span>}
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>RunIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>RunIterator&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">type </span>Item = RunOrNot;
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
@@ -550,13 +552,13 @@
     }
 }
 
-<span class="kw">struct </span>NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    runiter: RunIterator&lt;<span class="lifetime">&#39;a</span>&gt;,
+<span class="kw">struct </span>NorunCombineIterator&lt;<span class="lifetime">'a</span>&gt; {
+    runiter: RunIterator&lt;<span class="lifetime">'a</span>&gt;,
     prev: <span class="prelude-ty">Option</span>&lt;RunOrNot&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NorunCombineIterator&lt;<span class="lifetime">'a</span>&gt; {
+    <span class="kw">fn </span>new(data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; NorunCombineIterator&lt;<span class="lifetime">'a</span>&gt; {
         NorunCombineIterator {
             runiter: RunIterator::new(data),
             prev: <span class="prelude-val">None</span>,
@@ -565,7 +567,7 @@
 }
 
 <span class="comment">// Combines sequential noruns produced by RunIterator
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>NorunCombineIterator&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>NorunCombineIterator&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">type </span>Item = RunOrNot;
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
         <span class="kw">loop </span>{
@@ -575,7 +577,7 @@
                     </span><span class="kw">return </span><span class="prelude-val">Some</span>(Run(c, len));
                 }
                 <span class="prelude-val">Some</span>(Norun(idx, len)) =&gt; {
-                    <span class="comment">// Let&#39;s see if we need to continue norun
+                    <span class="comment">// Let's see if we need to continue norun
                     </span><span class="kw">match </span><span class="self">self</span>.runiter.next() {
                         <span class="prelude-val">Some</span>(Norun(<span class="kw">_</span>, len1)) =&gt; {
                             <span class="comment">// norun continues
@@ -619,7 +621,7 @@
                             </span><span class="kw">return </span><span class="prelude-val">Some</span>(Run(c, len));
                         }
                         <span class="prelude-val">None </span>=&gt; {
-                            <span class="comment">// That&#39;s all, folks
+                            <span class="comment">// That's all, folks
                             </span><span class="kw">return </span><span class="prelude-val">None</span>;
                         }
                     }
@@ -702,7 +704,7 @@
         <span class="kw">for </span>c <span class="kw">in </span><span class="number">0</span>..<span class="number">255 </span>{
             <span class="comment">// Radiance HDR seems to be pre IEEE 754.
             // exponent can be -128 (represented as 0u8), so some colors cannot be represented in normalized f32
-            // Let&#39;s exclude exponent value of -128 (0u8) from testing
+            // Let's exclude exponent value of -128 (0u8) from testing
             </span><span class="kw">let </span>pix = rgbe8(<span class="number">1</span>, mc, c, <span class="kw">if </span>c == <span class="number">0 </span>{ <span class="number">1 </span>} <span class="kw">else </span>{ c });
             <span class="macro">assert_eq!</span>(pix, to_rgbe8(pix.to_hdr()));
         }
@@ -736,7 +738,7 @@
                 <span class="comment">// Maximal value is normalized to the range 128..256, thus we have 1/128 precision
                 </span><span class="macro">assert!</span>(
                     rel_dist &lt;= <span class="number">1.0 </span>/ <span class="number">128.0</span>,
-                    <span class="string">&quot;Relative distance ({}) exceeds 1/128 for {:?} and {:?}&quot;</span>,
+                    <span class="string">"Relative distance ({}) exceeds 1/128 for {:?} and {:?}"</span>,
                     rel_dist,
                     c1,
                     c2

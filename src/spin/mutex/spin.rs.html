@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spin-0.9.4/src/mutex/spin.rs`."><title>spin.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="spin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/spin-0.9.4/src/mutex/spin.rs`."><title>spin.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="spin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../spin/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -585,9 +587,9 @@
 <span class="doccomment">/// A guard that provides mutable data access.
 ///
 /// When the guard falls out of scope it will release the lock.
-</span><span class="kw">pub struct </span>SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized + <span class="lifetime">&#39;a</span>&gt; {
-    lock: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>AtomicBool,
-    data: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>T,
+</span><span class="kw">pub struct </span>SpinMutexGuard&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized + <span class="lifetime">'a</span>&gt; {
+    lock: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>AtomicBool,
+    data: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T,
 }
 
 <span class="comment">// Same unsafe impls as `std::sync::Mutex`
@@ -630,7 +632,7 @@
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; T {
         <span class="comment">// We know statically that there are no outstanding references to
-        // `self` so there&#39;s no need to lock.
+        // `self` so there's no need to lock.
         </span><span class="kw">let </span>SpinMutex { data, .. } = <span class="self">self</span>;
         data.into_inner()
     }
@@ -700,7 +702,7 @@
     ///
     /// # Safety
     ///
-    /// This function provides no synchronization guarantees and so its result should be considered &#39;out of date&#39;
+    /// This function provides no synchronization guarantees and so its result should be considered 'out of date'
     /// the instant it is called. Do not use it for synchronization purposes. However, it may be useful as a heuristic.
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>is_locked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -713,7 +715,7 @@
     ///
     /// This is *extremely* unsafe if the lock is not held by the current
     /// thread. However, this can be useful in some instances for exposing the
-    /// lock to FFI that doesn&#39;t know how to deal with RAII.
+    /// lock to FFI that doesn't know how to deal with RAII.
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub unsafe fn </span>force_unlock(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="self">self</span>.lock.store(<span class="bool-val">false</span>, Ordering::Release);
@@ -751,7 +753,7 @@
     ///
     /// Since this call borrows the [`SpinMutex`] mutably, and a mutable reference is guaranteed to be exclusive in
     /// Rust, no actual locking needs to take place -- the mutable borrow statically guarantees no locks exist. As
-    /// such, this is a &#39;zero-cost&#39; operation.
+    /// such, this is a 'zero-cost' operation.
     ///
     /// # Example
     ///
@@ -763,7 +765,7 @@
     </span><span class="attr">#[inline(always)]
     </span><span class="kw">pub fn </span>get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>T {
         <span class="comment">// We know statically that there are no other references to `self`, so
-        // there&#39;s no need to lock the inner mutex.
+        // there's no need to lock the inner mutex.
         </span><span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.data.get() }
     }
 }
@@ -771,10 +773,10 @@
 <span class="kw">impl</span>&lt;T: <span class="question-mark">?</span>Sized + fmt::Debug, R&gt; fmt::Debug <span class="kw">for </span>SpinMutex&lt;T, R&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self</span>.try_lock() {
-            <span class="prelude-val">Some</span>(guard) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Mutex {{ data: &quot;</span>)
+            <span class="prelude-val">Some</span>(guard) =&gt; <span class="macro">write!</span>(f, <span class="string">"Mutex {{ data: "</span>)
                 .and_then(|()| (<span class="kw-2">&amp;*</span>guard).fmt(f))
-                .and_then(|()| <span class="macro">write!</span>(f, <span class="string">&quot;}}&quot;</span>)),
-            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Mutex {{ &lt;locked&gt; }}&quot;</span>),
+                .and_then(|()| <span class="macro">write!</span>(f, <span class="string">"}}"</span>)),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">write!</span>(f, <span class="string">"Mutex {{ &lt;locked&gt; }}"</span>),
         }
     }
 }
@@ -791,7 +793,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized&gt; SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized&gt; SpinMutexGuard&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="doccomment">/// Leak the lock guard, yielding a mutable reference to the underlying data.
     ///
     /// Note that this function will permanently lock the original [`SpinMutex`].
@@ -805,46 +807,46 @@
     /// assert_eq!(*data, 1);
     /// ```
     </span><span class="attr">#[inline(always)]
-    </span><span class="kw">pub fn </span>leak(this: <span class="self">Self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>T {
+    </span><span class="kw">pub fn </span>leak(this: <span class="self">Self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T {
         <span class="kw">let </span>data = this.data <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>; <span class="comment">// Keep it in pointer form temporarily to avoid double-aliasing
         </span>core::mem::forget(this);
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>data }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized + fmt::Debug&gt; fmt::Debug <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized + fmt::Debug&gt; fmt::Debug <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         fmt::Debug::fmt(<span class="kw-2">&amp;**</span><span class="self">self</span>, f)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized + fmt::Display&gt; fmt::Display <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized + fmt::Display&gt; fmt::Display <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         fmt::Display::fmt(<span class="kw-2">&amp;**</span><span class="self">self</span>, f)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized&gt; Deref <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized&gt; Deref <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="kw">type </span>Target = T;
     <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
         <span class="self">self</span>.data
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized&gt; DerefMut <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized&gt; DerefMut <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>T {
         <span class="self">self</span>.data
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="question-mark">?</span>Sized&gt; Drop <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: <span class="question-mark">?</span>Sized&gt; Drop <span class="kw">for </span>SpinMutexGuard&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="doccomment">/// The dropping of the MutexGuard will release the lock it was created from.
     </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.lock.store(<span class="bool-val">false</span>, Ordering::Release);
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;lock_api&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"lock_api"</span>)]
 </span><span class="kw">unsafe impl</span>&lt;R: RelaxStrategy&gt; lock_api_crate::RawMutex <span class="kw">for </span>SpinMutex&lt;(), R&gt; {
     <span class="kw">type </span>GuardMarker = lock_api_crate::GuardSend;
 

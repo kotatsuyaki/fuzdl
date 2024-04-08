@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/image/crop.rs`."><title>crop.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/image/crop.rs`."><title>crop.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -962,7 +964,7 @@
 
 // make cropped view writable:
 
-</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;slf</span>, Channels:<span class="lifetime">&#39;slf</span>&gt; WritableChannels&lt;<span class="lifetime">&#39;slf</span>&gt; <span class="kw">for </span>CroppedChannels&lt;Channels&gt; <span class="kw">where </span>Channels: WritableChannels&lt;<span class="lifetime">&#39;slf</span>&gt; {
+</span><span class="kw">impl</span>&lt;<span class="lifetime">'slf</span>, Channels:<span class="lifetime">'slf</span>&gt; WritableChannels&lt;<span class="lifetime">'slf</span>&gt; <span class="kw">for </span>CroppedChannels&lt;Channels&gt; <span class="kw">where </span>Channels: WritableChannels&lt;<span class="lifetime">'slf</span>&gt; {
     <span class="kw">fn </span>infer_channel_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ChannelList {
         <span class="self">self</span>.full_channels.infer_channel_list() <span class="comment">// no need for adjustments, as the layer content already reflects the changes
     </span>}
@@ -973,9 +975,9 @@
 
     <span class="kw">type </span>Writer = CroppedWriter&lt;Channels::Writer&gt;;
 
-    <span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;slf </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer {
+    <span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">'slf </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer {
         <span class="kw">let </span>offset = (<span class="self">self</span>.cropped_bounds.position - <span class="self">self</span>.full_bounds.position)
-            .to_usize(<span class="string">&quot;invalid cropping bounds for cropped view&quot;</span>).unwrap();
+            .to_usize(<span class="string">"invalid cropping bounds for cropped view"</span>).unwrap();
 
         CroppedWriter { channels: <span class="self">self</span>.full_channels.create_writer(header), offset }
     }
@@ -988,7 +990,7 @@
     offset: Vec2&lt;usize&gt;
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;c</span>, Channels&gt; ChannelsWriter <span class="kw">for </span>CroppedWriter&lt;Channels&gt; <span class="kw">where </span>Channels: ChannelsWriter {
+<span class="kw">impl</span>&lt;<span class="lifetime">'c</span>, Channels&gt; ChannelsWriter <span class="kw">for </span>CroppedWriter&lt;Channels&gt; <span class="kw">where </span>Channels: ChannelsWriter {
     <span class="kw">fn </span>extract_uncompressed_block(<span class="kw-2">&amp;</span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header, block: BlockIndex) -&gt; Vec&lt;u8&gt; {
         <span class="kw">let </span>block = BlockIndex {
             pixel_position: block.pixel_position + <span class="self">self</span>.offset,
@@ -1039,12 +1041,12 @@
         <span class="kw">let </span>cropped_absolute_bounds = <span class="self">self</span>.channel_data.cropped_bounds;
         <span class="kw">let </span>cropped_relative_bounds = cropped_absolute_bounds.with_origin(-<span class="self">self</span>.channel_data.full_bounds.position);
 
-        <span class="macro">assert!</span>(<span class="self">self</span>.absolute_bounds().contains(cropped_absolute_bounds), <span class="string">&quot;bounds not valid for layer dimensions&quot;</span>);
-        <span class="macro">assert!</span>(cropped_relative_bounds.size.area() &gt; <span class="number">0</span>, <span class="string">&quot;the cropped image would be empty&quot;</span>);
+        <span class="macro">assert!</span>(<span class="self">self</span>.absolute_bounds().contains(cropped_absolute_bounds), <span class="string">"bounds not valid for layer dimensions"</span>);
+        <span class="macro">assert!</span>(cropped_relative_bounds.size.area() &gt; <span class="number">0</span>, <span class="string">"the cropped image would be empty"</span>);
 
         Layer {
             channel_data: <span class="kw">if </span>cropped_relative_bounds.size == <span class="self">self</span>.channel_data.full_bounds.size {
-                <span class="macro">assert_eq!</span>(cropped_absolute_bounds.position, <span class="self">self</span>.channel_data.full_bounds.position, <span class="string">&quot;crop bounds size equals, but position does not&quot;</span>);
+                <span class="macro">assert_eq!</span>(cropped_absolute_bounds.position, <span class="self">self</span>.channel_data.full_bounds.position, <span class="string">"crop bounds size equals, but position does not"</span>);
 
                 <span class="comment">// the cropping would not remove any pixels
                 </span><span class="self">self</span>.channel_data.full_channels
@@ -1099,7 +1101,7 @@
 /// Returns `[(0,0), size]` if the image is fully opaque.
 /// Designed to be cache-friendly linear search. Optimized for row-major image vectors.
 </span><span class="kw">pub fn </span>try_find_smaller_bounds(current_bounds: IntegerBounds, pixel_at: <span class="kw">impl </span>Fn(Vec2&lt;usize&gt;) -&gt; bool) -&gt; <span class="prelude-ty">Option</span>&lt;IntegerBounds&gt; {
-    <span class="macro">assert_ne!</span>(current_bounds.size.area(), <span class="number">0</span>, <span class="string">&quot;cannot find smaller bounds of an image with zero width or height&quot;</span>);
+    <span class="macro">assert_ne!</span>(current_bounds.size.area(), <span class="number">0</span>, <span class="string">"cannot find smaller bounds of an image with zero width or height"</span>);
     <span class="kw">let </span>Vec2(width, height) = current_bounds.size;
 
     <span class="comment">// scans top to bottom (left to right)
@@ -1114,7 +1116,7 @@
         .unwrap_or(first_top_left_pixel); <span class="comment">// did not find any at bottom, but we know top has some pixel
 
     // now we know exactly how much we can throw away top and bottom,
-    // but we don&#39;t know exactly about left or right
+    // but we don't know exactly about left or right
     </span><span class="kw">let </span>top = first_top_left_pixel.y();
     <span class="kw">let </span>bottom = first_bottom_right_pixel.y();
 
@@ -1180,7 +1182,7 @@
             CropResult::Cropped (cropped) =&gt; cropped,
             CropResult::Empty { original } =&gt; {
                 <span class="kw">let </span>bounds = original.bounds();
-                <span class="kw">if </span>bounds.size == Vec2(<span class="number">0</span>,<span class="number">0</span>) { <span class="macro">panic!</span>(<span class="string">&quot;layer has width and height of zero&quot;</span>) }
+                <span class="kw">if </span>bounds.size == Vec2(<span class="number">0</span>,<span class="number">0</span>) { <span class="macro">panic!</span>(<span class="string">"layer has width and height of zero"</span>) }
                 original.crop(IntegerBounds::new(bounds.position, Vec2(<span class="number">1</span>,<span class="number">1</span>)))
             },
         }
@@ -1197,7 +1199,7 @@
     </span><span class="kw">fn </span>find_bounds() {
         <span class="kw">fn </span>find_bounds(offset: Vec2&lt;i32&gt;, lines: <span class="kw-2">&amp;</span>Vec&lt;Vec&lt;i32&gt;&gt;) -&gt; IntegerBounds {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(first_line) = lines.first() {
-                <span class="macro">assert!</span>(lines.iter().all(|line| line.len() == first_line.len()), <span class="string">&quot;invalid test input&quot;</span>);
+                <span class="macro">assert!</span>(lines.iter().all(|line| line.len() == first_line.len()), <span class="string">"invalid test input"</span>);
                 IntegerBounds::new(offset, (first_line.len(), lines.len()))
             }
             <span class="kw">else </span>{

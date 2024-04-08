@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rayon-core-1.9.3/src/log.rs`."><title>log.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rayon_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rayon-core-1.9.3/src/log.rs`."><title>log.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rayon_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../rayon_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -426,7 +428,7 @@
 //! To use in a debug build, set the env var `RAYON_LOG` as
 //! described below.  In a release build, logs are compiled out by
 //! default unless Rayon is built with `--cfg rayon_rs_log` (try
-//! `RUSTFLAGS=&quot;--cfg rayon_rs_log&quot;`).
+//! `RUSTFLAGS="--cfg rayon_rs_log"`).
 //!
 //! Note that logs are an internally debugging tool and their format
 //! is considered unstable, as are the details of how to enable them.
@@ -481,12 +483,12 @@
     /// sleep state that we saw at the time.
     </span>ThreadSleepy { worker: usize, jobs_counter: usize },
 
-    <span class="doccomment">/// Indicates that the thread&#39;s attempt to fall asleep was
+    <span class="doccomment">/// Indicates that the thread's attempt to fall asleep was
     /// interrupted because the latch was set. (This is not, in and of
     /// itself, a change to the thread state.)
     </span>ThreadSleepInterruptedByLatch { worker: usize, latch_addr: usize },
 
-    <span class="doccomment">/// Indicates that the thread&#39;s attempt to fall asleep was
+    <span class="doccomment">/// Indicates that the thread's attempt to fall asleep was
     /// interrupted because a job was posted. (This is not, in and of
     /// itself, a change to the thread state.)
     </span>ThreadSleepInterruptedByJob { worker: usize },
@@ -540,27 +542,27 @@
         }
 
         <span class="comment">// see the doc comment for the format
-        </span><span class="kw">let </span>env_log = <span class="kw">match </span>env::var(<span class="string">&quot;RAYON_LOG&quot;</span>) {
+        </span><span class="kw">let </span>env_log = <span class="kw">match </span>env::var(<span class="string">"RAYON_LOG"</span>) {
             <span class="prelude-val">Ok</span>(s) =&gt; s,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="self">Self</span>::disabled(),
         };
 
         <span class="kw">let </span>(sender, receiver) = crossbeam_channel::unbounded();
 
-        <span class="kw">if </span>env_log.starts_with(<span class="string">&quot;tail:&quot;</span>) {
-            <span class="kw">let </span>filename = env_log[<span class="string">&quot;tail:&quot;</span>.len()..].to_string();
+        <span class="kw">if </span>env_log.starts_with(<span class="string">"tail:"</span>) {
+            <span class="kw">let </span>filename = env_log[<span class="string">"tail:"</span>.len()..].to_string();
             ::std::thread::spawn(<span class="kw">move </span>|| {
                 <span class="self">Self</span>::tail_logger_thread(num_workers, filename, <span class="number">10_000</span>, receiver)
             });
-        } <span class="kw">else if </span>env_log == <span class="string">&quot;all&quot; </span>{
+        } <span class="kw">else if </span>env_log == <span class="string">"all" </span>{
             ::std::thread::spawn(<span class="kw">move </span>|| <span class="self">Self</span>::all_logger_thread(num_workers, receiver));
-        } <span class="kw">else if </span>env_log.starts_with(<span class="string">&quot;profile:&quot;</span>) {
-            <span class="kw">let </span>filename = env_log[<span class="string">&quot;profile:&quot;</span>.len()..].to_string();
+        } <span class="kw">else if </span>env_log.starts_with(<span class="string">"profile:"</span>) {
+            <span class="kw">let </span>filename = env_log[<span class="string">"profile:"</span>.len()..].to_string();
             ::std::thread::spawn(<span class="kw">move </span>|| {
                 <span class="self">Self</span>::profile_logger_thread(num_workers, filename, <span class="number">10_000</span>, receiver)
             });
         } <span class="kw">else </span>{
-            <span class="macro">panic!</span>(<span class="string">&quot;RAYON_LOG should be &#39;tail:&lt;file&gt;&#39; or &#39;profile:&lt;file&gt;&#39;&quot;</span>);
+            <span class="macro">panic!</span>(<span class="string">"RAYON_LOG should be 'tail:&lt;file&gt;' or 'profile:&lt;file&gt;'"</span>);
         }
 
         <span class="kw">return </span>Logger {
@@ -590,7 +592,7 @@
         receiver: Receiver&lt;Event&gt;,
     ) {
         <span class="kw">let </span>file = File::create(<span class="kw-2">&amp;</span>log_filename)
-            .unwrap_or_else(|err| <span class="macro">panic!</span>(<span class="string">&quot;failed to open `{}`: {}&quot;</span>, log_filename, err));
+            .unwrap_or_else(|err| <span class="macro">panic!</span>(<span class="string">"failed to open `{}`: {}"</span>, log_filename, err));
 
         <span class="kw">let </span><span class="kw-2">mut </span>writer = BufWriter::new(file);
         <span class="kw">let </span><span class="kw-2">mut </span>events = Vec::with_capacity(capacity);
@@ -633,7 +635,7 @@
         receiver: Receiver&lt;Event&gt;,
     ) {
         <span class="kw">let </span>file = File::create(<span class="kw-2">&amp;</span>log_filename)
-            .unwrap_or_else(|err| <span class="macro">panic!</span>(<span class="string">&quot;failed to open `{}`: {}&quot;</span>, log_filename, err));
+            .unwrap_or_else(|err| <span class="macro">panic!</span>(<span class="string">"failed to open `{}`: {}"</span>, log_filename, err));
 
         <span class="kw">let </span><span class="kw-2">mut </span>writer = BufWriter::new(file);
         <span class="kw">let </span><span class="kw-2">mut </span>events: VecDeque&lt;Event&gt; = VecDeque::with_capacity(capacity);
@@ -647,7 +649,7 @@
                     <span class="prelude-val">Ok</span>(event) =&gt; {
                         <span class="kw">if let </span>Event::Flush = event {
                             <span class="comment">// We ignore Flush events in tail mode --
-                            // we&#39;re really just looking for
+                            // we're really just looking for
                             // deadlocks.
                             </span><span class="kw">continue</span>;
                         } <span class="kw">else </span>{
@@ -666,13 +668,13 @@
             }
 
             <span class="kw">if </span>skipped {
-                <span class="macro">write!</span>(writer, <span class="string">&quot;...\n&quot;</span>).unwrap();
+                <span class="macro">write!</span>(writer, <span class="string">"...\n"</span>).unwrap();
                 skipped = <span class="bool-val">false</span>;
             }
 
             <span class="kw">for </span>event <span class="kw">in </span>events.drain(..) {
                 <span class="comment">// In tail mode, we dump *all* events out, whether or
-                // not they were &#39;interesting&#39; to the state machine.
+                // not they were 'interesting' to the state machine.
                 </span>state.simulate(<span class="kw-2">&amp;</span>event);
                 state.dump(<span class="kw-2">&amp;mut </span>writer, <span class="kw-2">&amp;</span>event).unwrap();
             }
@@ -706,11 +708,11 @@
 <span class="kw">impl </span>State {
     <span class="kw">fn </span>letter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
         <span class="kw">match </span><span class="self">self </span>{
-            State::Working =&gt; <span class="string">&#39;W&#39;</span>,
-            State::Idle =&gt; <span class="string">&#39;I&#39;</span>,
-            State::Notified =&gt; <span class="string">&#39;N&#39;</span>,
-            State::Sleeping =&gt; <span class="string">&#39;S&#39;</span>,
-            State::Terminated =&gt; <span class="string">&#39;T&#39;</span>,
+            State::Working =&gt; <span class="string">'W'</span>,
+            State::Idle =&gt; <span class="string">'I'</span>,
+            State::Notified =&gt; <span class="string">'N'</span>,
+            State::Sleeping =&gt; <span class="string">'S'</span>,
+            State::Terminated =&gt; <span class="string">'T'</span>,
         }
     }
 }
@@ -821,26 +823,26 @@
 
         <span class="kw">let </span>num_pending_jobs: usize = <span class="self">self</span>.local_queue_size.iter().sum();
 
-        <span class="macro">write!</span>(w, <span class="string">&quot;{:2},&quot;</span>, num_idle_threads)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(w, <span class="string">&quot;{:2},&quot;</span>, num_sleeping_threads)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(w, <span class="string">&quot;{:2},&quot;</span>, num_notified_threads)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(w, <span class="string">&quot;{:4},&quot;</span>, num_pending_jobs)<span class="question-mark">?</span>;
-        <span class="macro">write!</span>(w, <span class="string">&quot;{:4},&quot;</span>, <span class="self">self</span>.injector_size)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(w, <span class="string">"{:2},"</span>, num_idle_threads)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(w, <span class="string">"{:2},"</span>, num_sleeping_threads)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(w, <span class="string">"{:2},"</span>, num_notified_threads)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(w, <span class="string">"{:4},"</span>, num_pending_jobs)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(w, <span class="string">"{:4},"</span>, <span class="self">self</span>.injector_size)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>event_str = <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, event);
-        <span class="macro">write!</span>(w, <span class="string">r#&quot;&quot;{:60}&quot;,&quot;#</span>, event_str)<span class="question-mark">?</span>;
+        <span class="kw">let </span>event_str = <span class="macro">format!</span>(<span class="string">"{:?}"</span>, event);
+        <span class="macro">write!</span>(w, <span class="string">r#""{:60}","#</span>, event_str)<span class="question-mark">?</span>;
 
         <span class="kw">for </span>((i, state), queue_size) <span class="kw">in </span>(<span class="number">0</span>..).zip(<span class="kw-2">&amp;</span><span class="self">self</span>.thread_states).zip(<span class="kw-2">&amp;</span><span class="self">self</span>.local_queue_size) {
-            <span class="macro">write!</span>(w, <span class="string">&quot; T{:02},{}&quot;</span>, i, state.letter(),)<span class="question-mark">?</span>;
+            <span class="macro">write!</span>(w, <span class="string">" T{:02},{}"</span>, i, state.letter(),)<span class="question-mark">?</span>;
 
             <span class="kw">if </span><span class="kw-2">*</span>queue_size &gt; <span class="number">0 </span>{
-                <span class="macro">write!</span>(w, <span class="string">&quot;,{:03},&quot;</span>, queue_size)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(w, <span class="string">",{:03},"</span>, queue_size)<span class="question-mark">?</span>;
             } <span class="kw">else </span>{
-                <span class="macro">write!</span>(w, <span class="string">&quot;,   ,&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(w, <span class="string">",   ,"</span>)<span class="question-mark">?</span>;
             }
         }
 
-        <span class="macro">write!</span>(w, <span class="string">&quot;\n&quot;</span>)<span class="question-mark">?</span>;
+        <span class="macro">write!</span>(w, <span class="string">"\n"</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }

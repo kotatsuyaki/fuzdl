@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/printpdf-19f47db268ddbe71/ec14ac1/src/pdf_layer.rs`."><title>pdf_layer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="printpdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/printpdf-19f47db268ddbe71/ec14ac1/src/pdf_layer.rs`."><title>pdf_layer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="printpdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../printpdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -560,7 +562,7 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) operations: Vec&lt;Operation&gt;,
 }
 
-<span class="doccomment">/// A &quot;reference&quot; to the current layer, allows for inner mutability
+<span class="doccomment">/// A "reference" to the current layer, allows for inner mutability
 /// but only inside this library
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>PdfLayerReference {
@@ -637,7 +639,7 @@
     </span><span class="kw">pub fn </span>begin_text_section(<span class="kw-2">&amp;</span><span class="self">self</span>)
     -&gt; ()
     {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;BT&quot;</span>, <span class="macro">vec!</span>[] ));
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"BT"</span>, <span class="macro">vec!</span>[] ));
     }
 
     <span class="doccomment">/// Ends a new text section
@@ -646,7 +648,7 @@
     </span><span class="kw">pub fn </span>end_text_section(<span class="kw-2">&amp;</span><span class="self">self</span>)
     -&gt; ()
     {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;ET&quot;</span>, <span class="macro">vec!</span>[] ));
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"ET"</span>, <span class="macro">vec!</span>[] ));
     }
 
     <span class="doccomment">/// Set the current fill color for the layer
@@ -663,7 +665,7 @@
     </span><span class="kw">pub fn </span>set_font(<span class="kw-2">&amp;</span><span class="self">self</span>, font: <span class="kw-2">&amp;</span>IndirectFontRef, font_size: f64)
     -&gt; ()
     {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Tf&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Tf"</span>,
             <span class="macro">vec!</span>[font.name.clone().into(), (font_size).into()]
         ));
     }
@@ -676,7 +678,7 @@
     }
     <span class="doccomment">/// Instantiate layers, forms and postscript items on the page
     /// __WARNING__: Object must be added to the same page, since the XObjectRef is just a
-    /// String, essentially, it can&#39;t be checked that this is the case. The caller is
+    /// String, essentially, it can't be checked that this is the case. The caller is
     /// responsible for ensuring this. However, you can use the `Image` struct
     /// and use `image.add_to(layer)`, which will essentially do the same thing, but ensures
     /// that the image is referenced correctly
@@ -718,12 +720,12 @@
         <span class="comment">// add gs operator to stream
         </span>page_mut.layers[<span class="self">self</span>.layer.<span class="number">0</span>]
             .operations.push(lopdf::content::Operation::new(
-                <span class="string">&quot;gs&quot;</span>, <span class="macro">vec!</span>[lopdf::Object::Name(new_ref.gs_name.as_bytes().to_vec())]
+                <span class="string">"gs"</span>, <span class="macro">vec!</span>[lopdf::Object::Name(new_ref.gs_name.as_bytes().to_vec())]
         ));
     }
 
     <span class="doccomment">/// Set the overprint mode of the fill color to true (overprint) or false (no overprint)
-    /// This changes the graphics state of the current page, don&#39;t do it too often or you&#39;ll bloat the file size
+    /// This changes the graphics state of the current page, don't do it too often or you'll bloat the file size
     </span><span class="kw">pub fn </span>set_overprint_stroke(<span class="kw-2">&amp;</span><span class="self">self</span>, overprint: bool)
     {
         <span class="comment">// this is technically an operation on the page level
@@ -738,12 +740,12 @@
         <span class="kw">let </span>new_ref = page_mut.add_graphics_state(new_overprint_state);
         page_mut.layers[<span class="self">self</span>.layer.<span class="number">0</span>]
             .operations.push(lopdf::content::Operation::new(
-                <span class="string">&quot;gs&quot;</span>, <span class="macro">vec!</span>[lopdf::Object::Name(new_ref.gs_name.as_bytes().to_vec())]
+                <span class="string">"gs"</span>, <span class="macro">vec!</span>[lopdf::Object::Name(new_ref.gs_name.as_bytes().to_vec())]
         ));
     }
 
     <span class="doccomment">/// Set the overprint mode of the fill color to true (overprint) or false (no overprint)
-    /// This changes the graphics state of the current page, don&#39;t do it too often or you&#39;ll bloat the file size
+    /// This changes the graphics state of the current page, don't do it too often or you'll bloat the file size
     </span><span class="kw">pub fn </span>set_blend_mode(<span class="kw-2">&amp;</span><span class="self">self</span>, blend_mode: BlendMode)
     {
         <span class="comment">// this is technically an operation on the page level
@@ -759,7 +761,7 @@
 
         page_mut.layers[<span class="self">self</span>.layer.<span class="number">0</span>]
             .operations.push(lopdf::content::Operation::new(
-                <span class="string">&quot;gs&quot;</span>, <span class="macro">vec!</span>[lopdf::Object::Name(new_ref.gs_name.as_bytes().to_vec())]
+                <span class="string">"gs"</span>, <span class="macro">vec!</span>[lopdf::Object::Name(new_ref.gs_name.as_bytes().to_vec())]
         ));
     }
 
@@ -794,7 +796,7 @@
 
     <span class="doccomment">/// Sets (adds to) the current transformation matrix
     /// Use `save_graphics_state()` and `restore_graphics_state()`
-    /// to &quot;scope&quot; the transformation matrix to a specific function
+    /// to "scope" the transformation matrix to a specific function
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_ctm(<span class="kw-2">&amp;</span><span class="self">self</span>, ctm: CurTransMat) {
         <span class="self">self</span>.add_operation(ctm);
@@ -815,25 +817,25 @@
     </span><span class="kw">pub fn </span>set_text_cursor(<span class="kw-2">&amp;</span><span class="self">self</span>, x:Mm, y:Mm) {
         <span class="kw">let </span>x_in_pt: Pt = x.into();
         <span class="kw">let </span>y_in_pt: Pt = y.into();
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Td&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Td"</span>,
                 <span class="macro">vec!</span>[x_in_pt.into(), y_in_pt.into()]
         ));
     }
 
     <span class="doccomment">/// If called inside a text block scoped by `begin_text_section` and
     /// `end_text_section`, moves the cursor to a new line. PDF does not have
-    /// any concept of &quot;alignment&quot; except left-aligned text
+    /// any concept of "alignment" except left-aligned text
     /// __Note:__ Use `set_line_height` earlier to set the line height first
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>add_line_break(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;T*&quot;</span>, Vec::new()));
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"T*"</span>, Vec::new()));
     }
 
     <span class="doccomment">/// Sets the text line height inside a text block
     /// (must be called within `begin_text_block` and `end_text_block`)
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_line_height(<span class="kw-2">&amp;</span><span class="self">self</span>, height: f64) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;TL&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"TL"</span>,
             <span class="macro">vec!</span>[lopdf::Object::Real(height)]
         ));
     }
@@ -843,7 +845,7 @@
     /// the spacing inside a word by 3pt.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_character_spacing(<span class="kw-2">&amp;</span><span class="self">self</span>, spacing: f64) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Tc&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Tc"</span>,
             <span class="macro">vec!</span>[lopdf::Object::Real(spacing)]
         ));
     }
@@ -858,18 +860,18 @@
     /// with builtin fonts.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_word_spacing(<span class="kw-2">&amp;</span><span class="self">self</span>, spacing: f64) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Tw&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Tw"</span>,
             <span class="macro">vec!</span>[lopdf::Object::Real(spacing)]
         ));
     }
 
-    <span class="doccomment">/// Sets the horizontal scaling (like a &quot;condensed&quot; font)
+    <span class="doccomment">/// Sets the horizontal scaling (like a "condensed" font)
     /// Default value is 100 (regular scaling). Setting it to
     /// 50 will reduce the width of the written text by half,
     /// but stretch the text
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_text_scaling(<span class="kw-2">&amp;</span><span class="self">self</span>, scaling: f64) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Tz&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Tz"</span>,
             <span class="macro">vec!</span>[lopdf::Object::Real(scaling)]
         ));
     }
@@ -881,14 +883,14 @@
     /// change the size of the font
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_line_offset(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: f64) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Ts&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Ts"</span>,
             <span class="macro">vec!</span>[lopdf::Object::Real(offset)]
         ));
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub fn </span>set_text_rendering_mode(<span class="kw-2">&amp;</span><span class="self">self</span>, mode: TextRenderingMode) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Tr&quot;</span>,
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Tr"</span>,
             <span class="macro">vec!</span>[lopdf::Object::Integer(mode.into())]
         ));
     }
@@ -913,7 +915,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>doc = doc.borrow_mut();
         doc.pages[<span class="self">self</span>.page.<span class="number">0</span>]
             .layers[<span class="self">self</span>.layer.<span class="number">0</span>]
-                .operations.push(Operation::new(<span class="string">&quot;Tj&quot;</span>,
+                .operations.push(Operation::new(<span class="string">"Tj"</span>,
                     <span class="macro">vec!</span>[String(bytes, Hexadecimal)]
             ));
     }
@@ -940,7 +942,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>doc = doc.borrow_mut();
         doc.pages[<span class="self">self</span>.page.<span class="number">0</span>]
             .layers[<span class="self">self</span>.layer.<span class="number">0</span>]
-                .operations.push(Operation::new(<span class="string">&quot;TJ&quot;</span>, <span class="macro">vec!</span>[Array(list)]));
+                .operations.push(Operation::new(<span class="string">"TJ"</span>, <span class="macro">vec!</span>[Array(list)]));
     }
 
     <span class="doccomment">/// Add text to the file at the current position
@@ -954,7 +956,7 @@
     -&gt; () <span class="kw">where </span>S: Into&lt;String&gt;
     {
         <span class="comment">// NOTE: The unwrap() calls in this function are safe, since
-        // we&#39;ve already checked the font for validity when it was added to the document
+        // we've already checked the font for validity when it was added to the document
 
         </span><span class="kw">use </span>lopdf::Object::<span class="kw-2">*</span>;
         <span class="kw">use </span>lopdf::StringFormat::Hexadecimal;
@@ -989,13 +991,13 @@
             } <span class="kw">else </span>{
                 <span class="comment">// For built-in fonts, we selected the WinAnsiEncoding, see the Into&lt;LoDictionary&gt;
                 // implementation for BuiltinFont.
-                </span>lopdf::Document::encode_text(<span class="prelude-val">Some</span>(<span class="string">&quot;WinAnsiEncoding&quot;</span>), <span class="kw-2">&amp;</span>text)
+                </span>lopdf::Document::encode_text(<span class="prelude-val">Some</span>(<span class="string">"WinAnsiEncoding"</span>), <span class="kw-2">&amp;</span>text)
             }
         };
 
         doc.pages[<span class="self">self</span>.page.<span class="number">0</span>]
             .layers[<span class="self">self</span>.layer.<span class="number">0</span>]
-                .operations.push(Operation::new(<span class="string">&quot;Tj&quot;</span>,
+                .operations.push(Operation::new(<span class="string">"Tj"</span>,
                     <span class="macro">vec!</span>[String(bytes, Hexadecimal)]
         ));
     }
@@ -1003,13 +1005,13 @@
     <span class="doccomment">/// Saves the current graphic state
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>save_graphics_state(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;q&quot;</span>, Vec::new()));
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"q"</span>, Vec::new()));
     }
 
     <span class="doccomment">/// Restores the previous graphic state
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>restore_graphics_state(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.add_operation(Operation::new(<span class="string">&quot;Q&quot;</span>, Vec::new()));
+        <span class="self">self</span>.add_operation(Operation::new(<span class="string">"Q"</span>, Vec::new()));
     }
 
     <span class="doccomment">/// Add text to the file, x and y are measure in millimeter from the bottom left corner
@@ -1053,7 +1055,7 @@
         let svg_element_ref = {
             let doc = self.document.upgrade().unwrap();
             let doc = doc.borrow_mut();
-            let element = doc.contents.get((svg_data_index.0).0).expect(&quot;invalid svg reference&quot;);
+            let element = doc.contents.get((svg_data_index.0).0).expect("invalid svg reference");
             (*element).clone()
         };
 
@@ -1076,7 +1078,7 @@
 
         page_mut.layers[<span class="self">self</span>.layer.<span class="number">0</span>]
           .operations.push(lopdf::content::Operation::new(
-              <span class="string">&quot;Do&quot;</span>, <span class="macro">vec!</span>[lopdf::Object::Name(name.as_bytes().to_vec())]
+              <span class="string">"Do"</span>, <span class="macro">vec!</span>[lopdf::Object::Name(name.as_bytes().to_vec())]
         ));
     }
 }

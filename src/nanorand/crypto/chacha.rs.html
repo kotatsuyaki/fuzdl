@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/nanorand-0.7.0/src/crypto/chacha.rs`."><title>chacha.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="nanorand" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/nanorand-0.7.0/src/crypto/chacha.rs`."><title>chacha.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="nanorand" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../nanorand/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -146,7 +148,7 @@
 <a href="#146" id="146">146</a>
 <a href="#147" id="147">147</a>
 <a href="#148" id="148">148</a>
-</pre></div><pre class="rust"><code><span class="kw">const </span>CHACHA_TAU: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;expand 32-byte k&quot;</span>;
+</pre></div><pre class="rust"><code><span class="kw">const </span>CHACHA_TAU: <span class="kw-2">&amp;</span>[u8] = <span class="string">b"expand 32-byte k"</span>;
 
 <span class="kw">fn </span>chacha_quarter_round(state: <span class="kw-2">&amp;mut </span>[u32; <span class="number">16</span>], a: usize, b: usize, c: usize, d: usize) {
 	state[a] = state[a].wrapping_add(state[b]);
@@ -176,7 +178,7 @@
 <span class="doccomment">/// Do one ChaCha round on the input data.
 </span><span class="kw">pub fn </span>chacha_block&lt;<span class="kw">const </span>ROUNDS: u8&gt;(input: [u32; <span class="number">16</span>]) -&gt; [u32; <span class="number">16</span>] {
 	<span class="kw">let </span><span class="kw-2">mut </span>x = input;
-	<span class="macro">assert_eq!</span>(ROUNDS % <span class="number">2</span>, <span class="number">0</span>, <span class="string">&quot;ChaCha rounds must be divisble by 2!&quot;</span>);
+	<span class="macro">assert_eq!</span>(ROUNDS % <span class="number">2</span>, <span class="number">0</span>, <span class="string">"ChaCha rounds must be divisble by 2!"</span>);
 	<span class="kw">for _ in </span>(<span class="number">0</span>..ROUNDS).step_by(<span class="number">2</span>) {
 		<span class="comment">// Odd rounds
 		</span>chacha_quarter_round(<span class="kw-2">&amp;mut </span>x, <span class="number">0</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">12</span>);
@@ -264,33 +266,33 @@
 	<span class="attr">#[test]
 	</span><span class="kw">fn </span>test_ietf_chacha20_test_vectors() {
 		<span class="macro">ietf_test_vector!</span>(
-			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>,
-			<span class="string">&quot;0000000000000000&quot;</span>,
-			<span class="string">&quot;76b8e0ada0f13d90405d6ae55386bd28bdd219b8a08ded1aa836efcc8b770dc7da41597c5157488d7724e03fb8d84a376a43b8f41518a11cc387b669b2ee6586&quot;
+			<span class="string">"0000000000000000000000000000000000000000000000000000000000000000"</span>,
+			<span class="string">"0000000000000000"</span>,
+			<span class="string">"76b8e0ada0f13d90405d6ae55386bd28bdd219b8a08ded1aa836efcc8b770dc7da41597c5157488d7724e03fb8d84a376a43b8f41518a11cc387b669b2ee6586"
 		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
-			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000001&quot;</span>,
-			<span class="string">&quot;0000000000000000&quot;</span>,
-			<span class="string">&quot;4540f05a9f1fb296d7736e7b208e3c96eb4fe1834688d2604f450952ed432d41bbe2a0b6ea7566d2a5d1e7e20d42af2c53d792b1c43fea817e9ad275ae546963&quot;
+			<span class="string">"0000000000000000000000000000000000000000000000000000000000000001"</span>,
+			<span class="string">"0000000000000000"</span>,
+			<span class="string">"4540f05a9f1fb296d7736e7b208e3c96eb4fe1834688d2604f450952ed432d41bbe2a0b6ea7566d2a5d1e7e20d42af2c53d792b1c43fea817e9ad275ae546963"
 		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
-			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>,
-			<span class="string">&quot;0000000000000001&quot;</span>,
-			<span class="string">&quot;de9cba7bf3d69ef5e786dc63973f653a0b49e015adbff7134fcb7df137821031e85a050278a7084527214f73efc7fa5b5277062eb7a0433e445f41e3&quot;
+			<span class="string">"0000000000000000000000000000000000000000000000000000000000000000"</span>,
+			<span class="string">"0000000000000001"</span>,
+			<span class="string">"de9cba7bf3d69ef5e786dc63973f653a0b49e015adbff7134fcb7df137821031e85a050278a7084527214f73efc7fa5b5277062eb7a0433e445f41e3"
 		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
-			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>,
-			<span class="string">&quot;0100000000000000&quot;</span>,
-			<span class="string">&quot;ef3fdfd6c61578fbf5cf35bd3dd33b8009631634d21e42ac33960bd138e50d32111e4caf237ee53ca8ad6426194a88545ddc497a0b466e7d6bbdb0041b2f586b&quot;
+			<span class="string">"0000000000000000000000000000000000000000000000000000000000000000"</span>,
+			<span class="string">"0100000000000000"</span>,
+			<span class="string">"ef3fdfd6c61578fbf5cf35bd3dd33b8009631634d21e42ac33960bd138e50d32111e4caf237ee53ca8ad6426194a88545ddc497a0b466e7d6bbdb0041b2f586b"
 		</span>);
 
 		<span class="macro">ietf_test_vector!</span>(
-			<span class="string">&quot;000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f&quot;</span>,
-			<span class="string">&quot;0001020304050607&quot;</span>,
-			<span class="string">&quot;f798a189f195e66982105ffb640bb7757f579da31602fc93ec01ac56f85ac3c134a4547b733b46413042c9440049176905d3be59ea1c53f15916155c2be8241a38008b9a26bc35941e2444177c8ade6689de95264986d95889fb60e84629c9bd9a5acb1cc118be563eb9b3a4a472f82e09a7e778492b562ef7130e88dfe031c79db9d4f7c7a899151b9a475032b63fc385245fe054e3dd5a97a5f576fe064025d3ce042c566ab2c507b138db853e3d6959660996546cc9c4a6eafdc777c040d70eaf46f76dad3979e5c5360c3317166a1c894c94a371876a94df7628fe4eaaf2ccb27d5aaae0ad7ad0f9d4b6ad3b54098746d4524d38407a6deb3ab78fab78c9&quot;
+			<span class="string">"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"</span>,
+			<span class="string">"0001020304050607"</span>,
+			<span class="string">"f798a189f195e66982105ffb640bb7757f579da31602fc93ec01ac56f85ac3c134a4547b733b46413042c9440049176905d3be59ea1c53f15916155c2be8241a38008b9a26bc35941e2444177c8ade6689de95264986d95889fb60e84629c9bd9a5acb1cc118be563eb9b3a4a472f82e09a7e778492b562ef7130e88dfe031c79db9d4f7c7a899151b9a475032b63fc385245fe054e3dd5a97a5f576fe064025d3ce042c566ab2c507b138db853e3d6959660996546cc9c4a6eafdc777c040d70eaf46f76dad3979e5c5360c3317166a1c894c94a371876a94df7628fe4eaaf2ccb27d5aaae0ad7ad0f9d4b6ad3b54098746d4524d38407a6deb3ab78fab78c9"
 		</span>);
 	}
 }

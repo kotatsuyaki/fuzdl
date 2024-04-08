@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/png-0.17.5/src/decoder/stream.rs`."><title>stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="png" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/png-0.17.5/src/decoder/stream.rs`."><title>stream.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="png" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../png/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1621,14 +1623,14 @@
     </span>IoError(io::Error),
     <span class="doccomment">/// The input image was not a valid PNG.
     ///
-    /// There isn&#39;t a lot that can be done here, except if the program itself was responsible for
+    /// There isn't a lot that can be done here, except if the program itself was responsible for
     /// creating this image then investigate the generator. This is internally implemented with a
     /// large Enum. If You are interested in accessing some of the more exact information on the
     /// variant then we can discuss in an issue.
     </span>Format(FormatError),
     <span class="doccomment">/// An interface was used incorrectly.
     ///
-    /// This is used in cases where it&#39;s expected that the programmer might trip up and stability
+    /// This is used in cases where it's expected that the programmer might trip up and stability
     /// could be affected. For example when:
     ///
     /// * The decoder is polled for more animation frames despite being done (or not being animated
@@ -1640,7 +1642,7 @@
     /// above cases the number of frames respectively the size is determined by the file while the
     /// number of calls
     ///
-    /// If you&#39;re an application you might want to signal that a bug report is appreciated.
+    /// If you're an application you might want to signal that a bug report is appreciated.
     </span>Parameter(ParameterError),
     <span class="doccomment">/// The image would have required exceeding the limits configured with the decoder.
     ///
@@ -1746,13 +1748,13 @@
     </span>NoMoreImageData,
     <span class="comment">// TODO: strictly type this.
     </span><span class="doccomment">/// Filtering of a row has failed.
-    </span>BadFilter(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str),
+    </span>BadFilter(<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str),
     <span class="doccomment">/// Bad text encoding
     </span>BadTextEncoding(TextDecodingError),
 }
 
 <span class="kw">impl </span>error::Error <span class="kw">for </span>DecodingError {
-    <span class="kw">fn </span>cause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>error::Error + <span class="lifetime">&#39;static</span>)&gt; {
+    <span class="kw">fn </span>cause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>error::Error + <span class="lifetime">'static</span>)&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             DecodingError::IoError(err) =&gt; <span class="prelude-val">Some</span>(err),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
@@ -1764,10 +1766,10 @@
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; <span class="prelude-ty">Result</span>&lt;(), fmt::Error&gt; {
         <span class="kw">use </span><span class="self">self</span>::DecodingError::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self </span>{
-            IoError(err) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;{}&quot;</span>, err),
-            Parameter(desc) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;{}&quot;</span>, <span class="kw-2">&amp;</span>desc),
-            Format(desc) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;{}&quot;</span>, desc),
-            LimitsExceeded =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;limits are exceeded&quot;</span>),
+            IoError(err) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"{}"</span>, err),
+            Parameter(desc) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"{}"</span>, <span class="kw-2">&amp;</span>desc),
+            Format(desc) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"{}"</span>, desc),
+            LimitsExceeded =&gt; <span class="macro">write!</span>(fmt, <span class="string">"limits are exceeded"</span>),
         }
     }
 }
@@ -1783,105 +1785,105 @@
                 ..
             } =&gt; <span class="macro">write!</span>(
                 fmt,
-                <span class="string">&quot;CRC error: expected 0x{:x} have 0x{:x} while decoding {:?} chunk.&quot;</span>,
+                <span class="string">"CRC error: expected 0x{:x} have 0x{:x} while decoding {:?} chunk."</span>,
                 crc_val, crc_sum, chunk
             ),
-            MissingIhdr =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;IHDR chunk missing&quot;</span>),
-            MissingFctl =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;fcTL chunk missing before fdAT chunk.&quot;</span>),
-            MissingImageData =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;IDAT or fDAT chunk is missing.&quot;</span>),
-            ChunkBeforeIhdr { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;{:?} chunk appeared before IHDR chunk&quot;</span>, kind),
-            AfterIdat { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Chunk {:?} is invalid after IDAT chunk.&quot;</span>, kind),
-            AfterPlte { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Chunk {:?} is invalid after PLTE chunk.&quot;</span>, kind),
+            MissingIhdr =&gt; <span class="macro">write!</span>(fmt, <span class="string">"IHDR chunk missing"</span>),
+            MissingFctl =&gt; <span class="macro">write!</span>(fmt, <span class="string">"fcTL chunk missing before fdAT chunk."</span>),
+            MissingImageData =&gt; <span class="macro">write!</span>(fmt, <span class="string">"IDAT or fDAT chunk is missing."</span>),
+            ChunkBeforeIhdr { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">"{:?} chunk appeared before IHDR chunk"</span>, kind),
+            AfterIdat { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Chunk {:?} is invalid after IDAT chunk."</span>, kind),
+            AfterPlte { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Chunk {:?} is invalid after PLTE chunk."</span>, kind),
             OutsidePlteIdat { kind } =&gt; <span class="macro">write!</span>(
                 fmt,
-                <span class="string">&quot;Chunk {:?} must appear between PLTE and IDAT chunks.&quot;</span>,
+                <span class="string">"Chunk {:?} must appear between PLTE and IDAT chunks."</span>,
                 kind
             ),
-            DuplicateChunk { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Chunk {:?} must appear at most once.&quot;</span>, kind),
+            DuplicateChunk { kind } =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Chunk {:?} must appear at most once."</span>, kind),
             ApngOrder { present, expected } =&gt; <span class="macro">write!</span>(
                 fmt,
-                <span class="string">&quot;Sequence is not in order, expected #{} got #{}.&quot;</span>,
+                <span class="string">"Sequence is not in order, expected #{} got #{}."</span>,
                 expected, present,
             ),
             ShortPalette { expected, len } =&gt; <span class="macro">write!</span>(
                 fmt,
-                <span class="string">&quot;Not enough palette entries, expect {} got {}.&quot;</span>,
+                <span class="string">"Not enough palette entries, expect {} got {}."</span>,
                 expected, len
             ),
-            PaletteRequired =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Missing palette of indexed image.&quot;</span>),
+            PaletteRequired =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Missing palette of indexed image."</span>),
             InvalidColorBitDepth {
                 color_type,
                 bit_depth,
             } =&gt; <span class="macro">write!</span>(
                 fmt,
-                <span class="string">&quot;Invalid color/depth combination in header: {:?}/{:?}&quot;</span>,
+                <span class="string">"Invalid color/depth combination in header: {:?}/{:?}"</span>,
                 color_type, bit_depth,
             ),
             ColorWithBadTrns(color_type) =&gt; <span class="macro">write!</span>(
                 fmt,
-                <span class="string">&quot;Transparency chunk found for color type {:?}.&quot;</span>,
+                <span class="string">"Transparency chunk found for color type {:?}."</span>,
                 color_type
             ),
-            InvalidBitDepth(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid dispose operation {}.&quot;</span>, nr),
-            InvalidColorType(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid color type {}.&quot;</span>, nr),
-            InvalidDisposeOp(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid dispose op {}.&quot;</span>, nr),
-            InvalidBlendOp(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid blend op {}.&quot;</span>, nr),
-            InvalidUnit(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid physical pixel size unit {}.&quot;</span>, nr),
-            InvalidSrgbRenderingIntent(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid sRGB rendering intent {}.&quot;</span>, nr),
-            UnknownCompressionMethod(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Unknown compression method {}.&quot;</span>, nr),
-            UnknownFilterMethod(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Unknown filter method {}.&quot;</span>, nr),
-            UnknownInterlaceMethod(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Unknown interlace method {}.&quot;</span>, nr),
-            BadSubFrameBounds {} =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Sub frame is out-of-bounds.&quot;</span>),
-            InvalidSignature =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid PNG signature.&quot;</span>),
-            UnexpectedEof =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Unexpected end of data before image end.&quot;</span>),
-            UnexpectedEndOfChunk =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Unexpected end of data within a chunk.&quot;</span>),
-            NoMoreImageData =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;IDAT or fDAT chunk is has not enough data for image.&quot;</span>),
+            InvalidBitDepth(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid dispose operation {}."</span>, nr),
+            InvalidColorType(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid color type {}."</span>, nr),
+            InvalidDisposeOp(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid dispose op {}."</span>, nr),
+            InvalidBlendOp(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid blend op {}."</span>, nr),
+            InvalidUnit(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid physical pixel size unit {}."</span>, nr),
+            InvalidSrgbRenderingIntent(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid sRGB rendering intent {}."</span>, nr),
+            UnknownCompressionMethod(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Unknown compression method {}."</span>, nr),
+            UnknownFilterMethod(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Unknown filter method {}."</span>, nr),
+            UnknownInterlaceMethod(nr) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Unknown interlace method {}."</span>, nr),
+            BadSubFrameBounds {} =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Sub frame is out-of-bounds."</span>),
+            InvalidSignature =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid PNG signature."</span>),
+            UnexpectedEof =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Unexpected end of data before image end."</span>),
+            UnexpectedEndOfChunk =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Unexpected end of data within a chunk."</span>),
+            NoMoreImageData =&gt; <span class="macro">write!</span>(fmt, <span class="string">"IDAT or fDAT chunk is has not enough data for image."</span>),
             CorruptFlateStream { err } =&gt; {
-                <span class="macro">write!</span>(fmt, <span class="string">&quot;Corrupt deflate stream. &quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(fmt, <span class="string">"Corrupt deflate stream. "</span>)<span class="question-mark">?</span>;
                 <span class="kw">use </span>miniz_oxide::inflate::TINFLStatus;
                 <span class="kw">match </span>err {
-                    TINFLStatus::Adler32Mismatch =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Adler32 checksum failed.&quot;</span>),
-                    TINFLStatus::BadParam =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid input parameters.&quot;</span>),
+                    TINFLStatus::Adler32Mismatch =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Adler32 checksum failed."</span>),
+                    TINFLStatus::BadParam =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Invalid input parameters."</span>),
                     <span class="comment">// The Done status should already have been handled.
-                    </span>TINFLStatus::Done =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Unexpected done status.&quot;</span>),
+                    </span>TINFLStatus::Done =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Unexpected done status."</span>),
                     TINFLStatus::FailedCannotMakeProgress =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Unexpected end of data.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Unexpected end of data."</span>)
                     }
                     <span class="comment">// The HasMoreOutput status should already have been handled.
-                    </span>TINFLStatus::HasMoreOutput =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Has more output.&quot;</span>),
+                    </span>TINFLStatus::HasMoreOutput =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Has more output."</span>),
                     <span class="comment">// The HasMoreInput status should already have been handled.
-                    </span>TINFLStatus::NeedsMoreInput =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Needs more input.&quot;</span>),
+                    </span>TINFLStatus::NeedsMoreInput =&gt; <span class="macro">write!</span>(fmt, <span class="string">"Needs more input."</span>),
                     <span class="comment">// Write out the error number in case a new has been added.
-                    </span><span class="kw">_ </span>=&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;Error number {:?}.&quot;</span>, err),
+                    </span><span class="kw">_ </span>=&gt; <span class="macro">write!</span>(fmt, <span class="string">"Error number {:?}."</span>, err),
                 }
             }
-            BadFilter(message) =&gt; <span class="macro">write!</span>(fmt, <span class="string">&quot;{}.&quot;</span>, message),
+            BadFilter(message) =&gt; <span class="macro">write!</span>(fmt, <span class="string">"{}."</span>, message),
             <span class="comment">// TODO: Wrap more info in the enum variant
             </span>BadTextEncoding(tde) =&gt; {
                 <span class="kw">match </span>tde {
                     TextDecodingError::Unrepresentable =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Unrepresentable data in tEXt chunk.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Unrepresentable data in tEXt chunk."</span>)
                     }
                     TextDecodingError::InvalidKeywordSize =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Keyword empty or longer than 79 bytes.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Keyword empty or longer than 79 bytes."</span>)
                     }
                     TextDecodingError::MissingNullSeparator =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;No null separator in tEXt chunk.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"No null separator in tEXt chunk."</span>)
                     }
                     TextDecodingError::InflationError =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Invalid compressed text data.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Invalid compressed text data."</span>)
                     }
                     TextDecodingError::OutOfDecompressionSpace =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Out of decompression space. Try with a larger limit.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Out of decompression space. Try with a larger limit."</span>)
                     }
                     TextDecodingError::InvalidCompressionMethod =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Using an unrecognized byte as compression method.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Using an unrecognized byte as compression method."</span>)
                     }
                     TextDecodingError::InvalidCompressionFlag =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;Using a flag that is not 0 or 255 as a compression flag for iTXt chunk.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"Using a flag that is not 0 or 255 as a compression flag for iTXt chunk."</span>)
                     }
                     TextDecodingError::MissingCompressionFlag =&gt; {
-                        <span class="macro">write!</span>(fmt, <span class="string">&quot;No compression flag in the iTXt chunk.&quot;</span>)
+                        <span class="macro">write!</span>(fmt, <span class="string">"No compression flag in the iTXt chunk."</span>)
                     }
                 }
             }
@@ -1943,7 +1945,7 @@
     <span class="doccomment">/// The inflater state handling consecutive `IDAT` and `fdAT` chunks.
     </span>inflater: ZlibStream,
     <span class="doccomment">/// The complete image info read from all prior chunks.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) info: <span class="prelude-ty">Option</span>&lt;Info&lt;<span class="lifetime">&#39;static</span>&gt;&gt;,
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) info: <span class="prelude-ty">Option</span>&lt;Info&lt;<span class="lifetime">'static</span>&gt;&gt;,
     <span class="doccomment">/// The animation chunk sequence number.
     </span>current_seq_no: <span class="prelude-ty">Option</span>&lt;u32&gt;,
     <span class="doccomment">/// Stores where in decoding an `fdAT` chunk we are.
@@ -1998,7 +2000,7 @@
     }
 
     <span class="doccomment">/// Provides access to the inner `info` field
-    </span><span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Info&lt;<span class="lifetime">&#39;static</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Info&lt;<span class="lifetime">'static</span>&gt;&gt; {
         <span class="self">self</span>.info.as_ref()
     }
 
@@ -2035,8 +2037,8 @@
         <span class="prelude-val">Ok</span>((len - buf.len(), Decoded::Nothing))
     }
 
-    <span class="kw">fn </span>next_state&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>,
+    <span class="kw">fn </span>next_state&lt;<span class="lifetime">'a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span><span class="self">self</span>,
         buf: <span class="kw-2">&amp;</span>[u8],
         image_data: <span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(usize, Decoded), DecodingError&gt; {
@@ -2813,7 +2815,7 @@
     }
 }
 
-<span class="kw">impl </span>Info&lt;<span class="lifetime">&#39;_</span>&gt; {
+<span class="kw">impl </span>Info&lt;<span class="lifetime">'_</span>&gt; {
     <span class="kw">fn </span>validate(<span class="kw-2">&amp;</span><span class="self">self</span>, fc: <span class="kw-2">&amp;</span>FrameControl) -&gt; <span class="prelude-ty">Result</span>&lt;(), DecodingError&gt; {
         <span class="comment">// Validate mathematically: fc.width + fc.x_offset &lt;= self.width
         </span><span class="kw">let </span>in_x_bounds = <span class="prelude-val">Some</span>(fc.width) &lt;= <span class="self">self</span>.width.checked_sub(fc.x_offset);
@@ -2862,36 +2864,36 @@
             <span class="kw">let </span>actual: <span class="prelude-ty">Option</span>&lt;ScaledFloat&gt; = reader.info().source_gamma;
             <span class="macro">assert!</span>(actual == expected);
         }
-        trial(<span class="string">&quot;tests/pngsuite/f00n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f00n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f01n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f01n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f02n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f02n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f03n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f03n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f04n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f04n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f99n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tm3n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g03n0g16.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.35</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g03n2c08.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.35</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g03n3p04.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.35</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g04n0g16.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.45</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g04n2c08.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.45</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g04n3p04.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.45</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g05n0g16.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.55</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g05n2c08.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.55</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g05n3p04.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.55</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g07n0g16.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.7</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g07n2c08.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.7</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g07n3p04.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.7</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g10n0g16.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">1.0</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g10n2c08.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">1.0</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g10n3p04.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">1.0</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g25n0g16.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">2.5</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g25n2c08.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">2.5</span>)));
-        trial(<span class="string">&quot;tests/pngsuite/g25n3p04.png&quot;</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">2.5</span>)));
+        trial(<span class="string">"tests/pngsuite/f00n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f00n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f01n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f01n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f02n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f02n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f03n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f03n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f04n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f04n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f99n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tm3n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g03n0g16.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.35</span>)));
+        trial(<span class="string">"tests/pngsuite/g03n2c08.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.35</span>)));
+        trial(<span class="string">"tests/pngsuite/g03n3p04.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.35</span>)));
+        trial(<span class="string">"tests/pngsuite/g04n0g16.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.45</span>)));
+        trial(<span class="string">"tests/pngsuite/g04n2c08.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.45</span>)));
+        trial(<span class="string">"tests/pngsuite/g04n3p04.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.45</span>)));
+        trial(<span class="string">"tests/pngsuite/g05n0g16.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.55</span>)));
+        trial(<span class="string">"tests/pngsuite/g05n2c08.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.55</span>)));
+        trial(<span class="string">"tests/pngsuite/g05n3p04.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.55</span>)));
+        trial(<span class="string">"tests/pngsuite/g07n0g16.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.7</span>)));
+        trial(<span class="string">"tests/pngsuite/g07n2c08.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.7</span>)));
+        trial(<span class="string">"tests/pngsuite/g07n3p04.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">0.7</span>)));
+        trial(<span class="string">"tests/pngsuite/g10n0g16.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">1.0</span>)));
+        trial(<span class="string">"tests/pngsuite/g10n2c08.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">1.0</span>)));
+        trial(<span class="string">"tests/pngsuite/g10n3p04.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">1.0</span>)));
+        trial(<span class="string">"tests/pngsuite/g25n0g16.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">2.5</span>)));
+        trial(<span class="string">"tests/pngsuite/g25n2c08.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">2.5</span>)));
+        trial(<span class="string">"tests/pngsuite/g25n3p04.png"</span>, <span class="prelude-val">Some</span>(ScaledFloat::new(<span class="number">2.5</span>)));
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -2904,7 +2906,7 @@
             <span class="macro">assert!</span>(actual == expected);
         }
         trial(
-            <span class="string">&quot;tests/pngsuite/ccwn2c08.png&quot;</span>,
+            <span class="string">"tests/pngsuite/ccwn2c08.png"</span>,
             <span class="prelude-val">Some</span>(SourceChromaticities::new(
                 (<span class="number">0.3127</span>, <span class="number">0.3290</span>),
                 (<span class="number">0.64</span>, <span class="number">0.33</span>),
@@ -2913,7 +2915,7 @@
             )),
         );
         trial(
-            <span class="string">&quot;tests/pngsuite/ccwn3p08.png&quot;</span>,
+            <span class="string">"tests/pngsuite/ccwn3p08.png"</span>,
             <span class="prelude-val">Some</span>(SourceChromaticities::new(
                 (<span class="number">0.3127</span>, <span class="number">0.3290</span>),
                 (<span class="number">0.64</span>, <span class="number">0.33</span>),
@@ -2921,164 +2923,164 @@
                 (<span class="number">0.15</span>, <span class="number">0.06</span>),
             )),
         );
-        trial(<span class="string">&quot;tests/pngsuite/basi0g01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi0g02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi4a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi4a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi6a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basi6a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn0g01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn0g02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn4a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn4a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn6a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/basn6a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgai4a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgai4a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgan6a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgan6a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgbn4a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bggn4a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgwn6a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/bgyn6a16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cdfn2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cdhn2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cdsn2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cdun2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ch1n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ch2n3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cm0n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cm7n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cm9n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cs3n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cs3n3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cs5n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cs5n3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cs8n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cs8n3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ct0n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ct1n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cten0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ctfn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ctgn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/cthn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ctjn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ctzn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f00n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f00n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f01n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f01n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f02n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f02n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f03n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f03n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f04n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f04n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/f99n0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g03n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g03n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g03n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g04n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g04n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g04n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g05n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g05n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g05n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g07n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g07n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g07n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g10n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g10n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g10n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g25n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g25n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/g25n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi1n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi1n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi2n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi2n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi4n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi4n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi9n0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/oi9n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/PngSuite.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/pp0n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/pp0n6a08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ps1n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ps1n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ps2n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/ps2n2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s01i3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s01n3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s02i3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s02n3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s03i3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s03n3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s04i3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s04n3p01.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s05i3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s05n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s06i3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s06n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s07i3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s07n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s08i3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s08n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s09i3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s09n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s32i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s32n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s33i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s33n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s34i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s34n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s35i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s35n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s36i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s36n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s37i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s37n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s38i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s38n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s39i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s39n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s40i3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/s40n3p04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbbn0g04.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbbn2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbbn3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbgn2c16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbgn3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbrn2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbwn0g16.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbwn3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tbyn3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tm3n3p02.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tp0n0g08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tp0n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tp0n3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/tp1n3p08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/z00n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/z03n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
-        trial(<span class="string">&quot;tests/pngsuite/z06n2c08.png&quot;</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi0g01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi0g02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi4a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi4a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi6a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basi6a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn0g01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn0g02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn4a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn4a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn6a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/basn6a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgai4a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgai4a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgan6a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgan6a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgbn4a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bggn4a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgwn6a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/bgyn6a16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cdfn2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cdhn2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cdsn2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cdun2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ch1n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ch2n3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cm0n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cm7n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cm9n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cs3n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cs3n3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cs5n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cs5n3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cs8n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cs8n3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ct0n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ct1n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cten0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ctfn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ctgn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/cthn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ctjn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ctzn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f00n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f00n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f01n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f01n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f02n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f02n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f03n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f03n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f04n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f04n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/f99n0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g03n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g03n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g03n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g04n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g04n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g04n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g05n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g05n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g05n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g07n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g07n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g07n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g10n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g10n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g10n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g25n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g25n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/g25n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi1n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi1n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi2n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi2n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi4n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi4n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi9n0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/oi9n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/PngSuite.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/pp0n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/pp0n6a08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ps1n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ps1n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ps2n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/ps2n2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s01i3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s01n3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s02i3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s02n3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s03i3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s03n3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s04i3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s04n3p01.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s05i3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s05n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s06i3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s06n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s07i3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s07n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s08i3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s08n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s09i3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s09n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s32i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s32n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s33i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s33n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s34i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s34n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s35i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s35n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s36i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s36n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s37i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s37n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s38i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s38n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s39i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s39n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s40i3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/s40n3p04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbbn0g04.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbbn2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbbn3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbgn2c16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbgn3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbrn2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbwn0g16.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbwn3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tbyn3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tm3n3p02.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tp0n0g08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tp0n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tp0n3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/tp1n3p08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/z00n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/z03n2c08.png"</span>, <span class="prelude-val">None</span>);
+        trial(<span class="string">"tests/pngsuite/z06n2c08.png"</span>, <span class="prelude-val">None</span>);
         <span class="prelude-val">Ok</span>(())
     }
 }

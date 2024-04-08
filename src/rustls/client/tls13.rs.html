@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rustls-0.20.6/src/client/tls13.rs`."><title>tls13.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rustls" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rustls-0.20.6/src/client/tls13.rs`."><title>tls13.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rustls" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../rustls/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1185,7 +1187,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::error::Error;
 <span class="kw">use </span><span class="kw">crate</span>::hash_hs::{HandshakeHash, HandshakeHashBuffer};
 <span class="kw">use </span><span class="kw">crate</span>::kx;
-<span class="attr">#[cfg(feature = <span class="string">&quot;logging&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"logging"</span>)]
 </span><span class="kw">use </span><span class="kw">crate</span>::log::{debug, trace, warn};
 <span class="kw">use </span><span class="kw">crate</span>::msgs::base::{Payload, PayloadU8};
 <span class="kw">use </span><span class="kw">crate</span>::msgs::ccs::ChangeCipherSpecPayload;
@@ -1208,7 +1210,7 @@
 };
 <span class="kw">use </span><span class="kw">crate</span>::tls13::Tls13CipherSuite;
 <span class="kw">use </span><span class="kw">crate</span>::verify;
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">use crate</span>::{conn::Protocol, msgs::base::PayloadU16, quic};
 <span class="kw">use crate</span>::{sign, KeyLog};
 
@@ -1247,7 +1249,7 @@
     <span class="kw-2">mut </span>resuming_session: <span class="prelude-ty">Option</span>&lt;persist::Tls13ClientSessionValue&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     early_key_schedule: <span class="prelude-ty">Option</span>&lt;KeyScheduleEarly&gt;,
     hello: ClientHelloDetails,
@@ -1261,13 +1263,13 @@
         .ok_or_else(|| {
             cx.common
                 .send_fatal_alert(AlertDescription::MissingExtension);
-            Error::PeerMisbehavedError(<span class="string">&quot;missing key share&quot;</span>.to_string())
+            Error::PeerMisbehavedError(<span class="string">"missing key share"</span>.to_string())
         })<span class="question-mark">?</span>;
 
     <span class="kw">if </span>our_key_share.group() != their_key_share.group {
         <span class="kw">return </span><span class="prelude-val">Err</span>(cx
             .common
-            .illegal_param(<span class="string">&quot;wrong group for key share&quot;</span>));
+            .illegal_param(<span class="string">"wrong group for key share"</span>));
     }
 
     <span class="kw">let </span>key_schedule_pre_handshake = <span class="kw">if let </span>(<span class="prelude-val">Some</span>(selected_psk), <span class="prelude-val">Some</span>(early_key_schedule)) =
@@ -1279,7 +1281,7 @@
                 <span class="prelude-val">None </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(cx
                         .common
-                        .illegal_param(<span class="string">&quot;server resuming incompatible suite&quot;</span>));
+                        .illegal_param(<span class="string">"server resuming incompatible suite"</span>));
                 }
             };
 
@@ -1288,25 +1290,25 @@
             </span><span class="kw">if </span>cx.data.early_data.is_enabled() &amp;&amp; resuming_suite != suite {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(cx
                     .common
-                    .illegal_param(<span class="string">&quot;server varied suite with early data&quot;</span>));
+                    .illegal_param(<span class="string">"server varied suite with early data"</span>));
             }
 
             <span class="kw">if </span>selected_psk != <span class="number">0 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(cx
                     .common
-                    .illegal_param(<span class="string">&quot;server selected invalid psk&quot;</span>));
+                    .illegal_param(<span class="string">"server selected invalid psk"</span>));
             }
 
-            <span class="macro">debug!</span>(<span class="string">&quot;Resuming using PSK&quot;</span>);
+            <span class="macro">debug!</span>(<span class="string">"Resuming using PSK"</span>);
             <span class="comment">// The key schedule has been initialized and set in fill_in_psk_binder()
         </span>} <span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(
-                <span class="string">&quot;server selected unoffered psk&quot;</span>.to_string(),
+                <span class="string">"server selected unoffered psk"</span>.to_string(),
             ));
         }
         KeySchedulePreHandshake::from(early_key_schedule)
     } <span class="kw">else </span>{
-        <span class="macro">debug!</span>(<span class="string">&quot;Not resuming&quot;</span>);
+        <span class="macro">debug!</span>(<span class="string">"Not resuming"</span>);
         <span class="comment">// Discard the early data key schedule.
         </span>cx.data.early_data.rejected();
         cx.common.early_traffic = <span class="bool-val">false</span>;
@@ -1333,7 +1335,7 @@
         <span class="kw-2">&amp;</span>randoms.client,
     );
 
-    <span class="comment">// Decrypt with the peer&#39;s key, encrypt with our own key
+    <span class="comment">// Decrypt with the peer's key, encrypt with our own key
     </span>cx.common
         .record_layer
         .set_message_decrypter(suite.derive_decrypter(<span class="kw-2">&amp;</span>server_key));
@@ -1345,7 +1347,7 @@
             .set_message_encrypter(suite.derive_encrypter(<span class="kw-2">&amp;</span>client_key));
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
     </span><span class="kw">if </span>cx.common.is_quic() {
         cx.common.quic.hs_secrets = <span class="prelude-val">Some</span>(quic::Secrets::new(client_key, server_key, suite, <span class="bool-val">true</span>));
     }
@@ -1372,7 +1374,7 @@
         <span class="kw">if </span>!ALLOWED_PLAINTEXT_EXTS.contains(<span class="kw-2">&amp;</span>ext.get_type()) {
             common.send_fatal_alert(AlertDescription::UnsupportedExtension);
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(
-                <span class="string">&quot;server sent unexpected cleartext ext&quot;</span>.to_string(),
+                <span class="string">"server sent unexpected cleartext ext"</span>.to_string(),
             ));
         }
     }
@@ -1396,7 +1398,7 @@
             config
                 .kx_groups
                 .first()
-                .expect(<span class="string">&quot;No kx groups configured&quot;</span>)
+                .expect(<span class="string">"No kx groups configured"</span>)
         });
 
     kx::KeyExchange::start(group).ok_or(Error::FailedToGetRandomBytes)
@@ -1417,11 +1419,11 @@
     transcript: <span class="kw-2">&amp;</span>HandshakeHashBuffer,
     hmp: <span class="kw-2">&amp;mut </span>HandshakeMessagePayload,
 ) -&gt; KeyScheduleEarly {
-    <span class="comment">// We need to know the hash function of the suite we&#39;re trying to resume into.
+    <span class="comment">// We need to know the hash function of the suite we're trying to resume into.
     </span><span class="kw">let </span>hkdf_alg = resuming.suite().hkdf_algorithm;
     <span class="kw">let </span>suite_hash = resuming.suite().hash_algorithm();
 
-    <span class="comment">// The binder is calculated over the clienthello, but doesn&#39;t include itself or its
+    <span class="comment">// The binder is calculated over the clienthello, but doesn't include itself or its
     // length, or the length of its container.
     </span><span class="kw">let </span>binder_plaintext = hmp.get_encoding_for_binder_signing();
     <span class="kw">let </span>handshake_hash = transcript.get_hash_given(suite_hash, <span class="kw-2">&amp;</span>binder_plaintext);
@@ -1440,7 +1442,7 @@
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>prepare_resumption(
     config: <span class="kw-2">&amp;</span>ClientConfig,
-    cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;,
+    cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;,
     ticket: Vec&lt;u8&gt;,
     resuming_session: <span class="kw-2">&amp;</span>persist::Retrieved&lt;<span class="kw-2">&amp;</span>persist::Tls13ClientSessionValue&gt;,
     exts: <span class="kw-2">&amp;mut </span>Vec&lt;ClientExtension&gt;,
@@ -1463,7 +1465,7 @@
     // for our ticket.  This must go last.
     //
     // Include an empty binder. It gets filled in below because it depends on
-    // the message it&#39;s contained in (!!!).
+    // the message it's contained in (!!!).
     </span><span class="kw">let </span>obfuscated_ticket_age = resuming_session.obfuscated_ticket_age();
 
     <span class="kw">let </span>binder_len = resuming_suite
@@ -1478,8 +1480,8 @@
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>derive_early_traffic_secret(
     key_log: <span class="kw-2">&amp;</span><span class="kw">dyn </span>KeyLog,
-    cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;,
-    resuming_suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;,
+    resuming_suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     early_key_schedule: <span class="kw-2">&amp;</span>KeyScheduleEarly,
     sent_tls13_fake_ccs: <span class="kw-2">&amp;mut </span>bool,
     transcript_buffer: <span class="kw-2">&amp;</span>HandshakeHashBuffer,
@@ -1496,14 +1498,14 @@
         .record_layer
         .set_message_encrypter(resuming_suite.derive_encrypter(<span class="kw-2">&amp;</span>client_early_traffic_secret));
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
     </span><span class="kw">if </span>cx.common.is_quic() {
         cx.common.quic.early_secret = <span class="prelude-val">Some</span>(client_early_traffic_secret);
     }
 
     <span class="comment">// Now the client can send encrypted early data
     </span>cx.common.early_traffic = <span class="bool-val">true</span>;
-    <span class="macro">trace!</span>(<span class="string">&quot;Starting early data traffic&quot;</span>);
+    <span class="macro">trace!</span>(<span class="string">"Starting early data traffic"</span>);
 }
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>emit_fake_ccs(sent_tls13_fake_ccs: <span class="kw-2">&amp;mut </span>bool, common: <span class="kw-2">&amp;mut </span>CommonState) {
@@ -1530,13 +1532,13 @@
     <span class="kw">if </span>exts.has_duplicate_extension() {
         common.send_fatal_alert(AlertDescription::DecodeError);
         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(
-            <span class="string">&quot;server sent duplicate encrypted extensions&quot;</span>.to_string(),
+            <span class="string">"server sent duplicate encrypted extensions"</span>.to_string(),
         ));
     }
 
     <span class="kw">if </span>hello.server_sent_unsolicited_extensions(exts, <span class="kw-2">&amp;</span>[]) {
         common.send_fatal_alert(AlertDescription::UnsupportedExtension);
-        <span class="kw">let </span>msg = <span class="string">&quot;server sent unsolicited encrypted extension&quot;</span>.to_string();
+        <span class="kw">let </span>msg = <span class="string">"server sent unsolicited encrypted extension"</span>.to_string();
         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(msg));
     }
 
@@ -1545,7 +1547,7 @@
             || DISALLOWED_TLS13_EXTS.contains(<span class="kw-2">&amp;</span>ext.get_type())
         {
             common.send_fatal_alert(AlertDescription::UnsupportedExtension);
-            <span class="kw">let </span>msg = <span class="string">&quot;server sent inappropriate encrypted extension&quot;</span>.to_string();
+            <span class="kw">let </span>msg = <span class="string">"server sent inappropriate encrypted extension"</span>.to_string();
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(msg));
         }
     }
@@ -1558,26 +1560,26 @@
     resuming_session: <span class="prelude-ty">Option</span>&lt;persist::Tls13ClientSessionValue&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleHandshake,
     hello: ClientHelloDetails,
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectEncryptedExtensions {
-    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">let </span>exts = <span class="macro">require_handshake_msg!</span>(
             m,
             HandshakeType::EncryptedExtensions,
             HandshakePayload::EncryptedExtensions
         )<span class="question-mark">?</span>;
-        <span class="macro">debug!</span>(<span class="string">&quot;TLS1.3 encrypted extensions: {:?}&quot;</span>, exts);
+        <span class="macro">debug!</span>(<span class="string">"TLS1.3 encrypted extensions: {:?}"</span>, exts);
         <span class="self">self</span>.transcript.add_message(<span class="kw-2">&amp;</span>m);
 
         validate_encrypted_extensions(cx.common, <span class="kw-2">&amp;</span><span class="self">self</span>.hello, exts)<span class="question-mark">?</span>;
         hs::process_alpn_protocol(cx.common, <span class="kw-2">&amp;</span><span class="self">self</span>.config, exts.get_alpn_protocol())<span class="question-mark">?</span>;
 
-        <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+        <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
         </span>{
             <span class="comment">// QUIC transport parameters
             </span><span class="kw">if </span>cx.common.is_quic() {
@@ -1586,7 +1588,7 @@
                     <span class="prelude-val">None </span>=&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(cx
                             .common
-                            .missing_extension(<span class="string">&quot;QUIC transport parameters not found&quot;</span>));
+                            .missing_extension(<span class="string">"QUIC transport parameters not found"</span>));
                     }
                 }
             }
@@ -1619,7 +1621,7 @@
                     .to_vec(),
             );
 
-            <span class="comment">// We *don&#39;t* reverify the certificate chain here: resumption is a
+            <span class="comment">// We *don't* reverify the certificate chain here: resumption is a
             // continuation of the previous session in terms of security policy.
             </span><span class="kw">let </span>cert_verified = verify::ServerCertVerified::assertion();
             <span class="kw">let </span>sig_verified = verify::HandshakeSignatureValid::assertion();
@@ -1636,7 +1638,7 @@
             }))
         } <span class="kw">else </span>{
             <span class="kw">if </span>exts.early_data_extension_offered() {
-                <span class="kw">let </span>msg = <span class="string">&quot;server sent early data extension without resumption&quot;</span>.to_string();
+                <span class="kw">let </span>msg = <span class="string">"server sent early data extension without resumption"</span>.to_string();
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(msg));
             }
             <span class="prelude-val">Ok</span>(Box::new(ExpectCertificateOrCertReq {
@@ -1656,14 +1658,14 @@
     config: Arc&lt;ClientConfig&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleHandshake,
     may_send_sct_list: bool,
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectCertificateOrCertReq {
-    <span class="kw">fn </span>handle(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">match </span>m.payload {
             MessagePayload::Handshake {
                 parsed:
@@ -1719,28 +1721,28 @@
     config: Arc&lt;ClientConfig&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleHandshake,
     may_send_sct_list: bool,
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectCertificateRequest {
-    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">let </span>certreq = <span class="kw-2">&amp;</span><span class="macro">require_handshake_msg!</span>(
             m,
             HandshakeType::CertificateRequest,
             HandshakePayload::CertificateRequestTLS13
         )<span class="question-mark">?</span>;
         <span class="self">self</span>.transcript.add_message(<span class="kw-2">&amp;</span>m);
-        <span class="macro">debug!</span>(<span class="string">&quot;Got CertificateRequest {:?}&quot;</span>, certreq);
+        <span class="macro">debug!</span>(<span class="string">"Got CertificateRequest {:?}"</span>, certreq);
 
         <span class="comment">// Fortunately the problems here in TLS1.2 and prior are corrected in
         // TLS1.3.
 
         // Must be empty during handshake.
         </span><span class="kw">if </span>!certreq.context.<span class="number">0</span>.is_empty() {
-            <span class="macro">warn!</span>(<span class="string">&quot;Server sent non-empty certreq context&quot;</span>);
+            <span class="macro">warn!</span>(<span class="string">"Server sent non-empty certreq context"</span>);
             cx.common
                 .send_fatal_alert(AlertDescription::DecodeError);
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::CorruptMessagePayload(ContentType::Handshake));
@@ -1760,7 +1762,7 @@
             cx.common
                 .send_fatal_alert(AlertDescription::HandshakeFailure);
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerIncompatibleError(
-                <span class="string">&quot;server sent bad certreq schemes&quot;</span>.to_string(),
+                <span class="string">"server sent bad certreq schemes"</span>.to_string(),
             ));
         }
 
@@ -1790,7 +1792,7 @@
     config: Arc&lt;ClientConfig&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleHandshake,
     may_send_sct_list: bool,
@@ -1798,7 +1800,7 @@
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectCertificate {
-    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">let </span>cert_chain = <span class="macro">require_handshake_msg!</span>(
             m,
             HandshakeType::Certificate,
@@ -1808,7 +1810,7 @@
 
         <span class="comment">// This is only non-empty for client auth.
         </span><span class="kw">if </span>!cert_chain.context.<span class="number">0</span>.is_empty() {
-            <span class="macro">warn!</span>(<span class="string">&quot;certificate with non-empty context during handshake&quot;</span>);
+            <span class="macro">warn!</span>(<span class="string">"certificate with non-empty context during handshake"</span>);
             cx.common
                 .send_fatal_alert(AlertDescription::DecodeError);
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::CorruptMessagePayload(ContentType::Handshake));
@@ -1817,11 +1819,11 @@
         <span class="kw">if </span>cert_chain.any_entry_has_duplicate_extension()
             || cert_chain.any_entry_has_unknown_extension()
         {
-            <span class="macro">warn!</span>(<span class="string">&quot;certificate chain contains unsolicited/unknown extension&quot;</span>);
+            <span class="macro">warn!</span>(<span class="string">"certificate chain contains unsolicited/unknown extension"</span>);
             cx.common
                 .send_fatal_alert(AlertDescription::UnsupportedExtension);
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(
-                <span class="string">&quot;bad cert chain extensions&quot;</span>.to_string(),
+                <span class="string">"bad cert chain extensions"</span>.to_string(),
             ));
         }
 
@@ -1833,12 +1835,12 @@
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(sct_list) = server_cert.scts.as_ref() {
             <span class="kw">if </span>hs::sct_list_is_invalid(sct_list) {
-                <span class="kw">let </span>error_msg = <span class="string">&quot;server sent invalid SCT list&quot;</span>.to_string();
+                <span class="kw">let </span>error_msg = <span class="string">"server sent invalid SCT list"</span>.to_string();
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(error_msg));
             }
 
             <span class="kw">if </span>!<span class="self">self</span>.may_send_sct_list {
-                <span class="kw">let </span>error_msg = <span class="string">&quot;server sent unsolicited SCT list&quot;</span>.to_string();
+                <span class="kw">let </span>error_msg = <span class="string">"server sent unsolicited SCT list"</span>.to_string();
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(error_msg));
             }
         }
@@ -1861,7 +1863,7 @@
     config: Arc&lt;ClientConfig&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleHandshake,
     server_cert: ServerCertDetails,
@@ -1869,14 +1871,14 @@
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectCertificateVerify {
-    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">let </span>cert_verify = <span class="macro">require_handshake_msg!</span>(
             m,
             HandshakeType::CertificateVerify,
             HandshakePayload::CertificateVerify
         )<span class="question-mark">?</span>;
 
-        <span class="macro">trace!</span>(<span class="string">&quot;Server cert is {:?}&quot;</span>, <span class="self">self</span>.server_cert.cert_chain);
+        <span class="macro">trace!</span>(<span class="string">"Server cert is {:?}"</span>, <span class="self">self</span>.server_cert.cert_chain);
 
         <span class="comment">// 1. Verify the certificate chain.
         </span><span class="kw">let </span>(end_entity, intermediates) = <span class="self">self
@@ -2023,7 +2025,7 @@
     config: Arc&lt;ClientConfig&gt;,
     server_name: ServerName,
     randoms: ConnectionRandoms,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleHandshake,
     client_auth: <span class="prelude-ty">Option</span>&lt;ClientAuthDetails&gt;,
@@ -2032,7 +2034,7 @@
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectFinished {
-    <span class="kw">fn </span>handle(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">let </span><span class="kw-2">mut </span>st = <span class="kw-2">*</span><span class="self">self</span>;
         <span class="kw">let </span>finished =
             <span class="macro">require_handshake_msg!</span>(m, HandshakeType::Finished, HandshakePayload::Finished)<span class="question-mark">?</span>;
@@ -2129,7 +2131,7 @@
             _fin_verified: fin,
         };
 
-        <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+        <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
         </span>{
             <span class="kw">if </span>cx.common.protocol == Protocol::Quic {
                 cx.common.quic.traffic_secrets =
@@ -2148,7 +2150,7 @@
 </span><span class="kw">struct </span>ExpectTraffic {
     session_storage: Arc&lt;<span class="kw">dyn </span>StoresClientSessions&gt;,
     server_name: ServerName,
-    suite: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Tls13CipherSuite,
+    suite: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>Tls13CipherSuite,
     transcript: HandshakeHash,
     key_schedule: KeyScheduleTraffic,
     want_write_key_update: bool,
@@ -2158,17 +2160,17 @@
 }
 
 <span class="kw">impl </span>ExpectTraffic {
-    <span class="attr">#[allow(clippy::unnecessary_wraps)] </span><span class="comment">// returns Err for #[cfg(feature = &quot;quic&quot;)]
+    <span class="attr">#[allow(clippy::unnecessary_wraps)] </span><span class="comment">// returns Err for #[cfg(feature = "quic")]
     </span><span class="kw">fn </span>handle_new_ticket_tls13(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;,
+        cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;,
         nst: <span class="kw-2">&amp;</span>NewSessionTicketPayloadTLS13,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="kw">if </span>nst.has_duplicate_extension() {
             cx.common
                 .send_fatal_alert(AlertDescription::IllegalParameter);
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(
-                <span class="string">&quot;peer sent duplicate NewSessionTicket extensions&quot;</span>.into(),
+                <span class="string">"peer sent duplicate NewSessionTicket extensions"</span>.into(),
             ));
         }
 
@@ -2181,7 +2183,7 @@
             <span class="prelude-val">Ok</span>(t) =&gt; t,
             <span class="attr">#[allow(unused_variables)]
             </span><span class="prelude-val">Err</span>(e) =&gt; {
-                <span class="macro">debug!</span>(<span class="string">&quot;Session not saved: {}&quot;</span>, e);
+                <span class="macro">debug!</span>(<span class="string">"Session not saved: {}"</span>, e);
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(());
             }
         };
@@ -2201,11 +2203,11 @@
                 .unwrap_or_default(),
         );
 
-        <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+        <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(sz) = nst.get_max_early_data_size() {
             <span class="kw">if </span>cx.common.protocol == Protocol::Quic &amp;&amp; sz != <span class="number">0 </span>&amp;&amp; sz != <span class="number">0xffff_ffff </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(
-                    <span class="string">&quot;invalid max_early_data_size&quot;</span>.into(),
+                    <span class="string">"invalid max_early_data_size"</span>.into(),
                 ));
             }
         }
@@ -2214,7 +2216,7 @@
         <span class="attr">#[allow(unused_mut)]
         </span><span class="kw">let </span><span class="kw-2">mut </span>ticket = value.get_encoding();
 
-        <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+        <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
         </span><span class="kw">if let </span>(Protocol::Quic, <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>quic_params)) =
             (cx.common.protocol, <span class="kw-2">&amp;</span>cx.common.quic.params)
         {
@@ -2226,9 +2228,9 @@
             .put(key.get_encoding(), ticket);
 
         <span class="kw">if </span>worked {
-            <span class="macro">debug!</span>(<span class="string">&quot;Ticket saved&quot;</span>);
+            <span class="macro">debug!</span>(<span class="string">"Ticket saved"</span>);
         } <span class="kw">else </span>{
-            <span class="macro">debug!</span>(<span class="string">&quot;Ticket not saved&quot;</span>);
+            <span class="macro">debug!</span>(<span class="string">"Ticket not saved"</span>);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -2238,17 +2240,17 @@
         common: <span class="kw-2">&amp;mut </span>CommonState,
         kur: <span class="kw-2">&amp;</span>KeyUpdateRequest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
-        <span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+        <span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
         </span>{
             <span class="kw">if let </span>Protocol::Quic = common.protocol {
                 common.send_fatal_alert(AlertDescription::UnexpectedMessage);
-                <span class="kw">let </span>msg = <span class="string">&quot;KeyUpdate received in QUIC connection&quot;</span>.to_string();
-                <span class="macro">warn!</span>(<span class="string">&quot;{}&quot;</span>, msg);
+                <span class="kw">let </span>msg = <span class="string">"KeyUpdate received in QUIC connection"</span>.to_string();
+                <span class="macro">warn!</span>(<span class="string">"{}"</span>, msg);
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::PeerMisbehavedError(msg));
             }
         }
 
-        <span class="comment">// Mustn&#39;t be interleaved with other handshake messages.
+        <span class="comment">// Mustn't be interleaved with other handshake messages.
         </span>common.check_aligned_handshake()<span class="question-mark">?</span>;
 
         <span class="kw">match </span>kur {
@@ -2278,7 +2280,7 @@
 }
 
 <span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectTraffic {
-    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">match </span>m.payload {
             MessagePayload::ApplicationData(payload) =&gt; cx
                 .common
@@ -2336,12 +2338,12 @@
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">struct </span>ExpectQuicTraffic(ExpectTraffic);
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;quic&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"quic"</span>)]
 </span><span class="kw">impl </span>State&lt;ClientConnectionData&gt; <span class="kw">for </span>ExpectQuicTraffic {
-    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">&#39;_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
+    <span class="kw">fn </span>handle(<span class="kw-2">mut </span><span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>ClientContext&lt;<span class="lifetime">'_</span>&gt;, m: Message) -&gt; hs::NextStateOrError {
         <span class="kw">let </span>nst = <span class="macro">require_handshake_msg!</span>(
             m,
             HandshakeType::NewSessionTicket,

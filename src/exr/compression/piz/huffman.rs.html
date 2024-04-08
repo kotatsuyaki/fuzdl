@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/compression/piz/huffman.rs`."><title>huffman.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/compression/piz/huffman.rs`."><title>huffman.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1196,8 +1198,8 @@
         <span class="kw">let </span>code = <span class="kw-2">&amp;</span>decoding_table[u64_to_usize(index)];
 
         <span class="kw">if let </span>Code::Short(short_code) = code {
-            <span class="kw">if </span>short_code.len() &gt; code_bit_count { <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;code&quot;</span>)) }; <span class="comment">// FIXME why does this happen??
-            </span>code_bit_count -= short_code.len(); <span class="comment">// FIXME may throw &quot;attempted to subtract with overflow&quot;
+            <span class="kw">if </span>short_code.len() &gt; code_bit_count { <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"code"</span>)) }; <span class="comment">// FIXME why does this happen??
+            </span>code_bit_count -= short_code.len(); <span class="comment">// FIXME may throw "attempted to subtract with overflow"
 
             </span>read_code_into_vec(
                 short_code.value,
@@ -1497,7 +1499,7 @@
         <span class="kw-2">&amp;mut </span>out,
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>data_length = out.position() - start_position; <span class="comment">// we shouldn&#39;t count the last byte write
+    <span class="kw">let </span>data_length = out.position() - start_position; <span class="comment">// we shouldn't count the last byte write
 
     </span><span class="kw">if </span>code_bit_count != <span class="number">0 </span>{
         out.write(<span class="kw-2">&amp;</span>[
@@ -1575,7 +1577,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="doccomment">/// Build a &quot;canonical&quot; Huffman code table:
+<span class="doccomment">/// Build a "canonical" Huffman code table:
 ///	- for each (uncompressed) symbol, code contains the length
 ///	  of the corresponding code (in the compressed data)
 ///	- canonical codes are computed and stored in code
@@ -1631,7 +1633,7 @@
 ///	- original frequencies are destroyed;
 ///	- encoding tables are used by hufEncode() and hufBuildDecTable();
 ///
-/// NB: The following code &quot;(*a == *b) &amp;&amp; (a &gt; b))&quot; was added to ensure
+/// NB: The following code "(*a == *b) &amp;&amp; (a &gt; b))" was added to ensure
 ///     elements in the heap with the same value are sorted by index.
 ///     This is to ensure, the STL make_heap()/pop_heap()/push_heap() methods
 ///     produced a resultant sorted heap that is identical across OSes.
@@ -1682,7 +1684,7 @@
     </span><span class="kw">let </span><span class="kw-2">mut </span>links = <span class="macro">vec!</span>[<span class="number">0_usize</span>; ENCODING_TABLE_SIZE];
     <span class="kw">let </span><span class="kw-2">mut </span>frequency_heap = <span class="macro">vec!</span>[<span class="number">0_usize</span>; ENCODING_TABLE_SIZE];
 
-    <span class="comment">// This is a good solution since we don&#39;t have usize::MAX items (no panics or UB),
+    <span class="comment">// This is a good solution since we don't have usize::MAX items (no panics or UB),
     // and since this is short-circuit, it stops at the first in order non zero element.
     </span><span class="kw">let </span>min_frequency_index = frequencies.iter().position(|f| <span class="kw-2">*</span>f != <span class="number">0</span>).unwrap_or(<span class="number">0</span>);
 
@@ -1732,9 +1734,9 @@
     // leaf node, the distance between the root and the leaf is the length
     // of the code for the corresponding symbol.
     //
-    // The loop below doesn&#39;t actually build the tree; instead we compute
+    // The loop below doesn't actually build the tree; instead we compute
     // the distances of the leaves from the root on the fly.  When a new
-    // node is added to the heap, then that node&#39;s descendants are linked
+    // node is added to the heap, then that node's descendants are linked
     // into a single linear list that starts at the new node, and the code
     // lengths of the descendants (that is, their distance from the root
     // of the tree) are incremented by one.
@@ -1750,17 +1752,17 @@
         // values in fHeap, add the smallest frq to the second-smallest
         // frq, and remove the smallest frq value from fHeap.
         </span><span class="kw">let </span>(high_position, low_position) = {
-            <span class="kw">let </span>smallest_frequency = heap.pop().expect(<span class="string">&quot;heap empty bug&quot;</span>);
+            <span class="kw">let </span>smallest_frequency = heap.pop().expect(<span class="string">"heap empty bug"</span>);
             frequency_count -= <span class="number">1</span>;
 
-            <span class="kw">let </span><span class="kw-2">mut </span>second_smallest_frequency = heap.peek_mut().expect(<span class="string">&quot;heap empty bug&quot;</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>second_smallest_frequency = heap.peek_mut().expect(<span class="string">"heap empty bug"</span>);
             second_smallest_frequency.frequency += smallest_frequency.frequency;
 
             (second_smallest_frequency.position, smallest_frequency.position)
         };
 
         <span class="comment">// The entries in scode are linked into lists with the
-        // entries in hlink serving as &quot;next&quot; pointers and with
+        // entries in hlink serving as "next" pointers and with
         // the end of a list marked by hlink[j] == j.
         //
         // Traverse the lists that start at scode[m] and scode[mm].
@@ -1814,13 +1816,13 @@
 <span class="attr">#[inline] </span><span class="kw">fn </span>length(code: u64) -&gt; u64 { code &amp; <span class="number">63 </span>}
 <span class="attr">#[inline] </span><span class="kw">fn </span>code(code: u64) -&gt; u64 { code &gt;&gt; <span class="number">6 </span>}
 
-<span class="kw">const </span>INVALID_BIT_COUNT: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;invalid number of bits&quot;</span>;
-<span class="kw">const </span>INVALID_TABLE_ENTRY: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;invalid code table entry&quot;</span>;
-<span class="kw">const </span>NOT_ENOUGH_DATA: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;decoded data are shorter than expected&quot;</span>;
-<span class="kw">const </span>INVALID_TABLE_SIZE: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;unexpected end of code table data&quot;</span>;
-<span class="kw">const </span>TABLE_TOO_LONG: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;code table is longer than expected&quot;</span>;
-<span class="kw">const </span>INVALID_CODE: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;invalid code&quot;</span>;
-<span class="kw">const </span>TOO_MUCH_DATA: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;decoded data are longer than expected&quot;</span>;
+<span class="kw">const </span>INVALID_BIT_COUNT: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"invalid number of bits"</span>;
+<span class="kw">const </span>INVALID_TABLE_ENTRY: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"invalid code table entry"</span>;
+<span class="kw">const </span>NOT_ENOUGH_DATA: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"decoded data are shorter than expected"</span>;
+<span class="kw">const </span>INVALID_TABLE_SIZE: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"unexpected end of code table data"</span>;
+<span class="kw">const </span>TABLE_TOO_LONG: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"code table is longer than expected"</span>;
+<span class="kw">const </span>INVALID_CODE: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"invalid code"</span>;
+<span class="kw">const </span>TOO_MUCH_DATA: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str = <span class="string">"decoded data are longer than expected"</span>;
 
 
 <span class="attr">#[cfg(test)]

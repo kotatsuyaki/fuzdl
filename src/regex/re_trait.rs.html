@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/regex-1.6.0/src/re_trait.rs`."><title>re_trait.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="regex" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/regex-1.6.0/src/re_trait.rs`."><title>re_trait.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="regex" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../regex/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -324,7 +326,7 @@
     <span class="doccomment">/// Creates an iterator of all the capture group positions in order of
     /// appearance in the regular expression. Positions are byte indices
     /// in terms of the original string matched.
-    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SubCapturesPosIter&lt;<span class="lifetime">&#39;_</span>&gt; {
+    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SubCapturesPosIter&lt;<span class="lifetime">'_</span>&gt; {
         SubCapturesPosIter { idx: <span class="number">0</span>, locs: <span class="self">self </span>}
     }
 
@@ -347,14 +349,14 @@
 ///
 /// Positions are byte indices in terms of the original string matched.
 ///
-/// `&#39;c` is the lifetime of the captures.
+/// `'c` is the lifetime of the captures.
 </span><span class="attr">#[derive(Clone, Debug)]
-</span><span class="kw">pub struct </span>SubCapturesPosIter&lt;<span class="lifetime">&#39;c</span>&gt; {
+</span><span class="kw">pub struct </span>SubCapturesPosIter&lt;<span class="lifetime">'c</span>&gt; {
     idx: usize,
-    locs: <span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span>Locations,
+    locs: <span class="kw-2">&amp;</span><span class="lifetime">'c </span>Locations,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;c</span>&gt; Iterator <span class="kw">for </span>SubCapturesPosIter&lt;<span class="lifetime">&#39;c</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'c</span>&gt; Iterator <span class="kw">for </span>SubCapturesPosIter&lt;<span class="lifetime">'c</span>&gt; {
     <span class="kw">type </span>Item = <span class="prelude-ty">Option</span>&lt;(usize, usize)&gt;;
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Option</span>&lt;(usize, usize)&gt;&gt; {
@@ -379,9 +381,9 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;c</span>&gt; ExactSizeIterator <span class="kw">for </span>SubCapturesPosIter&lt;<span class="lifetime">&#39;c</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'c</span>&gt; ExactSizeIterator <span class="kw">for </span>SubCapturesPosIter&lt;<span class="lifetime">'c</span>&gt; {}
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;c</span>&gt; FusedIterator <span class="kw">for </span>SubCapturesPosIter&lt;<span class="lifetime">&#39;c</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'c</span>&gt; FusedIterator <span class="kw">for </span>SubCapturesPosIter&lt;<span class="lifetime">'c</span>&gt; {}
 
 <span class="doccomment">/// `RegularExpression` describes types that can implement regex searching.
 ///
@@ -389,12 +391,12 @@
 /// the internal API. Specific duplication that is avoided are the `find`
 /// and `capture` iterators, which are slightly tricky.
 ///
-/// It&#39;s not clear whether this trait is worth it, and it also isn&#39;t
-/// clear whether it&#39;s useful as a public trait or not. Methods like
+/// It's not clear whether this trait is worth it, and it also isn't
+/// clear whether it's useful as a public trait or not. Methods like
 /// `next_after_empty` reak of bad design, but the rest of the methods seem
 /// somewhat reasonable. One particular thing this trait would expose would be
 /// the ability to start the search of a regex anywhere in a haystack, which
-/// isn&#39;t possible in the current public API.
+/// isn't possible in the current public API.
 </span><span class="kw">pub trait </span>RegularExpression: Sized + fmt::Debug {
     <span class="doccomment">/// The type of the haystack.
     </span><span class="kw">type </span>Text: <span class="question-mark">?</span>Sized + fmt::Debug;
@@ -443,37 +445,37 @@
 
     <span class="doccomment">/// Returns an iterator over all non-overlapping successive leftmost-first
     /// matches.
-    </span><span class="kw">fn </span>find_iter(<span class="self">self</span>, text: <span class="kw-2">&amp;</span><span class="self">Self</span>::Text) -&gt; Matches&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt; {
+    </span><span class="kw">fn </span>find_iter(<span class="self">self</span>, text: <span class="kw-2">&amp;</span><span class="self">Self</span>::Text) -&gt; Matches&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt; {
         Matches { re: <span class="self">self</span>, text, last_end: <span class="number">0</span>, last_match: <span class="prelude-val">None </span>}
     }
 
     <span class="doccomment">/// Returns an iterator over all non-overlapping successive leftmost-first
     /// matches with captures.
-    </span><span class="kw">fn </span>captures_iter(<span class="self">self</span>, text: <span class="kw-2">&amp;</span><span class="self">Self</span>::Text) -&gt; CaptureMatches&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt; {
+    </span><span class="kw">fn </span>captures_iter(<span class="self">self</span>, text: <span class="kw-2">&amp;</span><span class="self">Self</span>::Text) -&gt; CaptureMatches&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt; {
         CaptureMatches(<span class="self">self</span>.find_iter(text))
     }
 }
 
 <span class="doccomment">/// An iterator over all non-overlapping successive leftmost-first matches.
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Matches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+</span><span class="kw">pub struct </span>Matches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t</span>,
+    R::Text: <span class="lifetime">'t</span>,
 {
     re: R,
-    text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span>R::Text,
+    text: <span class="kw-2">&amp;</span><span class="lifetime">'t </span>R::Text,
     last_end: usize,
     last_match: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>, R&gt; Matches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>, R&gt; Matches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t</span>,
+    R::Text: <span class="lifetime">'t</span>,
 {
     <span class="doccomment">/// Return the text being searched.
-    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span>R::Text {
+    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'t </span>R::Text {
         <span class="self">self</span>.text
     }
 
@@ -483,10 +485,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>, R&gt; Iterator <span class="kw">for </span>Matches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>, R&gt; Iterator <span class="kw">for </span>Matches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t </span>+ AsRef&lt;[u8]&gt;,
+    R::Text: <span class="lifetime">'t </span>+ AsRef&lt;[u8]&gt;,
 {
     <span class="kw">type </span>Item = (usize, usize);
 
@@ -503,7 +505,7 @@
             // the next search at the smallest possible starting position
             // of the next match following this one.
             </span><span class="self">self</span>.last_end = <span class="self">self</span>.re.next_after_empty(<span class="self">self</span>.text, e);
-            <span class="comment">// Don&#39;t accept empty matches immediately following a match.
+            <span class="comment">// Don't accept empty matches immediately following a match.
             // Just move on to the next match.
             </span><span class="kw">if </span><span class="prelude-val">Some</span>(e) == <span class="self">self</span>.last_match {
                 <span class="kw">return </span><span class="self">self</span>.next();
@@ -516,28 +518,28 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>, R&gt; FusedIterator <span class="kw">for </span>Matches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>, R&gt; FusedIterator <span class="kw">for </span>Matches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t </span>+ AsRef&lt;[u8]&gt;,
+    R::Text: <span class="lifetime">'t </span>+ AsRef&lt;[u8]&gt;,
 {
 }
 
 <span class="doccomment">/// An iterator over all non-overlapping successive leftmost-first matches with
 /// captures.
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>CaptureMatches&lt;<span class="lifetime">&#39;t</span>, R&gt;(Matches&lt;<span class="lifetime">&#39;t</span>, R&gt;)
+</span><span class="kw">pub struct </span>CaptureMatches&lt;<span class="lifetime">'t</span>, R&gt;(Matches&lt;<span class="lifetime">'t</span>, R&gt;)
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t</span>;
+    R::Text: <span class="lifetime">'t</span>;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>, R&gt; CaptureMatches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>, R&gt; CaptureMatches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t</span>,
+    R::Text: <span class="lifetime">'t</span>,
 {
     <span class="doccomment">/// Return the text being searched.
-    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span>R::Text {
+    </span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'t </span>R::Text {
         <span class="self">self</span>.<span class="number">0</span>.text()
     }
 
@@ -547,10 +549,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>, R&gt; Iterator <span class="kw">for </span>CaptureMatches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>, R&gt; Iterator <span class="kw">for </span>CaptureMatches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t </span>+ AsRef&lt;[u8]&gt;,
+    R::Text: <span class="lifetime">'t </span>+ AsRef&lt;[u8]&gt;,
 {
     <span class="kw">type </span>Item = Locations;
 
@@ -580,10 +582,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>, R&gt; FusedIterator <span class="kw">for </span>CaptureMatches&lt;<span class="lifetime">&#39;t</span>, R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>, R&gt; FusedIterator <span class="kw">for </span>CaptureMatches&lt;<span class="lifetime">'t</span>, R&gt;
 <span class="kw">where
     </span>R: RegularExpression,
-    R::Text: <span class="lifetime">&#39;t </span>+ AsRef&lt;[u8]&gt;,
+    R::Text: <span class="lifetime">'t </span>+ AsRef&lt;[u8]&gt;,
 {
 }
 </code></pre></div></section></main></body></html>

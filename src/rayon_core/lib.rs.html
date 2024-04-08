@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rayon-core-1.9.3/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rayon_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/rayon-core-1.9.3/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rayon_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../rayon_core/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -803,7 +805,7 @@
 //! These tasks can spawn nested tasks and scopes, but given the nature of work stealing, the order of execution can not be guaranteed.
 //! The scope will exist until all tasks spawned within the scope have been completed.
 //!
-//! [`spawn`] add a task into the &#39;static&#39; or &#39;global&#39; scope, or a local scope created by the [`scope()`] function.
+//! [`spawn`] add a task into the 'static' or 'global' scope, or a local scope created by the [`scope()`] function.
 //!
 //! [`ThreadPool`] can be used to create your own thread pools (using [`ThreadPoolBuilder`]) or to customize the global one.
 //! Tasks spawned within the pool (using [`install()`], [`join()`], etc.) will be added to a deque,
@@ -822,7 +824,7 @@
 //! ## Restricting multiple versions
 //!
 //! In order to ensure proper coordination between threadpools, and especially
-//! to make sure there&#39;s only one global threadpool, `rayon-core` is actively
+//! to make sure there's only one global threadpool, `rayon-core` is actively
 //! restricted from building multiple versions of itself into a single target.
 //! You may see a build error like this in violation:
 //!
@@ -831,13 +833,13 @@
 //! than one package, and can only be linked to by one package
 //! ```
 //!
-//! While we strive to keep `rayon-core` semver-compatible, it&#39;s still
+//! While we strive to keep `rayon-core` semver-compatible, it's still
 //! possible to arrive at this situation if different crates have overly
 //! restrictive tilde or inequality requirements for `rayon-core`.  The
 //! conflicting requirements will need to be resolved before the build will
 //! succeed.
 
-</span><span class="attr">#![doc(html_root_url = <span class="string">&quot;https://docs.rs/rayon-core/1.9&quot;</span>)]
+</span><span class="attr">#![doc(html_root_url = <span class="string">"https://docs.rs/rayon-core/1.9"</span>)]
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 #![deny(unreachable_pub)]
@@ -887,7 +889,7 @@
 ///
 /// The value may vary between different targets, and is subject to change in new Rayon versions.
 </span><span class="kw">pub fn </span>max_num_threads() -&gt; usize {
-    <span class="comment">// We are limited by the bits available in the sleep counter&#39;s `AtomicUsize`.
+    <span class="comment">// We are limited by the bits available in the sleep counter's `AtomicUsize`.
     </span><span class="kw">crate</span>::sleep::THREADS_MAX
 }
 
@@ -969,7 +971,7 @@
     </span>spawn_handler: S,
 
     <span class="doccomment">/// If false, worker threads will execute spawned jobs in a
-    /// &quot;depth-first&quot; fashion. If true, they will do a &quot;breadth-first&quot;
+    /// "depth-first" fashion. If true, they will do a "breadth-first"
     /// fashion. Depth-first is the default.
     </span>breadth_first: bool,
 }
@@ -977,7 +979,7 @@
 <span class="doccomment">/// Contains the rayon thread pool configuration. Use [`ThreadPoolBuilder`] instead.
 ///
 /// [`ThreadPoolBuilder`]: struct.ThreadPoolBuilder.html
-</span><span class="attr">#[deprecated(note = <span class="string">&quot;Use `ThreadPoolBuilder`&quot;</span>)]
+</span><span class="attr">#[deprecated(note = <span class="string">"Use `ThreadPoolBuilder`"</span>)]
 </span><span class="kw">pub struct </span>Configuration {
     builder: ThreadPoolBuilder,
 }
@@ -996,7 +998,7 @@
 /// Note that this same closure may be invoked multiple times in parallel.
 </span><span class="kw">type </span>ExitHandler = <span class="kw">dyn </span>Fn(usize) + Send + Sync;
 
-<span class="comment">// NB: We can&#39;t `#[derive(Default)]` because `S` is left ambiguous.
+<span class="comment">// NB: We can't `#[derive(Default)]` because `S` is left ambiguous.
 </span><span class="kw">impl </span>Default <span class="kw">for </span>ThreadPoolBuilder {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         ThreadPoolBuilder {
@@ -1076,7 +1078,7 @@
     /// fn main() -&gt; Result&lt;(), rayon::ThreadPoolBuildError&gt; {
     ///     let pool_data = vec![1, 2, 3];
     ///
-    ///     // We haven&#39;t assigned any TLS data yet.
+    ///     // We haven't assigned any TLS data yet.
     ///     assert!(!POOL_DATA.is_set());
     ///
     ///     rayon::ThreadPoolBuilder::new()
@@ -1087,7 +1089,7 @@
     ///             |pool| pool.install(|| assert!(POOL_DATA.is_set())),
     ///         )?;
     ///
-    ///     // Once we&#39;ve returned, `pool_data` is no longer borrowed.
+    ///     // Once we've returned, `pool_data` is no longer borrowed.
     ///     drop(pool_data);
     ///     Ok(())
     /// }
@@ -1129,7 +1131,7 @@
     /// is up to the caller to wait for thread termination if that is important
     /// for any invariants. For instance, threads created in [`crossbeam::scope`]
     /// will be joined before that scope returns, and this will block indefinitely
-    /// if the pool is leaked. Furthermore, the global thread pool doesn&#39;t terminate
+    /// if the pool is leaked. Furthermore, the global thread pool doesn't terminate
     /// until the entire process exits!
     ///
     /// [`crossbeam::scope`]: https://docs.rs/crossbeam/0.7/crossbeam/fn.scope.html
@@ -1148,7 +1150,7 @@
     ///         })
     ///         .build()?;
     ///
-    ///     pool.install(|| println!(&quot;Hello from my custom thread!&quot;));
+    ///     pool.install(|| println!("Hello from my custom thread!"));
     ///     Ok(())
     /// }
     /// ```
@@ -1173,7 +1175,7 @@
     ///         })
     ///         .build()?;
     ///
-    ///     pool.install(|| println!(&quot;Hello from my fully custom thread!&quot;));
+    ///     pool.install(|| println!("Hello from my fully custom thread!"));
     ///     Ok(())
     /// }
     /// ```
@@ -1205,7 +1207,7 @@
         <span class="kw">if </span><span class="self">self</span>.num_threads &gt; <span class="number">0 </span>{
             <span class="self">self</span>.num_threads
         } <span class="kw">else </span>{
-            <span class="kw">match </span>env::var(<span class="string">&quot;RAYON_NUM_THREADS&quot;</span>)
+            <span class="kw">match </span>env::var(<span class="string">"RAYON_NUM_THREADS"</span>)
                 .ok()
                 .and_then(|s| usize::from_str(<span class="kw-2">&amp;</span>s).ok())
             {
@@ -1215,7 +1217,7 @@
             }
 
             <span class="comment">// Support for deprecated `RAYON_RS_NUM_CPUS`.
-            </span><span class="kw">match </span>env::var(<span class="string">&quot;RAYON_RS_NUM_CPUS&quot;</span>)
+            </span><span class="kw">match </span>env::var(<span class="string">"RAYON_RS_NUM_CPUS"</span>)
                 .ok()
                 .and_then(|s| usize::from_str(<span class="kw-2">&amp;</span>s).ok())
             {
@@ -1232,10 +1234,10 @@
     }
 
     <span class="doccomment">/// Sets a closure which takes a thread index and returns
-    /// the thread&#39;s name.
+    /// the thread's name.
     </span><span class="kw">pub fn </span>thread_name&lt;F&gt;(<span class="kw-2">mut </span><span class="self">self</span>, closure: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: FnMut(usize) -&gt; String + <span class="lifetime">&#39;static</span>,
+        </span>F: FnMut(usize) -&gt; String + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.get_thread_name = <span class="prelude-val">Some</span>(Box::new(closure));
         <span class="self">self
@@ -1293,7 +1295,7 @@
     /// in a call to `std::panic::catch_unwind()`.
     </span><span class="kw">pub fn </span>panic_handler&lt;H&gt;(<span class="kw-2">mut </span><span class="self">self</span>, panic_handler: H) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>H: Fn(Box&lt;<span class="kw">dyn </span>Any + Send&gt;) + Send + Sync + <span class="lifetime">&#39;static</span>,
+        </span>H: Fn(Box&lt;<span class="kw">dyn </span>Any + Send&gt;) + Send + Sync + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.panic_handler = <span class="prelude-val">Some</span>(Box::new(panic_handler));
         <span class="self">self
@@ -1311,7 +1313,7 @@
     </span>}
 
     <span class="doccomment">/// **(DEPRECATED)** Suggest to worker threads that they execute
-    /// spawned jobs in a &quot;breadth-first&quot; fashion.
+    /// spawned jobs in a "breadth-first" fashion.
     ///
     /// Typically, when a worker thread is idle or blocked, it will
     /// attempt to execute the job from the *top* of its local deque of
@@ -1319,7 +1321,7 @@
     /// to true, however, workers will prefer to execute in a
     /// *breadth-first* fashion -- that is, they will search for jobs at
     /// the *bottom* of their local deque. (At present, workers *always*
-    /// steal from the bottom of other worker&#39;s deques, regardless of
+    /// steal from the bottom of other worker's deques, regardless of
     /// the setting of this flag.)
     ///
     /// If you think of the tasks as a tree, where a parent task
@@ -1327,7 +1329,7 @@
     /// corresponds to doing a breadth-first traversal of the tree,
     /// whereas the default would be to do a depth-first traversal.
     ///
-    /// **Note that this is an &quot;execution hint&quot;.** Rayon&#39;s task
+    /// **Note that this is an "execution hint".** Rayon's task
     /// execution is highly dynamic and the precise order in which
     /// independent tasks are executed is not intended to be
     /// guaranteed.
@@ -1338,7 +1340,7 @@
     ///
     /// [RFC #1]: https://github.com/rayon-rs/rfcs/blob/master/accepted/rfc0001-scope-scheduling.md
     /// [`scope_fifo()`]: fn.scope_fifo.html
-    </span><span class="attr">#[deprecated(note = <span class="string">&quot;use `scope_fifo` and `spawn_fifo` for similar effect&quot;</span>)]
+    </span><span class="attr">#[deprecated(note = <span class="string">"use `scope_fifo` and `spawn_fifo` for similar effect"</span>)]
     </span><span class="kw">pub fn </span>breadth_first(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.breadth_first = <span class="bool-val">true</span>;
         <span class="self">self
@@ -1361,7 +1363,7 @@
     /// If that handler returns, then startup will continue normally.
     </span><span class="kw">pub fn </span>start_handler&lt;H&gt;(<span class="kw-2">mut </span><span class="self">self</span>, start_handler: H) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">&#39;static</span>,
+        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.start_handler = <span class="prelude-val">Some</span>(Box::new(start_handler));
         <span class="self">self
@@ -1380,7 +1382,7 @@
     /// If that handler returns, then the thread will exit normally.
     </span><span class="kw">pub fn </span>exit_handler&lt;H&gt;(<span class="kw-2">mut </span><span class="self">self</span>, exit_handler: H) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">&#39;static</span>,
+        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.exit_handler = <span class="prelude-val">Some</span>(Box::new(exit_handler));
         <span class="self">self
@@ -1397,14 +1399,14 @@
     }
 
     <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::build`.
-    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ThreadPool, Box&lt;<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>&gt;&gt; {
+    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;ThreadPool, Box&lt;<span class="kw">dyn </span>Error + <span class="lifetime">'static</span>&gt;&gt; {
         <span class="self">self</span>.builder.build().map_err(Box::from)
     }
 
     <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::thread_name`.
     </span><span class="kw">pub fn </span>thread_name&lt;F&gt;(<span class="kw-2">mut </span><span class="self">self</span>, closure: F) -&gt; <span class="self">Self
     </span><span class="kw">where
-        </span>F: FnMut(usize) -&gt; String + <span class="lifetime">&#39;static</span>,
+        </span>F: FnMut(usize) -&gt; String + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.builder = <span class="self">self</span>.builder.thread_name(closure);
         <span class="self">self
@@ -1419,7 +1421,7 @@
     <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::panic_handler`.
     </span><span class="kw">pub fn </span>panic_handler&lt;H&gt;(<span class="kw-2">mut </span><span class="self">self</span>, panic_handler: H) -&gt; Configuration
     <span class="kw">where
-        </span>H: Fn(Box&lt;<span class="kw">dyn </span>Any + Send&gt;) + Send + Sync + <span class="lifetime">&#39;static</span>,
+        </span>H: Fn(Box&lt;<span class="kw">dyn </span>Any + Send&gt;) + Send + Sync + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.builder = <span class="self">self</span>.builder.panic_handler(panic_handler);
         <span class="self">self
@@ -1440,7 +1442,7 @@
     <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::start_handler`.
     </span><span class="kw">pub fn </span>start_handler&lt;H&gt;(<span class="kw-2">mut </span><span class="self">self</span>, start_handler: H) -&gt; Configuration
     <span class="kw">where
-        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">&#39;static</span>,
+        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.builder = <span class="self">self</span>.builder.start_handler(start_handler);
         <span class="self">self
@@ -1449,7 +1451,7 @@
     <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::exit_handler`.
     </span><span class="kw">pub fn </span>exit_handler&lt;H&gt;(<span class="kw-2">mut </span><span class="self">self</span>, exit_handler: H) -&gt; Configuration
     <span class="kw">where
-        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">&#39;static</span>,
+        </span>H: Fn(usize) + Send + Sync + <span class="lifetime">'static</span>,
     {
         <span class="self">self</span>.builder = <span class="self">self</span>.builder.exit_handler(exit_handler);
         <span class="self">self
@@ -1468,7 +1470,7 @@
 }
 
 <span class="kw">const </span>GLOBAL_POOL_ALREADY_INITIALIZED: <span class="kw-2">&amp;</span>str =
-    <span class="string">&quot;The global thread pool has already been initialized.&quot;</span>;
+    <span class="string">"The global thread pool has already been initialized."</span>;
 
 <span class="kw">impl </span>Error <span class="kw">for </span>ThreadPoolBuildError {
     <span class="attr">#[allow(deprecated)]
@@ -1479,7 +1481,7 @@
         }
     }
 
-    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">'static</span>)&gt; {
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
             ErrorKind::GlobalPoolAlreadyInitialized =&gt; <span class="prelude-val">None</span>,
             ErrorKind::IOError(e) =&gt; <span class="prelude-val">Some</span>(e),
@@ -1488,7 +1490,7 @@
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>ThreadPoolBuildError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
             ErrorKind::GlobalPoolAlreadyInitialized =&gt; GLOBAL_POOL_ALREADY_INITIALIZED.fmt(f),
             ErrorKind::IOError(e) =&gt; e.fmt(f),
@@ -1497,14 +1499,14 @@
 }
 
 <span class="doccomment">/// Deprecated in favor of `ThreadPoolBuilder::build_global`.
-</span><span class="attr">#[deprecated(note = <span class="string">&quot;use `ThreadPoolBuilder::build_global`&quot;</span>)]
+</span><span class="attr">#[deprecated(note = <span class="string">"use `ThreadPoolBuilder::build_global`"</span>)]
 #[allow(deprecated)]
 </span><span class="kw">pub fn </span>initialize(config: Configuration) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
     config.into_builder().build_global().map_err(Box::from)
 }
 
 <span class="kw">impl</span>&lt;S&gt; fmt::Debug <span class="kw">for </span>ThreadPoolBuilder&lt;S&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">let </span>ThreadPoolBuilder {
             <span class="kw-2">ref </span>num_threads,
             <span class="kw-2">ref </span>get_thread_name,
@@ -1520,8 +1522,8 @@
         // output.
         </span><span class="kw">struct </span>ClosurePlaceholder;
         <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>ClosurePlaceholder {
-            <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-                f.write_str(<span class="string">&quot;&lt;closure&gt;&quot;</span>)
+            <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+                f.write_str(<span class="string">"&lt;closure&gt;"</span>)
             }
         }
         <span class="kw">let </span>get_thread_name = get_thread_name.as_ref().map(|<span class="kw">_</span>| ClosurePlaceholder);
@@ -1529,14 +1531,14 @@
         <span class="kw">let </span>start_handler = start_handler.as_ref().map(|<span class="kw">_</span>| ClosurePlaceholder);
         <span class="kw">let </span>exit_handler = exit_handler.as_ref().map(|<span class="kw">_</span>| ClosurePlaceholder);
 
-        f.debug_struct(<span class="string">&quot;ThreadPoolBuilder&quot;</span>)
-            .field(<span class="string">&quot;num_threads&quot;</span>, num_threads)
-            .field(<span class="string">&quot;get_thread_name&quot;</span>, <span class="kw-2">&amp;</span>get_thread_name)
-            .field(<span class="string">&quot;panic_handler&quot;</span>, <span class="kw-2">&amp;</span>panic_handler)
-            .field(<span class="string">&quot;stack_size&quot;</span>, <span class="kw-2">&amp;</span>stack_size)
-            .field(<span class="string">&quot;start_handler&quot;</span>, <span class="kw-2">&amp;</span>start_handler)
-            .field(<span class="string">&quot;exit_handler&quot;</span>, <span class="kw-2">&amp;</span>exit_handler)
-            .field(<span class="string">&quot;breadth_first&quot;</span>, <span class="kw-2">&amp;</span>breadth_first)
+        f.debug_struct(<span class="string">"ThreadPoolBuilder"</span>)
+            .field(<span class="string">"num_threads"</span>, num_threads)
+            .field(<span class="string">"get_thread_name"</span>, <span class="kw-2">&amp;</span>get_thread_name)
+            .field(<span class="string">"panic_handler"</span>, <span class="kw-2">&amp;</span>panic_handler)
+            .field(<span class="string">"stack_size"</span>, <span class="kw-2">&amp;</span>stack_size)
+            .field(<span class="string">"start_handler"</span>, <span class="kw-2">&amp;</span>start_handler)
+            .field(<span class="string">"exit_handler"</span>, <span class="kw-2">&amp;</span>exit_handler)
+            .field(<span class="string">"breadth_first"</span>, <span class="kw-2">&amp;</span>breadth_first)
             .finish()
     }
 }
@@ -1552,7 +1554,7 @@
 
 <span class="attr">#[allow(deprecated)]
 </span><span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Configuration {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="self">self</span>.builder.fmt(f)
     }
 }

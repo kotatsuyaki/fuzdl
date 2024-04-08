@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/matching.rs`."><title>matching.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/matching.rs`."><title>matching.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../deflate/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -508,7 +510,7 @@
     <span class="comment">// debug_assert_eq!(position, hash_table.current_head() as usize);
 
     // If we already have a match at the maximum length,
-    // or we can&#39;t grow further, we stop here.
+    // or we can't grow further, we stop here.
     </span><span class="kw">if </span>prev_length &gt;= MAX_MATCH || position + prev_length &gt;= data.len() {
         <span class="kw">return </span>(<span class="number">0</span>, <span class="number">0</span>);
     }
@@ -528,7 +530,7 @@
     <span class="comment">// The position in the hash chain we are currently checking.
     </span><span class="kw">let </span><span class="kw-2">mut </span>current_head = position;
 
-    <span class="comment">// The best match length we&#39;ve found so far, and it&#39;s distance.
+    <span class="comment">// The best match length we've found so far, and it's distance.
     </span><span class="kw">let </span><span class="kw-2">mut </span>best_length = prev_length;
     <span class="kw">let </span><span class="kw-2">mut </span>best_distance = <span class="number">0</span>;
 
@@ -540,7 +542,7 @@
         current_head = hash_table.get_prev(current_head) <span class="kw">as </span>usize;
         <span class="kw">if </span>current_head &gt;= prev_head || current_head &lt; limit {
             <span class="comment">// If the current hash chain value refers to itself, or is referring to
-            // a value that&#39;s higher (we only move backwars through the chain),
+            // a value that's higher (we only move backwars through the chain),
             // we are at the end and can stop.
             </span><span class="kw">break</span>;
         }
@@ -551,7 +553,7 @@
         // that the hashes match.
         // If there is no previous match, best_length will be 1 and the two first bytes will
         // be checked instead.
-        // Since we&#39;ve made sure best_length is always at least 1, this shouldn&#39;t underflow.
+        // Since we've made sure best_length is always at least 1, this shouldn't underflow.
         </span><span class="kw">if </span>data[position + best_length - <span class="number">1</span>..=position + best_length]
             == data[current_head + best_length - <span class="number">1</span>..=current_head + best_length]
         {
@@ -603,7 +605,7 @@
     <span class="comment">// debug_assert_eq!(position, hash_table.current_head() as usize);
 
     // If we already have a match at the maximum length,
-    // or we can&#39;t grow further, we stop here.
+    // or we can't grow further, we stop here.
     </span><span class="kw">if </span>prev_length &gt;= MAX_MATCH || position + prev_length &gt;= data.len() {
         <span class="kw">return </span>(<span class="number">0</span>, <span class="number">0</span>);
     }
@@ -623,7 +625,7 @@
     <span class="comment">// The position in the hash chain we are currently checking.
     </span><span class="kw">let </span><span class="kw-2">mut </span>current_head = position;
 
-    <span class="comment">// The best match length we&#39;ve found so far, and it&#39;s distance.
+    <span class="comment">// The best match length we've found so far, and it's distance.
     </span><span class="kw">let </span><span class="kw-2">mut </span>best_length = prev_length;
     <span class="kw">let </span><span class="kw-2">mut </span>best_distance = <span class="number">0</span>;
     <span class="comment">// The offset from the start of the match of the hash chain we are traversing.
@@ -637,7 +639,7 @@
         current_head = hash_table.get_prev(current_head) <span class="kw">as </span>usize;
         <span class="kw">if </span>current_head &gt;= prev_head || current_head &lt; limit + offset {
             <span class="comment">// If the current hash chain value refers to itself, or is referring to
-            // a value that&#39;s higher (we only move backwars through the chain),
+            // a value that's higher (we only move backwars through the chain),
             // we are at the end and can stop.
             </span><span class="kw">break</span>;
         }
@@ -650,7 +652,7 @@
         // that the hashes match.
         // If there is no previous match, best_length will be 1 and the two first bytes will
         // be checked instead.
-        // Since we&#39;ve made sure best_length is always at least 1, this shouldn&#39;t underflow.
+        // Since we've made sure best_length is always at least 1, this shouldn't underflow.
         </span><span class="kw">if </span>data[position + best_length - <span class="number">1</span>..position + best_length + <span class="number">1</span>]
             == data[offset_head + best_length - <span class="number">1</span>..offset_head + best_length + <span class="number">1</span>]
         {
@@ -722,7 +724,7 @@
     <span class="doccomment">/// Test that we get the longest of the matches
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>get_longest_match() {
-        <span class="kw">let </span>test_data = <span class="string">b&quot;xTest data, Test_data,zTest data&quot;</span>;
+        <span class="kw">let </span>test_data = <span class="string">b"xTest data, Test_data,zTest data"</span>;
         <span class="kw">let </span>hash_table = filled_hash_table(<span class="kw-2">&amp;</span>test_data[..<span class="number">23 </span>+ <span class="number">1 </span>+ HASH_BYTES - <span class="number">1</span>]);
 
         <span class="kw">let </span>(length, distance) = <span class="kw">super</span>::longest_match_current(test_data, <span class="kw-2">&amp;</span>hash_table);
@@ -743,7 +745,7 @@
     <span class="doccomment">/// Make sure we can get a match at index zero
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>match_index_zero() {
-        <span class="kw">let </span>test_data = <span class="string">b&quot;AAAAAAA&quot;</span>;
+        <span class="kw">let </span>test_data = <span class="string">b"AAAAAAA"</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>hash_table = ChainedHashTable::from_starting_values(test_data[<span class="number">0</span>], test_data[<span class="number">1</span>]);
         <span class="kw">for </span>(n, <span class="kw-2">&amp;</span>b) <span class="kw">in </span>test_data[<span class="number">2</span>..<span class="number">5</span>].iter().enumerate() {
@@ -757,8 +759,8 @@
     }
 
     <span class="doccomment">/// Test for fast_zlib algorithm.
-    /// Check that it doesn&#39;t give worse matches than the default one.
-    /// ignored by default as it&#39;s slow, and best ran in release mode.
+    /// Check that it doesn't give worse matches than the default one.
+    /// ignored by default as it's slow, and best ran in release mode.
     </span><span class="attr">#[ignore]
     #[test]
     </span><span class="kw">fn </span>fast_match_at_least_equal() {
@@ -773,19 +775,19 @@
             <span class="kw">let </span>fast_match = longest_match_fast(<span class="kw-2">&amp;</span>data[..], <span class="kw-2">&amp;</span>hash_table, pos, <span class="number">0</span>, NUM_CHECKS);
 
             <span class="kw">if </span>fast_match.<span class="number">0 </span>&gt; naive_match.<span class="number">0 </span>{
-                <span class="macro">println!</span>(<span class="string">&quot;Fast match found better match!&quot;</span>);
+                <span class="macro">println!</span>(<span class="string">"Fast match found better match!"</span>);
             }
 
             <span class="macro">assert!</span>(
                 fast_match.<span class="number">0 </span>&gt;= naive_match.<span class="number">0</span>,
-                <span class="string">&quot;naive match had better length! start_pos: {}, naive: {:?}, fast {:?}&quot;</span>,
+                <span class="string">"naive match had better length! start_pos: {}, naive: {:?}, fast {:?}"</span>,
                 start_pos,
                 naive_match,
                 fast_match
             );
             <span class="macro">assert!</span>(
                 fast_match.<span class="number">1 </span>&gt;= naive_match.<span class="number">1</span>,
-                <span class="string">&quot;naive match had better dist! start_pos: {} naive {:?}, fast {:?}&quot;</span>,
+                <span class="string">"naive match had better dist! start_pos: {} naive {:?}, fast {:?}"</span>,
                 start_pos,
                 naive_match,
                 fast_match
@@ -794,7 +796,7 @@
     }
 }
 
-<span class="attr">#[cfg(all(test, feature = <span class="string">&quot;benchmarks&quot;</span>))]
+<span class="attr">#[cfg(all(test, feature = <span class="string">"benchmarks"</span>))]
 </span><span class="kw">mod </span>bench {
     <span class="kw">use super</span>::{longest_match, longest_match_fast};
     <span class="kw">use </span>chained_hash_table::filled_hash_table;
@@ -807,7 +809,7 @@
         <span class="kw">let </span>hash_table = filled_hash_table(<span class="kw-2">&amp;</span>data[..POS + <span class="number">1</span>]);
         <span class="kw">let </span>pos = hash_table.current_head() <span class="kw">as </span>usize;
         <span class="macro">println!</span>(
-            <span class="string">&quot;M: {:?}&quot;</span>,
+            <span class="string">"M: {:?}"</span>,
             longest_match(<span class="kw-2">&amp;</span>data[..], <span class="kw-2">&amp;</span>hash_table, pos, <span class="number">0</span>, <span class="number">4096</span>)
         );
         b.iter(|| longest_match(<span class="kw-2">&amp;</span>data[..], <span class="kw-2">&amp;</span>hash_table, pos, <span class="number">0</span>, <span class="number">4096</span>));
@@ -820,7 +822,7 @@
         <span class="kw">let </span>hash_table = filled_hash_table(<span class="kw-2">&amp;</span>data[..POS + <span class="number">1</span>]);
         <span class="kw">let </span>pos = hash_table.current_head() <span class="kw">as </span>usize;
         <span class="macro">println!</span>(
-            <span class="string">&quot;M: {:?}&quot;</span>,
+            <span class="string">"M: {:?}"</span>,
             longest_match_fast(<span class="kw-2">&amp;</span>data[..], <span class="kw-2">&amp;</span>hash_table, pos, <span class="number">0</span>, <span class="number">4096</span>)
         );
         b.iter(|| longest_match_fast(<span class="kw-2">&amp;</span>data[..], <span class="kw-2">&amp;</span>hash_table, pos, <span class="number">0</span>, <span class="number">4096</span>));

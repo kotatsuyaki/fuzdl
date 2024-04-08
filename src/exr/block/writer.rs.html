@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/block/writer.rs`."><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/block/writer.rs`."><title>writer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -504,8 +506,8 @@
 /// for each block written to the inner writer.
 </span><span class="attr">#[derive(Debug)]
 #[must_use]
-</span><span class="kw">pub struct </span>OnProgressChunkWriter&lt;<span class="lifetime">&#39;w</span>, W, F&gt; {
-    chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W,
+</span><span class="kw">pub struct </span>OnProgressChunkWriter&lt;<span class="lifetime">'w</span>, W, F&gt; {
+    chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span>W,
     written_chunks: usize,
     on_progress: F,
 }
@@ -524,20 +526,20 @@
     </span><span class="kw">fn </span>write_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, chunk: Chunk) -&gt; UnitResult;
 
     <span class="doccomment">/// Obtain a new writer that calls the specified closure for each block that is written to this writer.
-    </span><span class="kw">fn </span>on_progress&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, on_progress: F) -&gt; OnProgressChunkWriter&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>, F&gt; <span class="kw">where </span>F: FnMut(f64) {
+    </span><span class="kw">fn </span>on_progress&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, on_progress: F) -&gt; OnProgressChunkWriter&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>, F&gt; <span class="kw">where </span>F: FnMut(f64) {
         OnProgressChunkWriter { chunk_writer: <span class="self">self</span>, written_chunks: <span class="number">0</span>, on_progress }
     }
 
     <span class="doccomment">/// Obtain a new writer that can compress blocks to chunks, which are then passed to this writer.
-    </span><span class="kw">fn </span>sequential_blocks_compressor&lt;<span class="lifetime">&#39;w</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData) -&gt; SequentialBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, <span class="self">Self</span>&gt; {
+    </span><span class="kw">fn </span>sequential_blocks_compressor&lt;<span class="lifetime">'w</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span><span class="lifetime">'w </span>MetaData) -&gt; SequentialBlocksCompressor&lt;<span class="lifetime">'w</span>, <span class="self">Self</span>&gt; {
         SequentialBlocksCompressor::new(meta, <span class="self">self</span>)
     }
 
     <span class="doccomment">/// Obtain a new writer that can compress blocks to chunks on multiple threads, which are then passed to this writer.
     /// Returns none if the sequential compressor should be used instead (thread pool creation failure or too large performance overhead).
-    </span><span class="kw">fn </span>parallel_blocks_compressor&lt;<span class="lifetime">&#39;w</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData) -&gt; <span class="prelude-ty">Option</span>&lt;ParallelBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, <span class="self">Self</span>&gt;&gt; {
+    </span><span class="kw">fn </span>parallel_blocks_compressor&lt;<span class="lifetime">'w</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span><span class="self">self</span>, meta: <span class="kw-2">&amp;</span><span class="lifetime">'w </span>MetaData) -&gt; <span class="prelude-ty">Option</span>&lt;ParallelBlocksCompressor&lt;<span class="lifetime">'w</span>, <span class="self">Self</span>&gt;&gt; {
         <span class="kw">let </span>pool = threadpool::Builder::new()
-            .thread_name(<span class="string">&quot;OpenEXR Block Compressor&quot;</span>.to_string())
+            .thread_name(<span class="string">"OpenEXR Block Compressor"</span>.to_string())
             <span class="comment">// todo no more threads than remaining block count (self.len())
             </span>.build();
 
@@ -592,12 +594,12 @@
         <span class="kw">let </span>header_chunk_indices = <span class="kw-2">&amp;mut </span><span class="self">self</span>.chunk_indices_increasing_y[chunk.layer_index];
 
         <span class="kw">if </span>index_in_header_increasing_y &gt;= header_chunk_indices.len() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;too large chunk index&quot;</span>));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"too large chunk index"</span>));
         }
 
         <span class="kw">let </span>chunk_index_slot = <span class="kw-2">&amp;mut </span>header_chunk_indices[index_in_header_increasing_y];
         <span class="kw">if </span><span class="kw-2">*</span>chunk_index_slot != <span class="number">0 </span>{
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="macro">format!</span>(<span class="string">&quot;chunk at index {} is already written&quot;</span>, index_in_header_increasing_y)));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="macro">format!</span>(<span class="string">"chunk at index {} is already written"</span>, index_in_header_increasing_y)));
         }
 
         <span class="kw-2">*</span>chunk_index_slot = usize_to_u64(<span class="self">self</span>.byte_writer.byte_position());
@@ -651,11 +653,11 @@
     /// Leaves the writer seeked to the middle of the file.
     </span><span class="kw">fn </span>complete_meta_data(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; UnitResult {
         <span class="kw">if </span><span class="self">self</span>.chunk_indices_increasing_y.iter().flatten().any(|<span class="kw-2">&amp;</span>index| index == <span class="number">0</span>) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">&quot;some chunks are not written yet&quot;</span>))
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::invalid(<span class="string">"some chunks are not written yet"</span>))
         }
 
         <span class="comment">// write all offset tables
-        </span><span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.byte_writer.byte_position(), <span class="self">self</span>.chunk_indices_byte_location.end, <span class="string">&quot;offset table has already been updated&quot;</span>);
+        </span><span class="macro">debug_assert_ne!</span>(<span class="self">self</span>.byte_writer.byte_position(), <span class="self">self</span>.chunk_indices_byte_location.end, <span class="string">"offset table has already been updated"</span>);
         <span class="self">self</span>.byte_writer.seek_write_to(<span class="self">self</span>.chunk_indices_byte_location.start)<span class="question-mark">?</span>;
 
         <span class="kw">for </span>table <span class="kw">in </span><span class="self">self</span>.chunk_indices_increasing_y {
@@ -669,7 +671,7 @@
 }
 
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W, F&gt; ChunksWriter <span class="kw">for </span>OnProgressChunkWriter&lt;<span class="lifetime">&#39;w</span>, W, F&gt; <span class="kw">where </span>W: <span class="lifetime">&#39;w </span>+ ChunksWriter, F: FnMut(f64) {
+<span class="kw">impl</span>&lt;<span class="lifetime">'w</span>, W, F&gt; ChunksWriter <span class="kw">for </span>OnProgressChunkWriter&lt;<span class="lifetime">'w</span>, W, F&gt; <span class="kw">where </span>W: <span class="lifetime">'w </span>+ ChunksWriter, F: FnMut(f64) {
     <span class="kw">fn </span>total_chunks_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.chunk_writer.total_chunks_count()
     }
@@ -699,18 +701,18 @@
 <span class="doccomment">/// Write blocks that appear in any order and reorder them before writing.
 </span><span class="attr">#[derive(Debug)]
 #[must_use]
-</span><span class="kw">pub struct </span>SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt; {
-    chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W,
+</span><span class="kw">pub struct </span>SortedBlocksWriter&lt;<span class="lifetime">'w</span>, W&gt; {
+    chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span>W,
     pending_chunks: BTreeMap&lt;usize, (usize, Chunk)&gt;,
     unwritten_chunk_indices: Peekable&lt;std::ops::Range&lt;usize&gt;&gt;,
     requires_sorting: bool, <span class="comment">// using this instead of Option, because of borrowing
 </span>}
 
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W&gt; SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt; <span class="kw">where </span>W: ChunksWriter {
+<span class="kw">impl</span>&lt;<span class="lifetime">'w</span>, W&gt; SortedBlocksWriter&lt;<span class="lifetime">'w</span>, W&gt; <span class="kw">where </span>W: ChunksWriter {
 
     <span class="doccomment">/// New sorting writer. Returns `None` if sorting is not required.
-    </span><span class="kw">pub fn </span>new(meta_data: <span class="kw-2">&amp;</span>MetaData, chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W) -&gt; SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt; {
+    </span><span class="kw">pub fn </span>new(meta_data: <span class="kw-2">&amp;</span>MetaData, chunk_writer: <span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span>W) -&gt; SortedBlocksWriter&lt;<span class="lifetime">'w</span>, W&gt; {
         <span class="kw">let </span>requires_sorting = meta_data.headers.iter()
             .any(|header| header.line_order != LineOrder::Unspecified);
 
@@ -733,7 +735,7 @@
         <span class="comment">// write this chunk now if possible
         </span><span class="kw">if </span><span class="self">self</span>.unwritten_chunk_indices.peek() == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>chunk_index_in_file){
             <span class="self">self</span>.chunk_writer.write_chunk(chunk_y_index, chunk)<span class="question-mark">?</span>;
-            <span class="self">self</span>.unwritten_chunk_indices.next().expect(<span class="string">&quot;peeked chunk index is missing&quot;</span>);
+            <span class="self">self</span>.unwritten_chunk_indices.next().expect(<span class="string">"peeked chunk index is missing"</span>);
 
             <span class="comment">// write all pending blocks that are immediate successors of this block
             </span><span class="kw">while let </span><span class="prelude-val">Some</span>((next_chunk_y_index, next_chunk)) = <span class="self">self
@@ -741,7 +743,7 @@
                 .and_then(|id| <span class="self">self</span>.pending_chunks.remove(<span class="kw-2">&amp;</span>id))
             {
                 <span class="self">self</span>.chunk_writer.write_chunk(next_chunk_y_index, next_chunk)<span class="question-mark">?</span>;
-                <span class="self">self</span>.unwritten_chunk_indices.next().expect(<span class="string">&quot;peeked chunk index is missing&quot;</span>);
+                <span class="self">self</span>.unwritten_chunk_indices.next().expect(<span class="string">"peeked chunk index is missing"</span>);
             }
         }
 
@@ -766,18 +768,18 @@
 <span class="doccomment">/// Compress blocks to a chunk writer in this thread.
 </span><span class="attr">#[derive(Debug)]
 #[must_use]
-</span><span class="kw">pub struct </span>SequentialBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; {
-    meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData,
-    chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W,
+</span><span class="kw">pub struct </span>SequentialBlocksCompressor&lt;<span class="lifetime">'w</span>, W&gt; {
+    meta: <span class="kw-2">&amp;</span><span class="lifetime">'w </span>MetaData,
+    chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span>W,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W&gt; SequentialBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; <span class="kw">where </span>W: <span class="lifetime">&#39;w </span>+ ChunksWriter {
+<span class="kw">impl</span>&lt;<span class="lifetime">'w</span>, W&gt; SequentialBlocksCompressor&lt;<span class="lifetime">'w</span>, W&gt; <span class="kw">where </span>W: <span class="lifetime">'w </span>+ ChunksWriter {
 
     <span class="doccomment">/// New blocks writer.
-    </span><span class="kw">pub fn </span>new(meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData, chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W) -&gt; <span class="self">Self </span>{ <span class="self">Self </span>{ meta, chunks_writer, } }
+    </span><span class="kw">pub fn </span>new(meta: <span class="kw-2">&amp;</span><span class="lifetime">'w </span>MetaData, chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span>W) -&gt; <span class="self">Self </span>{ <span class="self">Self </span>{ meta, chunks_writer, } }
 
     <span class="doccomment">/// This is where the compressed blocks are written to.
-    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>W { <span class="self">self</span>.chunks_writer }
+    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'w </span>W { <span class="self">self</span>.chunks_writer }
 
     <span class="doccomment">/// Compress a single block immediately. The index of the block must be in increasing line order.
     </span><span class="kw">pub fn </span>compress_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index_in_header_increasing_y: usize, block: UncompressedBlock) -&gt; UnitResult {
@@ -791,9 +793,9 @@
 <span class="doccomment">/// Compress blocks to a chunk writer with multiple threads.
 </span><span class="attr">#[derive(Debug)]
 #[must_use]
-</span><span class="kw">pub struct </span>ParallelBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; {
-    meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData,
-    sorted_writer: SortedBlocksWriter&lt;<span class="lifetime">&#39;w</span>, W&gt;,
+</span><span class="kw">pub struct </span>ParallelBlocksCompressor&lt;<span class="lifetime">'w</span>, W&gt; {
+    meta: <span class="kw-2">&amp;</span><span class="lifetime">'w </span>MetaData,
+    sorted_writer: SortedBlocksWriter&lt;<span class="lifetime">'w</span>, W&gt;,
 
     sender: flume::Sender&lt;<span class="prelude-ty">Result</span>&lt;(usize, usize, Chunk)&gt;&gt;,
     receiver: flume::Receiver&lt;<span class="prelude-ty">Result</span>&lt;(usize, usize, Chunk)&gt;&gt;,
@@ -805,10 +807,10 @@
     next_incoming_chunk_index: usize, <span class="comment">// used to remember original chunk order
 </span>}
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;w</span>, W&gt; ParallelBlocksCompressor&lt;<span class="lifetime">&#39;w</span>, W&gt; <span class="kw">where </span>W: <span class="lifetime">&#39;w </span>+ ChunksWriter {
+<span class="kw">impl</span>&lt;<span class="lifetime">'w</span>, W&gt; ParallelBlocksCompressor&lt;<span class="lifetime">'w</span>, W&gt; <span class="kw">where </span>W: <span class="lifetime">'w </span>+ ChunksWriter {
 
     <span class="doccomment">/// New blocks writer. Returns none if sequential compression should be used.
-    </span><span class="kw">pub fn </span>new(meta: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>MetaData, chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="kw-2">mut </span>W, pool: threadpool::ThreadPool) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub fn </span>new(meta: <span class="kw-2">&amp;</span><span class="lifetime">'w </span>MetaData, chunks_writer: <span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="kw-2">mut </span>W, pool: threadpool::ThreadPool) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if </span>meta.headers.iter().all(|head|head.compression == Compression::Uncompressed) {
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
@@ -830,21 +832,21 @@
     }
 
     <span class="doccomment">/// This is where the compressed blocks are written to.
-    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;w </span>W { <span class="self">self</span>.sorted_writer.inner_chunks_writer() }
+    </span><span class="kw">pub fn </span>inner_chunks_writer(<span class="kw-2">&amp;</span><span class="lifetime">'w </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'w </span>W { <span class="self">self</span>.sorted_writer.inner_chunks_writer() }
 
     <span class="comment">// private, as may underflow counter in release mode
     </span><span class="kw">fn </span>write_next_queued_chunk(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; UnitResult {
-        <span class="macro">debug_assert!</span>(<span class="self">self</span>.currently_compressing_count &gt; <span class="number">0</span>, <span class="string">&quot;cannot wait for chunks as there are none left&quot;</span>);
+        <span class="macro">debug_assert!</span>(<span class="self">self</span>.currently_compressing_count &gt; <span class="number">0</span>, <span class="string">"cannot wait for chunks as there are none left"</span>);
 
         <span class="macro">assert_eq!</span>( <span class="comment">// propagate panics (in release mode unlikely, but possible of course)
                     </span><span class="self">self</span>.pool.panic_count(), <span class="number">0</span>,
-                    <span class="string">&quot;OpenEXR compressor thread panicked \
+                    <span class="string">"OpenEXR compressor thread panicked \
             (maybe a debug assertion failed) - \
-            Use non-parallel decompression to see panic messages.&quot;
+            Use non-parallel decompression to see panic messages."
         </span>);
 
         <span class="kw">let </span>some_compressed_chunk = <span class="self">self</span>.receiver.recv()
-            .expect(<span class="string">&quot;cannot receive compressed block&quot;</span>);
+            .expect(<span class="string">"cannot receive compressed block"</span>);
 
         <span class="self">self</span>.currently_compressing_count -= <span class="number">1</span>;
         <span class="kw">let </span>(chunk_file_index, chunk_y_index, chunk) = some_compressed_chunk<span class="question-mark">?</span>;
@@ -860,7 +862,7 @@
             <span class="self">self</span>.write_next_queued_chunk()<span class="question-mark">?</span>;
         }
 
-        <span class="macro">debug_assert_eq!</span>(<span class="self">self</span>.currently_compressing_count, <span class="number">0</span>, <span class="string">&quot;counter does not match block count&quot;</span>);
+        <span class="macro">debug_assert_eq!</span>(<span class="self">self</span>.currently_compressing_count, <span class="number">0</span>, <span class="string">"counter does not match block count"</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -885,7 +887,7 @@
 
             <span class="comment">// by now, decompressing could have failed in another thread.
             // the error is then already handled, so we simply
-            // don&#39;t send the decompressed block and do nothing
+            // don't send the decompressed block and do nothing
             </span><span class="kw">let _ </span>= sender.send(compressed_or_err.map(<span class="kw">move </span>|compressed| (index_in_file, index_in_header_increasing_y, compressed)));
         });
 
@@ -897,7 +899,7 @@
             <span class="self">self</span>.write_all_queued_chunks()<span class="question-mark">?</span>;
             <span class="macro">debug_assert_eq!</span>(
                 <span class="self">self</span>.written_chunk_count, <span class="self">self</span>.inner_chunks_writer().total_chunks_count(),
-                <span class="string">&quot;written chunk count mismatch&quot;
+                <span class="string">"written chunk count mismatch"
             </span>);
         }
 

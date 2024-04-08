@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/flate2-1.0.24/src/gz/bufread.rs`."><title>bufread.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="flate2" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/flate2-1.0.24/src/gz/bufread.rs`."><title>bufread.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="flate2" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../flate2/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -873,12 +875,12 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>corrupt() -&gt; io::Error {
     io::Error::new(
         io::ErrorKind::InvalidInput,
-        <span class="string">&quot;corrupt gzip stream does not have a matching checksum&quot;</span>,
+        <span class="string">"corrupt gzip stream does not have a matching checksum"</span>,
     )
 }
 
 <span class="kw">fn </span>bad_header() -&gt; io::Error {
-    io::Error::new(io::ErrorKind::InvalidInput, <span class="string">&quot;invalid gzip header&quot;</span>)
+    io::Error::new(io::ErrorKind::InvalidInput, <span class="string">"invalid gzip header"</span>)
 }
 
 <span class="kw">fn </span>read_le_u16&lt;R: Read&gt;(r: <span class="kw-2">&amp;mut </span>Buffer&lt;R&gt;) -&gt; io::Result&lt;u16&gt; {
@@ -887,7 +889,7 @@
     <span class="prelude-val">Ok</span>((b[<span class="number">0</span>] <span class="kw">as </span>u16) | ((b[<span class="number">1</span>] <span class="kw">as </span>u16) &lt;&lt; <span class="number">8</span>))
 }
 
-<span class="kw">fn </span>read_gz_header_part&lt;<span class="lifetime">&#39;a</span>, R: Read&gt;(r: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Buffer&lt;<span class="lifetime">&#39;a</span>, R&gt;) -&gt; io::Result&lt;()&gt; {
+<span class="kw">fn </span>read_gz_header_part&lt;<span class="lifetime">'a</span>, R: Read&gt;(r: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Buffer&lt;<span class="lifetime">'a</span>, R&gt;) -&gt; io::Result&lt;()&gt; {
     <span class="kw">loop </span>{
         <span class="kw">match </span>r.part.state {
             GzHeaderParsingState::Start =&gt; {
@@ -998,7 +1000,7 @@
 /// // File wrapped in a BufReader implements BufRead
 ///
 /// fn open_hello_world() -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
-///     let f = File::open(&quot;examples/hello_world.txt&quot;)?;
+///     let f = File::open("examples/hello_world.txt")?;
 ///     let b = BufReader::new(f);
 ///     let mut gz = GzEncoder::new(b, Compression::fast());
 ///     let mut buffer = Vec::new();
@@ -1140,9 +1142,9 @@
 ///
 /// # fn main() {
 /// #   let mut e = GzEncoder::new(Vec::new(), Compression::default());
-/// #   e.write_all(b&quot;Hello World&quot;).unwrap();
+/// #   e.write_all(b"Hello World").unwrap();
 /// #   let bytes = e.finish().unwrap();
-/// #   println!(&quot;{}&quot;, decode_reader(bytes).unwrap());
+/// #   println!("{}", decode_reader(bytes).unwrap());
 /// # }
 /// #
 /// // Uncompresses a Gz Encoded vector of bytes and returns a string or error
@@ -1218,15 +1220,15 @@
 <span class="doccomment">/// A small adapter which reads data originally from `buf` and then reads all
 /// further data from `reader`. This will also buffer all data read from
 /// `reader` into `buf` for reuse on a further call.
-</span><span class="kw">struct </span>Buffer&lt;<span class="lifetime">&#39;a</span>, T: <span class="lifetime">&#39;a</span>&gt; {
-    part: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>GzHeaderPartial,
+</span><span class="kw">struct </span>Buffer&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'a</span>&gt; {
+    part: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>GzHeaderPartial,
     buf_cur: usize,
     buf_max: usize,
-    reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>T,
+    reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Buffer&lt;<span class="lifetime">&#39;a</span>, T&gt; {
-    <span class="kw">fn </span>new(part: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>GzHeaderPartial, reader: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>T) -&gt; Buffer&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Buffer&lt;<span class="lifetime">'a</span>, T&gt; {
+    <span class="kw">fn </span>new(part: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>GzHeaderPartial, reader: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T) -&gt; Buffer&lt;<span class="lifetime">'a</span>, T&gt; {
         Buffer {
             reader,
             buf_cur: <span class="number">0</span>,
@@ -1236,7 +1238,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Read&gt; Read <span class="kw">for </span>Buffer&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T: Read&gt; Read <span class="kw">for </span>Buffer&lt;<span class="lifetime">'a</span>, T&gt; {
     <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; io::Result&lt;usize&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>bufref = <span class="kw">match </span><span class="self">self</span>.part.state {
             GzHeaderParsingState::Filename =&gt; <span class="self">self</span>.part.header.filename.as_mut(),
@@ -1269,7 +1271,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Buffer&lt;<span class="lifetime">&#39;a</span>, T&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Buffer&lt;<span class="lifetime">'a</span>, T&gt;
 <span class="kw">where
     </span>T: std::io::Read,
 {
@@ -1492,9 +1494,9 @@
 ///
 /// # fn main() {
 /// #   let mut e = GzEncoder::new(Vec::new(), Compression::default());
-/// #   e.write_all(b&quot;Hello World&quot;).unwrap();
+/// #   e.write_all(b"Hello World").unwrap();
 /// #   let bytes = e.finish().unwrap();
-/// #   println!(&quot;{}&quot;, decode_reader(bytes).unwrap());
+/// #   println!("{}", decode_reader(bytes).unwrap());
 /// # }
 /// #
 /// // Uncompresses a Gz Encoded vector of bytes and returns a string or error
@@ -1520,7 +1522,7 @@
 }
 
 <span class="kw">impl</span>&lt;R&gt; MultiGzDecoder&lt;R&gt; {
-    <span class="doccomment">/// Returns the current header associated with this stream, if it&#39;s valid
+    <span class="doccomment">/// Returns the current header associated with this stream, if it's valid
     </span><span class="kw">pub fn </span>header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>GzHeader&gt; {
         <span class="self">self</span>.<span class="number">0</span>.header()
     }
@@ -1619,7 +1621,7 @@
         <span class="kw">match </span>r.write_all(<span class="kw-2">&amp;</span>data) {
             <span class="prelude-val">Ok</span>(()) =&gt; {}
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for write_all&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for write_all"</span>);
             }
         }
         r.set_position(<span class="number">0</span>);
@@ -1630,7 +1632,7 @@
         <span class="kw">match </span>reader.read_and_forget(<span class="kw-2">&amp;mut </span>out) {
             <span class="prelude-val">Ok</span>(<span class="number">1</span>) =&gt; {}
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for read_and_forget with data&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for read_and_forget with data"</span>);
             }
         }
 
@@ -1641,7 +1643,7 @@
                 <span class="macro">assert_eq!</span>(io::ErrorKind::WouldBlock, err.kind());
             }
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for read_and_forget with incomplete&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for read_and_forget with incomplete"</span>);
             }
         }
 
@@ -1651,7 +1653,7 @@
         <span class="kw">match </span>r.write_all(<span class="kw-2">&amp;</span>data2) {
             <span class="prelude-val">Ok</span>(()) =&gt; {}
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for write_all&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for write_all"</span>);
             }
         }
         r.set_position(pos);
@@ -1663,7 +1665,7 @@
                 <span class="macro">assert_eq!</span>(io::ErrorKind::WouldBlock, err.kind());
             }
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for read_and_forget with more incomplete&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for read_and_forget with more incomplete"</span>);
             }
         }
 
@@ -1673,7 +1675,7 @@
         <span class="kw">match </span>r.write_all(<span class="kw-2">&amp;</span>data3) {
             <span class="prelude-val">Ok</span>(()) =&gt; {}
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for write_all&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for write_all"</span>);
             }
         }
         r.set_position(pos2);
@@ -1686,7 +1688,7 @@
                 <span class="macro">assert_eq!</span>(out[<span class="number">6</span>], <span class="number">8</span>);
             }
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for read_and_forget with data&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for read_and_forget with data"</span>);
             }
         }
 
@@ -1697,7 +1699,7 @@
                 <span class="macro">assert_eq!</span>(out[<span class="number">0</span>], <span class="number">9</span>);
             }
             <span class="kw">_ </span>=&gt; {
-                <span class="macro">panic!</span>(<span class="string">&quot;Unexpected result for read_and_forget with data&quot;</span>);
+                <span class="macro">panic!</span>(<span class="string">"Unexpected result for read_and_forget with data"</span>);
             }
         }
     }

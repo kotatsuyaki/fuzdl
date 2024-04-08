@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/png.rs`."><title>png.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/png.rs`."><title>png.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -807,7 +809,7 @@
         <span class="comment">// Since interlaced images do not come in
         // scanline order it is almost impossible to
         // read them in a streaming fashion, however
-        // this shouldn&#39;t be a too big of a problem
+        // this shouldn't be a too big of a problem
         // as most interlaced images should fit in memory.
         </span><span class="kw">let </span>buffer = <span class="kw">if </span>reader.info().interlaced {
             <span class="kw">let </span><span class="kw-2">mut </span>buffer = <span class="macro">vec!</span>[<span class="number">0</span>; len];
@@ -980,7 +982,7 @@
     ))
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>PngDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>PngDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = PngReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -1067,7 +1069,7 @@
         }
     }
 
-    <span class="comment">// TODO: thumbnail(&amp;mut self) -&gt; Option&lt;impl ImageDecoder&lt;&#39;_&gt;&gt;
+    <span class="comment">// TODO: thumbnail(&amp;mut self) -&gt; Option&lt;impl ImageDecoder&lt;'_&gt;&gt;
 
     </span><span class="doccomment">/// Decode one subframe and overlay it on the canvas.
     </span><span class="kw">fn </span>mix_next_frame(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>RgbaImage&gt;, ImageError&gt; {
@@ -1154,16 +1156,16 @@
             ColorType::Rgba8 =&gt; ImageBuffer::&lt;Rgba&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;::from_raw(width, height, buffer).unwrap(),
             ColorType::L16 | ColorType::Rgb16 | ColorType::La16 | ColorType::Rgba16 =&gt; {
                 <span class="comment">// TODO: to enable remove restriction in `animatable_color_type` method.
-                </span><span class="macro">unreachable!</span>(<span class="string">&quot;16-bit apng not yet support&quot;</span>)
+                </span><span class="macro">unreachable!</span>(<span class="string">"16-bit apng not yet support"</span>)
             }
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Invalid png color&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"Invalid png color"</span>),
         };
 
         <span class="kw">match </span>blend {
             BlendOp::Source =&gt; {
                 <span class="self">self</span>.current
                     .copy_from(<span class="kw-2">&amp;</span>source, px, py)
-                    .expect(<span class="string">&quot;Invalid png image not detected in png&quot;</span>);
+                    .expect(<span class="string">"Invalid png image not detected in png"</span>);
             }
             BlendOp::Over =&gt; {
                 <span class="comment">// TODO: investigate speed, speed-ups, and bounds-checks.
@@ -1186,13 +1188,13 @@
             </span>ColorType::L16 | ColorType::Rgb16 | ColorType::La16 | ColorType::Rgba16 =&gt; {
                 <span class="prelude-val">Err</span>(unsupported_color(<span class="self">self</span>.inner.color_type.into()))
             }
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;{:?} not a valid png color&quot;</span>, <span class="self">self</span>.inner.color_type),
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">"{:?} not a valid png color"</span>, <span class="self">self</span>.inner.color_type),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: Read + <span class="lifetime">&#39;a</span>&gt; AnimationDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>ApngDecoder&lt;R&gt; {
-    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; Frames&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: Read + <span class="lifetime">'a</span>&gt; AnimationDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>ApngDecoder&lt;R&gt; {
+    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; Frames&lt;<span class="lifetime">'a</span>&gt; {
         <span class="kw">struct </span>FrameIterator&lt;R: Read&gt;(ApngDecoder&lt;R&gt;);
 
         <span class="kw">impl</span>&lt;R: Read&gt; Iterator <span class="kw">for </span>FrameIterator&lt;R&gt; {
@@ -1311,7 +1313,7 @@
     <span class="doccomment">/// Encodes the image `data` that has dimensions `width` and `height` and `ColorType` `c`.
     ///
     /// Expects data in big endian.
-    </span><span class="attr">#[deprecated = <span class="string">&quot;Use `PngEncoder::write_image` instead. Beware that `write_image` has a different endianness convention&quot;</span>]
+    </span><span class="attr">#[deprecated = <span class="string">"Use `PngEncoder::write_image` instead. Beware that `write_image` has a different endianness convention"</span>]
     </span><span class="kw">pub fn </span>encode(<span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8], width: u32, height: u32, color: ColorType) -&gt; ImageResult&lt;()&gt; {
         <span class="self">self</span>.encode_inner(data, width, height, color)
     }
@@ -1458,7 +1460,7 @@
         <span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::ColorType(color_type) =&gt; <span class="macro">write!</span>(
                 f,
-                <span class="string">&quot;The color {:?} can not be represented in PNG.&quot;</span>,
+                <span class="string">"The color {:?} can not be represented in PNG."</span>,
                 color_type
             ),
         }
@@ -1478,24 +1480,24 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>ensure_no_decoder_off_by_one() {
         <span class="kw">let </span>dec = PngDecoder::new(
-            std::fs::File::open(<span class="string">&quot;tests/images/png/bugfixes/debug_triangle_corners_widescreen.png&quot;</span>)
+            std::fs::File::open(<span class="string">"tests/images/png/bugfixes/debug_triangle_corners_widescreen.png"</span>)
                 .unwrap(),
         )
-        .expect(<span class="string">&quot;Unable to read PNG file (does it exist?)&quot;</span>);
+        .expect(<span class="string">"Unable to read PNG file (does it exist?)"</span>);
 
         <span class="macro">assert_eq!</span>[(<span class="number">2000</span>, <span class="number">1000</span>), dec.dimensions()];
 
         <span class="macro">assert_eq!</span>[
             ColorType::Rgb8,
             dec.color_type(),
-            <span class="string">&quot;Image MUST have the Rgb8 format&quot;
+            <span class="string">"Image MUST have the Rgb8 format"
         </span>];
 
         <span class="kw">let </span>correct_bytes = dec
             .into_reader()
-            .expect(<span class="string">&quot;Unable to read file&quot;</span>)
+            .expect(<span class="string">"Unable to read file"</span>)
             .bytes()
-            .map(|x| x.expect(<span class="string">&quot;Unable to read byte&quot;</span>))
+            .map(|x| x.expect(<span class="string">"Unable to read byte"</span>))
             .collect::&lt;Vec&lt;u8&gt;&gt;();
 
         <span class="macro">assert_eq!</span>[<span class="number">6_000_000</span>, correct_bytes.len()];
@@ -1506,7 +1508,7 @@
         <span class="kw">use </span>std::error::Error;
 
         <span class="kw">let </span><span class="kw-2">mut </span>not_png =
-            std::fs::read(<span class="string">&quot;tests/images/png/bugfixes/debug_triangle_corners_widescreen.png&quot;</span>)
+            std::fs::read(<span class="string">"tests/images/png/bugfixes/debug_triangle_corners_widescreen.png"</span>)
                 .unwrap();
         not_png[<span class="number">0</span>] = <span class="number">0</span>;
 
@@ -1515,7 +1517,7 @@
             .source()
             .unwrap()
             .downcast_ref::&lt;png::DecodingError&gt;()
-            .expect(<span class="string">&quot;Caused by a png error&quot;</span>);
+            .expect(<span class="string">"Caused by a png error"</span>);
     }
 
     <span class="attr">#[test]

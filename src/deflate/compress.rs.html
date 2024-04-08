@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/compress.rs`."><title>compress.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/compress.rs`."><title>compress.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../deflate/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -378,7 +380,7 @@
 </span><span class="kw">pub enum </span>Flush {
     <span class="comment">// Simply wait for more input when we are out of input data to process.
     </span><span class="prelude-val">None</span>,
-    <span class="comment">// Send a &quot;sync block&quot;, corresponding to Z_SYNC_FLUSH in zlib. This finishes compressing and
+    <span class="comment">// Send a "sync block", corresponding to Z_SYNC_FLUSH in zlib. This finishes compressing and
     // outputting all pending data, and then outputs an empty stored block.
     // (That is, the block header indicating a stored block followed by `0000FFFF`).
     </span>Sync,
@@ -408,7 +410,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>state = EncoderState::fixed(Vec::new());
     <span class="kw">let </span>compressed = lz77_compress(input).unwrap();
 
-    <span class="comment">// We currently don&#39;t split blocks here(this function is just used for tests anyhow)
+    <span class="comment">// We currently don't split blocks here(this function is just used for tests anyhow)
     </span>state.write_start_of_block(<span class="bool-val">true</span>, <span class="bool-val">true</span>);
     flush_to_bitstream(<span class="kw-2">&amp;</span>compressed, <span class="kw-2">&amp;mut </span>state);
 
@@ -427,12 +429,12 @@
             </span>write_stored_header(writer, final_block &amp;&amp; last_chunk);
 
             <span class="comment">// Write the actual data.
-            </span>compress_block_stored(chunk, <span class="kw-2">&amp;mut </span>writer).expect(<span class="string">&quot;Write error&quot;</span>);
+            </span>compress_block_stored(chunk, <span class="kw-2">&amp;mut </span>writer).expect(<span class="string">"Write error"</span>);
         }
     } <span class="kw">else </span>{
         <span class="comment">// If the input length is zero, we output an empty block. This is used for syncing.
         </span>write_stored_header(writer, final_block);
-        compress_block_stored(<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;mut </span>writer).expect(<span class="string">&quot;Write error&quot;</span>);
+        compress_block_stored(<span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;mut </span>writer).expect(<span class="string">"Write error"</span>);
     }
 }
 
@@ -457,7 +459,7 @@
             <span class="kw">let </span>written = deflate_state
                 .inner
                 .as_mut()
-                .expect(<span class="string">&quot;Missing writer!&quot;</span>)
+                .expect(<span class="string">"Missing writer!"</span>)
                 .write(<span class="kw-2">&amp;</span>deflate_state.encoder_state.inner_vec()[output_buf_pos..])<span class="question-mark">?</span>;
 
             <span class="kw">if </span>written &lt; output_buf_len.checked_sub(output_buf_pos).unwrap() {
@@ -472,11 +474,11 @@
 
             <span class="kw">if </span>bytes_written == <span class="number">0 </span>{
                 <span class="comment">// If the buffer was already full when the function was called, this has to be
-                // returned rather than Ok(0) to indicate that we didn&#39;t write anything, but are
+                // returned rather than Ok(0) to indicate that we didn't write anything, but are
                 // not done yet.
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(io::Error::new(
                     io::ErrorKind::Interrupted,
-                    <span class="string">&quot;Internal buffer full.&quot;</span>,
+                    <span class="string">"Internal buffer full."</span>,
                 ));
             } <span class="kw">else </span>{
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(bytes_written);
@@ -484,7 +486,7 @@
         }
 
         <span class="kw">if </span>deflate_state.lz77_state.is_last_block() {
-            <span class="comment">// The last block has already been written, so we don&#39;t have anything to compress.
+            <span class="comment">// The last block has already been written, so we don't have anything to compress.
             </span><span class="kw">break</span>;
         }
 
@@ -503,7 +505,7 @@
         </span>deflate_state.bytes_written += written <span class="kw">as </span>u64;
 
         <span class="kw">if </span>status == LZ77Status::NeedInput {
-            <span class="comment">// If we&#39;ve consumed all the data input so far, and we&#39;re not
+            <span class="comment">// If we've consumed all the data input so far, and we're not
             // finishing or syncing or ending the block here, simply return
             // the number of bytes consumed so far.
             </span><span class="kw">return </span><span class="prelude-val">Ok</span>(bytes_written);
@@ -542,7 +544,7 @@
             )
         };
 
-        <span class="comment">// Check if we&#39;ve actually managed to compress the input, and output stored blocks
+        <span class="comment">// Check if we've actually managed to compress the input, and output stored blocks
         // if not.
         </span><span class="kw">match </span>res {
             BlockType::Dynamic(header) =&gt; {
@@ -594,8 +596,8 @@
 
                 <span class="macro">assert!</span>(
                     position &gt;= current_block_input_bytes <span class="kw">as </span>usize,
-                    <span class="string">&quot;Error! Trying to output a stored block with forgotten data!\
-                     if you encounter this error, please file an issue!&quot;
+                    <span class="string">"Error! Trying to output a stored block with forgotten data!\
+                     if you encounter this error, please file an issue!"
                 </span>);
 
                 write_stored_block(
@@ -635,13 +637,13 @@
 
     <span class="comment">// If we reach this point, the remaining data in the buffers is to be flushed.
     </span>deflate_state.encoder_state.flush();
-    <span class="comment">// Make sure we&#39;ve output everything, and return the number of bytes written if everything
+    <span class="comment">// Make sure we've output everything, and return the number of bytes written if everything
     // went well.
     </span><span class="kw">let </span>output_buf_pos = deflate_state.output_buf_pos;
     <span class="kw">let </span>written_to_writer = deflate_state
         .inner
         .as_mut()
-        .expect(<span class="string">&quot;Missing writer!&quot;</span>)
+        .expect(<span class="string">"Missing writer!"</span>)
         .write(<span class="kw-2">&amp;</span>deflate_state.encoder_state.inner_vec()[output_buf_pos..])<span class="question-mark">?</span>;
     <span class="kw">if </span>written_to_writer
         &lt; deflate_state
@@ -669,7 +671,7 @@
     <span class="attr">#[test]
     </span><span class="doccomment">/// Test compressing a short string using fixed encoding.
     </span><span class="kw">fn </span>fixed_string_mem() {
-        <span class="kw">let </span>test_data = String::from(<span class="string">&quot;                    GNU GENERAL PUBLIC LICENSE&quot;</span>).into_bytes();
+        <span class="kw">let </span>test_data = String::from(<span class="string">"                    GNU GENERAL PUBLIC LICENSE"</span>).into_bytes();
         <span class="kw">let </span>compressed = compress_data_fixed(<span class="kw-2">&amp;</span>test_data);
 
         <span class="kw">let </span>result = decompress_to_end(<span class="kw-2">&amp;</span>compressed);
@@ -692,7 +694,7 @@
     /// https://stackoverflow.com/questions/17398931/deflate-encoding-with-static-huffman-codes/17415203
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>fixed_example() {
-        <span class="kw">let </span>test_data = <span class="string">b&quot;Deflate late&quot;</span>;
+        <span class="kw">let </span>test_data = <span class="string">b"Deflate late"</span>;
         <span class="comment">// let check =
         // [0x73, 0x49, 0x4d, 0xcb, 0x49, 0x2c, 0x49, 0x55, 0xc8, 0x49, 0x2c, 0x49, 0x5, 0x0];
         </span><span class="kw">let </span>check = [
@@ -710,7 +712,7 @@
         <span class="kw">let </span>input = get_test_data();
 
         <span class="kw">let </span>compressed = compress_data_fixed(<span class="kw-2">&amp;</span>input);
-        <span class="macro">println!</span>(<span class="string">&quot;Fixed codes compressed len: {}&quot;</span>, compressed.len());
+        <span class="macro">println!</span>(<span class="string">"Fixed codes compressed len: {}"</span>, compressed.len());
         <span class="kw">let </span>result = decompress_to_end(<span class="kw-2">&amp;</span>compressed);
 
         <span class="macro">assert_eq!</span>(input.len(), result.len());

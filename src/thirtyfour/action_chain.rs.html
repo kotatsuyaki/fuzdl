@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/thirtyfour-0.31.0/src/action_chain.rs`."><title>action_chain.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="thirtyfour" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/thirtyfour-0.31.0/src/action_chain.rs`."><title>action_chain.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="thirtyfour" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../thirtyfour/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -834,8 +836,8 @@
     </span><span class="kw">pub fn </span>new(handle: SessionHandle) -&gt; <span class="self">Self </span>{
         ActionChain {
             handle,
-            key_actions: <span class="prelude-val">Some</span>(KeyActions::new(<span class="string">&quot;key&quot;</span>.to_string())),
-            mouse_actions: <span class="prelude-val">Some</span>(MouseActions::new(<span class="string">&quot;mouse&quot;</span>.to_string())),
+            key_actions: <span class="prelude-val">Some</span>(KeyActions::new(<span class="string">"key"</span>.to_string())),
+            mouse_actions: <span class="prelude-val">Some</span>(MouseActions::new(<span class="string">"mouse"</span>.to_string())),
         }
     }
 
@@ -919,9 +921,9 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// // Hold mouse button down on element.
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_and_hold_element(&amp;elem)
@@ -965,8 +967,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .move_to_element_center(&amp;elem)
@@ -994,8 +996,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_element(&amp;elem)
@@ -1021,8 +1023,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .move_to_element_center(&amp;elem)
@@ -1050,8 +1052,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_and_hold_element(&amp;elem)
@@ -1077,8 +1079,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .move_to_element_center(&amp;elem)
@@ -1106,8 +1108,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .context_click_element(&amp;elem)
@@ -1133,8 +1135,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .move_to_element_center(&amp;elem)
@@ -1160,8 +1162,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .double_click_element(&amp;elem)
@@ -1239,12 +1241,12 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Name(&quot;input1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Name("input1")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_element(&amp;elem)
-    ///     .key_down(&#39;a&#39;)
+    ///     .key_down('a')
     ///     .perform().await?;
     /// #         driver.quit().await?;
     /// #         Ok(())
@@ -1266,11 +1268,11 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Name(&quot;input1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Name("input1")).await?;
     /// driver
     ///     .action_chain()
-    ///     .key_down_on_element(&amp;elem, &#39;a&#39;)
+    ///     .key_down_on_element(&amp;elem, 'a')
     ///     .perform()
     ///     .await?;
     /// #         driver.quit().await?;
@@ -1292,16 +1294,16 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Name(&quot;input1&quot;)).await?;
-    /// elem.send_keys(&quot;selenium&quot;).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Name("input1")).await?;
+    /// elem.send_keys("selenium").await?;
     /// driver
     ///     .action_chain()
     ///     .key_down_on_element(&amp;elem, Key::Control)
-    ///     .key_down(&#39;a&#39;)
+    ///     .key_down('a')
     ///     .key_up(Key::Control)
-    ///     .key_up(&#39;a&#39;)
-    ///     .key_down(&#39;b&#39;)
+    ///     .key_up('a')
+    ///     .key_down('b')
     ///     .perform()
     ///     .await?;
     /// #         driver.quit().await?;
@@ -1324,20 +1326,20 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Name(&quot;input1&quot;)).await?;
-    /// elem.send_keys(&quot;selenium&quot;).await?;
-    /// assert_eq!(elem.value().await?.unwrap(), &quot;selenium&quot;);
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Name("input1")).await?;
+    /// elem.send_keys("selenium").await?;
+    /// assert_eq!(elem.value().await?.unwrap(), "selenium");
     /// driver
     ///     .action_chain()
     ///     .key_down_on_element(&amp;elem, Key::Control)
-    ///     .key_down(&#39;a&#39;)
-    ///     .key_up_on_element(&amp;elem, &#39;a&#39;)
+    ///     .key_down('a')
+    ///     .key_up_on_element(&amp;elem, 'a')
     ///     .key_up_on_element(&amp;elem, Key::Control)
-    ///     .key_down(&#39;b&#39;)
+    ///     .key_down('b')
     ///     .perform()
     ///     .await?;
-    /// assert_eq!(elem.value().await?.unwrap(), &quot;b&quot;);
+    /// assert_eq!(elem.value().await?.unwrap(), "b");
     /// #         driver.quit().await?;
     /// #         Ok(())
     /// #     })
@@ -1357,8 +1359,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// let center = elem.rect().await?.icenter();
     /// driver
     ///     .action_chain()
@@ -1386,9 +1388,9 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem1 = driver.find(By::Id(&quot;button1&quot;)).await?;
-    /// let elem2 = driver.find(By::Id(&quot;button2&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem1 = driver.find(By::Id("button1")).await?;
+    /// let elem2 = driver.find(By::Id("button2")).await?;
     ///
     /// // We will calculate the distance between the two center points and then
     /// // use action_chain() to move to the second button before clicking.
@@ -1420,8 +1422,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .move_to_element_center(&amp;elem)
@@ -1439,7 +1441,7 @@
     </span>}
 
     <span class="doccomment">/// Move the mouse cursor to the specified offsets relative to the specified
-    /// element&#39;s center position.
+    /// element's center position.
     ///
     /// # Example:
     ///
@@ -1450,17 +1452,17 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
     /// // Select the text in the source element and copy it to the clipboard.
-    /// let elem = driver.find(By::Id(&quot;button-result&quot;)).await?;
+    /// let elem = driver.find(By::Id("button-result")).await?;
     /// let width = elem.rect().await?.width;
     /// driver
     ///     .action_chain()
     ///     .move_to_element_with_offset(&amp;elem, (-(width as f64) / 2.0) as i64, 0)
     ///     .drag_and_drop_by_offset(width as i64, 0)
     ///     .key_down(Key::Control)
-    ///     .key_down(&#39;c&#39;)
-    ///     .key_up(&#39;c&#39;)
+    ///     .key_down('c')
+    ///     .key_up('c')
     ///     .key_up(Key::Control)
     ///     .perform()
     ///     .await?;
@@ -1489,8 +1491,8 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_and_hold_element(&amp;elem)
@@ -1517,9 +1519,9 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem1 = driver.find(By::Id(&quot;source-element-id&quot;)).await?;
-    /// let elem2 = driver.find(By::Id(&quot;target-element-id&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem1 = driver.find(By::Id("source-element-id")).await?;
+    /// let elem2 = driver.find(By::Id("target-element-id")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_and_hold_element(&amp;elem1)
@@ -1546,13 +1548,13 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Name(&quot;input1&quot;)).await?;
-    /// let button = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Name("input1")).await?;
+    /// let button = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
     ///     .click_element(&amp;elem)
-    ///     .send_keys(&quot;selenium&quot;)
+    ///     .send_keys("selenium")
     ///     .click_element(&amp;button)
     ///     .perform()
     ///     .await?;
@@ -1578,12 +1580,12 @@
     /// # fn main() -&gt; WebDriverResult&lt;()&gt; {
     /// #     block_on(async {
     /// #         let caps = DesiredCapabilities::chrome();
-    /// #         let driver = WebDriver::new(&quot;http://localhost:4444&quot;, caps).await?;
-    /// let elem = driver.find(By::Name(&quot;input1&quot;)).await?;
-    /// let button = driver.find(By::Id(&quot;button1&quot;)).await?;
+    /// #         let driver = WebDriver::new("http://localhost:4444", caps).await?;
+    /// let elem = driver.find(By::Name("input1")).await?;
+    /// let button = driver.find(By::Id("button1")).await?;
     /// driver
     ///     .action_chain()
-    ///     .send_keys_to_element(&amp;elem, &quot;selenium&quot;)
+    ///     .send_keys_to_element(&amp;elem, "selenium")
     ///     .click_element(&amp;button)
     ///     .perform()
     ///     .await?;

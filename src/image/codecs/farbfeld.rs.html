@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/farbfeld.rs`."><title>farbfeld.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/farbfeld.rs`."><title>farbfeld.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -406,7 +408,7 @@
 //!
 //! | Bytes  | Description                                             |
 //! |--------|---------------------------------------------------------|
-//! | 8      | &quot;farbfeld&quot; magic value                                  |
+//! | 8      | "farbfeld" magic value                                  |
 //! | 4      | 32-Bit BE unsigned integer (width)                      |
 //! | 4      | 32-Bit BE unsigned integer (height)                     |
 //! | [2222] | 4⋅16-Bit BE unsigned integers [RGBA] / pixel, row-major |
@@ -452,10 +454,10 @@
         buffered_read.read_exact(<span class="kw-2">&amp;mut </span>magic).map_err(|err| {
             ImageError::Decoding(DecodingError::new(ImageFormat::Farbfeld.into(), err))
         })<span class="question-mark">?</span>;
-        <span class="kw">if </span><span class="kw-2">&amp;</span>magic != <span class="string">b&quot;farbfeld&quot; </span>{
+        <span class="kw">if </span><span class="kw-2">&amp;</span>magic != <span class="string">b"farbfeld" </span>{
             <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Decoding(DecodingError::new(
                 ImageFormat::Farbfeld.into(),
-                <span class="macro">format!</span>(<span class="string">&quot;Invalid magic: {:02x?}&quot;</span>, magic),
+                <span class="macro">format!</span>(<span class="string">"Invalid magic: {:02x?}"</span>, magic),
             )));
         }
 
@@ -477,7 +479,7 @@
                 UnsupportedError::from_format_and_kind(
                     ImageFormat::Farbfeld.into(),
                     UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                        <span class="string">&quot;Image dimensions ({}x{}) are too large&quot;</span>,
+                        <span class="string">"Image dimensions ({}x{}) are too large"</span>,
                         reader.width, reader.height
                     )),
                 ),
@@ -544,7 +546,7 @@
             parse_offset(original_offset, end_offset, pos).ok_or_else(|| {
                 io::Error::new(
                     io::ErrorKind::InvalidInput,
-                    <span class="string">&quot;invalid seek to a negative or overflowing position&quot;</span>,
+                    <span class="string">"invalid seek to a negative or overflowing position"</span>,
                 )
             })<span class="question-mark">?</span>;
 
@@ -555,7 +557,7 @@
         } <span class="kw">else </span>{
             original_offset.checked_add(offset_from_current <span class="kw">as </span>u64)
         }
-        .expect(<span class="string">&quot;This should&#39;ve been checked above&quot;</span>);
+        .expect(<span class="string">"This should've been checked above"</span>);
 
         <span class="kw">if </span><span class="self">self</span>.current_offset &lt; end_offset &amp;&amp; <span class="self">self</span>.current_offset % <span class="number">2 </span>== <span class="number">1 </span>{
             <span class="kw">let </span>curr = <span class="self">self</span>.inner.seek(SeekFrom::Current(-<span class="number">1</span>))<span class="question-mark">?</span>;
@@ -597,7 +599,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>FarbfeldDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>FarbfeldDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = FarbfeldReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -617,7 +619,7 @@
     </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read + Seek&gt; ImageDecoderRect&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>FarbfeldDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read + Seek&gt; ImageDecoderRect&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>FarbfeldDecoder&lt;R&gt; {
     <span class="kw">fn </span>read_rect_with_progress&lt;F: Fn(Progress)&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: u32,
@@ -627,7 +629,7 @@
         buf: <span class="kw-2">&amp;mut </span>[u8],
         progress_callback: F,
     ) -&gt; ImageResult&lt;()&gt; {
-        <span class="comment">// A &quot;scanline&quot; (defined as &quot;shortest non-caching read&quot; in the doc) is just one channel in this case
+        <span class="comment">// A "scanline" (defined as "shortest non-caching read" in the doc) is just one channel in this case
 
         </span><span class="kw">let </span>start = <span class="self">self</span>.reader.seek(SeekFrom::Current(<span class="number">0</span>))<span class="question-mark">?</span>;
         image::load_rect(
@@ -665,7 +667,7 @@
     }
 
     <span class="kw">fn </span>encode_impl(<span class="kw-2">mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8], width: u32, height: u32) -&gt; io::Result&lt;()&gt; {
-        <span class="self">self</span>.w.write_all(<span class="string">b&quot;farbfeld&quot;</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.w.write_all(<span class="string">b"farbfeld"</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>buf = [<span class="number">0u8</span>; <span class="number">4</span>];
         BigEndian::write_u32(<span class="kw-2">&amp;mut </span>buf, width);
@@ -711,11 +713,11 @@
     <span class="kw">use </span>byteorder::{ByteOrder, NativeEndian};
     <span class="kw">use </span>std::io::{Cursor, Seek, SeekFrom};
 
-    <span class="kw">static </span>RECTANGLE_IN: <span class="kw-2">&amp;</span>[u8] =     <span class="string">b&quot;farbfeld\
+    <span class="kw">static </span>RECTANGLE_IN: <span class="kw-2">&amp;</span>[u8] =     <span class="string">b"farbfeld\
                                        \x00\x00\x00\x02\x00\x00\x00\x03\
                                        \xFF\x01\xFE\x02\xFD\x03\xFC\x04\xFB\x05\xFA\x06\xF9\x07\xF8\x08\
                                        \xF7\x09\xF6\x0A\xF5\x0B\xF4\x0C\xF3\x0D\xF2\x0E\xF1\x0F\xF0\x10\
-                                       \xEF\x11\xEE\x12\xED\x13\xEC\x14\xEB\x15\xEA\x16\xE9\x17\xE8\x18&quot;</span>;
+                                       \xEF\x11\xEE\x12\xED\x13\xEC\x14\xEB\x15\xEA\x16\xE9\x17\xE8\x18"</span>;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>read_rect_1x2() {
@@ -761,7 +763,7 @@
         <span class="kw">static </span>RECTANGLE_OUT: <span class="kw-2">&amp;</span>[u16] = <span class="kw-2">&amp;</span>[<span class="number">0xEF11</span>, <span class="number">0xEE12</span>, <span class="number">0xED13</span>, <span class="number">0xEC14</span>];
 
         <span class="kw">let </span><span class="kw-2">mut </span>input = <span class="macro">vec!</span>[];
-        input.extend_from_slice(<span class="string">b&quot;This is a 31-byte-long prologue&quot;</span>);
+        input.extend_from_slice(<span class="string">b"This is a 31-byte-long prologue"</span>);
         input.extend_from_slice(RECTANGLE_IN);
         <span class="kw">let </span><span class="kw-2">mut </span>input_cur = Cursor::new(input);
         input_cur.seek(SeekFrom::Start(<span class="number">31</span>)).unwrap();
@@ -777,7 +779,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>dimension_overflow() {
-        <span class="kw">let </span>header = <span class="string">b&quot;farbfeld\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF&quot;</span>;
+        <span class="kw">let </span>header = <span class="string">b"farbfeld\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"</span>;
 
         <span class="macro">assert!</span>(FarbfeldDecoder::new(Cursor::new(header)).is_err());
     }

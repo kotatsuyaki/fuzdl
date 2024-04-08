@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/webdriver-0.46.0/src/httpapi.rs`."><title>httpapi.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="webdriver" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/webdriver-0.46.0/src/httpapi.rs`."><title>httpapi.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="webdriver" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../webdriver/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -394,286 +396,286 @@
 <span class="kw">use </span><span class="kw">crate</span>::error::WebDriverResult;
 <span class="kw">use </span><span class="kw">crate</span>::Parameters;
 
-<span class="kw">pub fn </span>standard_routes&lt;U: WebDriverExtensionRoute&gt;() -&gt; Vec&lt;(Method, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, Route&lt;U&gt;)&gt; {
+<span class="kw">pub fn </span>standard_routes&lt;U: WebDriverExtensionRoute&gt;() -&gt; Vec&lt;(Method, <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str, Route&lt;U&gt;)&gt; {
     <span class="kw">return </span><span class="macro">vec!</span>[
-        (Method::POST, <span class="string">&quot;/session&quot;</span>, Route::NewSession),
-        (Method::DELETE, <span class="string">&quot;/session/{sessionId}&quot;</span>, Route::DeleteSession),
-        (Method::POST, <span class="string">&quot;/session/{sessionId}/url&quot;</span>, Route::Get),
+        (Method::POST, <span class="string">"/session"</span>, Route::NewSession),
+        (Method::DELETE, <span class="string">"/session/{sessionId}"</span>, Route::DeleteSession),
+        (Method::POST, <span class="string">"/session/{sessionId}/url"</span>, Route::Get),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/url&quot;</span>,
+            <span class="string">"/session/{sessionId}/url"</span>,
             Route::GetCurrentUrl,
         ),
-        (Method::POST, <span class="string">&quot;/session/{sessionId}/back&quot;</span>, Route::GoBack),
+        (Method::POST, <span class="string">"/session/{sessionId}/back"</span>, Route::GoBack),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/forward&quot;</span>,
+            <span class="string">"/session/{sessionId}/forward"</span>,
             Route::GoForward,
         ),
-        (Method::POST, <span class="string">&quot;/session/{sessionId}/refresh&quot;</span>, Route::Refresh),
-        (Method::GET, <span class="string">&quot;/session/{sessionId}/title&quot;</span>, Route::GetTitle),
+        (Method::POST, <span class="string">"/session/{sessionId}/refresh"</span>, Route::Refresh),
+        (Method::GET, <span class="string">"/session/{sessionId}/title"</span>, Route::GetTitle),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/source&quot;</span>,
+            <span class="string">"/session/{sessionId}/source"</span>,
             Route::GetPageSource,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/window&quot;</span>,
+            <span class="string">"/session/{sessionId}/window"</span>,
             Route::GetWindowHandle,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/window/handles&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/handles"</span>,
             Route::GetWindowHandles,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/new&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/new"</span>,
             Route::NewWindow,
         ),
         (
             Method::DELETE,
-            <span class="string">&quot;/session/{sessionId}/window&quot;</span>,
+            <span class="string">"/session/{sessionId}/window"</span>,
             Route::CloseWindow,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/window/size&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/size"</span>,
             Route::GetWindowSize,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/size&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/size"</span>,
             Route::SetWindowSize,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/window/position&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/position"</span>,
             Route::GetWindowPosition,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/position&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/position"</span>,
             Route::SetWindowPosition,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/window/rect&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/rect"</span>,
             Route::GetWindowRect,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/rect&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/rect"</span>,
             Route::SetWindowRect,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/minimize&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/minimize"</span>,
             Route::MinimizeWindow,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/maximize&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/maximize"</span>,
             Route::MaximizeWindow,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window/fullscreen&quot;</span>,
+            <span class="string">"/session/{sessionId}/window/fullscreen"</span>,
             Route::FullscreenWindow,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/window&quot;</span>,
+            <span class="string">"/session/{sessionId}/window"</span>,
             Route::SwitchToWindow,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/frame&quot;</span>,
+            <span class="string">"/session/{sessionId}/frame"</span>,
             Route::SwitchToFrame,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/frame/parent&quot;</span>,
+            <span class="string">"/session/{sessionId}/frame/parent"</span>,
             Route::SwitchToParentFrame,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/element&quot;</span>,
+            <span class="string">"/session/{sessionId}/element"</span>,
             Route::FindElement,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/elements&quot;</span>,
+            <span class="string">"/session/{sessionId}/elements"</span>,
             Route::FindElements,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/element&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/element"</span>,
             Route::FindElementElement,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/elements&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/elements"</span>,
             Route::FindElementElements,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/active&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/active"</span>,
             Route::GetActiveElement,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/shadow&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/shadow"</span>,
             Route::GetShadowRoot,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/displayed&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/displayed"</span>,
             Route::IsDisplayed,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/selected&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/selected"</span>,
             Route::IsSelected,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/attribute/{name}&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/attribute/{name}"</span>,
             Route::GetElementAttribute,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/property/{name}&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/property/{name}"</span>,
             Route::GetElementProperty,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/css/{propertyName}&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/css/{propertyName}"</span>,
             Route::GetCSSValue,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/text&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/text"</span>,
             Route::GetElementText,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/name&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/name"</span>,
             Route::GetElementTagName,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/rect&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/rect"</span>,
             Route::GetElementRect,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/enabled&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/enabled"</span>,
             Route::IsEnabled,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/execute/sync&quot;</span>,
+            <span class="string">"/session/{sessionId}/execute/sync"</span>,
             Route::ExecuteScript,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/execute/async&quot;</span>,
+            <span class="string">"/session/{sessionId}/execute/async"</span>,
             Route::ExecuteAsyncScript,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/cookie&quot;</span>,
+            <span class="string">"/session/{sessionId}/cookie"</span>,
             Route::GetCookies,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/cookie/{name}&quot;</span>,
+            <span class="string">"/session/{sessionId}/cookie/{name}"</span>,
             Route::GetNamedCookie,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/cookie&quot;</span>,
+            <span class="string">"/session/{sessionId}/cookie"</span>,
             Route::AddCookie,
         ),
         (
             Method::DELETE,
-            <span class="string">&quot;/session/{sessionId}/cookie&quot;</span>,
+            <span class="string">"/session/{sessionId}/cookie"</span>,
             Route::DeleteCookies,
         ),
         (
             Method::DELETE,
-            <span class="string">&quot;/session/{sessionId}/cookie/{name}&quot;</span>,
+            <span class="string">"/session/{sessionId}/cookie/{name}"</span>,
             Route::DeleteCookie,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/timeouts&quot;</span>,
+            <span class="string">"/session/{sessionId}/timeouts"</span>,
             Route::GetTimeouts,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/timeouts&quot;</span>,
+            <span class="string">"/session/{sessionId}/timeouts"</span>,
             Route::SetTimeouts,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/click&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/click"</span>,
             Route::ElementClick,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/clear&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/clear"</span>,
             Route::ElementClear,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/value&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/value"</span>,
             Route::ElementSendKeys,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/alert/dismiss&quot;</span>,
+            <span class="string">"/session/{sessionId}/alert/dismiss"</span>,
             Route::DismissAlert,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/alert/accept&quot;</span>,
+            <span class="string">"/session/{sessionId}/alert/accept"</span>,
             Route::AcceptAlert,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/alert/text&quot;</span>,
+            <span class="string">"/session/{sessionId}/alert/text"</span>,
             Route::GetAlertText,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/alert/text&quot;</span>,
+            <span class="string">"/session/{sessionId}/alert/text"</span>,
             Route::SendAlertText,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/screenshot&quot;</span>,
+            <span class="string">"/session/{sessionId}/screenshot"</span>,
             Route::TakeScreenshot,
         ),
         (
             Method::GET,
-            <span class="string">&quot;/session/{sessionId}/element/{elementId}/screenshot&quot;</span>,
+            <span class="string">"/session/{sessionId}/element/{elementId}/screenshot"</span>,
             Route::TakeElementScreenshot,
         ),
         (
             Method::POST,
-            <span class="string">&quot;/session/{sessionId}/actions&quot;</span>,
+            <span class="string">"/session/{sessionId}/actions"</span>,
             Route::PerformActions,
         ),
         (
             Method::DELETE,
-            <span class="string">&quot;/session/{sessionId}/actions&quot;</span>,
+            <span class="string">"/session/{sessionId}/actions"</span>,
             Route::ReleaseActions,
         ),
-        (Method::POST, <span class="string">&quot;/session/{sessionId}/print&quot;</span>, Route::Print),
-        (Method::GET, <span class="string">&quot;/status&quot;</span>, Route::Status),
+        (Method::POST, <span class="string">"/session/{sessionId}/print"</span>, Route::Print),
+        (Method::GET, <span class="string">"/status"</span>, Route::Status),
     ];
 }
 
@@ -745,7 +747,7 @@
 }
 
 <span class="kw">pub trait </span>WebDriverExtensionRoute: Clone + Send + PartialEq {
-    <span class="kw">type </span>Command: WebDriverExtensionCommand + <span class="lifetime">&#39;static</span>;
+    <span class="kw">type </span>Command: WebDriverExtensionCommand + <span class="lifetime">'static</span>;
 
     <span class="kw">fn </span>command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -765,7 +767,7 @@
         <span class="kw">_</span>: <span class="kw-2">&amp;</span>Parameters,
         <span class="kw">_</span>: <span class="kw-2">&amp;</span>Value,
     ) -&gt; WebDriverResult&lt;WebDriverCommand&lt;VoidWebDriverExtensionCommand&gt;&gt; {
-        <span class="macro">panic!</span>(<span class="string">&quot;No extensions implemented&quot;</span>);
+        <span class="macro">panic!</span>(<span class="string">"No extensions implemented"</span>);
     }
 }
 </code></pre></div></section></main></body></html>

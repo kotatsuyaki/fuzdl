@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/image/write/channels.rs`."><title>channels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/exr-1.5.0/src/image/write/channels.rs`."><title>channels.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="exr" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../exr/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -420,7 +422,7 @@
 
 
 <span class="doccomment">/// Enables an image containing this list of channels to be written to a file.
-</span><span class="kw">pub trait </span>WritableChannels&lt;<span class="lifetime">&#39;slf</span>&gt; {
+</span><span class="kw">pub trait </span>WritableChannels&lt;<span class="lifetime">'slf</span>&gt; {
 
     <span class="doccomment">/// Generate the file meta data for this list of channel
     </span><span class="kw">fn </span>infer_channel_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ChannelList;
@@ -432,7 +434,7 @@
     </span><span class="kw">type </span>Writer: ChannelsWriter;
 
     <span class="doccomment">/// Create a temporary writer for this list of channels
-    </span><span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;slf </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer;
+    </span><span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">'slf </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer;
 }
 
 <span class="doccomment">/// A temporary writer for a list of channels
@@ -463,8 +465,8 @@
     <span class="kw">fn </span>get_pixel(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Vec2&lt;usize&gt;) -&gt; P { <span class="self">self</span>(position) }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;samples</span>, Samples&gt; WritableChannels&lt;<span class="lifetime">&#39;samples</span>&gt; <span class="kw">for </span>AnyChannels&lt;Samples&gt;
-    <span class="kw">where </span>Samples: <span class="lifetime">&#39;samples </span>+ WritableSamples&lt;<span class="lifetime">&#39;samples</span>&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'samples</span>, Samples&gt; WritableChannels&lt;<span class="lifetime">'samples</span>&gt; <span class="kw">for </span>AnyChannels&lt;Samples&gt;
+    <span class="kw">where </span>Samples: <span class="lifetime">'samples </span>+ WritableSamples&lt;<span class="lifetime">'samples</span>&gt;
 {
     <span class="kw">fn </span>infer_channel_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ChannelList {
         ChannelList::new(<span class="self">self</span>.list.iter().map(|channel| ChannelDescription {
@@ -476,20 +478,20 @@
     }
 
     <span class="kw">fn </span>infer_level_modes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (LevelMode, RoundingMode) {
-        <span class="kw">let </span>mode = <span class="self">self</span>.list.iter().next().expect(<span class="string">&quot;zero channels in list&quot;</span>).sample_data.infer_level_modes();
+        <span class="kw">let </span>mode = <span class="self">self</span>.list.iter().next().expect(<span class="string">"zero channels in list"</span>).sample_data.infer_level_modes();
 
         <span class="macro">debug_assert!</span>(
             std::iter::repeat(mode).zip(<span class="self">self</span>.list.iter().skip(<span class="number">1</span>))
                 .all(|(first, other)| other.sample_data.infer_level_modes() == first),
 
-            <span class="string">&quot;level mode must be the same across all levels (do not nest resolution levels!)&quot;
+            <span class="string">"level mode must be the same across all levels (do not nest resolution levels!)"
         </span>);
 
         mode
     }
 
     <span class="kw">type </span>Writer = AnyChannelsWriter&lt;Samples::Writer&gt;;
-    <span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;samples </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer {
+    <span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">'samples </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer {
         <span class="kw">let </span>channels = <span class="self">self</span>.list.iter()
             .map(|chan| chan.sample_data.create_samples_writer(header))
             .collect();
@@ -517,12 +519,12 @@
 
 
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;c</span>, Channels, Storage&gt;
-WritableChannels&lt;<span class="lifetime">&#39;c</span>&gt; <span class="kw">for </span>SpecificChannels&lt;Storage, Channels&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'c</span>, Channels, Storage&gt;
+WritableChannels&lt;<span class="lifetime">'c</span>&gt; <span class="kw">for </span>SpecificChannels&lt;Storage, Channels&gt;
 <span class="kw">where
-    </span>Storage: <span class="lifetime">&#39;c </span>+ GetPixel,
+    </span>Storage: <span class="lifetime">'c </span>+ GetPixel,
     Storage::Pixel: IntoRecursive,
-    Channels: <span class="lifetime">&#39;c </span>+ Sync + Clone + IntoRecursive,
+    Channels: <span class="lifetime">'c </span>+ Sync + Clone + IntoRecursive,
     &lt;Channels <span class="kw">as </span>IntoRecursive&gt;::Recursive: WritableChannelsDescription&lt;&lt;Storage::Pixel <span class="kw">as </span>IntoRecursive&gt;::Recursive&gt;,
 {
     <span class="kw">fn </span>infer_channel_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ChannelList {
@@ -532,7 +534,7 @@ WritableChannels&lt;<span class="lifetime">&#39;c</span>&gt; <span class="kw">fo
         </span><span class="macro">debug_assert!</span>(
             <span class="comment">// check for equal neighbors in sorted vec
             </span>vec.iter().zip(vec.iter().skip(<span class="number">1</span>)).all(|(prev, next)| prev.name != next.name),
-            <span class="string">&quot;specific channels contain duplicate channel names&quot;
+            <span class="string">"specific channels contain duplicate channel names"
         </span>);
 
         ChannelList::new(vec)
@@ -543,13 +545,13 @@ WritableChannels&lt;<span class="lifetime">&#39;c</span>&gt; <span class="kw">fo
     </span>}
 
     <span class="kw">type </span>Writer = SpecificChannelsWriter&lt;
-        <span class="lifetime">&#39;c</span>,
+        <span class="lifetime">'c</span>,
         &lt;&lt;Channels <span class="kw">as </span>IntoRecursive&gt;::Recursive <span class="kw">as </span>WritableChannelsDescription&lt;&lt;Storage::Pixel <span class="kw">as </span>IntoRecursive&gt;::Recursive&gt;&gt;::RecursiveWriter,
         Storage,
         Channels
     &gt;;
 
-    <span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer {
+    <span class="kw">fn </span>create_writer(<span class="kw-2">&amp;</span><span class="lifetime">'c </span><span class="self">self</span>, header: <span class="kw-2">&amp;</span>Header) -&gt; <span class="self">Self</span>::Writer {
         SpecificChannelsWriter {
             channels: <span class="self">self</span>,
             recursive_channel_writer: <span class="self">self</span>.channels.clone().into_recursive().create_recursive_writer(<span class="kw-2">&amp;</span>header.channels),
@@ -561,14 +563,14 @@ WritableChannels&lt;<span class="lifetime">&#39;c</span>&gt; <span class="kw">fo
 
 <span class="doccomment">/// A temporary writer for a layer of channels, alpha being optional
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq)]
-</span><span class="kw">pub struct </span>SpecificChannelsWriter&lt;<span class="lifetime">&#39;channels</span>, PixelWriter, Storage, Channels&gt; {
-    channels: <span class="kw-2">&amp;</span><span class="lifetime">&#39;channels </span>SpecificChannels&lt;Storage, Channels&gt;, <span class="comment">// TODO this need not be a reference?? impl writer for specific_channels directly?
+</span><span class="kw">pub struct </span>SpecificChannelsWriter&lt;<span class="lifetime">'channels</span>, PixelWriter, Storage, Channels&gt; {
+    channels: <span class="kw-2">&amp;</span><span class="lifetime">'channels </span>SpecificChannels&lt;Storage, Channels&gt;, <span class="comment">// TODO this need not be a reference?? impl writer for specific_channels directly?
     </span>recursive_channel_writer: PixelWriter,
 }
 
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;channels</span>, PxWriter, Storage, Channels&gt; ChannelsWriter
-<span class="kw">for </span>SpecificChannelsWriter&lt;<span class="lifetime">&#39;channels</span>, PxWriter, Storage, Channels&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'channels</span>, PxWriter, Storage, Channels&gt; ChannelsWriter
+<span class="kw">for </span>SpecificChannelsWriter&lt;<span class="lifetime">'channels</span>, PxWriter, Storage, Channels&gt;
     <span class="kw">where
         </span>Channels: Sync,
         Storage: GetPixel,
@@ -582,7 +584,7 @@ WritableChannels&lt;<span class="lifetime">&#39;c</span>&gt; <span class="kw">fo
         <span class="kw">let </span>width = block_index.pixel_size.<span class="number">0</span>;
         <span class="kw">let </span>line_bytes = width * header.channels.bytes_per_pixel;
         <span class="kw">let </span>byte_lines = block_bytes.chunks_exact_mut(line_bytes);
-        <span class="macro">assert_eq!</span>(byte_lines.len(), block_index.pixel_size.height(), <span class="string">&quot;invalid block line splits&quot;</span>);
+        <span class="macro">assert_eq!</span>(byte_lines.len(), block_index.pixel_size.height(), <span class="string">"invalid block line splits"</span>);
 
         <span class="comment">//dbg!(width, line_bytes, header.channels.bytes_per_pixel, byte_lines.len());
 
@@ -635,7 +637,7 @@ WritableChannels&lt;<span class="lifetime">&#39;c</span>&gt; <span class="kw">fo
         </span><span class="kw">let </span>(start_byte_offset, target_sample_type) = channels.channels_with_byte_offset()
             .find(|(_offset, channel)| channel.name == <span class="self">self</span>.value.name)
             .map(|(offset, channel)| (offset, channel.sample_type))
-            .expect(<span class="string">&quot;a channel has not been put into channel list&quot;</span>);
+            .expect(<span class="string">"a channel has not been put into channel list"</span>);
 
         Recursive::new(<span class="self">self</span>.inner.create_recursive_writer(channels), SampleWriter {
             start_byte_offset, target_sample_type,
@@ -664,7 +666,7 @@ WritableChannelsDescription&lt;Recursive&lt;InnerPixel, Sample&gt;&gt;
             channels.channels_with_byte_offset()
                 .find(|(_offset, channel)| channel == <span class="kw-2">&amp;</span>required_channel)
                 .map(|(offset, channel)| (offset, channel.sample_type))
-                .expect(<span class="string">&quot;a channel has not been put into channel list&quot;</span>)
+                .expect(<span class="string">"a channel has not been put into channel list"</span>)
         );
 
         Recursive::new(
@@ -708,7 +710,7 @@ WritableChannelsDescription&lt;Recursive&lt;InnerPixel, Sample&gt;&gt;
         <span class="kw">let </span>byte_count = samples.len() * <span class="self">self</span>.target_sample_type.bytes_per_sample();
         <span class="kw">let </span><span class="kw-2">ref mut </span>byte_writer = <span class="kw-2">&amp;mut </span>bytes[byte_start_index..byte_start_index + byte_count];
 
-        <span class="kw">let </span>write_error_msg = <span class="string">&quot;invalid memory buffer length when writing&quot;</span>;
+        <span class="kw">let </span>write_error_msg = <span class="string">"invalid memory buffer length when writing"</span>;
 
         <span class="comment">// match outside the loop to avoid matching on every single sample
         </span><span class="kw">match </span><span class="self">self</span>.target_sample_type {
@@ -718,7 +720,7 @@ WritableChannelsDescription&lt;Recursive&lt;InnerPixel, Sample&gt;&gt;
             SampleType::U32 =&gt; <span class="kw">for </span>sample <span class="kw">in </span>samples { sample.to_u32().write(byte_writer).expect(write_error_msg); },
         };
 
-        <span class="macro">debug_assert!</span>(byte_writer.is_empty(), <span class="string">&quot;all samples are written, but more were expected&quot;</span>);
+        <span class="macro">debug_assert!</span>(byte_writer.is_empty(), <span class="string">"all samples are written, but more were expected"</span>);
     }
 }
 
@@ -785,18 +787,18 @@ WritableChannelsDescription&lt;Recursive&lt;InnerPixel, Sample&gt;&gt;
         <span class="kw">let </span>px = (<span class="number">2333_u32</span>, <span class="number">4_f32</span>);
         assert_is_writable_channels(
             SpecificChannels::build()
-                .with_channel(<span class="string">&quot;A&quot;</span>)
-                .with_channel(<span class="string">&quot;C&quot;</span>)
+                .with_channel(<span class="string">"A"</span>)
+                .with_channel(<span class="string">"C"</span>)
                 .with_pixels(PixelVec::new((<span class="number">3</span>, <span class="number">2</span>), <span class="macro">vec!</span>[px, px, px, px, px, px]))
         );
 
         <span class="kw">let </span>px = (<span class="number">3_f32</span>, f16::ONE, <span class="number">2333_u32</span>, <span class="number">4_f32</span>);
         assert_is_writable_channels(SpecificChannels::new(
             (
-                ChannelDescription::named(<span class="string">&quot;x&quot;</span>, SampleType::F32),
-                ChannelDescription::named(<span class="string">&quot;y&quot;</span>, SampleType::F16),
-                <span class="prelude-val">Some</span>(ChannelDescription::named(<span class="string">&quot;z&quot;</span>, SampleType::U32)),
-                <span class="prelude-val">Some</span>(ChannelDescription::named(<span class="string">&quot;p&quot;</span>, SampleType::F32)),
+                ChannelDescription::named(<span class="string">"x"</span>, SampleType::F32),
+                ChannelDescription::named(<span class="string">"y"</span>, SampleType::F16),
+                <span class="prelude-val">Some</span>(ChannelDescription::named(<span class="string">"z"</span>, SampleType::U32)),
+                <span class="prelude-val">Some</span>(ChannelDescription::named(<span class="string">"p"</span>, SampleType::F32)),
             ),
 
             PixelVec::new((<span class="number">3</span>, <span class="number">2</span>), <span class="macro">vec!</span>[px, px, px, px, px, px])
@@ -804,7 +806,7 @@ WritableChannelsDescription&lt;Recursive&lt;InnerPixel, Sample&gt;&gt;
 
 
 
-        <span class="kw">fn </span>assert_is_writable_channels&lt;<span class="lifetime">&#39;s</span>&gt;(_channels: <span class="kw">impl </span>WritableChannels&lt;<span class="lifetime">&#39;s</span>&gt;){}
+        <span class="kw">fn </span>assert_is_writable_channels&lt;<span class="lifetime">'s</span>&gt;(_channels: <span class="kw">impl </span>WritableChannels&lt;<span class="lifetime">'s</span>&gt;){}
 
     }
 }

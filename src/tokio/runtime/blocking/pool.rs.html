@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/runtime/blocking/pool.rs`."><title>pool.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/runtime/blocking/pool.rs`."><title>pool.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../tokio/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -478,7 +480,7 @@
     <span class="doccomment">/// This holds the JoinHandles for all running threads; on shutdown, the thread
     /// calling shutdown handles joining on these.
     </span>worker_threads: HashMap&lt;usize, thread::JoinHandle&lt;()&gt;&gt;,
-    <span class="doccomment">/// This is a counter used to iterate worker_threads in a consistent order (for loom&#39;s
+    <span class="doccomment">/// This is a counter used to iterate worker_threads in a consistent order (for loom's
     /// benefit).
     </span>worker_thread_index: usize,
 }
@@ -520,8 +522,8 @@
 </span><span class="attr">#[track_caller]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>spawn_blocking&lt;F, R&gt;(func: F) -&gt; JoinHandle&lt;R&gt;
 <span class="kw">where
-    </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">&#39;static</span>,
-    R: Send + <span class="lifetime">&#39;static</span>,
+    </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">'static</span>,
+    R: Send + <span class="lifetime">'static</span>,
 {
     <span class="kw">let </span>rt = context::current();
     rt.spawn_blocking(func)
@@ -538,8 +540,8 @@
     /// shutdown is already taking place, `None` will be returned.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>spawn_mandatory_blocking&lt;F, R&gt;(func: F) -&gt; <span class="prelude-ty">Option</span>&lt;JoinHandle&lt;R&gt;&gt;
     <span class="kw">where
-        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">&#39;static</span>,
-        R: Send + <span class="lifetime">&#39;static</span>,
+        </span>F: FnOnce() -&gt; R + Send + <span class="lifetime">'static</span>,
+        R: Send + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span>rt = context::current();
         rt.as_inner().spawn_mandatory_blocking(<span class="kw-2">&amp;</span>rt, func)
@@ -625,8 +627,8 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>BlockingPool {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        fmt.debug_struct(<span class="string">&quot;BlockingPool&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        fmt.debug_struct(<span class="string">"BlockingPool"</span>).finish()
     }
 }
 
@@ -637,7 +639,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>shared = <span class="self">self</span>.inner.shared.lock();
 
         <span class="kw">if </span>shared.shutdown {
-            <span class="comment">// Shutdown the task: it&#39;s fine to shutdown this task (even if
+            <span class="comment">// Shutdown the task: it's fine to shutdown this task (even if
             // mandatory) because it was scheduled after the shutdown of the
             // runtime began.
             </span>task.task.shutdown();
@@ -674,7 +676,7 @@
                         <span class="prelude-val">Err</span>(e) =&gt; {
                             <span class="comment">// The OS refused to spawn the thread and there is no thread
                             // to pick up the task that has just been pushed to the queue.
-                            </span><span class="macro">panic!</span>(<span class="string">&quot;OS can&#39;t spawn worker thread: {}&quot;</span>, e)
+                            </span><span class="macro">panic!</span>(<span class="string">"OS can't spawn worker thread: {}"</span>, e)
                         }
                     }
                 }
@@ -731,7 +733,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>shared = <span class="self">self</span>.shared.lock();
         <span class="kw">let </span><span class="kw-2">mut </span>join_on_thread = <span class="prelude-val">None</span>;
 
-        <span class="lifetime">&#39;main</span>: <span class="kw">loop </span>{
+        <span class="lifetime">'main</span>: <span class="kw">loop </span>{
             <span class="comment">// BUSY
             </span><span class="kw">while let </span><span class="prelude-val">Some</span>(task) = shared.queue.pop_front() {
                 drop(shared);
@@ -757,16 +759,16 @@
                     <span class="kw">break</span>;
                 }
 
-                <span class="comment">// Even if the condvar &quot;timed out&quot;, if the pool is entering the
+                <span class="comment">// Even if the condvar "timed out", if the pool is entering the
                 // shutdown phase, we want to perform the cleanup logic.
                 </span><span class="kw">if </span>!shared.shutdown &amp;&amp; timeout_result.timed_out() {
-                    <span class="comment">// We&#39;ll join the prior timed-out thread&#39;s JoinHandle after dropping the lock.
-                    // This isn&#39;t done when shutting down, because the thread calling shutdown will
+                    <span class="comment">// We'll join the prior timed-out thread's JoinHandle after dropping the lock.
+                    // This isn't done when shutting down, because the thread calling shutdown will
                     // handle joining everything.
                     </span><span class="kw">let </span>my_handle = shared.worker_threads.remove(<span class="kw-2">&amp;</span>worker_thread_id);
                     join_on_thread = std::mem::replace(<span class="kw-2">&amp;mut </span>shared.last_exiting_thread, my_handle);
 
-                    <span class="kw">break </span><span class="lifetime">&#39;main</span>;
+                    <span class="kw">break </span><span class="lifetime">'main</span>;
                 }
 
                 <span class="comment">// Spurious wakeup detected, go back to sleep.
@@ -782,12 +784,12 @@
                     shared = <span class="self">self</span>.shared.lock();
                 }
 
-                <span class="comment">// Work was produced, and we &quot;took&quot; it (by decrementing num_notify).
+                <span class="comment">// Work was produced, and we "took" it (by decrementing num_notify).
                 // This means that num_idle was decremented once for our wakeup.
-                // But, since we are exiting, we need to &quot;undo&quot; that, as we&#39;ll stay idle.
+                // But, since we are exiting, we need to "undo" that, as we'll stay idle.
                 </span>shared.num_idle += <span class="number">1</span>;
                 <span class="comment">// NOTE: Technically we should also do num_notify++ and notify again,
-                // but since we&#39;re shutting down anyway, that won&#39;t be necessary.
+                // but since we're shutting down anyway, that won't be necessary.
                 </span><span class="kw">break</span>;
             }
         }
@@ -801,7 +803,7 @@
         </span>shared.num_idle = shared
             .num_idle
             .checked_sub(<span class="number">1</span>)
-            .expect(<span class="string">&quot;num_idle underflowed on thread exit&quot;</span>);
+            .expect(<span class="string">"num_idle underflowed on thread exit"</span>);
 
         <span class="kw">if </span>shared.shutdown &amp;&amp; shared.num_th == <span class="number">0 </span>{
             <span class="self">self</span>.condvar.notify_one();
@@ -820,8 +822,8 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Spawner {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        fmt.debug_struct(<span class="string">&quot;blocking::Spawner&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, fmt: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        fmt.debug_struct(<span class="string">"blocking::Spawner"</span>).finish()
     }
 }
 </code></pre></div></section></main></body></html>

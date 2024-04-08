@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/object.rs`."><title>object.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/object.rs`."><title>object.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../lopdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -694,7 +696,7 @@
     <span class="doccomment">/// Can the stream be compressed by the `Document::compress()` function?
     /// Font streams may not be compressed, for example
     </span><span class="kw">pub </span>allows_compression: bool,
-    <span class="doccomment">/// Stream data&#39;s position in PDF file.
+    <span class="doccomment">/// Stream data's position in PDF file.
     </span><span class="kw">pub </span>start_position: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 }
 
@@ -773,8 +775,8 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; <span class="kw">for </span>Object {
-    <span class="kw">fn </span>from(name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt; <span class="kw">for </span>Object {
+    <span class="kw">fn </span>from(name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str) -&gt; <span class="self">Self </span>{
         Object::Name(name.as_bytes().to_vec())
     }
 }
@@ -927,27 +929,27 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Object {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
-            Object::Null =&gt; f.write_str(<span class="string">&quot;null&quot;</span>),
+            Object::Null =&gt; f.write_str(<span class="string">"null"</span>),
             Object::Boolean(<span class="kw-2">ref </span>value) =&gt; {
                 <span class="kw">if </span><span class="kw-2">*</span>value {
-                    f.write_str(<span class="string">&quot;true&quot;</span>)
+                    f.write_str(<span class="string">"true"</span>)
                 } <span class="kw">else </span>{
-                    f.write_str(<span class="string">&quot;false&quot;</span>)
+                    f.write_str(<span class="string">"false"</span>)
                 }
             }
-            Object::Integer(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="kw-2">*</span>value),
-            Object::Real(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, <span class="kw-2">*</span>value),
-            Object::Name(<span class="kw-2">ref </span>name) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;/{}&quot;</span>, String::from_utf8_lossy(name)),
-            Object::String(<span class="kw-2">ref </span>text, <span class="kw">_</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;({})&quot;</span>, String::from_utf8_lossy(text)),
+            Object::Integer(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="kw-2">*</span>value),
+            Object::Real(<span class="kw-2">ref </span>value) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="kw-2">*</span>value),
+            Object::Name(<span class="kw-2">ref </span>name) =&gt; <span class="macro">write!</span>(f, <span class="string">"/{}"</span>, String::from_utf8_lossy(name)),
+            Object::String(<span class="kw-2">ref </span>text, <span class="kw">_</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">"({})"</span>, String::from_utf8_lossy(text)),
             Object::Array(<span class="kw-2">ref </span>array) =&gt; {
-                <span class="kw">let </span>items = array.iter().map(|item| <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, item)).collect::&lt;Vec&lt;String&gt;&gt;();
-                <span class="macro">write!</span>(f, <span class="string">&quot;[{}]&quot;</span>, items.join(<span class="string">&quot; &quot;</span>))
+                <span class="kw">let </span>items = array.iter().map(|item| <span class="macro">format!</span>(<span class="string">"{:?}"</span>, item)).collect::&lt;Vec&lt;String&gt;&gt;();
+                <span class="macro">write!</span>(f, <span class="string">"[{}]"</span>, items.join(<span class="string">" "</span>))
             }
-            Object::Dictionary(<span class="kw-2">ref </span>dict) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, dict),
-            Object::Stream(<span class="kw-2">ref </span>stream) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{:?}stream...endstream&quot;</span>, stream.dict),
-            Object::Reference(<span class="kw-2">ref </span>id) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{} {} R&quot;</span>, id.<span class="number">0</span>, id.<span class="number">1</span>),
+            Object::Dictionary(<span class="kw-2">ref </span>dict) =&gt; <span class="macro">write!</span>(f, <span class="string">"{:?}"</span>, dict),
+            Object::Stream(<span class="kw-2">ref </span>stream) =&gt; <span class="macro">write!</span>(f, <span class="string">"{:?}stream...endstream"</span>, stream.dict),
+            Object::Reference(<span class="kw-2">ref </span>id) =&gt; <span class="macro">write!</span>(f, <span class="string">"{} {} R"</span>, id.<span class="number">0</span>, id.<span class="number">1</span>),
         }
     }
 }
@@ -967,7 +969,7 @@
 
     <span class="doccomment">/// Extract object from dictionary, dereferencing the object if it
     /// is a reference.
-    </span><span class="kw">pub fn </span>get_deref&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8], doc: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Document) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Object&gt; {
+    </span><span class="kw">pub fn </span>get_deref&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8], doc: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Document) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Object&gt; {
         doc.dereference(<span class="self">self</span>.get(key)<span class="question-mark">?</span>).map(|(<span class="kw">_</span>, object)| object)
     }
 
@@ -996,27 +998,27 @@
     }
 
     <span class="kw">pub fn </span>type_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
-        <span class="self">self</span>.get(<span class="string">b&quot;Type&quot;</span>)
+        <span class="self">self</span>.get(<span class="string">b"Type"</span>)
             .and_then(Object::as_name_str)
-            .or_else(|<span class="kw">_</span>| <span class="self">self</span>.get(<span class="string">b&quot;Linearized&quot;</span>).and(<span class="prelude-val">Ok</span>(<span class="string">&quot;Linearized&quot;</span>)))
+            .or_else(|<span class="kw">_</span>| <span class="self">self</span>.get(<span class="string">b"Linearized"</span>).and(<span class="prelude-val">Ok</span>(<span class="string">"Linearized"</span>)))
     }
 
     <span class="kw">pub fn </span>type_is(<span class="kw-2">&amp;</span><span class="self">self</span>, type_name: <span class="kw-2">&amp;</span>[u8]) -&gt; bool {
-        <span class="self">self</span>.get(<span class="string">b&quot;Type&quot;</span>).and_then(Object::as_name).ok() == <span class="prelude-val">Some</span>(type_name)
+        <span class="self">self</span>.get(<span class="string">b"Type"</span>).and_then(Object::as_name).ok() == <span class="prelude-val">Some</span>(type_name)
     }
 
-    <span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, Vec&lt;u8&gt;, Object&gt; {
+    <span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">'_</span>, Vec&lt;u8&gt;, Object&gt; {
         <span class="self">self</span>.<span class="number">0</span>.iter()
     }
 
-    <span class="kw">pub fn </span>iter_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; IterMut&lt;<span class="lifetime">&#39;_</span>, Vec&lt;u8&gt;, Object&gt; {
+    <span class="kw">pub fn </span>iter_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; IterMut&lt;<span class="lifetime">'_</span>, Vec&lt;u8&gt;, Object&gt; {
         <span class="self">self</span>.<span class="number">0</span>.iter_mut()
     }
 
     <span class="kw">pub fn </span>get_font_encoding(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
-        <span class="self">self</span>.get(<span class="string">b&quot;Encoding&quot;</span>)
+        <span class="self">self</span>.get(<span class="string">b"Encoding"</span>)
             .and_then(Object::as_name_str)
-            .unwrap_or(<span class="string">&quot;StandardEncoding&quot;</span>)
+            .unwrap_or(<span class="string">"StandardEncoding"</span>)
     }
 
     <span class="kw">pub fn </span>extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Dictionary) {
@@ -1130,18 +1132,18 @@
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Dictionary {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">let </span>entries = <span class="self">self
             </span>.into_iter()
-            .map(|(key, value)| <span class="macro">format!</span>(<span class="string">&quot;/{} {:?}&quot;</span>, String::from_utf8_lossy(key), value))
+            .map(|(key, value)| <span class="macro">format!</span>(<span class="string">"/{} {:?}"</span>, String::from_utf8_lossy(key), value))
             .collect::&lt;Vec&lt;String&gt;&gt;();
-        <span class="macro">write!</span>(f, <span class="string">&quot;&lt;&lt;{}&gt;&gt;&quot;</span>, entries.concat())
+        <span class="macro">write!</span>(f, <span class="string">"&lt;&lt;{}&gt;&gt;"</span>, entries.concat())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Dictionary {
-    <span class="kw">type </span>Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Object);
-    <span class="kw">type </span>IntoIter = linked_hash_map::Iter&lt;<span class="lifetime">&#39;a</span>, Vec&lt;u8&gt;, Object&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'a </span>Dictionary {
+    <span class="kw">type </span>Item = (<span class="kw-2">&amp;</span><span class="lifetime">'a </span>Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Object);
+    <span class="kw">type </span>IntoIter = linked_hash_map::Iter&lt;<span class="lifetime">'a</span>, Vec&lt;u8&gt;, Object&gt;;
 
     <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
         <span class="self">self</span>.<span class="number">0</span>.iter()
@@ -1161,7 +1163,7 @@
 
 <span class="kw">impl </span>Stream {
     <span class="kw">pub fn </span>new(<span class="kw-2">mut </span>dict: Dictionary, content: Vec&lt;u8&gt;) -&gt; Stream {
-        dict.set(<span class="string">&quot;Length&quot;</span>, content.len() <span class="kw">as </span>i64);
+        dict.set(<span class="string">"Length"</span>, content.len() <span class="kw">as </span>i64);
         Stream {
             dict,
             content,
@@ -1194,7 +1196,7 @@
     }
 
     <span class="kw">pub fn </span>filters(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;&gt; {
-        <span class="kw">let </span>filter = <span class="self">self</span>.dict.get(<span class="string">b&quot;Filter&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>filter = <span class="self">self</span>.dict.get(<span class="string">b"Filter"</span>)<span class="question-mark">?</span>;
 
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(name) = filter.as_name_str() {
             <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[name.into()])
@@ -1214,13 +1216,13 @@
 
     <span class="kw">pub fn </span>set_content(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content: Vec&lt;u8&gt;) {
         <span class="self">self</span>.content = content;
-        <span class="self">self</span>.dict.set(<span class="string">&quot;Length&quot;</span>, <span class="self">self</span>.content.len() <span class="kw">as </span>i64);
+        <span class="self">self</span>.dict.set(<span class="string">"Length"</span>, <span class="self">self</span>.content.len() <span class="kw">as </span>i64);
     }
 
     <span class="kw">pub fn </span>set_plain_content(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content: Vec&lt;u8&gt;) {
-        <span class="self">self</span>.dict.remove(<span class="string">b&quot;DecodeParms&quot;</span>);
-        <span class="self">self</span>.dict.remove(<span class="string">b&quot;Filter&quot;</span>);
-        <span class="self">self</span>.dict.set(<span class="string">&quot;Length&quot;</span>, content.len() <span class="kw">as </span>i64);
+        <span class="self">self</span>.dict.remove(<span class="string">b"DecodeParms"</span>);
+        <span class="self">self</span>.dict.remove(<span class="string">b"Filter"</span>);
+        <span class="self">self</span>.dict.set(<span class="string">"Length"</span>, content.len() <span class="kw">as </span>i64);
         <span class="self">self</span>.content = content;
     }
 
@@ -1229,12 +1231,12 @@
         <span class="kw">use </span>flate2::Compression;
         <span class="kw">use </span>std::io::prelude::<span class="kw-2">*</span>;
 
-        <span class="kw">if </span><span class="self">self</span>.dict.get(<span class="string">b&quot;Filter&quot;</span>).is_err() {
+        <span class="kw">if </span><span class="self">self</span>.dict.get(<span class="string">b"Filter"</span>).is_err() {
             <span class="kw">let </span><span class="kw-2">mut </span>encoder = ZlibEncoder::new(Vec::new(), Compression::best());
             encoder.write_all(<span class="self">self</span>.content.as_slice())<span class="question-mark">?</span>;
             <span class="kw">let </span>compressed = encoder.finish()<span class="question-mark">?</span>;
             <span class="kw">if </span>compressed.len() + <span class="number">19 </span>&lt; <span class="self">self</span>.content.len() {
-                <span class="self">self</span>.dict.set(<span class="string">&quot;Filter&quot;</span>, <span class="string">&quot;FlateDecode&quot;</span>);
+                <span class="self">self</span>.dict.set(<span class="string">"Filter"</span>, <span class="string">"FlateDecode"</span>);
                 <span class="self">self</span>.set_content(compressed);
             }
         }
@@ -1242,10 +1244,10 @@
     }
 
     <span class="kw">pub fn </span>decompressed_content(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;&gt; {
-        <span class="kw">let </span>params = <span class="self">self</span>.dict.get(<span class="string">b&quot;DecodeParms&quot;</span>).and_then(Object::as_dict).ok();
+        <span class="kw">let </span>params = <span class="self">self</span>.dict.get(<span class="string">b"DecodeParms"</span>).and_then(Object::as_dict).ok();
         <span class="kw">let </span>filters = <span class="self">self</span>.filters()<span class="question-mark">?</span>;
 
-        <span class="kw">if </span><span class="self">self</span>.dict.get(<span class="string">b&quot;Subtype&quot;</span>).and_then(Object::as_name_str).ok() == <span class="prelude-val">Some</span>(<span class="string">&quot;Image&quot;</span>) {
+        <span class="kw">if </span><span class="self">self</span>.dict.get(<span class="string">b"Subtype"</span>).and_then(Object::as_name_str).ok() == <span class="prelude-val">Some</span>(<span class="string">"Image"</span>) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Type);
         }
 
@@ -1255,8 +1257,8 @@
         <span class="comment">// Filters are in decoding order.
         </span><span class="kw">for </span>filter <span class="kw">in </span>filters {
             output = <span class="prelude-val">Some</span>(<span class="kw">match </span>filter.as_str() {
-                <span class="string">&quot;FlateDecode&quot; </span>=&gt; <span class="self">Self</span>::decompress_zlib(input, params)<span class="question-mark">?</span>,
-                <span class="string">&quot;LZWDecode&quot; </span>=&gt; <span class="self">Self</span>::decompress_lzw(input, params)<span class="question-mark">?</span>,
+                <span class="string">"FlateDecode" </span>=&gt; <span class="self">Self</span>::decompress_zlib(input, params)<span class="question-mark">?</span>,
+                <span class="string">"LZWDecode" </span>=&gt; <span class="self">Self</span>::decompress_lzw(input, params)<span class="question-mark">?</span>,
                 <span class="kw">_ </span>=&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(Error::Type);
                 }
@@ -1272,7 +1274,7 @@
         <span class="kw">const </span>MIN_BITS: u8 = <span class="number">9</span>;
 
         <span class="kw">let </span>early_change = params
-            .and_then(|p| p.get(<span class="string">b&quot;EarlyChange&quot;</span>).ok())
+            .and_then(|p| p.get(<span class="string">b"EarlyChange"</span>).ok())
             .and_then(|p| Object::as_i64(p).ok())
             .map(|v| v != <span class="number">0</span>)
             .unwrap_or(<span class="bool-val">true</span>);
@@ -1292,7 +1294,7 @@
 
         <span class="kw">let </span>result = decoder.into_stream(<span class="kw-2">&amp;mut </span>output).decode_all(input);
         <span class="kw">if let </span><span class="prelude-val">Err</span>(err) = result.status {
-            <span class="macro">warn!</span>(<span class="string">&quot;{}&quot;</span>, err);
+            <span class="macro">warn!</span>(<span class="string">"{}"</span>, err);
         }
 
         output
@@ -1307,7 +1309,7 @@
 
         <span class="kw">if </span>!input.is_empty() {
             decoder.read_to_end(<span class="kw-2">&amp;mut </span>output).unwrap_or_else(|err| {
-                <span class="macro">warn!</span>(<span class="string">&quot;{}&quot;</span>, err);
+                <span class="macro">warn!</span>(<span class="string">"{}"</span>, err);
                 <span class="number">0
             </span>});
         }
@@ -1318,11 +1320,11 @@
         <span class="kw">use </span><span class="kw">crate</span>::filters::png;
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(params) = params {
-            <span class="kw">let </span>predictor = params.get(<span class="string">b&quot;Predictor&quot;</span>).and_then(Object::as_i64).unwrap_or(<span class="number">1</span>);
+            <span class="kw">let </span>predictor = params.get(<span class="string">b"Predictor"</span>).and_then(Object::as_i64).unwrap_or(<span class="number">1</span>);
             <span class="kw">if </span>(<span class="number">10</span>..=<span class="number">15</span>).contains(<span class="kw-2">&amp;</span>predictor) {
-                <span class="kw">let </span>pixels_per_row = params.get(<span class="string">b&quot;Columns&quot;</span>).and_then(Object::as_i64).unwrap_or(<span class="number">1</span>) <span class="kw">as </span>usize;
-                <span class="kw">let </span>colors = params.get(<span class="string">b&quot;Colors&quot;</span>).and_then(Object::as_i64).unwrap_or(<span class="number">1</span>) <span class="kw">as </span>usize;
-                <span class="kw">let </span>bits = params.get(<span class="string">b&quot;BitsPerComponent&quot;</span>).and_then(Object::as_i64).unwrap_or(<span class="number">8</span>) <span class="kw">as </span>usize;
+                <span class="kw">let </span>pixels_per_row = params.get(<span class="string">b"Columns"</span>).and_then(Object::as_i64).unwrap_or(<span class="number">1</span>) <span class="kw">as </span>usize;
+                <span class="kw">let </span>colors = params.get(<span class="string">b"Colors"</span>).and_then(Object::as_i64).unwrap_or(<span class="number">1</span>) <span class="kw">as </span>usize;
+                <span class="kw">let </span>bits = params.get(<span class="string">b"BitsPerComponent"</span>).and_then(Object::as_i64).unwrap_or(<span class="number">8</span>) <span class="kw">as </span>usize;
                 <span class="kw">let </span>bytes_per_pixel = colors * bits / <span class="number">8</span>;
                 data = png::decode_frame(data.as_slice(), bytes_per_pixel, pixels_per_row)<span class="question-mark">?</span>;
             }
@@ -1334,8 +1336,8 @@
 
     <span class="kw">pub fn </span>decompress(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(data) = <span class="self">self</span>.decompressed_content() {
-            <span class="self">self</span>.dict.remove(<span class="string">b&quot;DecodeParms&quot;</span>);
-            <span class="self">self</span>.dict.remove(<span class="string">b&quot;Filter&quot;</span>);
+            <span class="self">self</span>.dict.remove(<span class="string">b"DecodeParms"</span>);
+            <span class="self">self</span>.dict.remove(<span class="string">b"Filter"</span>);
             <span class="self">self</span>.set_content(data);
         }
     }

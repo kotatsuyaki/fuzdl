@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/encoding-0.2.33/src/codec/tradchinese.rs`."><title>tradchinese.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="encoding" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/encoding-0.2.33/src/codec/tradchinese.rs`."><title>tradchinese.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="encoding" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../encoding/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -305,8 +307,8 @@
 </span><span class="kw">pub struct </span>BigFive2003Encoding;
 
 <span class="kw">impl </span>Encoding <span class="kw">for </span>BigFive2003Encoding {
-    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str { <span class="string">&quot;big5-2003&quot; </span>}
-    <span class="kw">fn </span>whatwg_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; { <span class="prelude-val">Some</span>(<span class="string">&quot;big5&quot;</span>) } <span class="comment">// WHATWG compatibility
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str { <span class="string">"big5-2003" </span>}
+    <span class="kw">fn </span>whatwg_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>str&gt; { <span class="prelude-val">Some</span>(<span class="string">"big5"</span>) } <span class="comment">// WHATWG compatibility
     </span><span class="kw">fn </span>raw_encoder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;RawEncoder&gt; { BigFive2003Encoder::new() }
     <span class="kw">fn </span>raw_decoder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;RawDecoder&gt; { BigFive2003HKSCS2008Decoder::new() }
 }
@@ -327,14 +329,14 @@
         output.writer_hint(input.len());
 
         <span class="kw">for </span>((i,j), ch) <span class="kw">in </span>input.index_iter() {
-            <span class="kw">if </span>ch &lt; <span class="string">&#39;\u{80}&#39; </span>{
+            <span class="kw">if </span>ch &lt; <span class="string">'\u{80}' </span>{
                 output.write_byte(ch <span class="kw">as </span>u8);
             } <span class="kw">else </span>{
                 <span class="kw">let </span>ptr = index::big5::backward(ch <span class="kw">as </span>u32);
                 <span class="kw">if </span>ptr == <span class="number">0xffff </span>|| ptr &lt; (<span class="number">0xa1 </span>- <span class="number">0x81</span>) * <span class="number">157 </span>{
-                    <span class="comment">// no HKSCS extension (XXX doesn&#39;t HKSCS include 0xFA40..0xFEFE?)
+                    <span class="comment">// no HKSCS extension (XXX doesn't HKSCS include 0xFA40..0xFEFE?)
                     </span><span class="kw">return </span>(i, <span class="prelude-val">Some</span>(CodecError {
-                        upto: j <span class="kw">as </span>isize, cause: <span class="string">&quot;unrepresentable character&quot;</span>.into()
+                        upto: j <span class="kw">as </span>isize, cause: <span class="string">"unrepresentable character"</span>.into()
                     }));
                 }
                 <span class="kw">let </span>lead = ptr / <span class="number">157 </span>+ <span class="number">0x81</span>;
@@ -404,7 +406,7 @@ initial:
     </span>state S0(ctx: Context) {
         case b @ <span class="number">0x00</span>...<span class="number">0x7f </span>=&gt; ctx.emit(b <span class="kw">as </span>u32);
         case b @ <span class="number">0x81</span>...<span class="number">0xfe </span>=&gt; S1(ctx, b);
-        case <span class="kw">_ </span>=&gt; ctx.err(<span class="string">&quot;invalid sequence&quot;</span>);
+        case <span class="kw">_ </span>=&gt; ctx.err(<span class="string">"invalid sequence"</span>);
     }
 
 transient:
@@ -413,12 +415,12 @@ transient:
         case b =&gt; <span class="kw">match </span>map_two_bytes(lead, b) {
             <span class="number">0xffff </span>=&gt; {
                 <span class="kw">let </span>backup = <span class="kw">if </span>b &lt; <span class="number">0x80 </span>{<span class="number">1</span>} <span class="kw">else </span>{<span class="number">0</span>};
-                ctx.backup_and_err(backup, <span class="string">&quot;invalid sequence&quot;</span>)
+                ctx.backup_and_err(backup, <span class="string">"invalid sequence"</span>)
             },
-            <span class="number">0 </span><span class="comment">/*index=1133*/ </span>=&gt; ctx.emit_str(<span class="string">&quot;\u{ca}\u{304}&quot;</span>),
-            <span class="number">1 </span><span class="comment">/*index=1135*/ </span>=&gt; ctx.emit_str(<span class="string">&quot;\u{ca}\u{30c}&quot;</span>),
-            <span class="number">2 </span><span class="comment">/*index=1164*/ </span>=&gt; ctx.emit_str(<span class="string">&quot;\u{ea}\u{304}&quot;</span>),
-            <span class="number">3 </span><span class="comment">/*index=1166*/ </span>=&gt; ctx.emit_str(<span class="string">&quot;\u{ea}\u{30c}&quot;</span>),
+            <span class="number">0 </span><span class="comment">/*index=1133*/ </span>=&gt; ctx.emit_str(<span class="string">"\u{ca}\u{304}"</span>),
+            <span class="number">1 </span><span class="comment">/*index=1135*/ </span>=&gt; ctx.emit_str(<span class="string">"\u{ca}\u{30c}"</span>),
+            <span class="number">2 </span><span class="comment">/*index=1164*/ </span>=&gt; ctx.emit_str(<span class="string">"\u{ea}\u{304}"</span>),
+            <span class="number">3 </span><span class="comment">/*index=1166*/ </span>=&gt; ctx.emit_str(<span class="string">"\u{ea}\u{30c}"</span>),
             ch =&gt; ctx.emit(ch),
         };
     }
@@ -434,57 +436,57 @@ transient:
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_encoder_valid() {
         <span class="kw">let </span><span class="kw-2">mut </span>e = BigFive2003Encoding.raw_encoder();
-        <span class="macro">assert_feed_ok!</span>(e, <span class="string">&quot;A&quot;</span>, <span class="string">&quot;&quot;</span>, [<span class="number">0x41</span>]);
-        <span class="macro">assert_feed_ok!</span>(e, <span class="string">&quot;BC&quot;</span>, <span class="string">&quot;&quot;</span>, [<span class="number">0x42</span>, <span class="number">0x43</span>]);
-        <span class="macro">assert_feed_ok!</span>(e, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, []);
-        <span class="macro">assert_feed_ok!</span>(e, <span class="string">&quot;\u{4e2d}\u{83ef}\u{6c11}\u{570b}&quot;</span>, <span class="string">&quot;&quot;</span>,
+        <span class="macro">assert_feed_ok!</span>(e, <span class="string">"A"</span>, <span class="string">""</span>, [<span class="number">0x41</span>]);
+        <span class="macro">assert_feed_ok!</span>(e, <span class="string">"BC"</span>, <span class="string">""</span>, [<span class="number">0x42</span>, <span class="number">0x43</span>]);
+        <span class="macro">assert_feed_ok!</span>(e, <span class="string">""</span>, <span class="string">""</span>, []);
+        <span class="macro">assert_feed_ok!</span>(e, <span class="string">"\u{4e2d}\u{83ef}\u{6c11}\u{570b}"</span>, <span class="string">""</span>,
                         [<span class="number">0xa4</span>, <span class="number">0xa4</span>, <span class="number">0xb5</span>, <span class="number">0xd8</span>, <span class="number">0xa5</span>, <span class="number">0xc1</span>, <span class="number">0xb0</span>, <span class="number">0xea</span>]);
-        <span class="macro">assert_feed_ok!</span>(e, <span class="string">&quot;1\u{20ac}/m&quot;</span>, <span class="string">&quot;&quot;</span>, [<span class="number">0x31</span>, <span class="number">0xa3</span>, <span class="number">0xe1</span>, <span class="number">0x2f</span>, <span class="number">0x6d</span>]);
-        <span class="macro">assert_feed_ok!</span>(e, <span class="string">&quot;\u{ffed}&quot;</span>, <span class="string">&quot;&quot;</span>, [<span class="number">0xf9</span>, <span class="number">0xfe</span>]);
+        <span class="macro">assert_feed_ok!</span>(e, <span class="string">"1\u{20ac}/m"</span>, <span class="string">""</span>, [<span class="number">0x31</span>, <span class="number">0xa3</span>, <span class="number">0xe1</span>, <span class="number">0x2f</span>, <span class="number">0x6d</span>]);
+        <span class="macro">assert_feed_ok!</span>(e, <span class="string">"\u{ffed}"</span>, <span class="string">""</span>, [<span class="number">0xf9</span>, <span class="number">0xfe</span>]);
         <span class="macro">assert_finish_ok!</span>(e, []);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_encoder_invalid() {
         <span class="kw">let </span><span class="kw-2">mut </span>e = BigFive2003Encoding.raw_encoder();
-        <span class="macro">assert_feed_err!</span>(e, <span class="string">&quot;&quot;</span>, <span class="string">&quot;\u{ffff}&quot;</span>, <span class="string">&quot;&quot;</span>, []);
-        <span class="macro">assert_feed_err!</span>(e, <span class="string">&quot;?&quot;</span>, <span class="string">&quot;\u{ffff}&quot;</span>, <span class="string">&quot;!&quot;</span>, [<span class="number">0x3f</span>]);
-        <span class="macro">assert_feed_err!</span>(e, <span class="string">&quot;&quot;</span>, <span class="string">&quot;\u{3eec}&quot;</span>, <span class="string">&quot;\u{4e00}&quot;</span>, []); <span class="comment">// HKSCS-2008 addition
+        <span class="macro">assert_feed_err!</span>(e, <span class="string">""</span>, <span class="string">"\u{ffff}"</span>, <span class="string">""</span>, []);
+        <span class="macro">assert_feed_err!</span>(e, <span class="string">"?"</span>, <span class="string">"\u{ffff}"</span>, <span class="string">"!"</span>, [<span class="number">0x3f</span>]);
+        <span class="macro">assert_feed_err!</span>(e, <span class="string">""</span>, <span class="string">"\u{3eec}"</span>, <span class="string">"\u{4e00}"</span>, []); <span class="comment">// HKSCS-2008 addition
         </span><span class="macro">assert_finish_ok!</span>(e, []);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decoder_valid() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x41</span>], [], <span class="string">&quot;A&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x42</span>, <span class="number">0x43</span>], [], <span class="string">&quot;BC&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x41</span>], [], <span class="string">"A"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x42</span>, <span class="number">0x43</span>], [], <span class="string">"BC"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [], <span class="string">""</span>);
         <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0xa4</span>, <span class="number">0xb5</span>, <span class="number">0xd8</span>, <span class="number">0xa5</span>, <span class="number">0xc1</span>, <span class="number">0xb0</span>, <span class="number">0xea</span>], [],
-                        <span class="string">&quot;\u{4e2d}\u{83ef}\u{6c11}\u{570b}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xa4</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0xb5</span>, <span class="number">0xd8</span>], [<span class="number">0xa5</span>], <span class="string">&quot;\u{4e2d}\u{83ef}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc1</span>, <span class="number">0xb0</span>, <span class="number">0xea</span>], [], <span class="string">&quot;\u{6c11}\u{570b}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x31</span>, <span class="number">0xa3</span>, <span class="number">0xe1</span>, <span class="number">0x2f</span>, <span class="number">0x6d</span>], [], <span class="string">&quot;1\u{20ac}/m&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf9</span>, <span class="number">0xfe</span>], [], <span class="string">&quot;\u{ffed}&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x87</span>, <span class="number">0x7e</span>], [], <span class="string">&quot;\u{3eec}&quot;</span>); <span class="comment">// HKSCS-2008 addition
+                        <span class="string">"\u{4e2d}\u{83ef}\u{6c11}\u{570b}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [], [<span class="number">0xa4</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0xb5</span>, <span class="number">0xd8</span>], [<span class="number">0xa5</span>], <span class="string">"\u{4e2d}\u{83ef}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xc1</span>, <span class="number">0xb0</span>, <span class="number">0xea</span>], [], <span class="string">"\u{6c11}\u{570b}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x31</span>, <span class="number">0xa3</span>, <span class="number">0xe1</span>, <span class="number">0x2f</span>, <span class="number">0x6d</span>], [], <span class="string">"1\u{20ac}/m"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xf9</span>, <span class="number">0xfe</span>], [], <span class="string">"\u{ffed}"</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x87</span>, <span class="number">0x7e</span>], [], <span class="string">"\u{3eec}"</span>); <span class="comment">// HKSCS-2008 addition
         </span><span class="macro">assert_feed_ok!</span>(d, [<span class="number">0x88</span>, <span class="number">0x62</span>, <span class="number">0x88</span>, <span class="number">0x64</span>, <span class="number">0x88</span>, <span class="number">0xa3</span>, <span class="number">0x88</span>, <span class="number">0xa5</span>], [],
-                        <span class="string">&quot;\u{ca}\u{304}\u{00ca}\u{30c}\u{ea}\u{304}\u{ea}\u{30c}&quot;</span>); <span class="comment">// 2-byte output
-        </span><span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+                        <span class="string">"\u{ca}\u{304}\u{00ca}\u{30c}\u{ea}\u{304}\u{ea}\u{30c}"</span>); <span class="comment">// 2-byte output
+        </span><span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decoder_invalid_lone_lead_immediate_test_finish() {
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0x81</span>..<span class="number">0xff </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [i], <span class="string">&quot;&quot;</span>); <span class="comment">// wait for a trail
-            </span><span class="macro">assert_finish_err!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [i], <span class="string">""</span>); <span class="comment">// wait for a trail
+            </span><span class="macro">assert_finish_err!</span>(d, <span class="string">""</span>);
         }
 
         <span class="comment">// 80/FF: immediate failure
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
@@ -492,8 +494,8 @@ transient:
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0x80</span>..<span class="number">0x100 </span>{
             <span class="kw">let </span>i = i <span class="kw">as </span>u8;
             <span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [i], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [i], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
     }
 
@@ -503,34 +505,34 @@ transient:
         // https://www.w3.org/Bugs/Public/show_bug.cgi?id=16771
         </span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0x81</span>..<span class="number">0xff </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-            <span class="macro">assert_feed_err!</span>(d, [], [i, <span class="number">0x80</span>], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_feed_err!</span>(d, [], [i, <span class="number">0xff</span>], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [i, <span class="number">0x80</span>], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [i, <span class="number">0xff</span>], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-            <span class="macro">assert_feed_ok!</span>(d, [], [i], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_feed_ok!</span>(d, [], [i], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0x20</span>], <span class="string">&quot;&quot;</span>);
-            <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [i], <span class="string">""</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_feed_ok!</span>(d, [], [i], <span class="string">""</span>);
+            <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0x20</span>], <span class="string">""</span>);
+            <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
         }
 
         <span class="comment">// 80/FF is not a valid lead and the trail is not consumed
         </span><span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [<span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [<span class="number">0xff</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0x80</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0xff</span>], <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [<span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0x80</span>], [<span class="number">0xff</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0x80</span>], <span class="string">""</span>);
+        <span class="macro">assert_feed_err!</span>(d, [], [<span class="number">0xff</span>], [<span class="number">0xff</span>], <span class="string">""</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_decoder_feed_after_finish() {
         <span class="kw">let </span><span class="kw-2">mut </span>d = BigFive2003Encoding.raw_decoder();
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0x40</span>], [<span class="number">0xa4</span>], <span class="string">&quot;\u{4e00}&quot;</span>);
-        <span class="macro">assert_finish_err!</span>(d, <span class="string">&quot;&quot;</span>);
-        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0x40</span>], [], <span class="string">&quot;\u{4e00}&quot;</span>);
-        <span class="macro">assert_finish_ok!</span>(d, <span class="string">&quot;&quot;</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0x40</span>], [<span class="number">0xa4</span>], <span class="string">"\u{4e00}"</span>);
+        <span class="macro">assert_finish_err!</span>(d, <span class="string">""</span>);
+        <span class="macro">assert_feed_ok!</span>(d, [<span class="number">0xa4</span>, <span class="number">0x40</span>], [], <span class="string">"\u{4e00}"</span>);
+        <span class="macro">assert_finish_ok!</span>(d, <span class="string">""</span>);
     }
 
     <span class="attr">#[bench]

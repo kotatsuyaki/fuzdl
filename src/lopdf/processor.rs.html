@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/processor.rs`."><title>processor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/lopdf-0.27.0/src/processor.rs`."><title>processor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="lopdf" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../lopdf/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -267,13 +269,13 @@
 <span class="kw">impl </span>Document {
     <span class="doccomment">/// Change producer of document information dictionary.
     </span><span class="kw">pub fn </span>change_producer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, producer: <span class="kw-2">&amp;</span>str) {
-        <span class="kw">if let </span><span class="prelude-val">Ok</span>(info) = <span class="self">self</span>.trailer.get_mut(<span class="string">b&quot;Info&quot;</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(info) = <span class="self">self</span>.trailer.get_mut(<span class="string">b"Info"</span>) {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(dict) = <span class="kw">match </span><span class="kw-2">*</span>info {
                 Object::Dictionary(<span class="kw-2">ref mut </span>dict) =&gt; <span class="prelude-val">Some</span>(dict),
                 Object::Reference(<span class="kw-2">ref </span>id) =&gt; <span class="self">self</span>.objects.get_mut(id).and_then(|o| o.as_dict_mut().ok()),
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
             } {
-                dict.set(<span class="string">&quot;Producer&quot;</span>, Object::string_literal(producer));
+                dict.set(<span class="string">"Producer"</span>, Object::string_literal(producer));
             }
         }
     }
@@ -306,14 +308,14 @@
             <span class="kw">if let </span><span class="prelude-val">Some</span>(page) = pages.get(<span class="kw-2">&amp;</span>page_number).and_then(|page_id| <span class="self">self</span>.delete_object(<span class="kw-2">*</span>page_id)) {
                 <span class="kw">let </span><span class="kw-2">mut </span>page_tree_ref = page
                     .as_dict()
-                    .and_then(|dict| dict.get(<span class="string">b&quot;Parent&quot;</span>))
+                    .and_then(|dict| dict.get(<span class="string">b"Parent"</span>))
                     .and_then(Object::as_reference);
                 <span class="kw">while let </span><span class="prelude-val">Ok</span>(page_tree_id) = page_tree_ref {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(page_tree) = <span class="self">self</span>.objects.get_mut(<span class="kw-2">&amp;</span>page_tree_id).and_then(|pt| pt.as_dict_mut().ok()) {
-                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(count) = page_tree.get(<span class="string">b&quot;Count&quot;</span>).and_then(Object::as_i64) {
-                            page_tree.set(<span class="string">&quot;Count&quot;</span>, count - <span class="number">1</span>);
+                        <span class="kw">if let </span><span class="prelude-val">Ok</span>(count) = page_tree.get(<span class="string">b"Count"</span>).and_then(Object::as_i64) {
+                            page_tree.set(<span class="string">"Count"</span>, count - <span class="number">1</span>);
                         }
-                        page_tree_ref = page_tree.get(<span class="string">b&quot;Parent&quot;</span>).and_then(Object::as_reference);
+                        page_tree_ref = page_tree.get(<span class="string">b"Parent"</span>).and_then(Object::as_reference);
                     } <span class="kw">else </span>{
                         <span class="kw">break</span>;
                     }
@@ -478,7 +480,7 @@
     }
 
     <span class="kw">pub fn </span>change_page_content(<span class="kw-2">&amp;mut </span><span class="self">self</span>, page_id: ObjectId, content: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>contents = <span class="self">self</span>.get_dictionary(page_id).and_then(|page| page.get(<span class="string">b&quot;Contents&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span>contents = <span class="self">self</span>.get_dictionary(page_id).and_then(|page| page.get(<span class="string">b"Contents"</span>))<span class="question-mark">?</span>;
         <span class="kw">match </span><span class="kw-2">*</span>contents {
             Object::Reference(id) =&gt; <span class="self">self</span>.change_content_stream(id, content),
             Object::Array(<span class="kw-2">ref </span>arr) =&gt; {
@@ -490,7 +492,7 @@
                     <span class="kw">let </span>new_stream = <span class="self">self</span>.add_object(<span class="kw">super</span>::Stream::new(<span class="macro">dictionary! </span>{}, content));
                     <span class="kw">if let </span><span class="prelude-val">Ok</span>(page) = <span class="self">self</span>.get_object_mut(page_id) {
                         <span class="kw">if let </span>Object::Dictionary(<span class="kw-2">ref mut </span>dict) = <span class="kw-2">*</span>page {
-                            dict.set(<span class="string">&quot;Contents&quot;</span>, new_stream);
+                            dict.set(<span class="string">"Contents"</span>, new_stream);
                         }
                     }
                 }
@@ -501,7 +503,7 @@
     }
 
     <span class="kw">pub fn </span>extract_stream(<span class="kw-2">&amp;</span><span class="self">self</span>, stream_id: ObjectId, decompress: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>file = File::create(<span class="macro">format!</span>(<span class="string">&quot;{:?}.bin&quot;</span>, stream_id))<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>file = File::create(<span class="macro">format!</span>(<span class="string">"{:?}.bin"</span>, stream_id))<span class="question-mark">?</span>;
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(stream_obj) = <span class="self">self</span>.get_object(stream_id) {
             <span class="kw">if let </span>Object::Stream(<span class="kw-2">ref </span>stream) = <span class="kw-2">*</span>stream_obj {
                 <span class="kw">if </span>decompress {

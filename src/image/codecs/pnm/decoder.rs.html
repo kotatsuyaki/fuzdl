@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/pnm/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/pnm/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1294,9 +1296,9 @@
 <span class="doccomment">/// All errors that can occur when attempting to parse a PNM
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">enum </span>DecoderError {
-    <span class="doccomment">/// PNM&#39;s &quot;P[123456]&quot; signature wrong or missing
+    <span class="doccomment">/// PNM's "P[123456]" signature wrong or missing
     </span>PnmMagicInvalid([u8; <span class="number">2</span>]),
-    <span class="doccomment">/// Couldn&#39;t parse the specified string as an integer from the specified source
+    <span class="doccomment">/// Couldn't parse the specified string as an integer from the specified source
     </span>UnparsableValue(ErrorDataSource, String, ParseIntError),
 
     <span class="doccomment">/// More than the exactly one allowed plane specified by the format
@@ -1332,7 +1334,7 @@
     </span>UnexpectedByteInRaster(u8),
     <span class="doccomment">/// Specified sample was out of bounds (e.g. &gt;1 in B&amp;W)
     </span>SampleOutOfBounds(u8),
-    <span class="doccomment">/// The image&#39;s maxval exceeds 0xFFFF
+    <span class="doccomment">/// The image's maxval exceeds 0xFFFF
     </span>MaxvalTooBig(u32),
 
     <span class="doccomment">/// The specified tuple type supports restricted depths and maxvals, those restrictions were not met
@@ -1354,35 +1356,35 @@
 }
 
 <span class="kw">impl </span>Display <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
             DecoderError::PnmMagicInvalid(magic) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Expected magic constant for PNM: P1..P7, got [{:#04X?}, {:#04X?}]&quot;</span>,
+                <span class="string">"Expected magic constant for PNM: P1..P7, got [{:#04X?}, {:#04X?}]"</span>,
                 magic[<span class="number">0</span>], magic[<span class="number">1</span>]
             )),
             DecoderError::UnparsableValue(src, data, err) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Error parsing {:?} as {}: {}&quot;</span>, data, src, err))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Error parsing {:?} as {}: {}"</span>, data, src, err))
             }
 
             DecoderError::NonAsciiByteInHeader(c) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Non-ASCII character {:#04X?} in header&quot;</span>, c))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Non-ASCII character {:#04X?} in header"</span>, c))
             }
-            DecoderError::NonAsciiLineInPamHeader =&gt; f.write_str(<span class="string">&quot;Non-ASCII line in PAM header&quot;</span>),
+            DecoderError::NonAsciiLineInPamHeader =&gt; f.write_str(<span class="string">"Non-ASCII line in PAM header"</span>),
             DecoderError::NonAsciiSample =&gt; {
-                f.write_str(<span class="string">&quot;Non-ASCII character where sample value was expected&quot;</span>)
+                f.write_str(<span class="string">"Non-ASCII character where sample value was expected"</span>)
             }
 
             DecoderError::NotNewlineAfterP7Magic(c) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Expected newline after P7 magic, got {:#04X?}&quot;</span>,
+                <span class="string">"Expected newline after P7 magic, got {:#04X?}"</span>,
                 c
             )),
-            DecoderError::UnexpectedPnmHeaderEnd =&gt; f.write_str(<span class="string">&quot;Unexpected end of PNM header&quot;</span>),
+            DecoderError::UnexpectedPnmHeaderEnd =&gt; f.write_str(<span class="string">"Unexpected end of PNM header"</span>),
 
             DecoderError::HeaderLineDuplicated(line) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Duplicate {} line&quot;</span>, line))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Duplicate {} line"</span>, line))
             }
             DecoderError::HeaderLineUnknown(identifier) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Unknown header line with identifier {:?}&quot;</span>,
+                <span class="string">"Unknown header line with identifier {:?}"</span>,
                 identifier
             )),
             DecoderError::HeaderLineMissing {
@@ -1391,22 +1393,22 @@
                 depth,
                 maxval,
             } =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Missing header line: have height={:?}, width={:?}, depth={:?}, maxval={:?}&quot;</span>,
+                <span class="string">"Missing header line: have height={:?}, width={:?}, depth={:?}, maxval={:?}"</span>,
                 height, width, depth, maxval
             )),
 
             DecoderError::InputTooShort =&gt; {
-                f.write_str(<span class="string">&quot;Not enough data was provided to the Decoder to decode the image&quot;</span>)
+                f.write_str(<span class="string">"Not enough data was provided to the Decoder to decode the image"</span>)
             }
             DecoderError::UnexpectedByteInRaster(c) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Unexpected character {:#04X?} within sample raster&quot;</span>,
+                <span class="string">"Unexpected character {:#04X?} within sample raster"</span>,
                 c
             )),
             DecoderError::SampleOutOfBounds(val) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Sample value {} outside of bounds&quot;</span>, val))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Sample value {} outside of bounds"</span>, val))
             }
             DecoderError::MaxvalTooBig(maxval) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Image MAXVAL exceeds {}: {}&quot;</span>, <span class="number">0xFFFF</span>, maxval))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Image MAXVAL exceeds {}: {}"</span>, <span class="number">0xFFFF</span>, maxval))
             }
 
             DecoderError::InvalidDepthOrMaxval {
@@ -1414,18 +1416,18 @@
                 depth,
                 maxval,
             } =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Invalid depth ({}) or maxval ({}) for tuple type {}&quot;</span>,
+                <span class="string">"Invalid depth ({}) or maxval ({}) for tuple type {}"</span>,
                 depth,
                 maxval,
                 tuple_type.name()
             )),
             DecoderError::InvalidDepth { tuple_type, depth } =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Invalid depth ({}) for tuple type {}&quot;</span>,
+                <span class="string">"Invalid depth ({}) for tuple type {}"</span>,
                 depth,
                 tuple_type.name()
             )),
-            DecoderError::TupleTypeUnrecognised =&gt; f.write_str(<span class="string">&quot;Tuple type not recognized&quot;</span>),
-            DecoderError::Overflow =&gt; f.write_str(<span class="string">&quot;Overflow when parsing value&quot;</span>),
+            DecoderError::TupleTypeUnrecognised =&gt; f.write_str(<span class="string">"Tuple type not recognized"</span>),
+            DecoderError::Overflow =&gt; f.write_str(<span class="string">"Overflow when parsing value"</span>),
         }
     }
 }
@@ -1439,7 +1441,7 @@
 }
 
 <span class="kw">impl </span>error::Error <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>error::Error + <span class="lifetime">&#39;static</span>)&gt; {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>error::Error + <span class="lifetime">'static</span>)&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             DecoderError::UnparsableValue(<span class="kw">_</span>, <span class="kw">_</span>, err) =&gt; <span class="prelude-val">Some</span>(err),
             <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
@@ -1450,23 +1452,23 @@
 <span class="doccomment">/// Single-value lines in a PNM header
 </span><span class="attr">#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 </span><span class="kw">enum </span>PnmHeaderLine {
-    <span class="doccomment">/// &quot;HEIGHT&quot;
+    <span class="doccomment">/// "HEIGHT"
     </span>Height,
-    <span class="doccomment">/// &quot;WIDTH&quot;
+    <span class="doccomment">/// "WIDTH"
     </span>Width,
-    <span class="doccomment">/// &quot;DEPTH&quot;
+    <span class="doccomment">/// "DEPTH"
     </span>Depth,
-    <span class="doccomment">/// &quot;MAXVAL&quot;, a.k.a. `maxwhite`
+    <span class="doccomment">/// "MAXVAL", a.k.a. `maxwhite`
     </span>Maxval,
 }
 
 <span class="kw">impl </span>Display <span class="kw">for </span>PnmHeaderLine {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         f.write_str(<span class="kw">match </span><span class="self">self </span>{
-            PnmHeaderLine::Height =&gt; <span class="string">&quot;HEIGHT&quot;</span>,
-            PnmHeaderLine::Width =&gt; <span class="string">&quot;WIDTH&quot;</span>,
-            PnmHeaderLine::Depth =&gt; <span class="string">&quot;DEPTH&quot;</span>,
-            PnmHeaderLine::Maxval =&gt; <span class="string">&quot;MAXVAL&quot;</span>,
+            PnmHeaderLine::Height =&gt; <span class="string">"HEIGHT"</span>,
+            PnmHeaderLine::Width =&gt; <span class="string">"WIDTH"</span>,
+            PnmHeaderLine::Depth =&gt; <span class="string">"DEPTH"</span>,
+            PnmHeaderLine::Maxval =&gt; <span class="string">"MAXVAL"</span>,
         })
     }
 }
@@ -1483,11 +1485,11 @@
 }
 
 <span class="kw">impl </span>Display <span class="kw">for </span>ErrorDataSource {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
             ErrorDataSource::Line(l) =&gt; l.fmt(f),
-            ErrorDataSource::Preamble =&gt; f.write_str(<span class="string">&quot;number in preamble&quot;</span>),
-            ErrorDataSource::Sample =&gt; f.write_str(<span class="string">&quot;sample&quot;</span>),
+            ErrorDataSource::Preamble =&gt; f.write_str(<span class="string">"number in preamble"</span>),
+            ErrorDataSource::Sample =&gt; f.write_str(<span class="string">"sample"</span>),
         }
     }
 }
@@ -1531,13 +1533,13 @@
         <span class="kw">let </span>magic = buffered_read.read_magic_constant()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>subtype = <span class="kw">match </span>magic {
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;1&#39;</span>] =&gt; PnmSubtype::Bitmap(SampleEncoding::Ascii),
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;2&#39;</span>] =&gt; PnmSubtype::Graymap(SampleEncoding::Ascii),
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;3&#39;</span>] =&gt; PnmSubtype::Pixmap(SampleEncoding::Ascii),
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;4&#39;</span>] =&gt; PnmSubtype::Bitmap(SampleEncoding::Binary),
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;5&#39;</span>] =&gt; PnmSubtype::Graymap(SampleEncoding::Binary),
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;6&#39;</span>] =&gt; PnmSubtype::Pixmap(SampleEncoding::Binary),
-            [<span class="string">b&#39;P&#39;</span>, <span class="string">b&#39;7&#39;</span>] =&gt; PnmSubtype::ArbitraryMap,
+            [<span class="string">b'P'</span>, <span class="string">b'1'</span>] =&gt; PnmSubtype::Bitmap(SampleEncoding::Ascii),
+            [<span class="string">b'P'</span>, <span class="string">b'2'</span>] =&gt; PnmSubtype::Graymap(SampleEncoding::Ascii),
+            [<span class="string">b'P'</span>, <span class="string">b'3'</span>] =&gt; PnmSubtype::Pixmap(SampleEncoding::Ascii),
+            [<span class="string">b'P'</span>, <span class="string">b'4'</span>] =&gt; PnmSubtype::Bitmap(SampleEncoding::Binary),
+            [<span class="string">b'P'</span>, <span class="string">b'5'</span>] =&gt; PnmSubtype::Graymap(SampleEncoding::Binary),
+            [<span class="string">b'P'</span>, <span class="string">b'6'</span>] =&gt; PnmSubtype::Pixmap(SampleEncoding::Binary),
+            [<span class="string">b'P'</span>, <span class="string">b'7'</span>] =&gt; PnmSubtype::ArbitraryMap,
             <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::PnmMagicInvalid(magic).into()),
         };
 
@@ -1557,7 +1559,7 @@
                 UnsupportedError::from_format_and_kind(
                     ImageFormat::Pnm.into(),
                     UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                        <span class="string">&quot;Image dimensions ({}x{}) are too large&quot;</span>,
+                        <span class="string">"Image dimensions ({}x{}) are too large"</span>,
                         decoder.dimensions().<span class="number">0</span>,
                         decoder.dimensions().<span class="number">1
                     </span>)),
@@ -1643,17 +1645,17 @@
                 <span class="prelude-val">Err</span>(err) =&gt; <span class="kw">return </span><span class="prelude-val">Some</span>((<span class="kw-2">*</span>partof, <span class="prelude-val">Err</span>(err))),
                 <span class="prelude-val">Ok</span>(byte) =&gt; byte,
             };
-            <span class="kw">let </span>cur_enabled = <span class="kw-2">*</span>partof &amp;&amp; byte != <span class="string">b&#39;#&#39;</span>;
-            <span class="kw">let </span>next_enabled = cur_enabled || (byte == <span class="string">b&#39;\r&#39; </span>|| byte == <span class="string">b&#39;\n&#39;</span>);
+            <span class="kw">let </span>cur_enabled = <span class="kw-2">*</span>partof &amp;&amp; byte != <span class="string">b'#'</span>;
+            <span class="kw">let </span>next_enabled = cur_enabled || (byte == <span class="string">b'\r' </span>|| byte == <span class="string">b'\n'</span>);
             <span class="kw-2">*</span>partof = next_enabled;
             <span class="prelude-val">Some</span>((cur_enabled, <span class="prelude-val">Ok</span>(byte)))
         });
 
         <span class="kw">for </span>(<span class="kw">_</span>, byte) <span class="kw">in </span>mark_comments.filter(|e| e.<span class="number">0</span>) {
             <span class="kw">match </span>byte {
-                <span class="prelude-val">Ok</span>(<span class="string">b&#39;\t&#39;</span>) | <span class="prelude-val">Ok</span>(<span class="string">b&#39;\n&#39;</span>) | <span class="prelude-val">Ok</span>(<span class="string">b&#39;\x0b&#39;</span>) | <span class="prelude-val">Ok</span>(<span class="string">b&#39;\x0c&#39;</span>) | <span class="prelude-val">Ok</span>(<span class="string">b&#39;\r&#39;</span>) | <span class="prelude-val">Ok</span>(<span class="string">b&#39; &#39;</span>) =&gt; {
+                <span class="prelude-val">Ok</span>(<span class="string">b'\t'</span>) | <span class="prelude-val">Ok</span>(<span class="string">b'\n'</span>) | <span class="prelude-val">Ok</span>(<span class="string">b'\x0b'</span>) | <span class="prelude-val">Ok</span>(<span class="string">b'\x0c'</span>) | <span class="prelude-val">Ok</span>(<span class="string">b'\r'</span>) | <span class="prelude-val">Ok</span>(<span class="string">b' '</span>) =&gt; {
                     <span class="kw">if </span>!bytes.is_empty() {
-                        <span class="kw">break</span>; <span class="comment">// We&#39;re done as we already have some content
+                        <span class="kw">break</span>; <span class="comment">// We're done as we already have some content
                     </span>}
                 }
                 <span class="prelude-val">Ok</span>(byte) <span class="kw">if </span>!byte.is_ascii() =&gt; {
@@ -1672,12 +1674,12 @@
 
         <span class="kw">if </span>!bytes.as_slice().is_ascii() {
             <span class="comment">// We have only filled the buffer with characters for which `byte.is_ascii()` holds.
-            </span><span class="macro">unreachable!</span>(<span class="string">&quot;Non-ASCII character should have returned sooner&quot;</span>)
+            </span><span class="macro">unreachable!</span>(<span class="string">"Non-ASCII character should have returned sooner"</span>)
         }
 
         <span class="kw">let </span>string = String::from_utf8(bytes)
             <span class="comment">// We checked the precondition ourselves a few lines before, `bytes.as_slice().is_ascii()`.
-            </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">unreachable!</span>(<span class="string">&quot;Only ASCII characters should be decoded&quot;</span>));
+            </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">unreachable!</span>(<span class="string">"Only ASCII characters should be decoded"</span>));
 
         <span class="prelude-val">Ok</span>(string)
     }
@@ -1753,7 +1755,7 @@
         <span class="kw">match </span><span class="self">self</span>.bytes().next() {
             <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::IoError(io::ErrorKind::UnexpectedEof.into())),
             <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(io)) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::IoError(io)),
-            <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="string">b&#39;\n&#39;</span>)) =&gt; (),
+            <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="string">b'\n'</span>)) =&gt; (),
             <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(c)) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::NotNewlineAfterP7Magic(c).into()),
         }
 
@@ -1769,7 +1771,7 @@
             <span class="kw">if </span>len == <span class="number">0 </span>{
                 <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::UnexpectedPnmHeaderEnd.into());
             }
-            <span class="kw">if </span>line.as_bytes()[<span class="number">0</span>] == <span class="string">b&#39;#&#39; </span>{
+            <span class="kw">if </span>line.as_bytes()[<span class="number">0</span>] == <span class="string">b'#' </span>{
                 <span class="kw">continue</span>;
             }
             <span class="kw">if </span>!line.is_ascii() {
@@ -1780,16 +1782,16 @@
                 .trim_left()
                 .split_at(line.find(char::is_whitespace).unwrap_or_else(|| line.len()));
             <span class="kw">match </span>identifier {
-                <span class="string">&quot;ENDHDR&quot; </span>=&gt; <span class="kw">break</span>,
-                <span class="string">&quot;HEIGHT&quot; </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>height, rest, PnmHeaderLine::Height)<span class="question-mark">?</span>,
-                <span class="string">&quot;WIDTH&quot; </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>width, rest, PnmHeaderLine::Width)<span class="question-mark">?</span>,
-                <span class="string">&quot;DEPTH&quot; </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>depth, rest, PnmHeaderLine::Depth)<span class="question-mark">?</span>,
-                <span class="string">&quot;MAXVAL&quot; </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>maxval, rest, PnmHeaderLine::Maxval)<span class="question-mark">?</span>,
-                <span class="string">&quot;TUPLTYPE&quot; </span>=&gt; {
+                <span class="string">"ENDHDR" </span>=&gt; <span class="kw">break</span>,
+                <span class="string">"HEIGHT" </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>height, rest, PnmHeaderLine::Height)<span class="question-mark">?</span>,
+                <span class="string">"WIDTH" </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>width, rest, PnmHeaderLine::Width)<span class="question-mark">?</span>,
+                <span class="string">"DEPTH" </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>depth, rest, PnmHeaderLine::Depth)<span class="question-mark">?</span>,
+                <span class="string">"MAXVAL" </span>=&gt; parse_single_value_line(<span class="kw-2">&amp;mut </span>maxval, rest, PnmHeaderLine::Maxval)<span class="question-mark">?</span>,
+                <span class="string">"TUPLTYPE" </span>=&gt; {
                     <span class="kw">let </span>identifier = rest.trim();
                     <span class="kw">if </span>tupltype.is_some() {
                         <span class="kw">let </span>appended = tupltype.take().map(|<span class="kw-2">mut </span>v| {
-                            v.push(<span class="string">&#39; &#39;</span>);
+                            v.push(<span class="string">' '</span>);
                             v.push_str(identifier);
                             v
                         });
@@ -1817,14 +1819,14 @@
 
         <span class="kw">let </span>tupltype = <span class="kw">match </span>tupltype {
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">&quot;BLACKANDWHITE&quot; </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::BlackAndWhite),
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">&quot;BLACKANDWHITE_ALPHA&quot; </span>=&gt; {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">"BLACKANDWHITE" </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::BlackAndWhite),
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">"BLACKANDWHITE_ALPHA" </span>=&gt; {
                 <span class="prelude-val">Some</span>(ArbitraryTuplType::BlackAndWhiteAlpha)
             }
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">&quot;GRAYSCALE&quot; </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::Grayscale),
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">&quot;GRAYSCALE_ALPHA&quot; </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::GrayscaleAlpha),
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">&quot;RGB&quot; </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::RGB),
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">&quot;RGB_ALPHA&quot; </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::RGBAlpha),
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">"GRAYSCALE" </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::Grayscale),
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">"GRAYSCALE_ALPHA" </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::GrayscaleAlpha),
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">"RGB" </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::RGB),
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref </span>t) <span class="kw">if </span>t == <span class="string">"RGB_ALPHA" </span>=&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::RGBAlpha),
             <span class="prelude-val">Some</span>(other) =&gt; <span class="prelude-val">Some</span>(ArbitraryTuplType::Custom(other)),
         };
 
@@ -1856,7 +1858,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>PnmDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>PnmDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = PnmReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -1951,7 +1953,7 @@
 <span class="kw">where
     </span>T::Err: Display,
 {
-    <span class="kw">let </span>is_separator = |v: <span class="kw-2">&amp;</span>u8| <span class="macro">matches! </span>{ <span class="kw-2">*</span>v, <span class="string">b&#39;\t&#39; </span>| <span class="string">b&#39;\n&#39; </span>| <span class="string">b&#39;\x0b&#39; </span>| <span class="string">b&#39;\x0c&#39; </span>| <span class="string">b&#39;\r&#39; </span>| <span class="string">b&#39; &#39; </span>};
+    <span class="kw">let </span>is_separator = |v: <span class="kw-2">&amp;</span>u8| <span class="macro">matches! </span>{ <span class="kw-2">*</span>v, <span class="string">b'\t' </span>| <span class="string">b'\n' </span>| <span class="string">b'\x0b' </span>| <span class="string">b'\x0c' </span>| <span class="string">b'\r' </span>| <span class="string">b' ' </span>};
 
     <span class="kw">let </span>token = reader
         .bytes()
@@ -1965,7 +1967,7 @@
 
     <span class="kw">let </span>string = str::from_utf8(<span class="kw-2">&amp;</span>token)
         <span class="comment">// We checked the precondition ourselves a few lines before with `token.is_ascii()`.
-        </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">unreachable!</span>(<span class="string">&quot;Only ASCII characters should be decoded&quot;</span>));
+        </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">unreachable!</span>(<span class="string">"Only ASCII characters should be decoded"</span>));
 
     string.parse().map_err(|err| {
         DecoderError::UnparsableValue(ErrorDataSource::Sample, string.to_owned(), err).into()
@@ -2040,9 +2042,9 @@
                     .next()
                     .ok_or_else::&lt;ImageError, <span class="kw">_</span>&gt;(|| DecoderError::InputTooShort.into())<span class="question-mark">??</span>;
                 <span class="kw">match </span>byte {
-                    <span class="string">b&#39;\t&#39; </span>| <span class="string">b&#39;\n&#39; </span>| <span class="string">b&#39;\x0b&#39; </span>| <span class="string">b&#39;\x0c&#39; </span>| <span class="string">b&#39;\r&#39; </span>| <span class="string">b&#39; &#39; </span>=&gt; <span class="kw">continue</span>,
-                    <span class="string">b&#39;0&#39; </span>=&gt; <span class="kw-2">*</span>b = <span class="number">255</span>,
-                    <span class="string">b&#39;1&#39; </span>=&gt; <span class="kw-2">*</span>b = <span class="number">0</span>,
+                    <span class="string">b'\t' </span>| <span class="string">b'\n' </span>| <span class="string">b'\x0b' </span>| <span class="string">b'\x0c' </span>| <span class="string">b'\r' </span>| <span class="string">b' ' </span>=&gt; <span class="kw">continue</span>,
+                    <span class="string">b'0' </span>=&gt; <span class="kw-2">*</span>b = <span class="number">255</span>,
+                    <span class="string">b'1' </span>=&gt; <span class="kw-2">*</span>b = <span class="number">0</span>,
                     c =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::UnexpectedByteInRaster(c).into()),
                 }
                 <span class="kw">break</span>;
@@ -2068,7 +2070,7 @@
     }
 
     <span class="kw">fn </span>from_ascii(_reader: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Read, _output_buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; ImageResult&lt;()&gt; {
-        <span class="macro">unreachable!</span>(<span class="string">&quot;BW bits from anymaps are never encoded as ASCII&quot;</span>)
+        <span class="macro">unreachable!</span>(<span class="string">"BW bits from anymaps are never encoded as ASCII"</span>)
     }
 }
 
@@ -2155,7 +2157,7 @@
                 UnsupportedError::from_format_and_kind(
                     ImageFormat::Pnm.into(),
                     UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                        <span class="string">&quot;Color type {}&quot;</span>,
+                        <span class="string">"Color type {}"</span>,
                         ArbitraryTuplType::BlackAndWhiteAlpha.name()
                     )),
                 ),
@@ -2175,7 +2177,7 @@
             <span class="prelude-val">Some</span>(ArbitraryTuplType::Custom(<span class="kw-2">ref </span>custom)) =&gt; <span class="prelude-val">Err</span>(ImageError::Unsupported(
                 UnsupportedError::from_format_and_kind(
                     ImageFormat::Pnm.into(),
-                    UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(<span class="string">&quot;Tuple type {:?}&quot;</span>, custom)),
+                    UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(<span class="string">"Tuple type {:?}"</span>, custom)),
                 ),
             )),
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(DecoderError::TupleTypeUnrecognised.into()),
@@ -2189,7 +2191,7 @@
     <span class="doccomment">/// Tests reading of a valid blackandwhite pam
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>pam_blackandwhite() {
-        <span class="kw">let </span>pamdata = <span class="string">b&quot;P7
+        <span class="kw">let </span>pamdata = <span class="string">b"P7
 WIDTH 4
 HEIGHT 4
 DEPTH 1
@@ -2197,7 +2199,7 @@ MAXVAL 1
 TUPLTYPE BLACKANDWHITE
 # Comment line
 ENDHDR
-\x01\x00\x00\x01\x01\x00\x00\x01\x01\x00\x00\x01\x01\x00\x00\x01&quot;</span>;
+\x01\x00\x00\x01\x01\x00\x00\x01\x01\x00\x00\x01\x01\x00\x00\x01"</span>;
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pamdata[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.original_color_type(), ExtendedColorType::L1);
@@ -2228,14 +2230,14 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
     <span class="doccomment">/// Tests reading of a valid grayscale pam
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>pam_grayscale() {
-        <span class="kw">let </span>pamdata = <span class="string">b&quot;P7
+        <span class="kw">let </span>pamdata = <span class="string">b"P7
 WIDTH 4
 HEIGHT 4
 DEPTH 1
@@ -2243,7 +2245,7 @@ MAXVAL 255
 TUPLTYPE GRAYSCALE
 # Comment line
 ENDHDR
-\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef&quot;</span>;
+\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef"</span>;
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pamdata[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.dimensions(), (<span class="number">4</span>, <span class="number">4</span>));
@@ -2273,14 +2275,14 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
     <span class="doccomment">/// Tests reading of a valid rgb pam
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>pam_rgb() {
-        <span class="kw">let </span>pamdata = <span class="string">b&quot;P7
+        <span class="kw">let </span>pamdata = <span class="string">b"P7
 # Comment line
 MAXVAL 255
 TUPLTYPE RGB
@@ -2288,7 +2290,7 @@ DEPTH 3
 WIDTH 2
 HEIGHT 2
 ENDHDR
-\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef&quot;</span>;
+\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef"</span>;
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pamdata[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::Rgb8);
         <span class="macro">assert_eq!</span>(decoder.dimensions(), (<span class="number">2</span>, <span class="number">2</span>));
@@ -2315,7 +2317,7 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
@@ -2323,7 +2325,7 @@ ENDHDR
     </span><span class="kw">fn </span>pbm_binary() {
         <span class="comment">// The data contains two rows of the image (each line is padded to the full byte). For
         // comments on its format, see documentation of `impl SampleType for PbmBit`.
-        </span><span class="kw">let </span>pbmbinary = [<span class="kw-2">&amp;</span><span class="string">b&quot;P4 6 2\n&quot;</span>[..], <span class="kw-2">&amp;</span>[<span class="number">0b01101100 </span><span class="kw">as </span>u8, <span class="number">0b10110111</span>]].concat();
+        </span><span class="kw">let </span>pbmbinary = [<span class="kw-2">&amp;</span><span class="string">b"P4 6 2\n"</span>[..], <span class="kw-2">&amp;</span>[<span class="number">0b01101100 </span><span class="kw">as </span>u8, <span class="number">0b10110111</span>]].concat();
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pbmbinary[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.original_color_type(), ExtendedColorType::L1);
@@ -2348,7 +2350,7 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
@@ -2356,7 +2358,7 @@ ENDHDR
     </span><span class="attr">#[test]
     </span><span class="kw">fn </span>pbm_binary_ascii_termination() {
         <span class="kw">use </span>std::io::{BufReader, Cursor, Error, ErrorKind, Read, <span class="prelude-ty">Result</span>};
-        <span class="kw">struct </span>FailRead(Cursor&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8]&gt;);
+        <span class="kw">struct </span>FailRead(Cursor&lt;<span class="kw-2">&amp;</span><span class="lifetime">'static </span>[u8]&gt;);
 
         <span class="kw">impl </span>Read <span class="kw">for </span>FailRead {
             <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
@@ -2364,19 +2366,19 @@ ENDHDR
                     <span class="prelude-val">Ok</span>(n) <span class="kw">if </span>n &gt; <span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(n),
                     <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(Error::new(
                         ErrorKind::BrokenPipe,
-                        <span class="string">&quot;Simulated broken pipe error&quot;</span>,
+                        <span class="string">"Simulated broken pipe error"</span>,
                     )),
                 }
             }
         }
 
-        <span class="kw">let </span>pbmbinary = BufReader::new(FailRead(Cursor::new(<span class="string">b&quot;P1 1 1\n&quot;</span>)));
+        <span class="kw">let </span>pbmbinary = BufReader::new(FailRead(Cursor::new(<span class="string">b"P1 1 1\n"</span>)));
 
         <span class="kw">let </span>decoder = PnmDecoder::new(pbmbinary).unwrap();
         <span class="kw">let </span><span class="kw-2">mut </span>image = <span class="macro">vec!</span>[<span class="number">0</span>; decoder.total_bytes() <span class="kw">as </span>usize];
         decoder
             .read_image(<span class="kw-2">&amp;mut </span>image)
-            .expect_err(<span class="string">&quot;Image is malformed&quot;</span>);
+            .expect_err(<span class="string">"Image is malformed"</span>);
     }
 
     <span class="attr">#[test]
@@ -2384,7 +2386,7 @@ ENDHDR
         <span class="comment">// The data contains two rows of the image (each line is padded to the full byte). For
         // comments on its format, see documentation of `impl SampleType for PbmBit`.  Tests all
         // whitespace characters that should be allowed (the 6 characters according to POSIX).
-        </span><span class="kw">let </span>pbmbinary = <span class="string">b&quot;P1 6 2\n 0 1 1 0 1 1\n1 0 1 1 0\t\n\x0b\x0c\r1&quot;</span>;
+        </span><span class="kw">let </span>pbmbinary = <span class="string">b"P1 6 2\n 0 1 1 0 1 1\n1 0 1 1 0\t\n\x0b\x0c\r1"</span>;
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pbmbinary[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.original_color_type(), ExtendedColorType::L1);
@@ -2407,7 +2409,7 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
@@ -2416,7 +2418,7 @@ ENDHDR
         <span class="comment">// The data contains two rows of the image (each line is padded to the full byte). Notably,
         // it is completely within specification for the ascii data not to contain separating
         // whitespace for the pbm format or any mix.
-        </span><span class="kw">let </span>pbmbinary = <span class="string">b&quot;P1 6 2\n011011101101&quot;</span>;
+        </span><span class="kw">let </span>pbmbinary = <span class="string">b"P1 6 2\n011011101101"</span>;
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pbmbinary[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.original_color_type(), ExtendedColorType::L1);
@@ -2439,7 +2441,7 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
@@ -2448,7 +2450,7 @@ ENDHDR
         <span class="comment">// The data contains two rows of the image (each line is padded to the full byte). For
         // comments on its format, see documentation of `impl SampleType for PbmBit`.
         </span><span class="kw">let </span>elements = (<span class="number">0</span>..<span class="number">16</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-        <span class="kw">let </span>pbmbinary = [<span class="kw-2">&amp;</span><span class="string">b&quot;P5 4 4 255\n&quot;</span>[..], <span class="kw-2">&amp;</span>elements].concat();
+        <span class="kw">let </span>pbmbinary = [<span class="kw-2">&amp;</span><span class="string">b"P5 4 4 255\n"</span>[..], <span class="kw-2">&amp;</span>elements].concat();
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pbmbinary[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.dimensions(), (<span class="number">4</span>, <span class="number">4</span>));
@@ -2473,7 +2475,7 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
@@ -2481,7 +2483,7 @@ ENDHDR
     </span><span class="kw">fn </span>pgm_ascii() {
         <span class="comment">// The data contains two rows of the image (each line is padded to the full byte). For
         // comments on its format, see documentation of `impl SampleType for PbmBit`.
-        </span><span class="kw">let </span>pbmbinary = <span class="string">b&quot;P2 4 4 255\n 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15&quot;</span>;
+        </span><span class="kw">let </span>pbmbinary = <span class="string">b"P2 4 4 255\n 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"</span>;
         <span class="kw">let </span>decoder = PnmDecoder::new(<span class="kw-2">&amp;</span>pbmbinary[..]).unwrap();
         <span class="macro">assert_eq!</span>(decoder.color_type(), ColorType::L8);
         <span class="macro">assert_eq!</span>(decoder.dimensions(), (<span class="number">4</span>, <span class="number">4</span>));
@@ -2506,13 +2508,13 @@ ENDHDR
                     encoded: <span class="kw">_</span>,
                 },
             ) =&gt; (),
-            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;Decoded header is incorrect&quot;</span>),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Decoded header is incorrect"</span>),
         }
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>dimension_overflow() {
-        <span class="kw">let </span>pamdata = <span class="string">b&quot;P7
+        <span class="kw">let </span>pamdata = <span class="string">b"P7
 # Comment line
 MAXVAL 255
 TUPLTYPE RGB
@@ -2520,14 +2522,14 @@ DEPTH 3
 WIDTH 4294967295
 HEIGHT 4294967295
 ENDHDR
-\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef&quot;</span>;
+\xde\xad\xbe\xef\xde\xad\xbe\xef\xde\xad\xbe\xef"</span>;
 
         <span class="macro">assert!</span>(PnmDecoder::new(<span class="kw-2">&amp;</span>pamdata[..]).is_err());
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>issue_1508() {
-        <span class="kw">let _ </span>= <span class="kw">crate</span>::load_from_memory(<span class="string">b&quot;P391919 16999 1 1 9 919 16999 1 9999 999* 99999 N&quot;</span>);
+        <span class="kw">let _ </span>= <span class="kw">crate</span>::load_from_memory(<span class="string">b"P391919 16999 1 1 9 919 16999 1 9999 999* 99999 N"</span>);
     }
 
     <span class="attr">#[test]

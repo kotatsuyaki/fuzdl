@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/fs/read_dir.rs`."><title>read_dir.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-1.20.1/src/fs/read_dir.rs`."><title>read_dir.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokio" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../tokio/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -333,7 +335,7 @@
 ///
 /// This struct is returned from the [`read_dir`] function of this module and
 /// will yield instances of [`DirEntry`]. Through a [`DirEntry`] information
-/// like the entry&#39;s path and possibly other metadata can be learned.
+/// like the entry's path and possibly other metadata can be learned.
 ///
 /// A `ReadDir` can be turned into a `Stream` with [`ReadDirStream`].
 ///
@@ -341,14 +343,14 @@
 ///
 /// # Errors
 ///
-/// This stream will return an [`Err`] if there&#39;s some sort of intermittent
+/// This stream will return an [`Err`] if there's some sort of intermittent
 /// IO error during iteration.
 ///
 /// [`read_dir`]: read_dir
 /// [`DirEntry`]: DirEntry
 /// [`Err`]: std::result::Result::Err
 </span><span class="attr">#[derive(Debug)]
-#[must_use = <span class="string">&quot;streams do nothing unless polled&quot;</span>]
+#[must_use = <span class="string">"streams do nothing unless polled"</span>]
 </span><span class="kw">pub struct </span>ReadDir(State);
 
 <span class="attr">#[derive(Debug)]
@@ -386,7 +388,7 @@
     /// Note that on multiple calls to `poll_next_entry`, only the `Waker` from
     /// the `Context` passed to the most recent call is scheduled to receive a
     /// wakeup.
-    </span><span class="kw">pub fn </span>poll_next_entry(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;io::Result&lt;<span class="prelude-ty">Option</span>&lt;DirEntry&gt;&gt;&gt; {
+    </span><span class="kw">pub fn </span>poll_next_entry(<span class="kw-2">&amp;mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;io::Result&lt;<span class="prelude-ty">Option</span>&lt;DirEntry&gt;&gt;&gt; {
         <span class="kw">loop </span>{
             <span class="kw">match </span><span class="self">self</span>.<span class="number">0 </span>{
                 State::Idle(<span class="kw-2">ref mut </span>std) =&gt; {
@@ -430,10 +432,10 @@
         ///
         /// # #[tokio::main]
         /// # async fn main() -&gt; std::io::Result&lt;()&gt; {
-        /// let mut entries = fs::read_dir(&quot;.&quot;).await?;
+        /// let mut entries = fs::read_dir(".").await?;
         /// while let Some(entry) = entries.next_entry().await? {
         ///     // Here, `entry` is a `DirEntry`.
-        ///     println!(&quot;{:?}: {}&quot;, entry.file_name(), entry.ino());
+        ///     println!("{:?}: {}", entry.file_name(), entry.ino());
         /// }
         /// # Ok(())
         /// # }
@@ -469,10 +471,10 @@
     /// use tokio::fs;
     ///
     /// # async fn dox() -&gt; std::io::Result&lt;()&gt; {
-    /// let mut entries = fs::read_dir(&quot;.&quot;).await?;
+    /// let mut entries = fs::read_dir(".").await?;
     ///
     /// while let Some(entry) = entries.next_entry().await? {
-    ///     println!(&quot;{:?}&quot;, entry.path());
+    ///     println!("{:?}", entry.path());
     /// }
     /// # Ok(())
     /// # }
@@ -481,9 +483,9 @@
     /// This prints output like:
     ///
     /// ```text
-    /// &quot;./whatever.txt&quot;
-    /// &quot;./foo.html&quot;
-    /// &quot;./hello_world.rs&quot;
+    /// "./whatever.txt"
+    /// "./foo.html"
+    /// "./hello_world.rs"
     /// ```
     ///
     /// The exact text, of course, depends on what files you have in `.`.
@@ -500,10 +502,10 @@
     /// use tokio::fs;
     ///
     /// # async fn dox() -&gt; std::io::Result&lt;()&gt; {
-    /// let mut entries = fs::read_dir(&quot;.&quot;).await?;
+    /// let mut entries = fs::read_dir(".").await?;
     ///
     /// while let Some(entry) = entries.next_entry().await? {
-    ///     println!(&quot;{:?}&quot;, entry.file_name());
+    ///     println!("{:?}", entry.file_name());
     /// }
     /// # Ok(())
     /// # }
@@ -529,14 +531,14 @@
     /// use tokio::fs;
     ///
     /// # async fn dox() -&gt; std::io::Result&lt;()&gt; {
-    /// let mut entries = fs::read_dir(&quot;.&quot;).await?;
+    /// let mut entries = fs::read_dir(".").await?;
     ///
     /// while let Some(entry) = entries.next_entry().await? {
     ///     if let Ok(metadata) = entry.metadata().await {
-    ///         // Now let&#39;s show our entry&#39;s permissions!
-    ///         println!(&quot;{:?}: {:?}&quot;, entry.path(), metadata.permissions());
+    ///         // Now let's show our entry's permissions!
+    ///         println!("{:?}: {:?}", entry.path(), metadata.permissions());
     ///     } else {
-    ///         println!(&quot;Couldn&#39;t get file type for {:?}&quot;, entry.path());
+    ///         println!("Couldn't get file type for {:?}", entry.path());
     ///     }
     /// }
     /// # Ok(())
@@ -564,14 +566,14 @@
     /// use tokio::fs;
     ///
     /// # async fn dox() -&gt; std::io::Result&lt;()&gt; {
-    /// let mut entries = fs::read_dir(&quot;.&quot;).await?;
+    /// let mut entries = fs::read_dir(".").await?;
     ///
     /// while let Some(entry) = entries.next_entry().await? {
     ///     if let Ok(file_type) = entry.file_type().await {
-    ///         // Now let&#39;s show our entry&#39;s file type!
-    ///         println!(&quot;{:?}: {:?}&quot;, entry.path(), file_type);
+    ///         // Now let's show our entry's file type!
+    ///         println!("{:?}: {:?}", entry.path(), file_type);
     ///     } else {
-    ///         println!(&quot;Couldn&#39;t get file type for {:?}&quot;, entry.path());
+    ///         println!("Couldn't get file type for {:?}", entry.path());
     ///     }
     /// }
     /// # Ok(())

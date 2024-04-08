@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/gif.rs`."><title>gif.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/gif.rs`."><title>gif.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -621,13 +623,13 @@
 //! use std::fs::File;
 //! # fn main() -&gt; std::io::Result&lt;()&gt; {
 //! // Decode a gif into frames
-//! let file_in = File::open(&quot;foo.gif&quot;)?;
+//! let file_in = File::open("foo.gif")?;
 //! let mut decoder = GifDecoder::new(file_in).unwrap();
 //! let frames = decoder.into_frames();
-//! let frames = frames.collect_frames().expect(&quot;error decoding gif&quot;);
+//! let frames = frames.collect_frames().expect("error decoding gif");
 //!
 //! // Encode frames into a gif and save to a file
-//! let mut file_out = File::open(&quot;out.gif&quot;)?;
+//! let mut file_out = File::open("out.gif")?;
 //! let mut encoder = GifEncoder::new(file_out);
 //! encoder.encode_frames(frames.into_iter());
 //! # Ok(())
@@ -702,7 +704,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>GifDecoder&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ Read&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>GifDecoder&lt;R&gt; {
     <span class="kw">type </span>Reader = GifReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -776,7 +778,7 @@
             }
         } <span class="kw">else </span>{
             <span class="comment">// If the frame does not match the logical screen, read into an extra buffer
-            // and &#39;insert&#39; the frame from left/top to logical screen width/height.
+            // and 'insert' the frame from left/top to logical screen width/height.
             </span><span class="kw">let </span>buffer_size = <span class="self">self</span>.reader.buffer_size();
 
             <span class="self">self</span>.limits.reserve_usize(buffer_size)<span class="question-mark">?</span>;
@@ -800,7 +802,7 @@
                     UnsupportedError::from_format_and_kind(
                         ImageFormat::Gif.into(),
                         UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                            <span class="string">&quot;Image dimensions ({}, {}) are too large&quot;</span>,
+                            <span class="string">"Image dimensions ({}, {}) are too large"</span>,
                             frame.width, frame.height
                         )),
                     ),
@@ -892,7 +894,7 @@
                     UnsupportedError::from_format_and_kind(
                         ImageFormat::Gif.into(),
                         UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                            <span class="string">&quot;Image dimensions ({}, {}) are too large&quot;</span>,
+                            <span class="string">"Image dimensions ({}, {}) are too large"</span>,
                             frame.width, frame.height
                         )),
                     ),
@@ -932,7 +934,7 @@
             }
         }
 
-        <span class="comment">// if `frame_buffer`&#39;s frame exactly matches the entire image, then
+        <span class="comment">// if `frame_buffer`'s frame exactly matches the entire image, then
         // use it directly, else create a new buffer to hold the composited
         // image.
         </span><span class="kw">let </span>image_buffer = <span class="kw">if </span>(frame.left, frame.top) == (<span class="number">0</span>, <span class="number">0</span>)
@@ -969,8 +971,8 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: Read + <span class="lifetime">&#39;a</span>&gt; AnimationDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>GifDecoder&lt;R&gt; {
-    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; animation::Frames&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: Read + <span class="lifetime">'a</span>&gt; AnimationDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>GifDecoder&lt;R&gt; {
+    <span class="kw">fn </span>into_frames(<span class="self">self</span>) -&gt; animation::Frames&lt;<span class="lifetime">'a</span>&gt; {
         animation::Frames::new(Box::new(GifFrameIterator::new(<span class="self">self</span>)))
     }
 }
@@ -1036,7 +1038,7 @@
     </span><span class="kw">pub fn </span>new_with_speed(w: W, speed: i32) -&gt; GifEncoder&lt;W&gt; {
         <span class="macro">assert!</span>(
             speed &gt;= <span class="number">1 </span>&amp;&amp; speed &lt;= <span class="number">30</span>,
-            <span class="string">&quot;speed needs to be in the range [1, 30]&quot;
+            <span class="string">"speed needs to be in the range [1, 30]"
         </span>);
         GifEncoder {
             w: <span class="prelude-val">Some</span>(w),
@@ -1114,7 +1116,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>convert_frame(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         img_frame: animation::Frame,
-    ) -&gt; ImageResult&lt;Frame&lt;<span class="lifetime">&#39;static</span>&gt;&gt; {
+    ) -&gt; ImageResult&lt;Frame&lt;<span class="lifetime">'static</span>&gt;&gt; {
         <span class="comment">// get the delay before converting img_frame
         </span><span class="kw">let </span>frame_delay = img_frame.delay().into_ratio().to_integer();
         <span class="comment">// convert img_frame into RgbaImage
@@ -1125,7 +1127,7 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>frame = Frame::from_rgba_speed(width, height, <span class="kw-2">&amp;mut *</span>rbga_frame, <span class="self">self</span>.speed);
         <span class="comment">// Saturate the conversion to u16::MAX instead of returning an error as that
         // would require a new special cased variant in ParameterErrorKind which most
-        // likely couldn&#39;t be reused for other cases. This isn&#39;t a bad trade-off given
+        // likely couldn't be reused for other cases. This isn't a bad trade-off given
         // that the current algorithm is already lossy.
         </span>frame.delay = (frame_delay / <span class="number">10</span>).try_into().unwrap_or(std::u16::MAX);
 

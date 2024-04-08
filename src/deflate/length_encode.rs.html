@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/length_encode.rs`."><title>length_encode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/deflate-1.0.0/src/length_encode.rs`."><title>length_encode.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="deflate" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../deflate/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -723,9 +725,9 @@
 
 <span class="doccomment">///Convenience version for unit tests.
 </span><span class="attr">#[cfg(test)]
-</span><span class="kw">pub fn </span>encode_lengths&lt;<span class="lifetime">&#39;a</span>, I&gt;(lengths: I) -&gt; (Vec&lt;EncodedLength&gt;, [u16; <span class="number">19</span>])
+</span><span class="kw">pub fn </span>encode_lengths&lt;<span class="lifetime">'a</span>, I&gt;(lengths: I) -&gt; (Vec&lt;EncodedLength&gt;, [u16; <span class="number">19</span>])
 <span class="kw">where
-    </span>I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt; + Clone,
+    </span>I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>u8&gt; + Clone,
 {
     <span class="kw">let </span><span class="kw-2">mut </span>freqs = [<span class="number">0u16</span>; <span class="number">19</span>];
     <span class="kw">let </span><span class="kw-2">mut </span>encoded: Vec&lt;EncodedLength&gt; = Vec::new();
@@ -740,12 +742,12 @@
 /// Populates the supplied array with the frequency of the different encoded length values
 /// The frequency array is taken as a parameter rather than returned to avoid
 /// excessive `memcpy`-ing.
-</span><span class="kw">pub fn </span>encode_lengths_m&lt;<span class="lifetime">&#39;a</span>, I&gt;(
+</span><span class="kw">pub fn </span>encode_lengths_m&lt;<span class="lifetime">'a</span>, I&gt;(
     lengths: I,
     <span class="kw-2">mut </span>out: <span class="kw-2">&amp;mut </span>Vec&lt;EncodedLength&gt;,
     <span class="kw-2">mut </span>frequencies: <span class="kw-2">&amp;mut </span>[u16; <span class="number">19</span>],
 ) <span class="kw">where
-    </span>I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>u8&gt; + Clone,
+    </span>I: Iterator&lt;Item = <span class="kw-2">&amp;</span><span class="lifetime">'a </span>u8&gt; + Clone,
 {
     out.clear();
     <span class="comment">// Number of repetitions of the current value
@@ -753,7 +755,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>iter = lengths.clone().enumerate().peekable();
     <span class="comment">// Previous value
     // We set it to the compliment of the first falue to simplify the code.
-    </span><span class="kw">let </span><span class="kw-2">mut </span>prev = !iter.peek().expect(<span class="string">&quot;No length values!&quot;</span>).<span class="number">1</span>;
+    </span><span class="kw">let </span><span class="kw-2">mut </span>prev = !iter.peek().expect(<span class="string">"No length values!"</span>).<span class="number">1</span>;
 
     <span class="kw">while let </span><span class="prelude-val">Some</span>((n, <span class="kw-2">&amp;</span>l)) = iter.next() {
         <span class="kw">if </span>l == prev &amp;&amp; not_max_repetitions(l, repeat) {
@@ -774,13 +776,13 @@
                         repeat = <span class="number">0</span>;
                     } <span class="kw">else </span>{
                         <span class="comment">// If we have a zero, we start repeat at one instead of outputting, as
-                        // there are separate codes for repeats of zero so we don&#39;t need a literal
+                        // there are separate codes for repeats of zero so we don't need a literal
                         // to define what byte to repeat.
                         </span>repeat = <span class="number">1</span>;
                     }
                 }
             } <span class="kw">else </span>{
-                <span class="comment">// There haven&#39;t been enough repetitions of the previous value,
+                <span class="comment">// There haven't been enough repetitions of the previous value,
                 // so just we output the lengths directly.
 
                 // If we are at the end, and we have a value that is repeated, we need to
@@ -794,7 +796,7 @@
                 <span class="comment">// Get to the position of the next byte to output by starting at zero and skipping.
                 </span><span class="kw">let </span>b_iter = lengths.clone().skip(n + extra_skip - repeat <span class="kw">as </span>usize);
 
-                <span class="comment">// As repeats of zeroes have separate codes, we don&#39;t need to output a literal here
+                <span class="comment">// As repeats of zeroes have separate codes, we don't need to output a literal here
                 // if we have a zero (unless we are at the end).
                 </span><span class="kw">let </span>extra = <span class="kw">if </span>l != <span class="number">0 </span>|| iter.peek().is_none() {
                     <span class="number">1
@@ -806,7 +808,7 @@
                     update_out_and_freq(EncodedLength::Length(i), <span class="kw-2">&amp;mut </span>out, <span class="kw-2">&amp;mut </span>frequencies);
                 }
 
-                <span class="comment">// If the current byte is zero we start repeat at 1 as we didn&#39;t output the literal
+                <span class="comment">// If the current byte is zero we start repeat at 1 as we didn't output the literal
                 // directly.
                 </span>repeat = <span class="number">1 </span>- extra <span class="kw">as </span>u8;
             }
@@ -843,10 +845,10 @@
     </span><span class="kw">pub fn </span>validate_lengths(lengths: <span class="kw-2">&amp;</span>[u8]) -&gt; bool {
         <span class="comment">// Avoid issue with floating point on mips: https://github.com/image-rs/deflate-rs/issues/23
         </span><span class="kw">if </span><span class="macro">cfg!</span>(any(
-            target_arch = <span class="string">&quot;mips&quot;</span>,
-            target_arch = <span class="string">&quot;mipsel&quot;</span>,
-            target_arch = <span class="string">&quot;mips64&quot;</span>,
-            target_arch = <span class="string">&quot;mipsel64&quot;
+            target_arch = <span class="string">"mips"</span>,
+            target_arch = <span class="string">"mipsel"</span>,
+            target_arch = <span class="string">"mips64"</span>,
+            target_arch = <span class="string">"mipsel64"
         </span>)) {
             <span class="bool-val">true
         </span>} <span class="kw">else </span>{
@@ -947,7 +949,7 @@
     /// https://github.com/richgel999/miniz/blob/master/miniz.c)
     ///
     /// This will not generate optimal (minimim-redundancy) codes, however in most cases
-    /// this won&#39;t make a large difference.
+    /// this won't make a large difference.
     </span><span class="kw">pub fn </span>enforce_max_code_lengths(
         num_codes: <span class="kw-2">&amp;mut </span>[u16; NUM_CODES_LENGTH],
         num_used: usize,
@@ -965,14 +967,14 @@
 
             <span class="kw">let </span><span class="kw-2">mut </span>total = <span class="number">0u32</span>;
             <span class="kw">for </span>i <span class="kw">in </span>(<span class="number">1</span>..=max_len).rev() {
-                <span class="comment">// This should be safe as max_len won&#39;t be higher than 15, and num_codes[i] can&#39;t
+                <span class="comment">// This should be safe as max_len won't be higher than 15, and num_codes[i] can't
                 // be higher than 288,
                 // and 288 &lt;&lt; 15 will not be anywhere close to overflowing 32 bits
                 </span>total += (u32::from(num_codes[i])) &lt;&lt; (max_len - i);
             }
 
             <span class="comment">// miniz uses unsigned long here. 32-bits should be sufficient though,
-            // as max_len won&#39;t be longer than 15 anyhow.
+            // as max_len won't be longer than 15 anyhow.
             </span><span class="kw">while </span>total != <span class="number">1u32 </span>&lt;&lt; max_len {
                 num_codes[max_len] -= <span class="number">1</span>;
                 <span class="kw">for </span>i <span class="kw">in </span>(<span class="number">1</span>..max_len).rev() {
@@ -999,12 +1001,12 @@
     <span class="doccomment">/// Generate huffman code lengths, using the algorithm described by
     /// Moffat and Katajainen in In-Place Calculation of Minimum-Redundancy Codes
     /// https://people.eng.unimelb.edu.au/ammoffat/abstracts/mk95wads.html
-    /// and it&#39;s implementation.
+    /// and it's implementation.
     ///
     /// This is significantly faster, and seems to generally create lengths that result in length
     /// tables that are better compressible than the algorithm used previously. The downside of this
-    /// algorithm is that it&#39;s not length-limited, so if too long code lengths are generated,
-    /// it might result in a sub-optimal tables as the length-restricting function isn&#39;t optimal.
+    /// algorithm is that it's not length-limited, so if too long code lengths are generated,
+    /// it might result in a sub-optimal tables as the length-restricting function isn't optimal.
     </span><span class="kw">pub fn </span>in_place_lengths(
         frequencies: <span class="kw-2">&amp;</span>[u16],
         max_len: usize,
@@ -1020,7 +1022,7 @@
         <span class="comment">// Clear any previous leaves in the leaf buffer.
         </span>leaves.clear();
 
-        <span class="comment">// Discard zero length nodes as they won&#39;t be given a code and thus don&#39;t need to
+        <span class="comment">// Discard zero length nodes as they won't be given a code and thus don't need to
         // participate in code length generation and create a new vec of the remaining
         // symbols and weights.
         </span>leaves.extend(frequencies.iter().enumerate().filter_map(|(n, f)| {
@@ -1042,7 +1044,7 @@
             <span class="kw">return</span>;
         }
 
-        <span class="comment">// Sort the leaves by value. As the sort in the standard library is stable, we don&#39;t
+        <span class="comment">// Sort the leaves by value. As the sort in the standard library is stable, we don't
         // have to worry about the symbol code here.
         </span>leaves.sort_by(|a, b| a.value.cmp(<span class="kw-2">&amp;</span>b.value));
 
@@ -1055,7 +1057,7 @@
             num_codes[l.value <span class="kw">as </span>usize] += <span class="number">1</span>;
         }
 
-        <span class="comment">// As the algorithm used here doesn&#39;t limit the maximum length that can be generated
+        <span class="comment">// As the algorithm used here doesn't limit the maximum length that can be generated
         // we need to make sure none of the lengths exceed `max_len`
         </span>enforce_max_code_lengths(<span class="kw-2">&amp;mut </span>num_codes, leaves.len(), max_len);
 
@@ -1071,7 +1073,7 @@
         <span class="macro">debug_assert_eq!</span>(leaf_it.next(), <span class="prelude-val">None</span>);
         <span class="macro">debug_assert!</span>(
             validate_lengths(lengths),
-            <span class="string">&quot;The generated length codes were not valid!&quot;
+            <span class="string">"The generated length codes were not valid!"
         </span>);
     }
 }
@@ -1106,7 +1108,7 @@
         </span><span class="macro">assert_eq!</span>(enc.<span class="number">1</span>[<span class="number">0</span>..<span class="number">7</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
         <span class="comment">// Neither are there any lengths above 9
         </span><span class="macro">assert_eq!</span>(enc.<span class="number">1</span>[<span class="number">10</span>..<span class="number">16</span>], [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]);
-        <span class="comment">// Also there are no zero-length codes so there shouldn&#39;t be any repetitions of zero
+        <span class="comment">// Also there are no zero-length codes so there shouldn't be any repetitions of zero
         </span><span class="macro">assert_eq!</span>(enc.<span class="number">1</span>[<span class="number">17</span>..<span class="number">19</span>], [<span class="number">0</span>, <span class="number">0</span>]);
 
         <span class="kw">let </span>test_lengths = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">15</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>];

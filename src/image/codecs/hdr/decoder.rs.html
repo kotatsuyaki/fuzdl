@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/hdr/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/image-0.24.3/./src/codecs/hdr/decoder.rs`."><title>decoder.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="image" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.1 (7cf61ebde 2024-03-27)" data-channel="1.77.1" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../../image/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1060,16 +1062,16 @@
 <span class="doccomment">/// Errors that can occur during decoding and parsing of a HDR image
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq)]
 </span><span class="kw">enum </span>DecoderError {
-    <span class="doccomment">/// HDR&#39;s &quot;#?RADIANCE&quot; signature wrong or missing
+    <span class="doccomment">/// HDR's "#?RADIANCE" signature wrong or missing
     </span>RadianceHdrSignatureInvalid,
     <span class="doccomment">/// EOF before end of header
     </span>TruncatedHeader,
     <span class="doccomment">/// EOF instead of image dimensions
     </span>TruncatedDimensions,
 
-    <span class="doccomment">/// A value couldn&#39;t be parsed
+    <span class="doccomment">/// A value couldn't be parsed
     </span>UnparsableF32(LineType, ParseFloatError),
-    <span class="doccomment">/// A value couldn&#39;t be parsed
+    <span class="doccomment">/// A value couldn't be parsed
     </span>UnparsableU32(LineType, ParseIntError),
     <span class="doccomment">/// Not enough numbers in line
     </span>LineTooShort(LineType),
@@ -1082,44 +1084,44 @@
     <span class="doccomment">/// Dimensions line had too many elements
     </span>DimensionsLineTooLong(usize),
 
-    <span class="doccomment">/// The length of a scanline (1) wasn&#39;t a match for the specified length (2)
+    <span class="doccomment">/// The length of a scanline (1) wasn't a match for the specified length (2)
     </span>WrongScanlineLength(usize, usize),
     <span class="doccomment">/// First pixel of a scanline is a run length marker
     </span>FirstPixelRlMarker,
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
             DecoderError::RadianceHdrSignatureInvalid =&gt; {
-                f.write_str(<span class="string">&quot;Radiance HDR signature not found&quot;</span>)
+                f.write_str(<span class="string">"Radiance HDR signature not found"</span>)
             }
-            DecoderError::TruncatedHeader =&gt; f.write_str(<span class="string">&quot;EOF in header&quot;</span>),
-            DecoderError::TruncatedDimensions =&gt; f.write_str(<span class="string">&quot;EOF in dimensions line&quot;</span>),
+            DecoderError::TruncatedHeader =&gt; f.write_str(<span class="string">"EOF in header"</span>),
+            DecoderError::TruncatedDimensions =&gt; f.write_str(<span class="string">"EOF in dimensions line"</span>),
             DecoderError::UnparsableF32(line, pe) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Cannot parse {} value as f32: {}&quot;</span>, line, pe))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Cannot parse {} value as f32: {}"</span>, line, pe))
             }
             DecoderError::UnparsableU32(line, pe) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Cannot parse {} value as u32: {}&quot;</span>, line, pe))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Cannot parse {} value as u32: {}"</span>, line, pe))
             }
             DecoderError::LineTooShort(line) =&gt; {
-                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;Not enough numbers in {}&quot;</span>, line))
+                f.write_fmt(<span class="macro">format_args!</span>(<span class="string">"Not enough numbers in {}"</span>, line))
             }
-            DecoderError::ExtraneousColorcorrNumbers =&gt; f.write_str(<span class="string">&quot;Extra numbers in COLORCORR&quot;</span>),
+            DecoderError::ExtraneousColorcorrNumbers =&gt; f.write_str(<span class="string">"Extra numbers in COLORCORR"</span>),
             DecoderError::DimensionsLineTooShort(elements, expected) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Dimensions line too short: have {} elements, expected {}&quot;</span>,
+                <span class="string">"Dimensions line too short: have {} elements, expected {}"</span>,
                 elements, expected
             )),
             DecoderError::DimensionsLineTooLong(expected) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Dimensions line too long, expected {} elements&quot;</span>,
+                <span class="string">"Dimensions line too long, expected {} elements"</span>,
                 expected
             )),
             DecoderError::WrongScanlineLength(len, expected) =&gt; f.write_fmt(<span class="macro">format_args!</span>(
-                <span class="string">&quot;Wrong length of decoded scanline: got {}, expected {}&quot;</span>,
+                <span class="string">"Wrong length of decoded scanline: got {}, expected {}"</span>,
                 len, expected
             )),
             DecoderError::FirstPixelRlMarker =&gt; {
-                f.write_str(<span class="string">&quot;First pixel of a scanline shouldn&#39;t be run length marker&quot;</span>)
+                f.write_str(<span class="string">"First pixel of a scanline shouldn't be run length marker"</span>)
             }
         }
     }
@@ -1132,7 +1134,7 @@
 }
 
 <span class="kw">impl </span>error::Error <span class="kw">for </span>DecoderError {
-    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>error::Error + <span class="lifetime">&#39;static</span>)&gt; {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>error::Error + <span class="lifetime">'static</span>)&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             DecoderError::UnparsableF32(<span class="kw">_</span>, err) =&gt; <span class="prelude-val">Some</span>(err),
             DecoderError::UnparsableU32(<span class="kw">_</span>, err) =&gt; <span class="prelude-val">Some</span>(err),
@@ -1152,13 +1154,13 @@
 }
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>LineType {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         f.write_str(<span class="kw">match </span><span class="self">self </span>{
-            LineType::Exposure =&gt; <span class="string">&quot;EXPOSURE&quot;</span>,
-            LineType::Pixaspect =&gt; <span class="string">&quot;PIXASPECT&quot;</span>,
-            LineType::Colorcorr =&gt; <span class="string">&quot;COLORCORR&quot;</span>,
-            LineType::DimensionsHeight =&gt; <span class="string">&quot;height dimension&quot;</span>,
-            LineType::DimensionsWidth =&gt; <span class="string">&quot;width dimension&quot;</span>,
+            LineType::Exposure =&gt; <span class="string">"EXPOSURE"</span>,
+            LineType::Pixaspect =&gt; <span class="string">"PIXASPECT"</span>,
+            LineType::Colorcorr =&gt; <span class="string">"COLORCORR"</span>,
+            LineType::DimensionsHeight =&gt; <span class="string">"height dimension"</span>,
+            LineType::DimensionsWidth =&gt; <span class="string">"width dimension"</span>,
         })
     }
 }
@@ -1227,7 +1229,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ BufRead&gt; ImageDecoder&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>HdrAdapter&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ BufRead&gt; ImageDecoder&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>HdrAdapter&lt;R&gt; {
     <span class="kw">type </span>Reader = HdrReader&lt;R&gt;;
 
     <span class="kw">fn </span>dimensions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
@@ -1250,7 +1252,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R: <span class="lifetime">&#39;a </span>+ BufRead + Seek&gt; ImageDecoderRect&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>HdrAdapter&lt;R&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, R: <span class="lifetime">'a </span>+ BufRead + Seek&gt; ImageDecoderRect&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>HdrAdapter&lt;R&gt; {
     <span class="kw">fn </span>read_rect_with_progress&lt;F: Fn(Progress)&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         x: u32,
@@ -1275,7 +1277,7 @@
 }
 
 <span class="doccomment">/// Radiance HDR file signature
-</span><span class="kw">pub const </span>SIGNATURE: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;#?RADIANCE&quot;</span>;
+</span><span class="kw">pub const </span>SIGNATURE: <span class="kw-2">&amp;</span>[u8] = <span class="string">b"#?RADIANCE"</span>;
 <span class="kw">const </span>SIGNATURE_LENGTH: usize = <span class="number">10</span>;
 
 <span class="doccomment">/// An Radiance HDR decoder
@@ -1348,7 +1350,7 @@
             <span class="kw">let </span>t_max = T::max_value();
             <span class="comment">// Disassembly shows that t_max_f32 is compiled into constant
             </span><span class="kw">let </span>t_max_f32: f32 = num_traits::NumCast::from(t_max)
-                .expect(<span class="string">&quot;to_ldr_scale_gamma: maximum value of type is not representable as f32&quot;</span>);
+                .expect(<span class="string">"to_ldr_scale_gamma: maximum value of type is not representable as f32"</span>);
             <span class="kw">let </span>fv = f32::powf(v * scale, gamma) * t_max_f32 + <span class="number">0.5</span>;
             <span class="kw">if </span>fv &lt; <span class="number">0.0 </span>{
                 T::zero()
@@ -1356,7 +1358,7 @@
                 t_max
             } <span class="kw">else </span>{
                 num_traits::NumCast::from(fv)
-                    .expect(<span class="string">&quot;to_ldr_scale_gamma: cannot convert f32 to target type. NaN?&quot;</span>)
+                    .expect(<span class="string">"to_ldr_scale_gamma: cannot convert f32 to target type. NaN?"</span>)
             }
         }
         Rgb([
@@ -1397,7 +1399,7 @@
                   // skip signature line ending
                 </span>read_line_u8(r)<span class="question-mark">?</span>;
             } <span class="kw">else </span>{
-                <span class="comment">// Old Radiance HDR files (*.pic) don&#39;t use signature
+                <span class="comment">// Old Radiance HDR files (*.pic) don't use signature
                 // Let them be parsed in non-strict mode
             </span>}
             <span class="comment">// read header data until empty line
@@ -1411,7 +1413,7 @@
                         <span class="kw">if </span>line.is_empty() {
                             <span class="comment">// end of header
                             </span><span class="kw">break</span>;
-                        } <span class="kw">else if </span>line[<span class="number">0</span>] == <span class="string">b&#39;#&#39; </span>{
+                        } <span class="kw">else if </span>line[<span class="number">0</span>] == <span class="string">b'#' </span>{
                             <span class="comment">// line[0] will not panic, line.len() == 0 is false here
                             // skip comments
                             </span><span class="kw">continue</span>;
@@ -1442,7 +1444,7 @@
                 UnsupportedError::from_format_and_kind(
                     ImageFormat::Hdr.into(),
                     UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                        <span class="string">&quot;Image dimensions ({}x{}) are too large&quot;</span>,
+                        <span class="string">"Image dimensions ({}x{}) are too large"</span>,
                         width, height
                     )),
                 ),
@@ -1469,7 +1471,7 @@
 
     <span class="doccomment">/// Consumes decoder and returns a vector of RGBE8 pixels
     </span><span class="kw">pub fn </span>read_image_native(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; ImageResult&lt;Vec&lt;Rgbe8Pixel&gt;&gt; {
-        <span class="comment">// Don&#39;t read anything if image is empty
+        <span class="comment">// Don't read anything if image is empty
         </span><span class="kw">if </span><span class="self">self</span>.width == <span class="number">0 </span>|| <span class="self">self</span>.height == <span class="number">0 </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[]);
         }
@@ -1493,7 +1495,7 @@
             <span class="self">self</span>.width <span class="kw">as </span>usize * <span class="self">self</span>.height <span class="kw">as </span>usize
         );
 
-        <span class="comment">// Don&#39;t read anything if image is empty
+        <span class="comment">// Don't read anything if image is empty
         </span><span class="kw">if </span><span class="self">self</span>.width == <span class="number">0 </span>|| <span class="self">self</span>.height == <span class="number">0 </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1592,7 +1594,7 @@
             </span><span class="kw">if </span><span class="self">self</span>.error_encountered {
                 <span class="self">self</span>.advance();
                 <span class="comment">// Error was encountered. Keep producing errors.
-                // ImageError can&#39;t implement Clone, so just dump some error
+                // ImageError can't implement Clone, so just dump some error
                 </span><span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(ImageError::Parameter(ParameterError::from_kind(
                     ParameterErrorKind::FailedAlready,
                 ))));
@@ -1730,7 +1732,7 @@
     </span><span class="kw">let </span><span class="kw-2">mut </span>prev_pixel = fb;
     <span class="kw">while </span>x_off &lt; width {
         <span class="kw">let </span>pix = read_rgbe(r)<span class="question-mark">?</span>;
-        <span class="comment">// it&#39;s harder to forget to increase x_off if I write this this way.
+        <span class="comment">// it's harder to forget to increase x_off if I write this this way.
         </span>x_off += {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(rl) = rl_marker(pix) {
                 <span class="comment">// rl_mult takes care of consecutive RL markers
@@ -1793,8 +1795,8 @@
     <span class="doccomment">/// Pixel height divided by pixel width
     </span><span class="kw">pub </span>pixel_aspect_ratio: <span class="prelude-ty">Option</span>&lt;f32&gt;,
     <span class="doccomment">/// All lines contained in image header are put here. Ordering of lines is preserved.
-    /// Lines in the form &quot;key=value&quot; are represented as (&quot;key&quot;, &quot;value&quot;).
-    /// All other lines are (&quot;&quot;, &quot;line&quot;)
+    /// Lines in the form "key=value" are represented as ("key", "value").
+    /// All other lines are ("", "line")
     </span><span class="kw">pub </span>custom_attributes: Vec&lt;(String, String)&gt;,
 }
 
@@ -1811,24 +1813,24 @@
         }
     }
 
-    <span class="comment">// Updates header info, in strict mode returns error for malformed lines (no &#39;=&#39; separator)
+    <span class="comment">// Updates header info, in strict mode returns error for malformed lines (no '=' separator)
     // unknown attributes are skipped
     </span><span class="kw">fn </span>update_header_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, line: <span class="kw-2">&amp;</span>str, strict: bool) -&gt; ImageResult&lt;()&gt; {
-        <span class="comment">// split line at first &#39;=&#39;
+        <span class="comment">// split line at first '='
         // old Radiance HDR files (*.pic) feature tabs in key, so                vvv trim
-        </span><span class="kw">let </span>maybe_key_value = split_at_first(line, <span class="string">&quot;=&quot;</span>).map(|(key, value)| (key.trim(), value));
+        </span><span class="kw">let </span>maybe_key_value = split_at_first(line, <span class="string">"="</span>).map(|(key, value)| (key.trim(), value));
         <span class="comment">// save all header lines in custom_attributes
         </span><span class="kw">match </span>maybe_key_value {
             <span class="prelude-val">Some</span>((key, val)) =&gt; <span class="self">self
                 </span>.custom_attributes
                 .push((key.to_owned(), val.to_owned())),
-            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.custom_attributes.push((<span class="string">&quot;&quot;</span>.into(), line.to_owned())),
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.custom_attributes.push((<span class="string">""</span>.into(), line.to_owned())),
         }
         <span class="comment">// parse known attributes
         </span><span class="kw">match </span>maybe_key_value {
-            <span class="prelude-val">Some</span>((<span class="string">&quot;FORMAT&quot;</span>, val)) =&gt; {
-                <span class="kw">if </span>val.trim() != <span class="string">&quot;32-bit_rle_rgbe&quot; </span>{
-                    <span class="comment">// XYZE isn&#39;t supported yet
+            <span class="prelude-val">Some</span>((<span class="string">"FORMAT"</span>, val)) =&gt; {
+                <span class="kw">if </span>val.trim() != <span class="string">"32-bit_rle_rgbe" </span>{
+                    <span class="comment">// XYZE isn't supported yet
                     </span><span class="kw">return </span><span class="prelude-val">Err</span>(ImageError::Unsupported(
                         UnsupportedError::from_format_and_kind(
                             ImageFormat::Hdr.into(),
@@ -1839,7 +1841,7 @@
                     ));
                 }
             }
-            <span class="prelude-val">Some</span>((<span class="string">&quot;EXPOSURE&quot;</span>, val)) =&gt; {
+            <span class="prelude-val">Some</span>((<span class="string">"EXPOSURE"</span>, val)) =&gt; {
                 <span class="kw">match </span>val.trim().parse::&lt;f32&gt;() {
                     <span class="prelude-val">Ok</span>(v) =&gt; {
                         <span class="self">self</span>.exposure = <span class="prelude-val">Some</span>(<span class="self">self</span>.exposure.unwrap_or(<span class="number">1.0</span>) * v); <span class="comment">// all encountered exposure values should be multiplied
@@ -1855,7 +1857,7 @@
                     </span>}
                 };
             }
-            <span class="prelude-val">Some</span>((<span class="string">&quot;PIXASPECT&quot;</span>, val)) =&gt; {
+            <span class="prelude-val">Some</span>((<span class="string">"PIXASPECT"</span>, val)) =&gt; {
                 <span class="kw">match </span>val.trim().parse::&lt;f32&gt;() {
                     <span class="prelude-val">Ok</span>(v) =&gt; {
                         <span class="self">self</span>.pixel_aspect_ratio = <span class="prelude-val">Some</span>(<span class="self">self</span>.pixel_aspect_ratio.unwrap_or(<span class="number">1.0</span>) * v);
@@ -1872,7 +1874,7 @@
                     </span>}
                 };
             }
-            <span class="prelude-val">Some</span>((<span class="string">&quot;COLORCORR&quot;</span>, val)) =&gt; {
+            <span class="prelude-val">Some</span>((<span class="string">"COLORCORR"</span>, val)) =&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>rgbcorr = [<span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>];
                 <span class="kw">match </span>parse_space_separated_f32(val, <span class="kw-2">&amp;mut </span>rgbcorr, LineType::Colorcorr) {
                     <span class="prelude-val">Ok</span>(extra_numbers) =&gt; {
@@ -1918,7 +1920,7 @@
     <span class="prelude-val">Ok</span>(nums.next().is_some())
 }
 
-<span class="comment">// Parses dimension line &quot;-Y height +X width&quot;
+<span class="comment">// Parses dimension line "-Y height +X width"
 // returns (width, height) or error
 </span><span class="kw">fn </span>parse_dimensions_line(line: <span class="kw-2">&amp;</span>str, strict: bool) -&gt; ImageResult&lt;(u32, u32)&gt; {
     <span class="kw">const </span>DIMENSIONS_COUNT: usize = <span class="number">4</span>;
@@ -1940,10 +1942,10 @@
         <span class="comment">// extra data in dimensions line
         </span><span class="kw">return </span><span class="prelude-val">Err</span>(DecoderError::DimensionsLineTooLong(DIMENSIONS_COUNT).into());
     } <span class="comment">// no else
-      // dimensions line is in the form &quot;-Y 10 +X 20&quot;
+      // dimensions line is in the form "-Y 10 +X 20"
       // There are 8 possible orientations: +Y +X, +X -Y and so on
     </span><span class="kw">match </span>(c1_tag, c2_tag) {
-        (<span class="string">&quot;-Y&quot;</span>, <span class="string">&quot;+X&quot;</span>) =&gt; {
+        (<span class="string">"-Y"</span>, <span class="string">"+X"</span>) =&gt; {
             <span class="comment">// Common orientation (left-right, top-down)
             // c1_str is height, c2_str is width
             </span><span class="kw">let </span>height = c1_str
@@ -1958,7 +1960,7 @@
             UnsupportedError::from_format_and_kind(
                 ImageFormat::Hdr.into(),
                 UnsupportedErrorKind::GenericFeature(<span class="macro">format!</span>(
-                    <span class="string">&quot;Orientation {} {}&quot;</span>,
+                    <span class="string">"Orientation {} {}"</span>,
                     limit_string_len(c1_tag, <span class="number">4</span>),
                     limit_string_len(c2_tag, <span class="number">4</span>)
                 )),
@@ -1971,15 +1973,15 @@
 </span><span class="kw">fn </span>limit_string_len(s: <span class="kw-2">&amp;</span>str, len: usize) -&gt; String {
     <span class="kw">let </span>s_char_len = s.chars().count();
     <span class="kw">if </span>s_char_len &gt; len {
-        s.chars().take(len).chain(<span class="string">&quot;...&quot;</span>.chars()).collect()
+        s.chars().take(len).chain(<span class="string">"..."</span>.chars()).collect()
     } <span class="kw">else </span>{
         s.into()
     }
 }
 
 <span class="comment">// Splits string into (before separator, after separator) tuple
-// or None if separator isn&#39;t found
-</span><span class="kw">fn </span>split_at_first&lt;<span class="lifetime">&#39;a</span>&gt;(s: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, separator: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str)&gt; {
+// or None if separator isn't found
+</span><span class="kw">fn </span>split_at_first&lt;<span class="lifetime">'a</span>&gt;(s: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, separator: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str)&gt; {
     <span class="kw">match </span>s.find(separator) {
         <span class="prelude-val">None </span>| <span class="prelude-val">Some</span>(<span class="number">0</span>) =&gt; <span class="prelude-val">None</span>,
         <span class="prelude-val">Some</span>(p) <span class="kw">if </span>p &gt;= s.len() - separator.len() =&gt; <span class="prelude-val">None</span>,
@@ -1989,37 +1991,37 @@
 
 <span class="attr">#[test]
 </span><span class="kw">fn </span>split_at_first_test() {
-    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;&quot;</span>.into()), <span class="string">&quot;=&quot;</span>), <span class="prelude-val">None</span>);
-    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;=&quot;</span>.into()), <span class="string">&quot;=&quot;</span>), <span class="prelude-val">None</span>);
-    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;= &quot;</span>.into()), <span class="string">&quot;=&quot;</span>), <span class="prelude-val">None</span>);
+    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">""</span>.into()), <span class="string">"="</span>), <span class="prelude-val">None</span>);
+    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">"="</span>.into()), <span class="string">"="</span>), <span class="prelude-val">None</span>);
+    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">"= "</span>.into()), <span class="string">"="</span>), <span class="prelude-val">None</span>);
     <span class="macro">assert_eq!</span>(
-        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot; = &quot;</span>.into()), <span class="string">&quot;=&quot;</span>),
-        <span class="prelude-val">Some</span>((<span class="string">&quot; &quot;</span>, <span class="string">&quot; &quot;</span>))
+        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">" = "</span>.into()), <span class="string">"="</span>),
+        <span class="prelude-val">Some</span>((<span class="string">" "</span>, <span class="string">" "</span>))
     );
     <span class="macro">assert_eq!</span>(
-        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;EXPOSURE= &quot;</span>.into()), <span class="string">&quot;=&quot;</span>),
-        <span class="prelude-val">Some</span>((<span class="string">&quot;EXPOSURE&quot;</span>, <span class="string">&quot; &quot;</span>))
+        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">"EXPOSURE= "</span>.into()), <span class="string">"="</span>),
+        <span class="prelude-val">Some</span>((<span class="string">"EXPOSURE"</span>, <span class="string">" "</span>))
     );
     <span class="macro">assert_eq!</span>(
-        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;EXPOSURE= =&quot;</span>.into()), <span class="string">&quot;=&quot;</span>),
-        <span class="prelude-val">Some</span>((<span class="string">&quot;EXPOSURE&quot;</span>, <span class="string">&quot; =&quot;</span>))
+        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">"EXPOSURE= ="</span>.into()), <span class="string">"="</span>),
+        <span class="prelude-val">Some</span>((<span class="string">"EXPOSURE"</span>, <span class="string">" ="</span>))
     );
     <span class="macro">assert_eq!</span>(
-        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;EXPOSURE== =&quot;</span>.into()), <span class="string">&quot;==&quot;</span>),
-        <span class="prelude-val">Some</span>((<span class="string">&quot;EXPOSURE&quot;</span>, <span class="string">&quot; =&quot;</span>))
+        split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">"EXPOSURE== ="</span>.into()), <span class="string">"=="</span>),
+        <span class="prelude-val">Some</span>((<span class="string">"EXPOSURE"</span>, <span class="string">" ="</span>))
     );
-    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">&quot;EXPOSURE&quot;</span>.into()), <span class="string">&quot;&quot;</span>), <span class="prelude-val">None</span>);
+    <span class="macro">assert_eq!</span>(split_at_first(<span class="kw-2">&amp;</span>Cow::Owned(<span class="string">"EXPOSURE"</span>.into()), <span class="string">""</span>), <span class="prelude-val">None</span>);
 }
 
-<span class="comment">// Reads input until b&quot;\n&quot; or EOF
+<span class="comment">// Reads input until b"\n" or EOF
 // Returns vector of read bytes NOT including end of line characters
 //   or return None to indicate end of file
 </span><span class="kw">fn </span>read_line_u8&lt;R: BufRead&gt;(r: <span class="kw-2">&amp;mut </span>R) -&gt; ::std::io::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ret = Vec::with_capacity(<span class="number">16</span>);
-    <span class="kw">match </span>r.read_until(<span class="string">b&#39;\n&#39;</span>, <span class="kw-2">&amp;mut </span>ret) {
+    <span class="kw">match </span>r.read_until(<span class="string">b'\n'</span>, <span class="kw-2">&amp;mut </span>ret) {
         <span class="prelude-val">Ok</span>(<span class="number">0</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
         <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">b&#39;\n&#39;</span>) = ret[..].last() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">b'\n'</span>) = ret[..].last() {
                 <span class="kw">let _ </span>= ret.pop();
             }
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(ret))
@@ -2030,14 +2032,14 @@
 
 <span class="attr">#[test]
 </span><span class="kw">fn </span>read_line_u8_test() {
-    <span class="kw">let </span>buf: Vec&lt;<span class="kw">_</span>&gt; = (<span class="kw-2">&amp;</span><span class="string">b&quot;One\nTwo\nThree\nFour\n\n\n&quot;</span>[..]).into();
+    <span class="kw">let </span>buf: Vec&lt;<span class="kw">_</span>&gt; = (<span class="kw-2">&amp;</span><span class="string">b"One\nTwo\nThree\nFour\n\n\n"</span>[..]).into();
     <span class="kw">let </span>input = <span class="kw-2">&amp;mut </span>::std::io::Cursor::new(buf);
-    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b&quot;One&quot;</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b&quot;Two&quot;</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b&quot;Three&quot;</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b&quot;Four&quot;</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b&quot;&quot;</span>[..]);
-    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b&quot;&quot;</span>[..]);
+    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b"One"</span>[..]);
+    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b"Two"</span>[..]);
+    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b"Three"</span>[..]);
+    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b"Four"</span>[..]);
+    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b""</span>[..]);
+    <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>read_line_u8(input).unwrap().unwrap()[..], <span class="kw-2">&amp;</span><span class="string">b""</span>[..]);
     <span class="macro">assert_eq!</span>(read_line_u8(input).unwrap(), <span class="prelude-val">None</span>);
 }
 
@@ -2070,7 +2072,7 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>dimension_overflow() {
-        <span class="kw">let </span>data = <span class="string">b&quot;#?RADIANCE\nFORMAT=32-bit_rle_rgbe\n\n -Y 4294967295 +X 4294967295&quot;</span>;
+        <span class="kw">let </span>data = <span class="string">b"#?RADIANCE\nFORMAT=32-bit_rle_rgbe\n\n -Y 4294967295 +X 4294967295"</span>;
 
         <span class="macro">assert!</span>(HdrAdapter::new(Cursor::new(data)).is_err());
         <span class="macro">assert!</span>(HdrAdapter::new_nonstrict(Cursor::new(data)).is_err());
