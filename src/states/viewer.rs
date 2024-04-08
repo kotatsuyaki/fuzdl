@@ -19,7 +19,7 @@ pub struct Viewer {
 
     #[by(
         wait(timeout_ms = 8000, interval_ms = 300),
-        css = "[class^=ViewerFooter_footer__page]"
+        css = "[class^=ViewerFooter_footer__page],[class^=InternalViewerFooter_footer__page_state__count]"
     )]
     page_counter: ElementResolver<WebElement>,
 
