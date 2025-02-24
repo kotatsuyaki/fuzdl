@@ -86,7 +86,7 @@ pub async fn with_driver<Out, Fut: Future<Output = Out> + Send>(
 
 async fn create_driver_process() -> Result<Child> {
     let child = Command::new("chromedriver")
-        .arg("--port=4444")
+        .arg("--port=4445")
         // Prevent IO from the child process messing up our IO
         .stdin(Stdio::null())
         .stdout(Stdio::null())
@@ -102,7 +102,7 @@ async fn create_driver() -> Result<WebDriver> {
     caps.set_headless()?;
     caps.add_chrome_arg("--no-sandbox")?;
 
-    let driver = WebDriver::new("http://localhost:4444", caps)
+    let driver = WebDriver::new("http://localhost:4445", caps)
         .await
         .context("Failed to create WebDriver")?;
 
