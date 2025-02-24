@@ -94,7 +94,7 @@ impl Viewer {
             let img = self
                 .body
                 .query(By::Css(&img_css_selector))
-                .wait(Duration::from_secs(10), Duration::from_millis(100))
+                .wait(Duration::from_secs(25), Duration::from_millis(100))
                 .single()
                 .await?;
 

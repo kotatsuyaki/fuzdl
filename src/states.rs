@@ -24,8 +24,8 @@ macro_rules! resolve_all {
 mod signin;
 pub use signin::Signin;
 
-mod purchased;
-pub use purchased::{MagazineMetadata, Purchased};
+mod subscribed;
+pub use subscribed::Subscribed;
 
 mod magazine;
 pub use magazine::{Magazine, MagazineIssue};
@@ -34,7 +34,7 @@ mod book;
 pub use book::{Book, BookIssue};
 
 mod manga;
-pub use manga::{Manga, MangaBook, MangaChapter, MangaPointConsumption};
+pub use manga::{Manga, MangaChapter};
 
 mod viewer;
 pub use viewer::{DownloadOutput, TocEntry, Viewer, ViewerLocation};

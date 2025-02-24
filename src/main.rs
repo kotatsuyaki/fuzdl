@@ -254,7 +254,7 @@ impl Display for DownloadTask {
 }
 
 async fn prompt_magazine(driver: &WebDriver) -> Result<Vec<DownloadTask>> {
-    let purchased = states::Purchased::new_from_driver(&driver).await?;
+    let purchased = states::Subscribed::new_from_driver(&driver).await?;
     let magazines = purchased.list_magazines().await?;
     let selected_megazine = prompt_select("Select a magazine", &magazines).await?;
 
