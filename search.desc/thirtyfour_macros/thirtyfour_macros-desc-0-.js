@@ -1,0 +1,1 @@
+searchState.loadedDescShard("thirtyfour_macros", 0, "Thirtyfour is a Selenium / WebDriver library for Rust, for …\nDerive macro for a wrapped <code>Component</code>.")
